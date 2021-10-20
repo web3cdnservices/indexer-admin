@@ -1,21 +1,12 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import useSWR from 'swr';
 import Button from '@mui/material/Button';
 import { useWeb3, connect } from '../containers/web3';
-import { fetcher } from '../utils/fetcher';
-import TokenBalance from '../containers/TokenBalance';
-// import { unregisterIndexer } from '../utils/contract';
-
-const contractAddress = '0x3ed62137c5DB927cb137c26455969116BF0c23Cb';
+import TokenBalance from '../containers/tokenBalance';
 
 const Projects = () => {
-  const { active, account, chainId, library, activate } = useWeb3();
-  // const { data: balance, mutate } = useSWR(['getBalance', account, 'latest'], {
-  //   fetcher: fetcher(library),
-  // });
-  // console.log('>>balance:', balance);
+  const { account, chainId, activate } = useWeb3();
 
   return (
     <div
@@ -40,7 +31,7 @@ const Projects = () => {
         >
           Conenct MetaMask
         </Button>
-        <TokenBalance address={contractAddress} />
+        {account && <TokenBalance account={account} />}
       </div>
     </div>
   );
