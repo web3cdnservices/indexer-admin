@@ -1,26 +1,29 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { VFC } from 'react';
+import { FC } from 'react';
 import { Route } from 'react-router';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import './App.css';
 import * as Pages from './pages';
 import { Web3Provider } from './containers';
+import { contractSDKOptions, ContractSDKProvider } from './containers/contractSdk';
 
-const App: VFC = () => (
+const App: FC = () => (
   <Web3Provider>
-    <div className="App">
-      <Router>
-        <div className="Main">
-          <Switch>
-            <Route component={Pages.Projects} path="/projects" />
-            <Route component={Pages.Registry} path="/registry" />
-          </Switch>
-        </div>
-      </Router>
-    </div>
+    <ContractSDKProvider initialState={contractSDKOptions}>
+      <div className="App">
+        <Router>
+          <div className="Main">
+            <Switch>
+              <Route component={Pages.Projects} path="/projects" />
+              <Route component={Pages.Registry} path="/registry" />
+            </Switch>
+          </div>
+        </Router>
+      </div>
+    </ContractSDKProvider>
   </Web3Provider>
 );
 

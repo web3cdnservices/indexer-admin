@@ -39,6 +39,11 @@ export async function connect(activate: Web3ReactManagerFunctions['activate']): 
 
 export const useWeb3 = (): Web3ReactContextInterface<providers.Web3Provider> => useWeb3React();
 
+export const useWeb3Provider = (): providers.Web3Provider | undefined => {
+  const { library } = useWeb3();
+  return library;
+};
+
 const InitProvider: VFC = () => {
   const { activate } = useWeb3();
   const activateInitialConnector = useCallback(
