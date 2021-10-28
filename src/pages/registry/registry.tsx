@@ -3,23 +3,33 @@
 
 import { Snackbar } from '@mui/material';
 import Alert from '@mui/material/Alert';
-import { useState } from 'react';
-import { useWeb3 } from '../../containers';
-import { connect } from '../../containers/web3';
+import { useState, useEffect } from 'react';
 import { useContractSDK } from '../../containers/contractSdk';
 import TokenBalance from '../../components/balance';
 import { Container, ActionButton, Text, ButtonsContainer, ConnectButton } from './styles';
 import { useIsIndexer } from '../../hooks/indexerHook';
+import { useWeb3 } from '../../hooks/web3Hook';
 
 const ALERT_MESSAGE = 'SDK not initialised';
 
 const Registry = () => {
-  const { account, library, activate, deactivate, active } = useWeb3();
+  const { account, library, active, connector } = useWeb3();
+  console.log('account changed', account);
   const isIndexer = useIsIndexer(account ?? '');
   const sdk = useContractSDK();
 
   const [alert, setAlert] = useState('');
   const [controller, setController] = useState('');
+
+  // TODO: move to helper file
+  const connectWithMetaMask = () => {
+    // @ts-ignore
+    if (window?.ethereum) {
+      // @ts-ignore
+      window.ethereum.request({ method: 'eth_requestAccounts' });
+      connector?.getAccount();
+    }
+  };
 
   const registry = () => {
     if (!sdk || !library) {
@@ -82,13 +92,7 @@ const Registry = () => {
 
   const renderConnectionButtons = () => (
     <ButtonsContainer>
-      <ConnectButton
-        variant="outlined"
-        color="info"
-        onClick={() => {
-          active ? deactivate() : connect(activate);
-        }}
-      >
+      <ConnectButton variant="outlined" color="info" onClick={() => connectWithMetaMask()}>
         {active ? 'Disconnect' : 'Connect'}
       </ConnectButton>
     </ButtonsContainer>

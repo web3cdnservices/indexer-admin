@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Button from '@mui/material/Button';
-import { useWeb3, connect } from '../../containers/web3';
 import TokenBalance from '../../components/balance';
+import { connect } from '../../containers/web3';
+import { useWeb3 } from '../../hooks/web3Hook';
 import { Container } from './styles';
 
 const Projects = () => {

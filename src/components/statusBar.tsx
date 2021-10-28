@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import styled from '@emotion/styled';
-import { chainNames, useWeb3 } from '../containers/web3';
+import { chainNames } from '../containers/web3';
+import { useIsMetaMask, useWeb3 } from '../hooks/web3Hook';
 
 const Container = styled.div`
   position: absolute;
@@ -35,14 +36,20 @@ const Text = styled.div`
 `;
 
 const StatusBar = () => {
-  const { active, chainId, connector } = useWeb3();
-  const status = active ? 'Connected' : 'Disconnected';
+  const { active, chainId } = useWeb3();
+  const isMetaMask = useIsMetaMask();
+
+  const provider = active ? 'Actived' : 'Inactived';
+  const status = isMetaMask ? 'Connected' : 'DisConnected';
   const chainName = chainId ? chainNames[chainId] : '';
+
   return (
     <Container>
       <ContentContainer>
         <Text>{chainName}</Text>
-        <StatusCard>Chain</StatusCard>
+        {!!chainName && <StatusCard>Chain</StatusCard>}
+        <Text>{provider}</Text>
+        <StatusCard>Provider</StatusCard>
         <Text>{status}</Text>
         <StatusCard>Status</StatusCard>
       </ContentContainer>

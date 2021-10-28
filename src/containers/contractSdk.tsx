@@ -4,9 +4,9 @@
 import React from 'react';
 import { ContractSDK, SdkOptions, SubqueryNetwork } from '@subql/contract-sdk';
 import { createContainer } from './unstated';
-import Logger from './logger';
-import { useWeb3Provider } from './web3';
+import Logger from '../utils/logger';
 import deploymentDetails from '../contract/localnet.json';
+import { useIsMetaMask, useWeb3Provider } from '../hooks/web3Hook';
 
 export const contractSDKOptions = {
   network: 'local' as SubqueryNetwork,
@@ -18,6 +18,7 @@ function useContractsImpl(logger: Logger, initialState?: SdkOptions): ContractSD
   const [sdk, setSdk] = React.useState<ContractSDK | undefined>(undefined);
 
   const provider = useWeb3Provider();
+  const isMetaMask = useIsMetaMask();
 
   const initSdk = React.useCallback(async () => {
     if (!initialState || !initialState.network || !initialState.deploymentDetails) {
@@ -27,13 +28,8 @@ function useContractsImpl(logger: Logger, initialState?: SdkOptions): ContractSD
     }
 
     try {
-      const instance = provider ? await ContractSDK.create(provider, initialState) : undefined;
-      if (!provider) {
-        logger.e('provider can not be undefined');
-      }
-
-      console.log('Provider:', provider);
-
+      const instance =
+        provider && isMetaMask ? await ContractSDK.create(provider, initialState) : undefined;
       setSdk(instance);
     } catch (e) {
       logger.e('Failed to create ContractSDK instance', e);

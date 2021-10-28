@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { ReactNode, useMemo, useContext, createContext } from 'react';
-import Logger from './logger';
+import Logger from '../utils/logger';
 
 const EMPTY: unique symbol = Symbol(undefined);
 
