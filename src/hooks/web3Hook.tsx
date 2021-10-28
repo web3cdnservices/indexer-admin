@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { providers } from 'ethers';
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
+import { JsonRpcSigner } from '@ethersproject/providers';
 
 export const isMetaMaskInstalled = (): boolean => {
   // @ts-ignore
@@ -23,6 +24,17 @@ export const useWeb3 = (): Web3ReactContextInterface<providers.Web3Provider> => 
 export const useWeb3Provider = (): providers.Web3Provider | undefined => {
   const { library } = useWeb3();
   return library;
+};
+
+export const useSigner = (): JsonRpcSigner | undefined => {
+  const [signer, setSigner] = useState<JsonRpcSigner | undefined>(undefined);
+  const { active, account, library } = useWeb3();
+
+  useEffect(() => {
+    setSigner(library?.getSigner());
+  }, [active, account]);
+
+  return signer;
 };
 
 export const useIsMetaMask = (): boolean => {

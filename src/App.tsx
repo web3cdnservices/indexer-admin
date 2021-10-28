@@ -20,7 +20,7 @@ const App: FC = () => (
           <div className="Main">
             <Switch>
               <Route component={Pages.Projects} path="/projects" />
-              <Route component={Pages.Registry} path="/registry" />
+              <Route component={Pages.Registry} path="/" />
             </Switch>
           </div>
         </Router>

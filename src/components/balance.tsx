@@ -15,10 +15,11 @@ const TokenBalance: FC<Props> = ({ account }) => {
   const sdk = useContractSDK();
 
   useEffect(() => {
+    console.log('>>sdk:', sdk);
     sdk?.sqToken.balanceOf(account).then((balance) => setBalance(balance));
   }, [account]);
 
-  return <div style={{ color: '#d9d9d9', marginTop: '20px' }}>{formatUnits(balance, 18)} SQT</div>;
+  return <div style={{ color: '#d9d9d9', marginLeft: '30px' }}>{formatUnits(balance, 18)} SQT</div>;
 };
 
 export default TokenBalance;

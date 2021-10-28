@@ -13,7 +13,6 @@ export const contractSDKOptions = {
   deploymentDetails,
 };
 
-// TODO: refactor
 function useContractsImpl(logger: Logger, initialState?: SdkOptions): ContractSDK | undefined {
   const [sdk, setSdk] = React.useState<ContractSDK | undefined>(undefined);
 
@@ -28,9 +27,12 @@ function useContractsImpl(logger: Logger, initialState?: SdkOptions): ContractSD
     }
 
     try {
-      const instance =
-        provider && isMetaMask ? await ContractSDK.create(provider, initialState) : undefined;
-      setSdk(instance);
+      logger.l(provider, isMetaMask);
+      if (provider && isMetaMask) {
+        const instance = await ContractSDK.create(provider, initialState);
+        logger.l('sdk', instance);
+        setSdk(instance);
+      }
     } catch (e) {
       logger.e('Failed to create ContractSDK instance', e);
       setSdk(undefined);

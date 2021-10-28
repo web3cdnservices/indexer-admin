@@ -1,32 +1,25 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import Button from '@mui/material/Button';
-import TokenBalance from '../../components/balance';
-import { connect } from '../../containers/web3';
-import { useWeb3 } from '../../hooks/web3Hook';
+import { useContractSDK } from '../../containers/contractSdk';
+import { useSigner } from '../../hooks/web3Hook';
 import { Container } from './styles';
 
-const Projects = () => {
-  const { account, chainId, activate, active } = useWeb3();
+const deploymentId = '0xbec921276c8067fe0c82def3e5ecfd8447f1961bc85768c2a56e6bd26d3c0c55';
 
-  return (
-    <Container>
-      <div>Connect with: {account}</div>
-      <div>Chain ID: {chainId}</div>
-      <div>Connection: {active.toString()}</div>
-      {!active && (
-        <Button
-          style={{ borderWidth: 1, borderColor: 'blue' }}
-          color="primary"
-          onClick={() => connect(activate)}
-        >
-          Conenct MetaMask
-        </Button>
-      )}
-      {account && <TokenBalance account={account} />}
-    </Container>
-  );
+const Projects = () => {
+  const signer = useSigner();
+  const sdk = useContractSDK();
+
+  const startIndexing = () => {
+    signer && sdk?.queryRegistry.connect(signer).startIndexing(deploymentId);
+  };
+
+  const stopIndexing = () => {
+    signer && sdk?.queryRegistry.connect(signer).stopIndexing(deploymentId);
+  };
+
+  return <Container />;
 };
 
 export default Projects;

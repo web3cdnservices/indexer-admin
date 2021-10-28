@@ -36,11 +36,10 @@ const Text = styled.div`
 `;
 
 const StatusBar = () => {
-  const { active, chainId } = useWeb3();
+  const { chainId } = useWeb3();
   const isMetaMask = useIsMetaMask();
 
-  const provider = active ? 'Actived' : 'Inactived';
-  const status = isMetaMask ? 'Connected' : 'DisConnected';
+  const status = isMetaMask ? 'Connected' : 'Disconnected';
   const chainName = chainId ? chainNames[chainId] : '';
 
   return (
@@ -48,8 +47,6 @@ const StatusBar = () => {
       <ContentContainer>
         <Text>{chainName}</Text>
         {!!chainName && <StatusCard>Chain</StatusCard>}
-        <Text>{provider}</Text>
-        <StatusCard>Provider</StatusCard>
         <Text>{status}</Text>
         <StatusCard>Status</StatusCard>
       </ContentContainer>

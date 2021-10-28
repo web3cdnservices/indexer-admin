@@ -15,3 +15,17 @@ export const useIsIndexer = (account: string) => {
 
   return isIndexer;
 };
+
+export const useIsController = (account: string) => {
+  const [isController, setIsController] = useState(false);
+  const sdk = useContractSDK();
+
+  useEffect(() => {
+    !!account &&
+      sdk?.indexerRegistry
+        .isController(account)
+        .then((isController) => setIsController(isController));
+  }, [account]);
+
+  return isController;
+};

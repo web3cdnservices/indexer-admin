@@ -13,6 +13,8 @@ export const Container = styled.div`
 `;
 
 export const ButtonsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   margin-top: 50px;
 `;
 
@@ -22,16 +24,27 @@ export const ActionButton = styled(Button)`
 `;
 
 export const ConnectButton = styled(Button)`
-  height: 30px;
-  width: 150px;
-  padding: 20 30;
-  border-radius: 15px;
+  height: 40px;
+  width: 270px;
+  border-radius: 20px;
   border-color: white;
   margin-top: 20px;
   color: white;
 `;
 
-export const Text = styled.div`
-  margin: 0px 20px;
+export const TextContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border: thin solid;
+  border-color: white;
+  height: 60px;
+  border-radius: 30px;
+  padding: 0px 50px;
+  margin: 20px 0px;
+`;
+
+export const Text = styled.div<{ size?: number }>`
   color: #d9d9d9;
+  font-size: ${(p) => p.size || 16}px;
 `;
