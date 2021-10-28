@@ -2,7 +2,9 @@
 
 ## Local Test
 
-Make sure have `contracts` repo at the same folder level with this project. There has local dependencies with [contracts](https://github.com/subquery/contracts) project.
+### Preparation
+
+Make sure have `contracts` repo at the same folder level with this project. We don't have the contract sdk public on npm, so that there has local dependencies with [contracts](https://github.com/subquery/contracts) project.
 
 1. Run `yarn start:node` to start `moonbeam` local node.
 
