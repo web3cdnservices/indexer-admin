@@ -32,13 +32,15 @@ function useContractsImpl(logger: Logger, initialState?: SdkOptions): ContractSD
         logger.e('provider can not be undefined');
       }
 
+      console.log('Provider:', provider);
+
       setSdk(instance);
     } catch (e) {
       logger.e('Failed to create ContractSDK instance', e);
       setSdk(undefined);
       throw e;
     }
-  }, [logger, initialState]);
+  }, [logger, initialState, provider]);
 
   React.useEffect(() => {
     initSdk();

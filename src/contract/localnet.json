@@ -3,36 +3,36 @@
         "address": "0xc01Ee7f10EA4aF4673cFff62710E1D7792aBa8f3",
         "bytecodeHash": "d29045326fc0be7d9c9f34fdab667880275b398b16dbd356c3e1664209578734",
         "txHash": "0xc984ed7ea61a0ffcdd56469b3008ed472fd268cc394f2ee973b882e7c5d1d34e",
-        "lastUpdate": "Wed, 27 Oct 2021 21:05:30 GMT"
+        "lastUpdate": "Wed, 27 Oct 2021 23:24:44 GMT"
     },
     "InflationController": {
         "address": "0x970951a12F975E6762482ACA81E57D5A2A4e73F4",
         "bytecodeHash": "910f964b54e2df4d1c136742ae4b45b12b04289b338d42b7ddd6cf2083ab1f74",
         "txHash": "0xbc18c7291fa16523b93a49e0b6ada74c142f471fa821a108e82b39bef5361323",
-        "lastUpdate": "Wed, 27 Oct 2021 21:05:31 GMT"
+        "lastUpdate": "Wed, 27 Oct 2021 23:24:44 GMT"
     },
     "SQToken": {
         "address": "0x3ed62137c5DB927cb137c26455969116BF0c23Cb",
         "bytecodeHash": "9efa42ea053fd6886f6bef569c9562e926f2ea276ca7a77ed9a04599c1e0a897",
         "txHash": "0x99cae1858b31a3da79884b0b028330b607cee718e70680a11cadddeb0971bce7",
-        "lastUpdate": "Wed, 27 Oct 2021 21:05:31 GMT"
+        "lastUpdate": "Wed, 27 Oct 2021 23:24:44 GMT"
     },
     "Staking": {
         "address": "0x962c0940d72E7Db6c9a5F81f1cA87D8DB2B82A23",
         "bytecodeHash": "7ff5178c907c65f5472c47db6a6212473761f64443a23d74b18b10c1473d4c90",
         "txHash": "0xf71eb35d4527b74bb80ecb94a5b5169f248b5a78ca8d69c68edbbb0e19106011",
-        "lastUpdate": "Wed, 27 Oct 2021 21:05:31 GMT"
+        "lastUpdate": "Wed, 27 Oct 2021 23:24:44 GMT"
     },
     "IndexerRegistry": {
         "address": "0x5CC307268a1393AB9A764A20DACE848AB8275c46",
-        "bytecodeHash": "452f63e1ccec53332feb29337a7f8a61a06e196198a06b1bb38ba0f61210ef36",
-        "txHash": "0x85cd16d785e0ac7dcb3645cce65826ba548c66e743cad4b82cf4e4bb18326bd7",
-        "lastUpdate": "Wed, 27 Oct 2021 21:05:31 GMT"
+        "bytecodeHash": "e42058827a122e6db2c24a4fdee3f786c5afeb3664af81f61ac12a6cd7fe113f",
+        "txHash": "0xfd8bedf6c4ad37e229bec1d2cb9bc6bb7b16a4e7fd2e2ac6709b1e97e45367fb",
+        "lastUpdate": "Wed, 27 Oct 2021 23:24:45 GMT"
     },
     "QueryRegistry": {
         "address": "0xeAB4eEBa1FF8504c124D031F6844AD98d07C318f",
-        "bytecodeHash": "25dcff484d0bc8839a9bb01c76c9dce39717771671fa87eec5394d4a73c89ac6",
-        "txHash": "0xaad9149bf5bb410a193cf74b524290e12b0be2358fc7cd0598d8729e62912b57",
-        "lastUpdate": "Wed, 27 Oct 2021 21:05:31 GMT"
+        "bytecodeHash": "5d501d9404ecf7e8d8444605eb3ec201dadfb2314a9e66773f8ae69868e42873",
+        "txHash": "0x30136b168eaf95b4e07ed234bc9835e28c79d0b15e6d1d9c57d7699e5a83f7e4",
+        "lastUpdate": "Wed, 27 Oct 2021 23:24:45 GMT"
     }
 }

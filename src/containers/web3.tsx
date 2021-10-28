@@ -19,6 +19,12 @@ export const injectedConntector = new InjectedConnector({
   supportedChainIds: [1, 1281, 1285, 1287],
 });
 
+export const chainNames: Record<number, string> = {
+  1281: 'Moonbeam Local',
+  1285: 'Moonriver',
+  1287: 'Moonbeam Dev',
+};
+
 const networkConnector = new NetworkConnector({
   urls: RPC_URLS,
   defaultChainId: 1281,
@@ -37,6 +43,7 @@ export async function connect(activate: Web3ReactManagerFunctions['activate']): 
   return activate(networkConnector);
 }
 
+// move the hooks to a seperate folder
 export const useWeb3 = (): Web3ReactContextInterface<providers.Web3Provider> => useWeb3React();
 
 export const useWeb3Provider = (): providers.Web3Provider | undefined => {

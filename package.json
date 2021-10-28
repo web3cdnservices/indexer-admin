@@ -7,6 +7,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "start:node": "sh ./scripts/start-node.sh",
     "deploy:contract": "sh ./scripts/deploy-contract.sh"
   },
   "dependencies": {

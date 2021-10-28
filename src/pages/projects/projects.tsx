@@ -3,7 +3,7 @@
 
 import Button from '@mui/material/Button';
 import { useWeb3, connect } from '../../containers/web3';
-import TokenBalance from '../../containers/tokenBalance';
+import TokenBalance from '../../components/balance';
 import { Container } from './styles';
 
 const Projects = () => {

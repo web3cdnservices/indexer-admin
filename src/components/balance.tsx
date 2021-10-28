@@ -4,7 +4,7 @@
 import { FC, useState, useEffect } from 'react';
 import { formatUnits } from '@ethersproject/units';
 import { BigNumber } from '@ethersproject/bignumber';
-import { useContractSDK } from './contractSdk';
+import { useContractSDK } from '../containers/contractSdk';
 
 type Props = {
   account: string;
@@ -18,7 +18,7 @@ const TokenBalance: FC<Props> = ({ account }) => {
     sdk?.sqToken.balanceOf(account).then((balance) => setBalance(balance));
   }, [account]);
 
-  return <div>{formatUnits(balance, 18)} SQT</div>;
+  return <div style={{ color: '#d9d9d9', marginTop: '20px' }}>{formatUnits(balance, 18)} SQT</div>;
 };
 
 export default TokenBalance;
