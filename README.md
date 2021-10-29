@@ -1,10 +1,10 @@
 # Indexer Admin App
 
-## Local Test
-
-### Preparation
+## Preparation
 
 Make sure have `contracts` repo at the same folder level with this project. We don't have the contract sdk public on npm, so that there has local dependencies with [contracts](https://github.com/subquery/contracts) project.
+
+## Local Testing
 
 1. Run `yarn start:node` to start `moonbeam` local node.
 
