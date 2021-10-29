@@ -19,30 +19,22 @@ function useContractsImpl(logger: Logger, initialState?: SdkOptions): ContractSD
   const provider = useWeb3Provider();
   const isMetaMask = useIsMetaMask();
 
-  const initSdk = React.useCallback(async () => {
+  React.useEffect(() => {
     if (!initialState || !initialState.network || !initialState.deploymentDetails) {
       throw new Error(
         'Invalid initial state, contracts provider requires network and deploymentDetails'
       );
     }
 
-    try {
-      logger.l(provider, isMetaMask);
-      if (provider && isMetaMask) {
-        const instance = await ContractSDK.create(provider, initialState);
-        logger.l('sdk', instance);
-        setSdk(instance);
+    if (provider && isMetaMask) {
+      try {
+        ContractSDK.create(provider, initialState).then((instance) => setSdk(instance));
+      } catch (e) {
+        logger.e('Failed to create ContractSDK instance', e);
+        setSdk(undefined);
       }
-    } catch (e) {
-      logger.e('Failed to create ContractSDK instance', e);
-      setSdk(undefined);
-      throw e;
     }
-  }, [logger, initialState, provider]);
-
-  React.useEffect(() => {
-    initSdk();
-  }, [initSdk]);
+  }, [logger, initialState, provider, isMetaMask]);
 
   return sdk;
 }

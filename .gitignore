@@ -9,7 +9,7 @@
 /coverage
 
 # local cotnracts
-/src/contracts
+/src/contract
 
 # production
 /build

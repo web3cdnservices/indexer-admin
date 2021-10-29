@@ -4,8 +4,9 @@
 import { Snackbar } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import { useState } from 'react';
+// import { parseEther } from '@ethersproject/units';
 import { useContractSDK } from '../../containers/contractSdk';
-import TokenBalance from '../../components/balance';
+import Balance from '../../components/balance';
 import { useIsIndexer } from '../../hooks/indexerHook';
 import { useIsMetaMask, useSigner, useWeb3 } from '../../hooks/web3Hook';
 import { connect } from '../../containers/web3';
@@ -17,13 +18,14 @@ import {
   ConnectButton,
   TextContainer,
 } from './styles';
+import { createQueryProject } from '../../mock/queryRegistry';
 
 const ALERT_MESSAGE = 'SDK not initialised';
 
 const Registry = () => {
   const { account, activate } = useWeb3();
   const isMetaMask = useIsMetaMask();
-  const isIndexer = useIsIndexer(account ?? '');
+  const isIndexer = useIsIndexer(account ?? '') || true;
   const signer = useSigner();
   const sdk = useContractSDK();
 
@@ -38,6 +40,21 @@ const Registry = () => {
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       await connect(activate);
     }
+  };
+
+  // TODO:
+  const buildQueryProject = () => {
+    if (!sdk || !signer) {
+      setAlert(ALERT_MESSAGE);
+      return;
+    }
+
+    createQueryProject(sdk, signer);
+
+    // sdk?.settings
+    //   .connect(signer)
+    //   .getQueryRegistry()
+    //   .then((address) => console.log('>>>indexer address:', address));
   };
 
   const registry = () => {
@@ -77,7 +94,7 @@ const Registry = () => {
         {!!account && (
           <TextContainer>
             <Text>{account}</Text>
-            <TokenBalance account={account} />
+            <Balance account={account} />
           </TextContainer>
         )}
         {controller && <Text>Controller Account:</Text>}
@@ -100,6 +117,11 @@ const Registry = () => {
       {isIndexer && (
         <ActionButton variant="contained" color="primary" onClick={() => configController()}>
           Config Controller
+        </ActionButton>
+      )}
+      {isIndexer && (
+        <ActionButton variant="contained" color="primary" onClick={() => buildQueryProject()}>
+          Create Query Project
         </ActionButton>
       )}
     </ButtonsContainer>
