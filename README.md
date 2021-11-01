@@ -17,3 +17,8 @@ Make sure have `contracts` repo at the same folder level with this project. We d
 5. After check the network and contract with MetaMask. Run `yarn start` to start the app locally. Press `Connect With MetaMask` button to connect the accounts with the app.
 
 6. A new account can `registry` as an indexe. Can config `controller account` and `unregistry` from the netwrok.
+
+
+## Tools
+- [moonbeam explorer](https://moonbeam-explorer.netlify.app/?network=MoonbeamDevNode)
+- [polkadot explorer](https://polkadot.js.org/apps/#/explorer)
