@@ -5,11 +5,8 @@ import styled from '@emotion/styled';
 
 export const Container = styled.div`
   display: flex;
+  flex: 1;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
-  background-color: lightblue;
   align-items: center;
-  padding-top: 100;
-  padding-bottom: 100;
+  padding: 50px;
 `;

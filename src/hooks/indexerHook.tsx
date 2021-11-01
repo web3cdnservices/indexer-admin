@@ -4,28 +4,64 @@
 import { useEffect, useState } from 'react';
 import { useContractSDK } from '../containers/contractSdk';
 
-export const useIsIndexer = (account: string) => {
+type Account = string | null | undefined;
+
+export const useIsIndexer = (account: Account) => {
   const [isIndexer, setIsIndexer] = useState(false);
   const sdk = useContractSDK();
 
   useEffect(() => {
-    !!account &&
-      sdk?.indexerRegistry.isIndexer(account).then((isIndexer) => setIsIndexer(isIndexer));
-  }, [account]);
+    sdk?.indexerRegistry
+      .isIndexer(account ?? '')
+      .then((isIndexer) => setIsIndexer(isIndexer))
+      .catch(() => setIsIndexer(false));
+  }, [account, sdk]);
 
   return isIndexer;
 };
 
-export const useIsController = (account: string) => {
+export const useIsController = (account: Account) => {
   const [isController, setIsController] = useState(false);
   const sdk = useContractSDK();
 
   useEffect(() => {
-    !!account &&
-      sdk?.indexerRegistry
-        .isController(account)
-        .then((isController) => setIsController(isController));
-  }, [account]);
+    sdk?.indexerRegistry
+      .isController(account ?? '')
+      .then((isController) => setIsController(isController))
+      .catch(() => setIsController(false));
+  }, [account, sdk]);
 
   return isController;
+};
+
+export const useController = (account: Account) => {
+  const [controller, setController] = useState('');
+  const sdk = useContractSDK();
+
+  useEffect(() => {
+    sdk?.indexerRegistry
+      .indexerToController(account ?? '')
+      .then((controller) => {
+        setController(controller);
+      })
+      .catch(() => setController(''));
+  }, [account, sdk]);
+
+  return controller;
+};
+
+export const useControllerToIndexer = (account: Account) => {
+  const [indexer, setIndexer] = useState('');
+  const sdk = useContractSDK();
+
+  useEffect(() => {
+    sdk?.indexerRegistry
+      .controllerToIndexer(account ?? '')
+      .then((indexer) => {
+        setIndexer(indexer);
+      })
+      .catch(() => setIndexer(''));
+  }, [account, sdk]);
+
+  return indexer;
 };

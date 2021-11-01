@@ -47,4 +47,5 @@ export const TextContainer = styled.div`
 export const Text = styled.div<{ size?: number }>`
   color: #d9d9d9;
   font-size: ${(p) => p.size || 16}px;
+  margin-right: 20px;
 `;

@@ -3,6 +3,7 @@
 
 import styled from '@emotion/styled';
 import { chainNames } from '../containers/web3';
+import { useIsController, useIsIndexer } from '../hooks/indexerHook';
 import { useIsMetaMask, useWeb3 } from '../hooks/web3Hook';
 
 const Container = styled.div`
@@ -10,7 +11,7 @@ const Container = styled.div`
   direction: row;
   top: 10px;
   right: 0px;
-  width: 50%;
+  width: 100%;
   height: 35px;
   min-width: 300px;
 `;
@@ -35,20 +36,32 @@ const Text = styled.div`
   color: #d9d9d9;
 `;
 
+const barNames = {
+  accountType: 'Account Type',
+  status: 'Status',
+  network: 'Network',
+};
+
 const StatusBar = () => {
-  const { chainId } = useWeb3();
+  const { chainId, account } = useWeb3();
   const isMetaMask = useIsMetaMask();
+  const isIndexer = useIsIndexer(account);
+  const isController = useIsController(account);
 
   const status = isMetaMask ? 'Connected' : 'Disconnected';
   const chainName = chainId ? chainNames[chainId] : '';
+  // eslint-disable-next-line no-nested-ternary
+  const accountType = isIndexer ? 'Indexer' : isController ? 'Controller' : '';
 
   return (
     <Container>
       <ContentContainer>
         <Text>{chainName}</Text>
-        {!!chainName && <StatusCard>Chain</StatusCard>}
+        {!!chainName && <StatusCard>{barNames.network}</StatusCard>}
         <Text>{status}</Text>
-        <StatusCard>Status</StatusCard>
+        <StatusCard>{barNames.status}</StatusCard>
+        <Text>{accountType}</Text>
+        {!!accountType && <StatusCard>{barNames.accountType}</StatusCard>}
       </ContentContainer>
     </Container>
   );
