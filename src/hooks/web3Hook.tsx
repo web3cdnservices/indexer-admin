@@ -26,7 +26,9 @@ export const useWeb3Provider = (): providers.Web3Provider | undefined => {
   return library;
 };
 
-export const useSigner = (): JsonRpcSigner | undefined => {
+export type Signer = JsonRpcSigner | undefined;
+
+export const useSigner = (): Signer => {
   const [signer, setSigner] = useState<JsonRpcSigner | undefined>(undefined);
   const { active, account, library } = useWeb3();
 

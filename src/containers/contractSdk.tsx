@@ -13,7 +13,9 @@ export const contractSDKOptions = {
   deploymentDetails,
 };
 
-function useContractsImpl(logger: Logger, initialState?: SdkOptions): ContractSDK | undefined {
+export type SDK = ContractSDK | undefined;
+
+function useContractsImpl(logger: Logger, initialState?: SdkOptions): SDK {
   const [sdk, setSdk] = React.useState<ContractSDK | undefined>(undefined);
 
   const provider = useWeb3Provider();

@@ -1,56 +1,51 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useContractSDK } from '../../containers/contractSdk';
-import { useIsMetaMask, useSigner, useWeb3 } from '../../hooks/web3Hook';
+import { useState } from 'react';
+import { useIsMetaMask, useWeb3 } from '../../hooks/web3Hook';
 import { Container } from './styles';
 import { ActionButton, ButtonsContainer } from '../registry/styles';
-import { useIsIndexer, useIsController, useAccountType } from '../../hooks/indexerHook';
+import { useIsIndexer, useAccountType } from '../../hooks/indexerHook';
 import AccountCard from '../../components/accountCard';
-
-// TODO: move to mock actions
-const deploymentId = '0xbec921276c8067fe0c82def3e5ecfd8447f1961bc85768c2a56e6bd26d3c0c55';
+import TransactionPanel from '../../components/transactionPanel';
+import { TransactionType } from '../../utils/transactions';
 
 const indexerActions = {
   startIndexing: 'Start Indexing',
   stopIndexing: 'Stop Indexing',
 };
 
-const controllerActions = {
-  reportStatus: 'Report Status',
-};
-
 const Projects = () => {
-  const signer = useSigner();
-  const sdk = useContractSDK();
-
   const { account } = useWeb3();
   const isIndexer = useIsIndexer(account);
   const isMetaMask = useIsMetaMask();
   const accountType = useAccountType(account);
 
-  const startIndexing = () => {
-    signer && sdk?.queryRegistry.connect(signer).startIndexing(deploymentId);
-  };
+  const [displayTxPanel, setDisplayTxPanel] = useState(false);
+  const [txType, setTxType] = useState<TransactionType | undefined>(undefined);
 
-  // const reportIndexingStatus = () => {
-  //   // TODO: report ....
-  //   signer && sdk?.queryRegistry.connect(signer).startIndexing(deploymentId);
-  // };
-
-  const stopIndexing = () => {
-    signer && sdk?.queryRegistry.connect(signer).stopIndexing(deploymentId);
+  const showTransactionPanel = (type: TransactionType) => {
+    setTxType(type);
+    setDisplayTxPanel(true);
   };
 
   const renderIndexerButtons = () => (
     <ButtonsContainer>
       {isIndexer && (
-        <ActionButton variant="contained" color="primary" onClick={() => startIndexing()}>
+        <ActionButton
+          variant="contained"
+          color="primary"
+          onClick={() => showTransactionPanel(TransactionType.startIndexing)}
+        >
           {indexerActions.startIndexing}
         </ActionButton>
       )}
       {isIndexer && (
-        <ActionButton variant="contained" color="primary" onClick={() => stopIndexing()}>
+        <ActionButton
+          variant="contained"
+          color="primary"
+          onClick={() => showTransactionPanel(TransactionType.startIndexing)}
+        >
           {indexerActions.stopIndexing}
         </ActionButton>
       )}
@@ -66,6 +61,12 @@ const Projects = () => {
           actionItems={renderIndexerButtons()}
         />
       )}
+      <TransactionPanel
+        type={txType}
+        display={displayTxPanel}
+        onSendTx={() => setDisplayTxPanel(false)}
+        onCancelled={() => setDisplayTxPanel(false)}
+      />
     </Container>
   );
 };
