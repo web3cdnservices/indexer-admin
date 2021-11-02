@@ -21,7 +21,7 @@ const TokenBalance: FC<Props> = ({ account }) => {
     });
   }, [account]);
 
-  return <div style={{ color: '#d9d9d9', marginLeft: '10px' }}>{formatUnits(balance, 18)} SQT</div>;
+  return <div style={{ color: '#d9d9d9', fontSize: '16px' }}>{formatUnits(balance, 18)} SQT</div>;
 };
 
 export default TokenBalance;

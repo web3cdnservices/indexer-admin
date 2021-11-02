@@ -15,12 +15,17 @@ export const Container = styled.div`
 export const ButtonsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 50px;
+  justify-content: center;
 `;
 
 export const ActionButton = styled(Button)`
-  width: 250px;
-  margin: 20px;
+  width: 230px;
+  margin: 15px;
+`;
+
+export const Separator = styled.div<{ height?: number }>`
+  width: 100%;
+  height: ${(p) => p.height || 20}px;
 `;
 
 export const ConnectButton = styled(Button)`

@@ -3,7 +3,7 @@
 
 import styled from '@emotion/styled';
 import { chainNames } from '../containers/web3';
-import { useIsController, useIsIndexer } from '../hooks/indexerHook';
+import { useAccountType, useIsController, useIsIndexer } from '../hooks/indexerHook';
 import { useIsMetaMask, useWeb3 } from '../hooks/web3Hook';
 
 const Container = styled.div`
@@ -45,13 +45,10 @@ const barNames = {
 const StatusBar = () => {
   const { chainId, account } = useWeb3();
   const isMetaMask = useIsMetaMask();
-  const isIndexer = useIsIndexer(account);
-  const isController = useIsController(account);
+  const accountType = useAccountType(account);
 
   const status = isMetaMask ? 'Connected' : 'Disconnected';
   const chainName = chainId ? chainNames[chainId] : '';
-  // eslint-disable-next-line no-nested-ternary
-  const accountType = isIndexer ? 'Indexer' : isController ? 'Controller' : '';
 
   return (
     <Container>

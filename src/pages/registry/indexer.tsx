@@ -7,20 +7,16 @@ import { useState } from 'react';
 // import { parseEther } from '@ethersproject/units';
 import { BigNumberish } from '@ethersproject/bignumber';
 import { useContractSDK } from '../../containers/contractSdk';
-import Balance from '../../components/balance';
-import { useController, useIsController, useIsIndexer } from '../../hooks/indexerHook';
+import {
+  useController,
+  useControllerToIndexer,
+  useIsController,
+  useIsIndexer,
+} from '../../hooks/indexerHook';
 import { useIsMetaMask, useSigner, useWeb3 } from '../../hooks/web3Hook';
 import { connect } from '../../containers/web3';
-import {
-  Container,
-  ActionButton,
-  Text,
-  ButtonsContainer,
-  ConnectButton,
-  TextContainer,
-} from './styles';
-import { createQueryProject } from '../../mock/queryRegistry';
-import Projects from '../projects/projects';
+import { Container, ActionButton, ButtonsContainer, ConnectButton, Separator } from './styles';
+import AccountCard from '../../components/accountCard';
 
 // TODO: set a global alert, maybe put in contextProvider
 const ALERT_MESSAGE = 'SDK not initialised';
@@ -37,6 +33,8 @@ const Registry = () => {
   const isIndexer = useIsIndexer(account);
   const isController = useIsController(account);
   const controller = useController(account);
+  const indexer = useControllerToIndexer(account);
+
   const signer = useSigner();
   const sdk = useContractSDK();
 
@@ -52,36 +50,33 @@ const Registry = () => {
     }
   };
 
-  const isControllerEmpty = (controllerAccount: string) => {
-    return !controllerAccount || controllerAccount === '0x0000000000000000000000000000000000000000';
+  const isControllerEmpty = () =>
+    !isController && (!controller || controller === '0x0000000000000000000000000000000000000000');
+
+  const getIndexerAccount = () => {
+    return isController ? indexer : account;
   };
 
-  // TODO: move to a seperate mock palce
-  const buildQueryProject = () => {
+  const getControllerAccount = () => {
+    return isController ? account : controller;
+  };
+
+  const getAccountTitle = () => {
+    return isIndexer || isController ? 'Indexer' : 'Account';
+  };
+
+  const registry = (amount: number) => {
     if (!sdk || !signer) {
       setAlert(ALERT_MESSAGE);
       return;
     }
 
-    createQueryProject(sdk, signer);
-  };
+    // TODO: if balance === 0, should show alert and can not registry
 
-  const requestApprove = (amount: BigNumberish) => {
-    if (!sdk || !signer) {
-      setAlert(ALERT_MESSAGE);
-      return;
-    }
-
-    sdk.sqToken.connect(signer).approve(sdk.staking.address, amount);
-  };
-
-  const registry = () => {
-    if (!sdk || !signer) {
-      setAlert(ALERT_MESSAGE);
-      return;
-    }
-
-    sdk?.indexerRegistry.connect(signer).registerIndexer(1000000);
+    Promise.all([
+      // sdk.sqToken.connect(signer).approve(sdk.staking.address, amount),
+      sdk.indexerRegistry.connect(signer).registerIndexer(amount),
+    ]);
   };
 
   const unRegister = () => {
@@ -108,57 +103,7 @@ const Registry = () => {
     }
   };
 
-  const renderContents = () => {
-    return (
-      <div>
-        {!!account && (
-          <TextContainer>
-            {isIndexer && <Text>Indexer:</Text>}
-            <Text>{account}</Text>
-            <Balance account={account} />
-          </TextContainer>
-        )}
-        {!isControllerEmpty(controller) && isIndexer && (
-          <TextContainer>
-            <Text>Controller:</Text>
-            <Text>{controller}</Text>
-            <Balance account={controller} />
-          </TextContainer>
-        )}
-      </div>
-    );
-  };
-
-  const renderActionComponents = () => (
-    <ButtonsContainer>
-      {!isIndexer && !isController && isMetaMask && (
-        <ActionButton variant="contained" color="primary" onClick={() => registry()}>
-          {indexerActions.registry}
-        </ActionButton>
-      )}
-      {!isIndexer && !isController && isMetaMask && (
-        <ActionButton variant="contained" color="primary" onClick={() => requestApprove(1000000)}>
-          Request Approve
-        </ActionButton>
-      )}
-      {isIndexer && (
-        <ActionButton variant="contained" color="error" onClick={() => unRegister()}>
-          {indexerActions.unRegister}
-        </ActionButton>
-      )}
-      {isIndexer && (
-        <ActionButton variant="contained" color="primary" onClick={() => configController()}>
-          {indexerActions.configController}
-        </ActionButton>
-      )}
-      {isMetaMask && (
-        <ActionButton variant="contained" color="primary" onClick={() => buildQueryProject()}>
-          Create Query Project
-        </ActionButton>
-      )}
-    </ButtonsContainer>
-  );
-
+  // TODO: move to onboarding page
   const renderConnectionButtons = () => (
     <ButtonsContainer>
       <ConnectButton variant="outlined" color="info" onClick={connectWithMetaMask}>
@@ -167,12 +112,37 @@ const Registry = () => {
     </ButtonsContainer>
   );
 
+  const renderIndexerButtons = () => (
+    <ButtonsContainer>
+      {!isIndexer && !isController && isMetaMask && (
+        <ActionButton variant="contained" color="primary" onClick={() => registry(1000000)}>
+          {indexerActions.registry}
+        </ActionButton>
+      )}
+      {isIndexer && (
+        <ActionButton variant="contained" color="primary" onClick={() => configController()}>
+          {indexerActions.configController}
+        </ActionButton>
+      )}
+      {isIndexer && (
+        <ActionButton variant="contained" color="primary" onClick={() => unRegister()}>
+          {indexerActions.unRegister}
+        </ActionButton>
+      )}
+    </ButtonsContainer>
+  );
+
   return (
     <Container>
+      <Separator height={80} />
+      <AccountCard
+        title={getAccountTitle()}
+        account={getIndexerAccount()}
+        actionItems={renderIndexerButtons()}
+      />
+      <Separator height={30} />
+      {!isControllerEmpty() && <AccountCard title="Controller" account={getControllerAccount()} />}
       {!isMetaMask && renderConnectionButtons()}
-      {renderContents()}
-      {renderActionComponents()}
-      <Projects />
       {alert && (
         <Snackbar open={!!alert} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
           <Alert severity="error" onClose={() => setAlert('')} sx={{ width: '100%' }}>

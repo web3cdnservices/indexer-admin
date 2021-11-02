@@ -2,6 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Projects from './projects/projects';
-import Registry from './registry/registry';
+import Registry from './registry/indexer';
 
 export { Projects, Registry };

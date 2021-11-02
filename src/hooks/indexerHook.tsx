@@ -65,3 +65,16 @@ export const useControllerToIndexer = (account: Account) => {
 
   return indexer;
 };
+
+export const useAccountType = (account: Account) => {
+  const [accountType, setAccountType] = useState<string>('');
+  const isIndexer = useIsIndexer(account);
+  const isController = useIsController(account);
+
+  useEffect(() => {
+    // eslint-disable-next-line no-nested-ternary
+    setAccountType(isIndexer ? 'Indexer' : isController ? 'Controller' : '');
+  }, [account, isIndexer, isController]);
+
+  return accountType;
+};
