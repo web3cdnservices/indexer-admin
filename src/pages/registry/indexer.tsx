@@ -17,6 +17,8 @@ import { useIsMetaMask, useSigner, useWeb3 } from '../../hooks/web3Hook';
 import { connect } from '../../containers/web3';
 import { Container, ActionButton, ButtonsContainer, ConnectButton, Separator } from './styles';
 import AccountCard from '../../components/accountCard';
+import TransactionPanel from '../../components/transactionPanel';
+import { TransactionType } from '../../utils/transactions';
 
 // TODO: set a global alert, maybe put in contextProvider
 const ALERT_MESSAGE = 'SDK not initialised';
@@ -39,6 +41,8 @@ const Registry = () => {
   const sdk = useContractSDK();
 
   const [alert, setAlert] = useState('');
+  const [display, setDisplay] = useState(false);
+  const [txType, setTxType] = useState<TransactionType | undefined>(undefined);
 
   // TODO: move to helper file
   const connectWithMetaMask = async () => {
@@ -80,12 +84,14 @@ const Registry = () => {
   };
 
   const unRegister = () => {
-    if (!sdk || !signer) {
-      setAlert(ALERT_MESSAGE);
-      return;
-    }
+    // if (!sdk || !signer) {
+    //   setAlert(ALERT_MESSAGE);
+    //   return;
+    // }
 
-    sdk?.indexerRegistry.connect(signer).unregisterIndexer();
+    setTxType(TransactionType.registry);
+    setDisplay(!display);
+    // sdk?.indexerRegistry.connect(signer).unregisterIndexer();
   };
 
   const configController = async () => {
@@ -150,6 +156,7 @@ const Registry = () => {
           </Alert>
         </Snackbar>
       )}
+      <TransactionPanel type={txType} display={display} onClick={() => console.log('send tx')} />
     </Container>
   );
 };

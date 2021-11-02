@@ -5,19 +5,40 @@ import styled from '@emotion/styled';
 import TextField from '@mui/material/TextField';
 import { FC } from 'react';
 
-type Props = {
-  label: string;
-  value: number | string;
-  onChange: (this: Window, ev: Event) => any;
-};
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 30px;
+`;
 
 const StyledTextField = styled(TextField)`
   border-color: white;
   color: white;
+  width: 100%;
 `;
 
-const InputField: FC<Props> = ({ value }) => {
-  return <StyledTextField value={value} color="primary" />;
+const Text = styled.div`
+  margin-right: 20px;
+  color: black;
+  margin-bottom: 20px;
+  font-weight: bold;
+`;
+
+type Props = {
+  label: string;
+  value?: number | string;
+  disabled?: boolean;
+  onChange: (this: Window, ev: Event) => any;
+};
+
+const InputField: FC<Props> = ({ label, value, onChange, disabled = false }) => {
+  return (
+    <Container>
+      <Text>{label}</Text>
+      <StyledTextField disabled={disabled} color="primary" value={value} />
+    </Container>
+  );
 };
 
 export default InputField;

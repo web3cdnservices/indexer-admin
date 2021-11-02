@@ -25,7 +25,7 @@ const ContentContainer = styled.div`
   padding: 10px 0px;
 `;
 
-export const Text = styled.div<{ size?: number; fontWeight?: string }>`
+const Text = styled.div<{ size?: number; fontWeight?: string }>`
   color: #d9d9d9;
   font-size: ${(p) => p.size || 16}px;
   font-weight: ${(p) => p.fontWeight || 500};

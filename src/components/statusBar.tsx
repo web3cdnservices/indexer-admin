@@ -3,7 +3,7 @@
 
 import styled from '@emotion/styled';
 import { chainNames } from '../containers/web3';
-import { useAccountType, useIsController, useIsIndexer } from '../hooks/indexerHook';
+import { useAccountType } from '../hooks/indexerHook';
 import { useIsMetaMask, useWeb3 } from '../hooks/web3Hook';
 
 const Container = styled.div`

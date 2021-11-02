@@ -19,8 +19,8 @@ const App: FC = () => (
         <Router>
           <div className="Main">
             <Switch>
-              <Route component={Pages.Projects} path="/projects" />
               <Route component={Pages.Registry} path="/" />
+              <Route component={Pages.Projects} path="/projects" />
             </Switch>
           </div>
         </Router>
