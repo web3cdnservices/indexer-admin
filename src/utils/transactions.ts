@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export enum TransactionType {
+  approve = 'approve',
   registry = 'registry',
   configCntroller = 'configCntroller',
   startIndexing = 'startIndexing',
@@ -17,6 +18,12 @@ export type TransactionKey = {
 };
 
 export const transactionSchema = {
+  [TransactionType.approve]: [
+    {
+      title: 'Amount',
+      key: 'amount',
+    },
+  ],
   [TransactionType.registry]: [
     {
       title: 'Amount',

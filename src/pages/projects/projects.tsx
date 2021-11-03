@@ -44,7 +44,7 @@ const Projects = () => {
         <ActionButton
           variant="contained"
           color="primary"
-          onClick={() => showTransactionPanel(TransactionType.startIndexing)}
+          onClick={() => showTransactionPanel(TransactionType.stopIndexing)}
         >
           {indexerActions.stopIndexing}
         </ActionButton>

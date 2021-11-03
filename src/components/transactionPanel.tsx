@@ -11,6 +11,7 @@ import {
   configController,
   startIndexing,
   stopIndexing,
+  indexerRequestApprove,
 } from '../utils/indexerActions';
 import { TransactionType, transactionSchema, TransactionKey } from '../utils/transactions';
 import InputField from './inputField';
@@ -70,6 +71,11 @@ const TransactionPanel: FC<Props> = ({ type, display, onSendTx, onCancelled }) =
     setParams({});
   };
 
+  const onTransactionComplete = () => {
+    onSendTx();
+    setParams({});
+  };
+
   const onFormValueChanged = (key: string, value: string | number) => {
     const updatedParams = { ...params, [key]: value };
     setParams(updatedParams);
@@ -77,15 +83,21 @@ const TransactionPanel: FC<Props> = ({ type, display, onSendTx, onCancelled }) =
 
   const sendTransaction = (type: TransactionType) => {
     switch (type) {
+      case TransactionType.approve: {
+        indexerRequestApprove(sdk, signer, params?.amount)
+          .then(() => onTransactionComplete())
+          .catch((errorMsg) => onTransactionFailed(errorMsg));
+        break;
+      }
       case TransactionType.registry: {
         indexerRegistry(sdk, signer, params?.amount)
-          .then(() => onSendTx)
+          .then(() => onTransactionComplete())
           .catch((errorMsg) => onTransactionFailed(errorMsg));
         break;
       }
       case TransactionType.configCntroller: {
         configController(sdk, signer, params?.controllerAccount)
-          .then(() => onSendTx())
+          .then(() => onTransactionComplete())
           .catch((errorMsg) => onTransactionFailed(errorMsg));
         break;
       }

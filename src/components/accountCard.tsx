@@ -3,7 +3,7 @@
 
 import styled from '@emotion/styled';
 import { FC } from 'react';
-import Balance from './balance';
+// import Balance from './balance';
 
 const Container = styled.div`
   display: flex;
@@ -22,7 +22,7 @@ const ContentContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 10px 0px;
+  padding: 20px 0px;
 `;
 
 const Text = styled.div<{ size?: number; fontWeight?: string }>`
@@ -45,7 +45,6 @@ const AccountCard: FC<Props> = ({ title, account, actionItems }) => {
           {title}
         </Text>
         <Text>{account ?? ''}</Text>
-        {account && <Balance account={account} />}
       </ContentContainer>
       {!!actionItems && actionItems}
     </Container>

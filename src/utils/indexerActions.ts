@@ -14,6 +14,29 @@ const ErrorMessages = {
   controllerError: 'Controller can not be empty',
 };
 
+export const indexerRequestApprove = (
+  sdk: SDK,
+  signer: Signer,
+  amount: string | undefined
+): Promise<string> =>
+  new Promise((resolve, reject) => {
+    if (!sdk || !signer) {
+      reject(ErrorMessages.sdkOrSignerError);
+      return;
+    }
+
+    if (!amount) {
+      reject(ErrorMessages.amountError);
+      return;
+    }
+
+    sdk.sqToken
+      .connect(signer)
+      .approve(sdk.staking.address, amount)
+      .then(() => resolve(''))
+      .catch((error) => reject(error.message));
+  });
+
 export const indexerRegistry = (
   sdk: SDK,
   signer: Signer,

@@ -10,12 +10,12 @@ import { createQueryProject } from './queryRegistry';
 
 const Container = styled.div`
   position: absolute;
-  top: 150px;
-  left: 0px;
+  top: 10px;
+  left: 10px;
   display: flex;
   height: 30px;
   border: thin solid;
-  width: 260px;
+  width: 200px;
   background-color: #191d27;
 `;
 

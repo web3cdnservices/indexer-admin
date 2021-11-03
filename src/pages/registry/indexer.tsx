@@ -21,6 +21,7 @@ import { connectWithMetaMask } from '../../utils/metamask';
 import QueryHelper from '../../mock/queryHelper';
 
 const indexerActions = {
+  approve: 'Request Approve',
   registry: 'Registry',
   unRegister: 'Unregistry',
   configController: 'Config Controller',
@@ -58,6 +59,15 @@ const Registry = () => {
 
   const renderIndexerButtons = () => (
     <ButtonsContainer>
+      {!isIndexer && !isController && isMetaMask && (
+        <ActionButton
+          variant="contained"
+          color="primary"
+          onClick={() => showTransactionPanel(TransactionType.approve)}
+        >
+          {indexerActions.approve}
+        </ActionButton>
+      )}
       {!isIndexer && !isController && isMetaMask && (
         <ActionButton
           variant="contained"
