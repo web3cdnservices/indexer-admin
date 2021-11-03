@@ -58,16 +58,6 @@ export const indexerRegistry = (
       .registerIndexer(amount)
       .then(() => resolve(''))
       .catch((error) => reject(error.message));
-
-    // TODO: handle these 2 actions
-    // sdk.sqToken
-    //   .connect(signer)
-    //   .approve(sdk.staking.address, amount)
-    //   .then(() => {
-    //     console.log('>>>resolved');
-    //     resolve('');
-    //   })
-    //   .catch((error) => reject(error.message));
   });
 
 export const unRegister = (sdk: SDK, signer: Signer) =>

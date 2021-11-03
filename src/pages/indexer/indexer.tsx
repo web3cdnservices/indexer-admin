@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useState } from 'react';
-// import { parseEther } from '@ethersproject/units';
-import { BigNumberish } from '@ethersproject/bignumber';
 import { useContractSDK } from '../../containers/contractSdk';
 import {
   useController,

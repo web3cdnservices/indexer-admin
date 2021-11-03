@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { useIsMetaMask, useWeb3 } from '../../hooks/web3Hook';
 import { Container } from './styles';
-import { ActionButton, ButtonsContainer } from '../registry/styles';
+import { ActionButton, ButtonsContainer } from '../indexer/styles';
 import { useIsIndexer, useAccountType } from '../../hooks/indexerHook';
 import AccountCard from '../../components/accountCard';
 import TransactionPanel from '../../components/transactionPanel';
