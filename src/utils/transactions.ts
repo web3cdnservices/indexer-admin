@@ -9,33 +9,46 @@ export enum TransactionType {
   reportStatus = 'reportStatus',
 }
 
+export type TransactionKey = {
+  amount?: string;
+  controllerAccount?: string;
+  deploymentID?: string;
+  Status?: string;
+};
+
 export const transactionSchema = {
   [TransactionType.registry]: [
     {
       title: 'Amount',
+      key: 'amount',
     },
   ],
   [TransactionType.configCntroller]: [
     {
       title: 'Controller Account',
+      key: 'controllerAccount',
     },
   ],
   [TransactionType.startIndexing]: [
     {
       title: 'Deployment ID',
+      key: 'deploymentID',
     },
   ],
   [TransactionType.stopIndexing]: [
     {
       title: 'Deployment ID',
+      key: 'deploymentID',
     },
   ],
   [TransactionType.reportStatus]: [
     {
       title: 'Deployment ID',
+      key: 'deploymentID',
     },
     {
       title: 'Status',
+      key: 'status',
     },
   ],
 };

@@ -12,7 +12,7 @@ import {
   startIndexing,
   stopIndexing,
 } from '../utils/indexerActions';
-import { TransactionType, transactionSchema } from '../utils/transactions';
+import { TransactionType, transactionSchema, TransactionKey } from '../utils/transactions';
 import InputField from './inputField';
 import Alert from './alert';
 
@@ -43,6 +43,7 @@ const ButtonGroups = styled.div<{ display: boolean }>`
   align-items: center;
   transition: width 1s;
   width: ${(p) => (p.display ? '80%' : 0)};
+  margin-bottom: 20px;
 `;
 
 const ActionButton = styled(Button)<{ display: boolean }>`
@@ -57,42 +58,45 @@ type Props = {
   onCancelled: () => void;
 };
 
-// FIME: for testing
-const testDeploymentId = '0xbec921276c8067fe0c82def3e5ecfd8447f1961bc85768c2a56e6bd26d3c0c55';
-const testController = '0x3Cd0A705a2DC65e5b1E1205896BaA2be8A07c6e0';
-
 const TransactionPanel: FC<Props> = ({ type, display, onSendTx, onCancelled }) => {
   const [alert, setAlert] = useState('');
+  const [params, setParams] = useState<TransactionKey>({});
   const signer = useSigner();
   const sdk = useContractSDK();
 
   const onTransactionFailed = (errorMsg: string) => {
     onCancelled();
     setAlert(errorMsg);
+    setParams({});
+  };
+
+  const onFormValueChanged = (key: string, value: string | number) => {
+    const updatedParams = { ...params, [key]: value };
+    setParams(updatedParams);
   };
 
   const sendTransaction = (type: TransactionType) => {
     switch (type) {
       case TransactionType.registry: {
-        indexerRegistry(sdk, signer, 10000000)
+        indexerRegistry(sdk, signer, params?.amount)
           .then(() => onSendTx)
           .catch((errorMsg) => onTransactionFailed(errorMsg));
         break;
       }
       case TransactionType.configCntroller: {
-        configController(sdk, signer, testController)
+        configController(sdk, signer, params?.controllerAccount)
           .then(() => onSendTx())
           .catch((errorMsg) => onTransactionFailed(errorMsg));
         break;
       }
       case TransactionType.startIndexing: {
-        startIndexing(sdk, signer, testDeploymentId)
+        startIndexing(sdk, signer, params?.deploymentID)
           .then(() => onSendTx())
           .catch((errorMsg) => onTransactionFailed(errorMsg));
         break;
       }
       case TransactionType.stopIndexing: {
-        stopIndexing(sdk, signer, testDeploymentId)
+        stopIndexing(sdk, signer, params.deploymentID)
           .then(() => onSendTx())
           .catch((errorMsg) => onTransactionFailed(errorMsg));
         break;
@@ -107,12 +111,12 @@ const TransactionPanel: FC<Props> = ({ type, display, onSendTx, onCancelled }) =
     const data = transactionSchema[type];
     return (
       <FormsContainer>
-        {data.map(({ title }) => {
+        {data.map(({ title, key }) => {
           return (
             <InputField
-              key={title}
+              key={key}
               label={title}
-              onChange={(value) => console.log('>>>:', value)}
+              onChange={(value) => onFormValueChanged(key, value)}
             />
           );
         })}

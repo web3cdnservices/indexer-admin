@@ -29,14 +29,19 @@ type Props = {
   label: string;
   value?: number | string;
   disabled?: boolean;
-  onChange: (this: Window, ev: Event) => any;
+  onChange: (value: string | number) => any;
 };
 
 const InputField: FC<Props> = ({ label, value, onChange, disabled = false }) => {
   return (
     <Container>
       <Text>{label}</Text>
-      <StyledTextField disabled={disabled} color="primary" value={value} />
+      <StyledTextField
+        onChange={(event) => onChange(event.target.value)}
+        disabled={disabled}
+        color="primary"
+        value={value}
+      />
     </Container>
   );
 };

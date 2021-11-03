@@ -10,12 +10,23 @@ const ErrorMessages = {
   sdkOrSignerError: 'Contract SDK or Signer not initialised',
   controllerExist: 'Controller account is used by an indexer already',
   deploymentIdError: 'Invalid deploymentId provided',
+  amountError: 'Amount can not be empty',
+  controllerError: 'Controller can not be empty',
 };
 
-export const indexerRegistry = (sdk: SDK, signer: Signer, amount: number): Promise<string> =>
+export const indexerRegistry = (
+  sdk: SDK,
+  signer: Signer,
+  amount: string | undefined
+): Promise<string> =>
   new Promise((resolve, reject) => {
     if (!sdk || !signer) {
       reject(ErrorMessages.sdkOrSignerError);
+      return;
+    }
+
+    if (!amount) {
+      reject(ErrorMessages.amountError);
       return;
     }
 
@@ -50,10 +61,15 @@ export const unRegister = (sdk: SDK, signer: Signer) =>
       .catch((error) => reject(error.message));
   });
 
-export const configController = (sdk: SDK, signer: Signer, controller: string) =>
+export const configController = (sdk: SDK, signer: Signer, controller: string | undefined) =>
   new Promise((resolve, reject) => {
     if (!sdk || !signer) {
       reject(ErrorMessages.sdkOrSignerError);
+      return;
+    }
+
+    if (!controller) {
+      reject(ErrorMessages.controllerError);
       return;
     }
 
@@ -70,7 +86,11 @@ export const configController = (sdk: SDK, signer: Signer, controller: string) =
     });
   });
 
-export const startIndexing = (sdk: SDK, signer: Signer, deploymentId: string): Promise<string> =>
+export const startIndexing = (
+  sdk: SDK,
+  signer: Signer,
+  deploymentId: string | undefined
+): Promise<string> =>
   new Promise((resolve, reject) => {
     if (!sdk || !signer) {
       reject(ErrorMessages.sdkOrSignerError);
@@ -82,7 +102,7 @@ export const startIndexing = (sdk: SDK, signer: Signer, deploymentId: string): P
       return;
     }
 
-    sdk.indexerRegistry
+    sdk.queryRegistry
       .connect(signer)
       .startIndexing(deploymentId)
       .then(() => resolve(''))
@@ -90,7 +110,11 @@ export const startIndexing = (sdk: SDK, signer: Signer, deploymentId: string): P
       .catch((error) => reject(error.message));
   });
 
-export const stopIndexing = (sdk: SDK, signer: Signer, deploymentId: string): Promise<string> =>
+export const stopIndexing = (
+  sdk: SDK,
+  signer: Signer,
+  deploymentId: string | undefined
+): Promise<string> =>
   new Promise((resolve, reject) => {
     if (!sdk || !signer) {
       reject(ErrorMessages.sdkOrSignerError);
@@ -102,7 +126,7 @@ export const stopIndexing = (sdk: SDK, signer: Signer, deploymentId: string): Pr
       return;
     }
 
-    sdk.indexerRegistry
+    sdk.queryRegistry
       .connect(signer)
       .stopIndexing(deploymentId)
       .then(() => resolve(''))

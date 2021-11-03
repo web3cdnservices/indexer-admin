@@ -18,6 +18,7 @@ import TransactionPanel from '../../components/transactionPanel';
 import { TransactionType } from '../../utils/transactions';
 import { emptyControllerAccount, unRegister } from '../../utils/indexerActions';
 import { connectWithMetaMask } from '../../utils/metamask';
+import QueryHelper from '../../mock/queryHelper';
 
 const indexerActions = {
   registry: 'Registry',
@@ -86,16 +87,20 @@ const Registry = () => {
   return (
     <Container>
       <Separator height={80} />
-      <AccountCard
-        title={isIndexer || isController ? 'Indexer' : 'Account'}
-        account={isController ? indexer : account}
-        actionItems={renderIndexerButtons()}
-      />
+      {isMetaMask && (
+        <AccountCard
+          title={isIndexer || isController ? 'Indexer' : 'Account'}
+          account={isController ? indexer : account}
+          actionItems={renderIndexerButtons()}
+        />
+      )}
       <Separator height={30} />
+
       {!isControllerEmpty() && (
         <AccountCard title="Controller" account={isController ? account : controller} />
       )}
       {!isMetaMask && renderConnectionButtons()}
+      <QueryHelper />
       <TransactionPanel
         type={txType}
         display={displayTxPanel}

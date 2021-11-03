@@ -9,6 +9,8 @@ const version = '0xaec921276c8067fe0c82def3e5ecfd8447f1961bc85768c2a56e6bd26d3c0
 
 export const deploymentId = '0xbec921276c8067fe0c82def3e5ecfd8447f1961bc85768c2a56e6bd26d3c0c55';
 
-export const createQueryProject = (sdk: ContractSDK, signer: JsonRpcSigner) => {
-  sdk.queryRegistry.connect(signer).createQueryProject(metadata, version, deploymentId);
+export const createQueryProject = (sdk?: ContractSDK, signer?: JsonRpcSigner) => {
+  if (sdk && signer) {
+    sdk.queryRegistry.connect(signer).createQueryProject(metadata, version, deploymentId);
+  }
 };
