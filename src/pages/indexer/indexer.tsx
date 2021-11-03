@@ -1,11 +1,12 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useContractSDK } from '../../containers/contractSdk';
 import {
   useController,
   useControllerToIndexer,
+  useIndexerEvent,
   useIsController,
   useIsIndexer,
 } from '../../hooks/indexerHook';
@@ -13,6 +14,7 @@ import { useIsMetaMask, useSigner, useWeb3 } from '../../hooks/web3Hook';
 import { Container, ActionButton, ButtonsContainer, ConnectButton, Separator } from './styles';
 import AccountCard from '../../components/accountCard';
 import TransactionPanel from '../../components/transactionPanel';
+import Alert from '../../components/alert';
 import { TransactionType } from '../../utils/transactions';
 import { emptyControllerAccount, unRegister } from '../../utils/indexerActions';
 import { connectWithMetaMask } from '../../utils/metamask';
@@ -32,12 +34,18 @@ const Registry = () => {
   const isController = useIsController(account);
   const controller = useController(account);
   const indexer = useControllerToIndexer(account);
+  const event = useIndexerEvent();
 
   const signer = useSigner();
   const sdk = useContractSDK();
 
   const [displayTxPanel, setDisplayTxPanel] = useState(false);
   const [txType, setTxType] = useState<TransactionType | undefined>(undefined);
+  const [alert, setAlert] = useState('');
+
+  useEffect(() => {
+    setAlert(event);
+  }, [event]);
 
   const isControllerEmpty = () =>
     !isController && (!controller || controller === emptyControllerAccount);
@@ -115,6 +123,7 @@ const Registry = () => {
         onSendTx={() => setDisplayTxPanel(false)}
         onCancelled={() => setDisplayTxPanel(false)}
       />
+      <Alert severity="success" message={alert} onClose={() => setAlert('')} />
     </Container>
   );
 };

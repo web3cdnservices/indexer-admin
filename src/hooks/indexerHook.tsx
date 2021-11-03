@@ -78,3 +78,23 @@ export const useAccountType = (account: Account) => {
 
   return accountType;
 };
+
+// events hook
+export const useIndexerEvent = () => {
+  const [event, setEvent] = useState<string>('');
+  const sdk = useContractSDK();
+
+  useEffect(() => {
+    sdk?.queryRegistry.on('StartIndexing', (deploymentId) =>
+      setEvent(`Indexer starts indexing the project ${deploymentId}`)
+    );
+    sdk?.queryRegistry.on('StopIndexing', (deploymentId) =>
+      setEvent(`Indexer stop indexing the project ${deploymentId}`)
+    );
+    sdk?.queryRegistry.on('CreateQuery', (a, b, deploymentId) =>
+      setEvent(`New Query project created: ${deploymentId}`)
+    );
+  }, [sdk]);
+
+  return event;
+};

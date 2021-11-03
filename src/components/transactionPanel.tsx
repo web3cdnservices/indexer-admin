@@ -165,7 +165,7 @@ const TransactionPanel: FC<Props> = ({ type, display, onSendTx, onCancelled }) =
           </ActionButton>
         </ButtonGroups>
       )}
-      <Alert message={alert} onClose={() => setAlert('')} />
+      <Alert severity="error" message={alert} onClose={() => setAlert('')} />
     </Container>
   );
 };

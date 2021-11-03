@@ -1,12 +1,13 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useIsMetaMask, useWeb3 } from '../../hooks/web3Hook';
 import { Container } from './styles';
 import { ActionButton, ButtonsContainer } from '../indexer/styles';
-import { useIsIndexer, useAccountType } from '../../hooks/indexerHook';
+import { useIsIndexer, useAccountType, useIndexerEvent } from '../../hooks/indexerHook';
 import AccountCard from '../../components/accountCard';
+import Alert from '../../components/alert';
 import TransactionPanel from '../../components/transactionPanel';
 import { TransactionType } from '../../utils/transactions';
 
@@ -20,9 +21,15 @@ const Projects = () => {
   const isIndexer = useIsIndexer(account);
   const isMetaMask = useIsMetaMask();
   const accountType = useAccountType(account);
+  const event = useIndexerEvent();
 
   const [displayTxPanel, setDisplayTxPanel] = useState(false);
   const [txType, setTxType] = useState<TransactionType | undefined>(undefined);
+  const [alert, setAlert] = useState('');
+
+  useEffect(() => {
+    setAlert(event);
+  }, [event]);
 
   const showTransactionPanel = (type: TransactionType) => {
     setTxType(type);
@@ -67,6 +74,7 @@ const Projects = () => {
         onSendTx={() => setDisplayTxPanel(false)}
         onCancelled={() => setDisplayTxPanel(false)}
       />
+      <Alert severity="success" message={alert} onClose={() => setAlert('')} />
     </Container>
   );
 };
