@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useState, useEffect } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
+
 import { useContractSDK } from '../../containers/contractSdk';
 import {
   useController,
@@ -19,6 +21,7 @@ import { TransactionType } from '../../utils/transactions';
 import { emptyControllerAccount, unRegister } from '../../utils/indexerActions';
 import { connectWithMetaMask } from '../../utils/metamask';
 import QueryHelper from '../../mock/queryHelper';
+import { ADD_PROJECT, GET_PROJECTS } from '../../utils/queries';
 
 const indexerActions = {
   approve: 'Request Approve',
@@ -42,6 +45,16 @@ const Registry = () => {
   const [displayTxPanel, setDisplayTxPanel] = useState(false);
   const [txType, setTxType] = useState<TransactionType | undefined>(undefined);
   const [alert, setAlert] = useState('');
+
+  // FIXME: test for graphql request
+  const projectID = '0xf7F5Edc7dfE5B475E45F6E54a8433B15968c69xx';
+  const queryService = 'https://api.subquery.network/sq/subvis-io/kusama-auction';
+  // const [addProject, { data, loading, error }] = useMutation(ADD_PROJECT);
+  const { data, loading, error } = useQuery(GET_PROJECTS);
+  if (loading) console.log('Submitting...:', loading);
+  // @ts-ignore
+  if (error) console.log(`Submission error! ${error?.networkError?.stack}`);
+  if (data) console.log('>>>request', data);
 
   useEffect(() => {
     setAlert(event);
