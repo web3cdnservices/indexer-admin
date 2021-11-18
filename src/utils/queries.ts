@@ -12,11 +12,22 @@ export const ADD_PROJECT = gql`
   }
 `;
 
+export const GET_PROJECT = gql`
+  query Project($id: String!) {
+    project(id: $id) {
+      id
+      status
+      nodeEndpoint
+      queryEndpoint
+    }
+  }
+`;
+
 export const GET_PROJECTS = gql`
   query {
     getProjects {
       id
-      endpoint
+      nodeEndpoint
     }
   }
 `;
