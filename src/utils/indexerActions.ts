@@ -14,6 +14,7 @@ const ErrorMessages = {
   controllerError: 'Controller can not be empty',
 };
 
+// TODO: refactor
 export const indexerRequestApprove = (
   sdk: SDK,
   signer: Signer,
@@ -53,9 +54,11 @@ export const indexerRegistry = (
       return;
     }
 
+    const metadata = '0xab3921276c8067fe0c82def3e5ecfd8447f1961bc85768c2a56e6bd26d3c0c55';
+
     sdk.indexerRegistry
       .connect(signer)
-      .registerIndexer(amount)
+      .registerIndexer(amount, metadata)
       .then(() => resolve(''))
       .catch((error) => reject(error.message));
   });
