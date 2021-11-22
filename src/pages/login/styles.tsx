@@ -31,14 +31,22 @@ export const ContentContainer = styled.div`
   flex-direction: column;
 `;
 
-export const Title = styled.div`
+export const Title = styled.div<{ align?: string; weight?: string }>`
+  text-align: ${(p) => p.align || 'left'};
+  font-weight: ${(p) => p.weight || 'bold'};
   font-size: 28px;
-  font-weight: bold;
 `;
 
 export const SubTitle = styled.div`
   font-size: 16px;
   margin-top: 15px;
+`;
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
 `;
 
 export const StyledButton = styled(Button)`
@@ -54,4 +62,20 @@ export const LoginForm = styled(Form)`
 export const FormItem = styled(Form.Item)`
   font-size: 16px;
   font-weight: bold;
+`;
+
+export const ImageCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  border: thin solid;
+  border-color: lightgray;
+  border-radius: 16px;
+`;
+
+export const Image = styled.img`
+  width: 120px;
+  height: 120px;
 `;

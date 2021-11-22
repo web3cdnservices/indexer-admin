@@ -6,6 +6,7 @@ import { FC } from 'react';
 import {
   Panel,
   StyledButton,
+  ButtonContainer,
   ContentContainer,
   SubTitle,
   Title,
@@ -42,18 +43,12 @@ const LoginView: FC<Props> = ({ onConnected }) => {
           <FormItem hidden={false} label="Network Type">
             <Input disabled value="Local Network" />
           </FormItem>
-          <FormItem
-            style={{
-              backgroundColor: 'green',
-              justifyContent: 'center',
-              alignItems: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <StyledButton type="primary" htmlType="submit" shape="round" size="large">
-              {button}
-            </StyledButton>
+          <FormItem>
+            <ButtonContainer>
+              <StyledButton type="primary" htmlType="submit" shape="round" size="large">
+                {button}
+              </StyledButton>
+            </ButtonContainer>
           </FormItem>
         </LoginForm>
       </ContentContainer>

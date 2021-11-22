@@ -2,12 +2,15 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useState } from 'react';
+import { useIsMetaMask } from '../../hooks/web3Hook';
 import LoginView from './loginView';
 import MetaMaskView from './metamaskView';
+import RegisterView from './registerView';
 import { Container } from './styles';
 
 const LoginPage = () => {
   const [isConnectService, setIsConenct] = useState(false);
+  const isMetaMask = useIsMetaMask();
   // TODO: is MetaMask connectted - just to page
   /**
    * status for the login page
@@ -24,7 +27,8 @@ const LoginPage = () => {
   return (
     <Container>
       {!isConnectService && <LoginView onConnected={() => setIsConenct(true)} />}
-      {isConnectService && <MetaMaskView />}
+      {isConnectService && !isMetaMask && <MetaMaskView />}
+      {isConnectService && isMetaMask && <RegisterView />}
     </Container>
   );
 };

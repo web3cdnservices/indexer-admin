@@ -7,7 +7,7 @@ import { providers } from 'ethers';
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
 import { JsonRpcSigner } from '@ethersproject/providers';
 
-export const isMetaMaskInstalled = (): boolean => {
+export const useIsMetaMaskInstalled = (): boolean => {
   // @ts-ignore
   const { ethereum } = window;
   const [isMetaMask, setIsMetaMask] = useState(false);
