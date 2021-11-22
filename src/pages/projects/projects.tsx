@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useIsMetaMask, useWeb3 } from '../../hooks/web3Hook';
 import { Container } from './styles';
-import { ActionButton, ButtonsContainer } from '../indexer/styles';
+import { ActionButton, ButtonsContainer } from '../account/styles';
 import { useIsIndexer, useAccountType, useIndexerEvent } from '../../hooks/indexerHook';
 import AccountCard from '../../components/accountCard';
 import Alert from '../../components/alert';

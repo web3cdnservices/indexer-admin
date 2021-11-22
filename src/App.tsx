@@ -3,6 +3,7 @@
 
 import { FC } from 'react';
 import { Route } from 'react-router';
+import 'antd/dist/antd.css';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
@@ -26,8 +27,9 @@ const App: FC = () => (
           <Router>
             <div className="Main">
               <Switch>
+                <Route component={Pages.Login} path="/" />
                 <Route component={Pages.Projects} path="/projects" />
-                <Route component={Pages.Indexer} path="/" />
+                <Route component={Pages.Indexer} path="/account" />
               </Switch>
             </div>
           </Router>
