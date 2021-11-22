@@ -6,18 +6,7 @@ import { Panel, Title, ImageCard, Image, StyledButton } from './styles';
 import MetaMaskIcon from '../../resources/metamask.svg';
 import { useIsMetaMaskInstalled, useWeb3 } from '../../hooks/web3Hook';
 import { connectWithMetaMask } from '../../utils/metamask';
-
-// TODO: move to the single json file
-const data = {
-  install: {
-    title: 'No MetaMask Extension found in the browser',
-    buttonText: 'Install MetaMask Extension',
-  },
-  connect: {
-    title: 'Connect wallet to use Indexer Admin',
-    buttonText: 'Connect with MetaMask',
-  },
-};
+import prompts from './prompts';
 
 // TODO: move to a constant file
 const extensionUrls = {
@@ -30,7 +19,8 @@ const extensionUrls = {
 const MetaMaskView = () => {
   const { activate } = useWeb3();
   const isMetaMaskInstalled = useIsMetaMaskInstalled();
-  const desc = isMetaMaskInstalled ? data.connect : data.install;
+  const { metamask } = prompts;
+  const data = isMetaMaskInstalled ? metamask.connect : metamask.install;
 
   const onButtonClick = () => {
     if (isMetaMaskInstalled) {
@@ -45,13 +35,13 @@ const MetaMaskView = () => {
   return (
     <Panel>
       <Title align="center" weight="500">
-        {desc.title}
+        {data.title}
       </Title>
       <ImageCard>
         <Image src={MetaMaskIcon} />
       </ImageCard>
       <StyledButton type="primary" shape="round" size="large" onClick={onButtonClick}>
-        {desc.buttonText}
+        {data.buttonTitle}
       </StyledButton>
     </Panel>
   );

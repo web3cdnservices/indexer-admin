@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useIsMetaMask } from '../../hooks/web3Hook';
 import LoginView from './loginView';
 import MetaMaskView from './metamaskView';
-import RegisterView from './registerView';
+import RegisterView from './register/registerView';
 import { Container } from './styles';
 
 const LoginPage = () => {

@@ -1,11 +1,9 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Panel } from './styles';
+import { Panel } from '../styles';
 
-// TODO: use hook to decide to connect or install MetaMask
-
-const RegisterView = () => {
+const IntroductionView = () => {
   return (
     <Panel>
       <div>Connect with MetaMask</div>
@@ -13,4 +11,4 @@ const RegisterView = () => {
   );
 };
 
-export default RegisterView;
+export default IntroductionView;

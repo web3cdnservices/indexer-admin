@@ -3,6 +3,7 @@
 
 import { Input } from 'antd';
 import { FC } from 'react';
+import prompts from './prompts';
 import {
   Panel,
   StyledButton,
@@ -14,15 +15,12 @@ import {
   LoginForm,
 } from './styles';
 
-const title = 'Welcome to Indexer Admin';
-const subTitle = "Let's connect with coordinator service to use the indexer admin";
-const button = 'Connect';
-
 type Props = {
   onConnected: () => void;
 };
 
 const LoginView: FC<Props> = ({ onConnected }) => {
+  const { login } = prompts;
   const onConnect = (values: any) => {
     console.log('>>>onFinish:', values);
     // TODO: 1. validate service endpoint
@@ -34,8 +32,8 @@ const LoginView: FC<Props> = ({ onConnected }) => {
   return (
     <Panel>
       <ContentContainer>
-        <Title>{title}</Title>
-        <SubTitle>{subTitle}</SubTitle>
+        <Title>{login.title}</Title>
+        <SubTitle>{login.desc}</SubTitle>
         <LoginForm name="login" layout="vertical" onFinish={onConnect}>
           <FormItem name="url" validateStatus="success" label="Coordinator Service Endpoint">
             <Input placeholder="https://you.coordinator.service" />
@@ -46,7 +44,7 @@ const LoginView: FC<Props> = ({ onConnected }) => {
           <FormItem>
             <ButtonContainer>
               <StyledButton type="primary" htmlType="submit" shape="round" size="large">
-                {button}
+                {login.buttonTitle}
               </StyledButton>
             </ButtonContainer>
           </FormItem>
