@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC } from 'react';
-import { Title, SubTitle, StyledButton } from '../styles';
+import { Title, SubTitle, StyledButton } from '../login/styles';
 import { ContentContainer, DescContainer, TextContainer } from './styles';
 import prompts from './prompts';
 import { RegisterStep } from './types';

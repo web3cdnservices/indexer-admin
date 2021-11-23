@@ -4,15 +4,15 @@
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { Container } from '../styles';
+import { Container } from '../login/styles';
 import { RegistrySteps } from './styles';
 import RegisterView from './registerView';
 import { RegisterStep, StepStatus } from './types';
-import { indexerRegistry, indexerRequestApprove } from '../../../utils/indexerActions';
-import { useSigner, useWeb3 } from '../../../hooks/web3Hook';
-import { useContractSDK } from '../../../containers/contractSdk';
-import { useIsIndexer } from '../../../hooks/indexerHook';
-import { ADD_INDEXER } from '../../../utils/queries';
+import { indexerRegistry, indexerRequestApprove } from '../../utils/indexerActions';
+import { useSigner, useWeb3 } from '../../hooks/web3Hook';
+import { useContractSDK } from '../../containers/contractSdk';
+import { useIsIndexer } from '../../hooks/indexerHook';
+import { ADD_INDEXER } from '../../utils/queries';
 
 const RegisterPage = () => {
   const { account } = useWeb3();

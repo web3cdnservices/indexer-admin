@@ -13,13 +13,12 @@ import {
   useIsIndexer,
 } from '../../hooks/indexerHook';
 import { useIsMetaMask, useSigner, useWeb3 } from '../../hooks/web3Hook';
-import { Container, ActionButton, ButtonsContainer, ConnectButton, Separator } from './styles';
+import { Container, ActionButton, ButtonsContainer, Separator } from './styles';
 import AccountCard from '../../components/accountCard';
 import TransactionPanel from '../../components/transactionPanel';
 import Alert from '../../components/alert';
 import { TransactionType } from '../../utils/transactions';
 import { emptyControllerAccount, unRegister } from '../../utils/indexerActions';
-import { connectWithMetaMask } from '../../utils/metamask';
 import QueryHelper from '../../mock/queryHelper';
 
 const indexerActions = {
@@ -30,7 +29,7 @@ const indexerActions = {
 };
 
 const Registry = () => {
-  const { account, activate } = useWeb3();
+  const { account } = useWeb3();
   const isMetaMask = useIsMetaMask();
   const isIndexer = useIsIndexer();
   const isController = useIsController(account);
@@ -57,34 +56,8 @@ const Registry = () => {
     setDisplayTxPanel(true);
   };
 
-  const renderConnectionButtons = () => (
-    <ButtonsContainer>
-      <ConnectButton variant="outlined" color="info" onClick={() => connectWithMetaMask(activate)}>
-        Connect with MetaMask
-      </ConnectButton>
-    </ButtonsContainer>
-  );
-
   const renderIndexerButtons = () => (
     <ButtonsContainer>
-      {!isIndexer && !isController && isMetaMask && (
-        <ActionButton
-          variant="contained"
-          color="primary"
-          onClick={() => showTransactionPanel(TransactionType.approve)}
-        >
-          {indexerActions.approve}
-        </ActionButton>
-      )}
-      {!isIndexer && !isController && isMetaMask && (
-        <ActionButton
-          variant="contained"
-          color="primary"
-          onClick={() => showTransactionPanel(TransactionType.registry)}
-        >
-          {indexerActions.registry}
-        </ActionButton>
-      )}
       {isIndexer && (
         <ActionButton
           variant="contained"
@@ -117,7 +90,6 @@ const Registry = () => {
       {!isControllerEmpty() && (
         <AccountCard title="Controller" account={isController ? account : controller} />
       )}
-      {!isMetaMask && renderConnectionButtons()}
       <QueryHelper />
       <TransactionPanel
         type={txType}
