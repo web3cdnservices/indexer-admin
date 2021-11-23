@@ -6,10 +6,12 @@ import { Button, Form } from 'antd';
 
 export const Container = styled.div`
   display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   align-items: center;
   justify-content: center;
+  background-color: #f6f9fc;
 `;
 
 export const Panel = styled.div`
@@ -37,7 +39,8 @@ export const Title = styled.div<{ size?: number; align?: string; weight?: string
   font-size: ${(p) => p.size || 28}px;
 `;
 
-export const SubTitle = styled.div`
+export const SubTitle = styled.div<{ align?: string }>`
+  text-align: ${(p) => p.align || 'left'};
   font-size: 16px;
   margin-top: 15px;
 `;
@@ -49,10 +52,11 @@ export const ButtonContainer = styled.div`
   margin-top: 30px;
 `;
 
-export const StyledButton = styled(Button)`
+export const StyledButton = styled(Button)<{ width?: string }>`
+  background-color: #4388dd;
   align-self: center;
   margin-top: 50px;
-  width: 70%;
+  width: ${(p) => p.width || '30%'};
 `;
 
 export const LoginForm = styled(Form)`

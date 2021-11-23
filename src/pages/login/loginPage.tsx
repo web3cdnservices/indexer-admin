@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useIsMetaMask } from '../../hooks/web3Hook';
 import LoginView from './loginView';
 import MetaMaskView from './metamaskView';
-import RegisterView from './register/registerView';
+import RegisterPage from './register/registerPage';
 import { Container } from './styles';
 
 const LoginPage = () => {
@@ -24,11 +24,13 @@ const LoginPage = () => {
    *
    */
 
+  // TODO: 1. if metamask connect with correct network, and the conenct account is an indexer -> display account management page
+
   return (
     <Container>
       {!isConnectService && <LoginView onConnected={() => setIsConenct(true)} />}
       {isConnectService && !isMetaMask && <MetaMaskView />}
-      {isConnectService && isMetaMask && <RegisterView />}
+      {isConnectService && isMetaMask && <RegisterPage />}
     </Container>
   );
 };

@@ -43,7 +43,7 @@ const LoginView: FC<Props> = ({ onConnected }) => {
           </FormItem>
           <FormItem>
             <ButtonContainer>
-              <StyledButton type="primary" htmlType="submit" shape="round" size="large">
+              <StyledButton width="70%" type="primary" htmlType="submit" shape="round" size="large">
                 {login.buttonTitle}
               </StyledButton>
             </ButtonContainer>

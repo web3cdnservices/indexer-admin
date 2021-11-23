@@ -40,7 +40,7 @@ const MetaMaskView = () => {
       <ImageCard>
         <Image src={MetaMaskIcon} />
       </ImageCard>
-      <StyledButton type="primary" shape="round" size="large" onClick={onButtonClick}>
+      <StyledButton width="150" type="primary" shape="round" size="large" onClick={onButtonClick}>
         {data.buttonTitle}
       </StyledButton>
     </Panel>
