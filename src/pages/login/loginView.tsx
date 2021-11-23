@@ -33,18 +33,22 @@ const LoginView: FC<Props> = ({ onConnected }) => {
 
   const onConnect = (values: any) => {
     console.log('>>>onFinish:', values);
-    // TODO: update appolo url
+    // TODO: update service url
     getMetadata();
   };
 
   useEffect(() => {
-    console.log('>>data:', loading, data, error);
     if (!loading && isIndexer && data && !error) {
       if (isIndexer && data.accountMetadata.indexer === account) {
         history.push('/account');
       } else {
         onConnected();
       }
+    }
+
+    // FIXME: just for testing, remove the code later
+    if (!loading && error) {
+      onConnected();
     }
   }, [loading]);
 

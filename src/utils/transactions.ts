@@ -2,12 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export enum TransactionType {
-  approve = 'approve',
-  registry = 'registry',
   configCntroller = 'configCntroller',
   startIndexing = 'startIndexing',
+  readyIndexing = 'readyIndexing',
   stopIndexing = 'stropIndexing',
-  reportStatus = 'reportStatus',
 }
 
 export type TransactionKey = {
@@ -17,19 +15,8 @@ export type TransactionKey = {
   Status?: string;
 };
 
+// TODO: support config steps
 export const transactionSchema = {
-  [TransactionType.approve]: [
-    {
-      title: 'Amount',
-      key: 'amount',
-    },
-  ],
-  [TransactionType.registry]: [
-    {
-      title: 'Amount',
-      key: 'amount',
-    },
-  ],
   [TransactionType.configCntroller]: [
     {
       title: 'Controller Account',
@@ -42,20 +29,16 @@ export const transactionSchema = {
       key: 'deploymentID',
     },
   ],
-  [TransactionType.stopIndexing]: [
+  [TransactionType.readyIndexing]: [
     {
       title: 'Deployment ID',
       key: 'deploymentID',
     },
   ],
-  [TransactionType.reportStatus]: [
+  [TransactionType.stopIndexing]: [
     {
       title: 'Deployment ID',
       key: 'deploymentID',
-    },
-    {
-      title: 'Status',
-      key: 'status',
     },
   ],
 };

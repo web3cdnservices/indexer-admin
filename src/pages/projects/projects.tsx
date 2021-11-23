@@ -61,13 +61,6 @@ const Projects = () => {
 
   return (
     <Container>
-      {isMetaMask && (
-        <AccountCard
-          title={accountType || 'Account'}
-          account={account ?? ''}
-          actionItems={renderIndexerButtons()}
-        />
-      )}
       <TransactionPanel
         type={txType}
         display={displayTxPanel}

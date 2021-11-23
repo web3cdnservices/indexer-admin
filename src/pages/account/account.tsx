@@ -79,17 +79,10 @@ const Registry = () => {
     <Container>
       <Separator height={80} />
       {isMetaMask && (
-        <AccountCard
-          title={isIndexer || isController ? 'Indexer' : 'Account'}
-          account={isController ? indexer : account}
-          actionItems={renderIndexerButtons()}
-        />
+        <AccountCard title="Indexer Account" account={account} desc="Staking: 10000 SQT" />
       )}
       <Separator height={30} />
-
-      {!isControllerEmpty() && (
-        <AccountCard title="Controller" account={isController ? account : controller} />
-      )}
+      <AccountCard title="Controller Account" account={controller} desc="Balance: 200 SQT" />
       <QueryHelper />
       <TransactionPanel
         type={txType}
