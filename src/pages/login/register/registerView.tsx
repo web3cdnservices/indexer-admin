@@ -3,26 +3,36 @@
 
 import { FC } from 'react';
 import { Title, SubTitle, StyledButton } from '../styles';
-import { ContentContainer, DescContainer } from './styles';
+import { ContentContainer, DescContainer, TextContainer } from './styles';
 import prompts from './prompts';
 import { RegisterStep } from './types';
 
 type Props = {
   step: RegisterStep;
+  loading: boolean;
   onClick: () => void;
 };
 
-const RegisterView: FC<Props> = ({ step, onClick }) => {
+const RegisterView: FC<Props> = ({ step, onClick, loading }) => {
   const { title, desc, buttonTitle } = prompts[step];
   return (
     <ContentContainer>
-      <Title size={40} align="center" weight="500">
-        {title}
-      </Title>
-      <DescContainer mt={40}>
-        <SubTitle align="center">{desc}</SubTitle>
-      </DescContainer>
-      <StyledButton width="20%" type="primary" shape="round" size="large" onClick={onClick}>
+      <TextContainer>
+        <Title size={35} align="center" weight="500">
+          {title}
+        </Title>
+        <DescContainer mt={20}>
+          <SubTitle align="center">{desc}</SubTitle>
+        </DescContainer>
+      </TextContainer>
+      <StyledButton
+        loading={loading}
+        width="30%"
+        type="primary"
+        shape="round"
+        size="large"
+        onClick={onClick}
+      >
         {buttonTitle}
       </StyledButton>
     </ContentContainer>

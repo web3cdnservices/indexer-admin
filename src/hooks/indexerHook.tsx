@@ -3,10 +3,13 @@
 
 import { useEffect, useState } from 'react';
 import { useContractSDK } from '../containers/contractSdk';
+import { useWeb3 } from './web3Hook';
 
 type Account = string | null | undefined;
 
-export const useIsIndexer = (account: Account) => {
+export const useIsIndexer = (address?: Account) => {
+  const { account: currentAccount } = useWeb3();
+  const account = address ?? currentAccount;
   const [isIndexer, setIsIndexer] = useState(false);
   const sdk = useContractSDK();
 

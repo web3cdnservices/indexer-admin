@@ -21,8 +21,6 @@ import { TransactionType } from '../../utils/transactions';
 import { emptyControllerAccount, unRegister } from '../../utils/indexerActions';
 import { connectWithMetaMask } from '../../utils/metamask';
 import QueryHelper from '../../mock/queryHelper';
-import { ADD_PROJECT, GET_PROJECTS } from '../../utils/queries';
-import { useProject } from '../../hooks/projectHook';
 
 const indexerActions = {
   approve: 'Request Approve',
@@ -34,7 +32,7 @@ const indexerActions = {
 const Registry = () => {
   const { account, activate } = useWeb3();
   const isMetaMask = useIsMetaMask();
-  const isIndexer = useIsIndexer(account);
+  const isIndexer = useIsIndexer();
   const isController = useIsController(account);
   const controller = useController(account);
   const indexer = useControllerToIndexer(account);
@@ -46,17 +44,6 @@ const Registry = () => {
   const [displayTxPanel, setDisplayTxPanel] = useState(false);
   const [txType, setTxType] = useState<TransactionType | undefined>(undefined);
   const [alert, setAlert] = useState('');
-
-  // FIXME: test for graphql request
-  // const projectID = '0xf7F5Edc7dfE5B475E45F6E54a8433B15968c69xx';
-  // const queryService = 'https://api.subquery.network/sq/subvis-io/kusama-auction';
-  // const [addProject, { data, loading, error }] = useMutation(ADD_PROJECT);
-  // const { data, loading, error } = useQuery(GET_PROJECTS);
-  const { data, error, loading } = useProject('1243242342424');
-  if (loading) console.log('Submitting...:', loading);
-  // @ts-ignore
-  if (error) console.log(`Submission error! ${error}`);
-  if (data) console.log('>>>request', data);
 
   useEffect(() => {
     setAlert(event);

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useEffect, useState } from 'react';
-import { ApolloError, useMutation, useQuery } from '@apollo/client';
+import { ApolloError, useQuery } from '@apollo/client';
 import { GET_PROJECT } from '../utils/queries';
 
 // TODO: move to `type` file

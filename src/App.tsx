@@ -27,9 +27,9 @@ const App: FC = () => (
           <Router>
             <div className="Main">
               <Switch>
-                <Route component={Pages.Login} path="/" />
                 <Route component={Pages.Projects} path="/projects" />
                 <Route component={Pages.Indexer} path="/account" />
+                <Route component={Pages.Login} path="/" />
               </Switch>
             </div>
           </Router>

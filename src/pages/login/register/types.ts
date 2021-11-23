@@ -7,3 +7,9 @@ export enum RegisterStep {
   register = 'register',
   sync = 'sync',
 }
+
+export enum StepStatus {
+  wait = 'wait',
+  process = 'process',
+  finish = 'finish',
+}

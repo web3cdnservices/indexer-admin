@@ -18,7 +18,7 @@ const indexerActions = {
 
 const Projects = () => {
   const { account } = useWeb3();
-  const isIndexer = useIsIndexer(account);
+  const isIndexer = useIsIndexer();
   const isMetaMask = useIsMetaMask();
   const accountType = useAccountType(account);
   const event = useIndexerEvent();

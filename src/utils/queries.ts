@@ -3,6 +3,23 @@
 
 import { gql } from '@apollo/client';
 
+export const GET_ACCOUNT_METADATA = gql`
+  query {
+    accountMetadata {
+      indexer
+      network
+    }
+  }
+`;
+
+export const ADD_INDEXER = gql`
+  mutation AddIndexer($indexer: String!) {
+    addIndexer(indexer: $indexer) {
+      indexer
+    }
+  }
+`;
+
 export const ADD_PROJECT = gql`
   mutation AddProject($id: ID!, $endpoint: String!) {
     addProject(id: $id, endpoint: $endpoint) {

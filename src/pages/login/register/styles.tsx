@@ -2,20 +2,36 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import styled from 'styled-components';
+import { Steps } from 'antd';
 
 export const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   border-radius: 18px;
   background-color: white;
-  padding: 40px;
-  width: 70%;
-  height: 60%;
+  padding: 60px;
+  min-width: 650px;
+  min-height: 450px;
+  width: 60%;
+  height: 50%;
+`;
+
+export const TextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export const DescContainer = styled.div<{ mt?: number }>`
   margin-top: ${(p) => p.mt ?? 0}px;
-  width: 540px;
+  width: 450px;
+`;
+
+export const RegistrySteps = styled(Steps)`
+  width: 65%;
+  margin-top: 10px;
+  margin-bottom: 100px;
+  min-width: 750px;
 `;
