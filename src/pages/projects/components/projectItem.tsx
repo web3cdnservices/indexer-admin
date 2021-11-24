@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Hashicon } from '@emeraldpay/hashicon-react';
 import { Progress } from 'antd';
 import { FC } from 'react';
+import { useHistory } from 'react-router-dom';
 import StatusLabel from '../../../components/statusLabel';
 import { IndexingStatus, statusColor, statusText } from '../constant';
 import { Text } from '../../../components/primary';
@@ -16,8 +17,12 @@ const Container = styled.div`
   min-width: 600px;
   min-height: 90px;
   margin: 10px 0px;
-  padding: 10px 0px;
+  padding: 10px 10px;
   background-color: white;
+  :hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    cursor: pointer;
+  }
 `;
 
 const ProfileContainer = styled.div`
@@ -41,15 +46,18 @@ type Props = {
 };
 
 const ProjectItem: FC<Props> = ({ id, title, progress, status }) => {
+  const history = useHistory();
   return (
-    <Container>
+    <Container onClick={() => history.push('/project', { id })}>
       <ItemContainer pl={15} flex={4}>
         <Hashicon hasher="keccak" value={id} size={70} />
         <ProfileContainer>
           <Text fw="600" size={18}>
             {title}
           </Text>
-          <Text mt={10}>{id}</Text>
+          <Text size={15} mt={5}>
+            {id}
+          </Text>
         </ProfileContainer>
       </ItemContainer>
       <ItemContainer flex={3}>

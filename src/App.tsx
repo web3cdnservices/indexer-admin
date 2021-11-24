@@ -27,6 +27,7 @@ const App: FC = () => (
             <div className="Main">
               <Switch>
                 <Route component={Pages.Projects} path="/projects" />
+                <Route component={Pages.ProjectDetail} path="/project" />
                 <Route component={Pages.Account} path="/account" />
                 <Route component={Pages.Login} path="/" />
               </Switch>

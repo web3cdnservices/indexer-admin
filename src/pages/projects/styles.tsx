@@ -9,7 +9,8 @@ export const Container = styled.div`
   align-items: center;
   width: 100%;
   min-width: 600px;
-  padding: 30px 100px;
+  padding: 10px 100px;
+  padding-bottom: 150px;
   overflow-y: scroll;
 `;
 

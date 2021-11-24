@@ -36,7 +36,7 @@ account
 
 ## Optimisation
 
-- [ ] Display empty modal when switch to unsupport network and account
+- [ ] Display `empty` or `error` modal when switch to unsupport network and account
 - [ ] Show a tutorial tip let indexer go to project page to add project after config controller
 - [ ] Replace `hashIcon` with other library to generte hash icon
 - [ ] Support font family in the design
