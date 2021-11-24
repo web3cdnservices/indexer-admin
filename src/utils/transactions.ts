@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export enum TransactionType {
+  unregister = 'unregister',
   configCntroller = 'configCntroller',
   startIndexing = 'startIndexing',
   readyIndexing = 'readyIndexing',
@@ -41,4 +42,5 @@ export const transactionSchema = {
       key: 'deploymentID',
     },
   ],
+  [TransactionType.unregister]: [],
 };

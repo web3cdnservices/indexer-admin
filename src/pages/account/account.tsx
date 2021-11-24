@@ -2,88 +2,94 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useState, useEffect } from 'react';
-// import { useMutation, useQuery } from '@apollo/client';
 
-import { useContractSDK } from '../../containers/contractSdk';
+import { useHistory } from 'react-router-dom';
 import {
   useController,
-  useControllerToIndexer,
   useIndexerEvent,
   useIsController,
+  useIsControllerChanged,
   useIsIndexer,
+  useIsIndexerChanged,
 } from '../../hooks/indexerHook';
-import { useIsMetaMask, useSigner, useWeb3 } from '../../hooks/web3Hook';
-import { Container, ActionButton, ButtonsContainer, Separator } from './styles';
+import { useIsMetaMask, useWeb3 } from '../../hooks/web3Hook';
+import { Container, Separator } from './styles';
+import prompts from './prompts';
 import AccountCard from '../../components/accountCard';
 import TransactionPanel from '../../components/transactionPanel';
 import Alert from '../../components/alert';
 import { TransactionType } from '../../utils/transactions';
-import { emptyControllerAccount, unRegister } from '../../utils/indexerActions';
-import QueryHelper from '../../mock/queryHelper';
-
-const indexerActions = {
-  approve: 'Request Approve',
-  registry: 'Registry',
-  unRegister: 'Unregistry',
-  configController: 'Config Controller',
-};
 
 const Registry = () => {
+  const [displayTxPanel, setDisplayTxPanel] = useState(false);
+  const [timestamp, setTimestamp] = useState(Date.now());
+  const [txType, setTxType] = useState<TransactionType | undefined>(undefined);
+  const [alert, setAlert] = useState('');
+
   const { account } = useWeb3();
+  const history = useHistory();
   const isMetaMask = useIsMetaMask();
   const isIndexer = useIsIndexer();
   const isController = useIsController(account);
-  const controller = useController(account);
-  const indexer = useControllerToIndexer(account);
+  const controller = useController(account, timestamp);
   const event = useIndexerEvent();
 
-  const signer = useSigner();
-  const sdk = useContractSDK();
+  const { request: checkIsIndexerChanged, loading: indexerLoading } = useIsIndexerChanged();
+  const { request: checkIsControllerChanged, loading: controllerLoading } =
+    useIsControllerChanged(account);
 
-  const [displayTxPanel, setDisplayTxPanel] = useState(false);
-  const [txType, setTxType] = useState<TransactionType | undefined>(undefined);
-  const [alert, setAlert] = useState('');
+  // TODO: `desc` should be a real time string other than fixed one
+  const controllerItem = !controller ? prompts.emptyController : prompts.controller;
+  const { indexer } = prompts;
 
   useEffect(() => {
     setAlert(event);
   }, [event]);
-
-  const isControllerEmpty = () =>
-    !isController && (!controller || controller === emptyControllerAccount);
 
   const showTransactionPanel = (type: TransactionType) => {
     setTxType(type);
     setDisplayTxPanel(true);
   };
 
-  const renderIndexerButtons = () => (
-    <ButtonsContainer>
-      {isIndexer && (
-        <ActionButton
-          variant="contained"
-          color="primary"
-          onClick={() => showTransactionPanel(TransactionType.configCntroller)}
-        >
-          {indexerActions.configController}
-        </ActionButton>
-      )}
-      {isIndexer && (
-        <ActionButton variant="contained" color="primary" onClick={() => unRegister(sdk, signer)}>
-          {indexerActions.unRegister}
-        </ActionButton>
-      )}
-    </ButtonsContainer>
-  );
+  // TODO: display empty view if the current account is invalid
 
   return (
     <Container>
       <Separator height={80} />
-      {isMetaMask && (
-        <AccountCard title="Indexer Account" account={account} desc="Staking: 10000 SQT" />
+      {isMetaMask && isIndexer && (
+        <AccountCard
+          title={indexer.title}
+          name={indexer.name}
+          buttonTitle={indexer.buttonTitle}
+          account={account ?? ''}
+          status="active"
+          desc={indexer.desc}
+          loading={indexerLoading}
+          onClick={() => {
+            // FIXME: should call when send the transaction
+            checkIsIndexerChanged(false, () => history.replace('./'));
+            showTransactionPanel(TransactionType.unregister);
+          }}
+        />
       )}
       <Separator height={30} />
-      <AccountCard title="Controller Account" account={controller} desc="Balance: 200 SQT" />
-      <QueryHelper />
+      {(isIndexer || isController) && (
+        <AccountCard
+          title={controllerItem.title}
+          name={controllerItem.name}
+          account={controller}
+          buttonTitle={isIndexer ? controllerItem.buttonTitle : ''}
+          desc={controllerItem.desc}
+          loading={controllerLoading}
+          onClick={() => {
+            // FIXME: should call and get the target controller address when sending the transaction
+            checkIsControllerChanged('0x3Cd0A705a2DC65e5b1E1205896BaA2be8A07c6e0', () =>
+              setTimestamp(Date.now())
+            );
+            showTransactionPanel(TransactionType.configCntroller);
+          }}
+        />
+      )}
       <TransactionPanel
         type={txType}
         display={displayTxPanel}
@@ -96,3 +102,6 @@ const Registry = () => {
 };
 
 export default Registry;
+
+// 0x3Cd0A705a2DC65e5b1E1205896BaA2be8A07c6e0
+// 0x798d4Ba9baf0064Ec19eB4F0a1a45785ae9D6DFc

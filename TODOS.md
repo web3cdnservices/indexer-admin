@@ -2,17 +2,17 @@
 
 ## Account Management
 
-- [ ] Login page, login with service endpoint
-  - [ ] Validate endpoint: request network
-  - [ ] Display network type
-- [ ] Connect MetaMask page. Install or connect with MetaMask
-- [ ] Indexer Registry workflow
-  - [ ] Contract: request approve
-  - [ ] Contract: request indexer registration
-  - [ ] Sync indexer with coordinator
+- [x] Login page, login with service endpoint
+  - [x] Validate endpoint: request network
+  - [x] Display network type
+- [x] Connect MetaMask page. Install or connect with MetaMask
+- [x] Indexer Registry workflow
+  - [x] Contract: request approve
+  - [x] Contract: request indexer registration
+  - [x] Sync indexer with coordinator
 - [ ] Send Tx modal component
 - [ ] Account management page
-  - [ ] Account card component
+  - [x] Account card component
   - [ ] Different UI response when switch network and account
 
 ## Projects Management

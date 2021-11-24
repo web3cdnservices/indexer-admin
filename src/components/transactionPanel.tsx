@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import { FC, useState } from 'react';
 import { useContractSDK } from '../containers/contractSdk';
 import { useSigner } from '../hooks/web3Hook';
-import { configController, startIndexing, stopIndexing } from '../utils/indexerActions';
+import { configController, startIndexing, stopIndexing, unRegister } from '../utils/indexerActions';
 import { TransactionType, transactionSchema, TransactionKey } from '../utils/transactions';
 import InputField from './inputField';
 import Alert from './alert';
@@ -41,7 +41,7 @@ const ButtonGroups = styled.div<{ display: boolean }>`
   margin-bottom: 20px;
 `;
 
-const ActionButton = styled(Button)<{ display: boolean }>`
+const ActionButton = styled(Button)`
   width: 100%;
   margin: 10px;
 `;
@@ -95,6 +95,12 @@ const TransactionPanel: FC<Props> = ({ type, display, onSendTx, onCancelled }) =
           .catch((errorMsg) => onTransactionFailed(errorMsg));
         break;
       }
+      case TransactionType.unregister: {
+        unRegister(sdk, signer)
+          .then(() => onSendTx())
+          .catch((errorMsg) => onTransactionFailed(errorMsg));
+        break;
+      }
       default:
     }
   };
@@ -130,19 +136,13 @@ const TransactionPanel: FC<Props> = ({ type, display, onSendTx, onCancelled }) =
       {display && (
         <ButtonGroups display={display}>
           <ActionButton
-            display={display}
             variant="contained"
             color="primary"
             onClick={() => type && sendTransaction(type)}
           >
             Send Transaction
           </ActionButton>
-          <ActionButton
-            display={display}
-            variant="contained"
-            color="error"
-            onClick={() => type && onCancelled()}
-          >
+          <ActionButton variant="contained" color="error" onClick={() => type && onCancelled()}>
             Cancel
           </ActionButton>
         </ButtonGroups>

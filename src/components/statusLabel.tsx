@@ -8,7 +8,7 @@ const Container = styled.div<{ color?: string }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${(p) => p.color ?? 'pink'};
+  background-color: ${(p) => p.color ?? 'lightgreen'};
   border-radius: 5px;
   padding: 5px 10px;
 `;

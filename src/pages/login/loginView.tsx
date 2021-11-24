@@ -38,17 +38,12 @@ const LoginView: FC<Props> = ({ onConnected }) => {
   };
 
   useEffect(() => {
-    if (!loading && isIndexer && data && !error) {
+    if (!loading && data && !error) {
       if (isIndexer && data.accountMetadata.indexer === account) {
         history.push('/account');
       } else {
         onConnected();
       }
-    }
-
-    // FIXME: just for testing, remove the code later
-    if (!loading && error) {
-      onConnected();
     }
   }, [loading]);
 

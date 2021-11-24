@@ -24,7 +24,7 @@ export const ActionButton = styled(Button)`
 `;
 
 export const Separator = styled.div<{ height?: number }>`
-  width: 100%;
+  min-height: 20px;
   height: ${(p) => p.height || 20}px;
 `;
 
