@@ -1,12 +1,17 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import { useLocation } from 'react-router-dom';
 import { Container, ContentContainer, IconsContainer } from './styles';
 import { linkConfigs } from './config';
 import Icon from '../../components/Icon';
 import { Text } from '../../components/primary';
 
 const Header = () => {
+  const location = useLocation();
+  console.log('>>>pathname:', location.pathname);
+  if (['/project', '/projects'].includes(location.pathname)) return null;
+
   return (
     <Container>
       <ContentContainer>

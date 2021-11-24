@@ -9,7 +9,7 @@ export const Container = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100%;
-  min-height: 500px;
+  min-height: 400px;
   align-items: center;
   justify-content: center;
   background-color: #f6f9fc;
@@ -27,6 +27,7 @@ export const Panel = styled.div`
   padding: 50px;
   padding-top: 105px;
   margin-top: -50px;
+  align-self: center;
 `;
 
 export const ContentContainer = styled.div`

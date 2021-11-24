@@ -32,8 +32,8 @@ const App: FC = () => (
                 <Route component={Pages.Login} path="/" />
               </Switch>
             </div>
+            <Pages.Footer />
           </Router>
-          <Pages.Footer />
         </div>
       </ContractSDKProvider>
     </Web3Provider>
