@@ -10,7 +10,7 @@ const Header = () => {
   return (
     <Container>
       <ContentContainer>
-        <Text color="white" fw="700" size={30}>
+        <Text mw={160} color="white" fw="700" size={30}>
           Follow Us
         </Text>
         <IconsContainer>

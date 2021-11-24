@@ -65,52 +65,39 @@ const AccountCard: FC<Props> = ({
   loading,
   account,
   status,
-}) => {
-  const renderButton = () =>
-    !!buttonTitle && (
-      <Button
-        loading={loading}
-        align="center"
-        width={200}
-        type="primary"
-        shape="round"
-        size="large"
-        onClick={onClick}
-      >
-        {buttonTitle}
-      </Button>
-    );
-
-  return (
-    <Container>
-      <HeaderContainer>
-        <MainTitleContainer>
-          <Text size={30} fw="500" mr={20}>
-            {title}
-          </Text>
-          {!!status && <StatusLabel text={status} />}
-        </MainTitleContainer>
-        {!!account && renderButton()}
-      </HeaderContainer>
-      {account ? (
-        <ContentContainer>
-          <Hashicon hasher="keccak" value={account ?? ''} size={100} />
-          <DescContainer ml={20}>
-            <Text>{name}</Text>
-            <Text mt={10}>{account}</Text>
-            <Text mt={10}>{desc}</Text>
-          </DescContainer>
-        </ContentContainer>
-      ) : (
-        <DescContainer>
-          <Text color="gray" size={15} mb={30}>
-            {desc}
-          </Text>
-          {renderButton()}
-        </DescContainer>
+}) => (
+  <Container>
+    <HeaderContainer>
+      <MainTitleContainer>
+        <Text size={30} fw="500" mr={20}>
+          {title}
+        </Text>
+        {!!status && <StatusLabel text={status} />}
+      </MainTitleContainer>
+      {!!account && !!buttonTitle && (
+        <Button title={buttonTitle} loading={loading} width={200} onClick={onClick} />
       )}
-    </Container>
-  );
-};
+    </HeaderContainer>
+    {account ? (
+      <ContentContainer>
+        <Hashicon hasher="keccak" value={account ?? ''} size={100} />
+        <DescContainer ml={20}>
+          <Text>{name}</Text>
+          <Text mt={10}>{account}</Text>
+          <Text mt={10}>{desc}</Text>
+        </DescContainer>
+      </ContentContainer>
+    ) : (
+      <DescContainer>
+        <Text color="gray" size={15} mb={30}>
+          {desc}
+        </Text>
+        {!!buttonTitle && (
+          <Button title={buttonTitle} loading={loading} width={200} onClick={onClick} />
+        )}
+      </DescContainer>
+    )}
+  </Container>
+);
 
 export default AccountCard;

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Button as AntButton } from 'antd';
+import { FC } from 'react';
 import styled from 'styled-components';
 
 export const Text = styled.div<{
@@ -11,6 +12,7 @@ export const Text = styled.div<{
   mr?: number;
   mt?: number;
   mb?: number;
+  mw?: number;
   clolor?: string;
 }>`
   // TODO: support diff font-family props
@@ -21,10 +23,32 @@ export const Text = styled.div<{
   margin-right: ${({ mr }) => mr ?? 0}px;
   margin-top: ${({ mt }) => mt ?? 0}px;
   margin-bottom: ${({ mb }) => mb ?? 0}px;
+  min-width: ${({ mw }) => mw ?? 10}px;
 `;
 
-export const Button = styled(AntButton)<{ width?: number; align?: string }>`
+const StyledButton = styled(AntButton)<{ width?: number; align?: string }>`
   background-color: #4388dd;
   align-self: ${({ align }) => align ?? 'center'}px;
   width: ${({ width }) => width ?? 150}px;
 `;
+
+type ButtonProps = {
+  title: string;
+  onClick: () => void;
+  loading?: boolean;
+  width?: number;
+};
+
+export const Button: FC<ButtonProps> = ({ title, loading, width, onClick }) => (
+  <StyledButton
+    loading={!!loading}
+    align="center"
+    width={width}
+    type="primary"
+    shape="round"
+    size="large"
+    onClick={onClick}
+  >
+    {title}
+  </StyledButton>
+);

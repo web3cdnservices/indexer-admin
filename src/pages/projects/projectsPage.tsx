@@ -1,72 +1,27 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useState, useEffect } from 'react';
-import { useIsMetaMask, useWeb3 } from '../../hooks/web3Hook';
-import { Container } from './styles';
-import { useIsIndexer, useAccountType, useIndexerEvent } from '../../hooks/indexerHook';
-import AccountCard from '../../components/accountCard';
-import Alert from '../../components/alert';
-import TransactionPanel from '../../components/transactionPanel';
-import { TransactionType } from '../../utils/transactions';
+import { useWeb3 } from '../../hooks/web3Hook';
+import { Container, HeaderContainer } from './styles';
+import { Text, Button } from '../../components/primary';
+import ProjecItemsHeader from './components/projecItemsHeader';
+import ProjectItem from './components/projectItem';
 
-const indexerActions = {
-  startIndexing: 'Start Indexing',
-  stopIndexing: 'Stop Indexing',
-};
+const items = [1, 2, 3, 4, 5];
 
 const Projects = () => {
   const { account } = useWeb3();
-  const isIndexer = useIsIndexer();
-  const isMetaMask = useIsMetaMask();
-  const accountType = useAccountType(account);
-  const event = useIndexerEvent();
-
-  const [displayTxPanel, setDisplayTxPanel] = useState(false);
-  const [txType, setTxType] = useState<TransactionType | undefined>(undefined);
-  const [alert, setAlert] = useState('');
-
-  useEffect(() => {
-    setAlert(event);
-  }, [event]);
-
-  const showTransactionPanel = (type: TransactionType) => {
-    setTxType(type);
-    setDisplayTxPanel(true);
-  };
-
-  // const renderIndexerButtons = () => (
-  //   <ButtonsContainer>
-  //     {isIndexer && (
-  //       <ActionButton
-  //         variant="contained"
-  //         color="primary"
-  //         onClick={() => showTransactionPanel(TransactionType.startIndexing)}
-  //       >
-  //         {indexerActions.startIndexing}
-  //       </ActionButton>
-  //     )}
-  //     {isIndexer && (
-  //       <ActionButton
-  //         variant="contained"
-  //         color="primary"
-  //         onClick={() => showTransactionPanel(TransactionType.stopIndexing)}
-  //       >
-  //         {indexerActions.stopIndexing}
-  //       </ActionButton>
-  //     )}
-  //   </ButtonsContainer>
-  // );
 
   return (
     <Container>
-      <TransactionPanel
-        type={txType}
-        display={displayTxPanel}
-        onSendTx={() => setDisplayTxPanel(false)}
-        onCancelled={() => setDisplayTxPanel(false)}
-      />
-      <Alert severity="success" message={alert} onClose={() => setAlert('')} />
+      <HeaderContainer>
+        <Text size={45}>Projects</Text>
+        <Button title="Add Project" onClick={() => console.log('add project')} />
+      </HeaderContainer>
+      <ProjecItemsHeader />
+      {items.map(() => (
+        <ProjectItem />
+      ))}
     </Container>
   );
 };

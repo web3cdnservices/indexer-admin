@@ -10,13 +10,4 @@ export const Container = styled.div`
   width: 100%;
   min-width: 600px;
   padding: 30px 100px;
-  overflow-y: scroll;
-`;
-
-export const HeaderContainer = styled.div`
-  display: flex;
-  width: 100%;
-  min-width: 600px;
-  align-items: center;
-  justify-content: space-between;
 `;

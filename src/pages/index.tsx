@@ -5,7 +5,7 @@ import Header from './header/header';
 import Footer from './footer/footer';
 import Login from './login/loginPage';
 import Projects from './projects/projectsPage';
-import ProjectDetail from './projects/projectDetailsPage';
+import ProjectDetail from './project-details/projectDetailsPage';
 import Account from './account/account';
 
 export { Header, Footer, Login, Projects, Account, ProjectDetail };
