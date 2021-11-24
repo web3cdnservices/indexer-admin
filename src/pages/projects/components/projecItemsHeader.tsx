@@ -3,6 +3,7 @@
 
 import styled from 'styled-components';
 import { Text } from '../../../components/primary';
+import { ItemContainer } from '../styles';
 
 const Container = styled.div`
   display: flex;
@@ -11,11 +12,6 @@ const Container = styled.div`
   height: 60px;
   margin-top: 50px;
   margin-bottom: 30px;
-`;
-
-const TextContainer = styled.div<{ flex?: number }>`
-  display: flex;
-  flex: ${({ flex }) => flex ?? 1};
 `;
 
 const projetHeaderItems = [
@@ -27,9 +23,9 @@ const projetHeaderItems = [
 const ProjecItemsHeader = () => (
   <Container>
     {projetHeaderItems.map(({ title, flex }) => (
-      <TextContainer flex={flex}>
+      <ItemContainer color="#f6f9fc" flex={flex}>
         <Text color="gray">{title}</Text>
-      </TextContainer>
+      </ItemContainer>
     ))}
   </Container>
 );

@@ -13,7 +13,7 @@ import {
   useIsIndexerChanged,
 } from '../../hooks/indexerHook';
 import { useIsMetaMask, useWeb3 } from '../../hooks/web3Hook';
-import { Container, Separator } from './styles';
+import { Container } from './styles';
 import prompts from './prompts';
 import AccountCard from '../../components/accountCard';
 import TransactionPanel from '../../components/transactionPanel';

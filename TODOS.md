@@ -15,14 +15,14 @@
   - [x] Account card component
   - [x] Config controller account
   - [x] unregister from network
-- [ ] Send Tx modal component
 - [x] Display `connect with metamask` view once the extension is locked
-- [ ] Display empty modal when switch to unsupport network and account
-- [ ] Show a tutorial tip let indexer go to project page to add project after config controller account
+- [ ] Send Tx modal component
+account
 
 ## Projects Management
 
-- [ ] Add project workflow
+- [x] UI Implementation for project list page
+- [ ] dd project workflow
 - [ ] Display Project list with data from coordinator service
 - [ ] Project detail page
   - [ ] Start indexing project flow
@@ -32,9 +32,15 @@
 ## Header and Footer
 
 - [x] Header includes icon, tabbars and account profile
-- [ ] Footer includes media links
+- [x] Footer includes media links
 
+## Optimisation
 
+- [ ] Display empty modal when switch to unsupport network and account
+- [ ] Show a tutorial tip let indexer go to project page to add project after config controller
+- [ ] Replace `hashIcon` with other library to generte hash icon
+- [ ] Support font family in the design
+- [ ] Move `colors` to a constant file, support theme in the future
 
 ## Test Values
 

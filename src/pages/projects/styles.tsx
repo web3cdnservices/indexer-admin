@@ -20,3 +20,18 @@ export const HeaderContainer = styled.div`
   align-items: center;
   justify-content: space-between;
 `;
+
+export const ItemContainer = styled.div<{
+  flex?: number;
+  pl?: number;
+  mw?: number;
+  color?: string;
+}>`
+  display: flex;
+  flex: ${({ flex }) => flex ?? 1};
+  background-color: ${({ color }) => color ?? 'white'};
+  padding-left: ${({ pl }) => pl ?? 0}px;
+  min-width: ${({ mw }) => mw ?? 100}px;
+  margin-right: 15px;
+  align-items: center;
+`;

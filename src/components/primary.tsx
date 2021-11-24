@@ -24,6 +24,7 @@ export const Text = styled.div<{
   margin-top: ${({ mt }) => mt ?? 0}px;
   margin-bottom: ${({ mb }) => mb ?? 0}px;
   min-width: ${({ mw }) => mw ?? 10}px;
+  overflow-wrap: break-word;
 `;
 
 const StyledButton = styled(AntButton)<{ width?: number; align?: string }>`
