@@ -11,11 +11,11 @@ export const ContentContainer = styled.div`
   justify-content: space-between;
   border-radius: 18px;
   background-color: white;
+  margin-bottom: 50px;
   padding: 60px;
   min-width: 650px;
   min-height: 450px;
   width: 60%;
-  height: 50%;
 `;
 
 export const TextContainer = styled.div`
@@ -32,6 +32,6 @@ export const DescContainer = styled.div<{ mt?: number }>`
 export const RegistrySteps = styled(Steps)`
   width: 65%;
   margin-top: 10px;
-  margin-bottom: 100px;
+  margin-bottom: 70px;
   min-width: 750px;
 `;

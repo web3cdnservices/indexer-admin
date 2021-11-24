@@ -72,7 +72,6 @@ const Registry = () => {
           }}
         />
       )}
-      <Separator height={30} />
       {(isIndexer || isController) && (
         <AccountCard
           title={controllerItem.title}
