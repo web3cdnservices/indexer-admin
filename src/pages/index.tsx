@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Login from './login/loginPage';
-import Projects from './projects/projects';
-import Indexer from './account/account';
+import Projects from './projects/projectsPage';
+import ProjectDetail from './projects/projectDetailsPage';
+import Account from './account/account';
 
-export { Login, Projects, Indexer };
+export { Login, Projects, Account, ProjectDetail };

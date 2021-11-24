@@ -102,6 +102,3 @@ const Registry = () => {
 };
 
 export default Registry;
-
-// 0x3Cd0A705a2DC65e5b1E1205896BaA2be8A07c6e0
-// 0x798d4Ba9baf0064Ec19eB4F0a1a45785ae9D6DFc

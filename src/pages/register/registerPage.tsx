@@ -35,6 +35,7 @@ const RegisterPage = () => {
     setStep(registerSteps[getStepIndex(currentStep) + 1] as RegisterStep);
   };
 
+  // TODO: show alert when tx failed
   const onTransactionFailed = (error: Error) => {
     console.log('>>>tx failed:', error);
     setLoading(false);
