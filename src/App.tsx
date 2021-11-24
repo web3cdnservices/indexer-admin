@@ -22,6 +22,7 @@ const App: FC = () => (
     <Web3Provider>
       <ContractSDKProvider initialState={contractSDKOptions}>
         <div className="App">
+          <Pages.Header />
           <Router>
             <div className="Main">
               <Switch>
@@ -31,6 +32,7 @@ const App: FC = () => (
               </Switch>
             </div>
           </Router>
+          <Pages.Footer />
         </div>
       </ContractSDKProvider>
     </Web3Provider>

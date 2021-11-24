@@ -1,6 +1,7 @@
 .App {
   display: flex;
-  width: 100%;
+  flex-direction: column;
+  width: 100vw;
   height: 100vh;
   background-color: #f6f9fc;
 }
@@ -12,4 +13,10 @@
   margin: auto;
   background-color: #f6f9fc;
   padding-top: 50px;
+  overflow: scroll;
+}
+
+.ant-tabs-ink-bar {
+  background-color: #f6f9fc;
+  height: 0px;
 }

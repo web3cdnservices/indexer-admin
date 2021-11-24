@@ -1,9 +1,11 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import Header from './header/header';
+import Footer from './footer/footer';
 import Login from './login/loginPage';
 import Projects from './projects/projectsPage';
 import ProjectDetail from './projects/projectDetailsPage';
 import Account from './account/account';
 
-export { Login, Projects, Account, ProjectDetail };
+export { Header, Footer, Login, Projects, Account, ProjectDetail };

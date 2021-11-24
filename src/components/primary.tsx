@@ -7,6 +7,7 @@ import styled from 'styled-components';
 export const Text = styled.div<{
   size?: number;
   fw?: string;
+  ml?: number;
   mr?: number;
   mt?: number;
   mb?: number;
@@ -16,6 +17,7 @@ export const Text = styled.div<{
   color: ${({ color }) => color ?? 'black'};
   font-size: ${({ size }) => size ?? 18}px;
   font-weight: ${({ fw }) => fw ?? 400};
+  margin-left: ${({ ml }) => ml ?? 0}px;
   margin-right: ${({ mr }) => mr ?? 0}px;
   margin-top: ${({ mt }) => mt ?? 0}px;
   margin-bottom: ${({ mb }) => mb ?? 0}px;

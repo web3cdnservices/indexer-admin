@@ -7,8 +7,9 @@ export const Container = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 50px;
+  padding: 0px 50px;
 `;
 
 export const Separator = styled.div<{ height?: number }>`

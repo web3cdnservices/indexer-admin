@@ -19,6 +19,7 @@ import AccountCard from '../../components/accountCard';
 import TransactionPanel from '../../components/transactionPanel';
 import Alert from '../../components/alert';
 import { TransactionType } from '../../utils/transactions';
+import MetaMaskView from '../login/metamaskView';
 
 const Registry = () => {
   const [displayTxPanel, setDisplayTxPanel] = useState(false);
@@ -55,7 +56,6 @@ const Registry = () => {
 
   return (
     <Container>
-      <Separator height={80} />
       {isMetaMask && isIndexer && (
         <AccountCard
           title={indexer.title}
@@ -66,7 +66,7 @@ const Registry = () => {
           desc={indexer.desc}
           loading={indexerLoading}
           onClick={() => {
-            // FIXME: should call when send the transaction
+            // FIXME: should call when sending the transaction
             checkIsIndexerChanged(false, () => history.replace('./'));
             showTransactionPanel(TransactionType.unregister);
           }}
@@ -90,6 +90,8 @@ const Registry = () => {
           }}
         />
       )}
+      {!isMetaMask && <MetaMaskView />}
+
       <TransactionPanel
         type={txType}
         display={displayTxPanel}
