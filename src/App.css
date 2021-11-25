@@ -20,3 +20,19 @@
   background-color: #f6f9fc;
   height: 0px;
 }
+
+.ant-modal-header {
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.ant-modal-mask {
+  background-color:  rgba(0, 0, 0, 0.65);
+}
+
+.ant-modal-content {
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+}
+

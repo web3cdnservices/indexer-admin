@@ -9,8 +9,8 @@ import localnetDeployment from '../contract/localnet.json';
 import testnetDeployment from '../contract/testnet.json';
 import { useIsMetaMask, useWeb3Provider } from '../hooks/web3Hook';
 
-const network: SubqueryNetwork = 'testnet';
-const deploymentDetails = network === 'testnet' ? testnetDeployment : localnetDeployment;
+const network: SubqueryNetwork = 'local';
+const deploymentDetails = network === 'local' ? testnetDeployment : localnetDeployment;
 
 export const contractSDKOptions = {
   network,

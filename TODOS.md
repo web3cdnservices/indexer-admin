@@ -22,12 +22,13 @@ account
 ## Projects Management
 
 - [x] UI Implementation for project list page
-- [ ] dd project workflow
-- [ ] Display Project list with data from coordinator service
-- [ ] Project detail page
-  - [ ] Start indexing project flow
-  - [ ] Update project to ready flow
-  - [ ] UI components for project detail page
+- [x] Display Project list with data from coordinator service
+- [x] Project detail page
+- [x] UI components for project detail page
+
+- [ ] add project workflow
+- [ ] Start indexing project flow
+- [ ] Update project to ready flow
 
 ## Header and Footer
 
@@ -42,6 +43,7 @@ account
 - [ ] Support font family in the design
 - [ ] Move `colors` to a constant file, support theme in the future
 - [ ] The account info in the header bar, show address excpt in the account page.
+- [ ] Add `copy` button for `deploymentID` `endpoints` `addresses`
 
 ## Test Values
 

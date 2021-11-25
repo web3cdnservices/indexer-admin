@@ -17,7 +17,7 @@ const RPC_URLS: Record<number, string> = {
 };
 
 export const injectedConntector = new InjectedConnector({
-  supportedChainIds: [1, 1281, 1285, 1287],
+  supportedChainIds: [1281, 1285, 1287],
 });
 
 export const chainNames: Record<number, string> = {

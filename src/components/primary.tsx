@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Button as AntButton } from 'antd';
+import { ButtonHTMLType } from 'antd/lib/button/button';
 import { FC } from 'react';
 import styled from 'styled-components';
 
@@ -54,13 +55,22 @@ const StyledButton = styled(AntButton)<{
 type ButtonProps = {
   title: string;
   onClick: () => void;
+  htmlType?: ButtonHTMLType;
   loading?: boolean;
   color?: string;
   width?: number;
   margin?: number;
 };
 
-export const Button: FC<ButtonProps> = ({ title, onClick, loading, color, width, margin }) => (
+export const Button: FC<ButtonProps> = ({
+  title,
+  onClick,
+  loading,
+  htmlType,
+  color,
+  width,
+  margin,
+}) => (
   <StyledButton
     loading={!!loading}
     align="center"
@@ -71,6 +81,7 @@ export const Button: FC<ButtonProps> = ({ title, onClick, loading, color, width,
     color={color}
     margin={margin}
     onClick={onClick}
+    htmlType={htmlType ?? 'button'}
   >
     {title}
   </StyledButton>
