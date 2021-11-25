@@ -45,22 +45,22 @@ type Props = {
   status: IndexingStatus;
 };
 
-const ProjectItem: FC<Props> = ({ id, title, progress, status }) => {
+const ProjectItem: FC<Props> = ({ id, title, progress = 0, status }) => {
   const history = useHistory();
   return (
     <Container onClick={() => history.push('/project', { id, name: title, status })}>
-      <ItemContainer pl={15} flex={4}>
+      <ItemContainer pl={15} flex={7}>
         <Hashicon hasher="keccak" value={id} size={70} />
         <ProfileContainer>
           <Text fw="600" size={18}>
-            {title}
+            {title ?? 'Sushi Swap'}
           </Text>
-          <Text size={15} mt={5}>
+          <Text size={13} mt={5}>
             {id}
           </Text>
         </ProfileContainer>
       </ItemContainer>
-      <ItemContainer flex={3}>
+      <ItemContainer flex={5}>
         <ProgressBar percent={progress} />
       </ItemContainer>
       <ItemContainer flex={1}>

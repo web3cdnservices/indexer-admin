@@ -21,10 +21,10 @@ export const ADD_INDEXER = gql`
 `;
 
 export const ADD_PROJECT = gql`
-  mutation AddProject($id: ID!, $endpoint: String!) {
-    addProject(id: $id, endpoint: $endpoint) {
+  mutation AddProject($id: String!) {
+    addProject(id: $id) {
       id
-      endpoint
+      status
     }
   }
 `;
@@ -44,7 +44,9 @@ export const GET_PROJECTS = gql`
   query {
     getProjects {
       id
-      nodeEndpoint
+      status
+      indexerEndpoint
+      queryEndpoint
     }
   }
 `;

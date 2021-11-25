@@ -54,7 +54,7 @@ const StyledButton = styled(AntButton)<{
 
 type ButtonProps = {
   title: string;
-  onClick: () => void;
+  onClick?: () => void;
   htmlType?: ButtonHTMLType;
   loading?: boolean;
   color?: string;

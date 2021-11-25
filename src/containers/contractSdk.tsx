@@ -9,12 +9,17 @@ import localnetDeployment from '../contract/localnet.json';
 import testnetDeployment from '../contract/testnet.json';
 import { useIsMetaMask, useWeb3Provider } from '../hooks/web3Hook';
 
+// TODO: updte network in runtime
 const network: SubqueryNetwork = 'local';
-const deploymentDetails = network === 'local' ? testnetDeployment : localnetDeployment;
+
+const deployments = {
+  local: localnetDeployment,
+  testnet: testnetDeployment,
+};
 
 export const contractSDKOptions = {
+  deploymentDetails: deployments[network],
   network,
-  deploymentDetails,
 };
 
 export type SDK = ContractSDK | undefined;

@@ -45,6 +45,10 @@ account
 - [ ] The account info in the header bar, show address excpt in the account page.
 - [ ] Add `copy` button for `deploymentID` `endpoints` `addresses`
 
+## Improvements
+
+- [ ] Indexer should can remove `Proejct` which is not started, should show `remove proejct` button in the details page
+
 ## Test Values
 
 - Controller Account:

@@ -1,19 +1,15 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { IndexingStatus } from '../projects/constant';
+import { IndexingStatus } from './constant';
 
 export type TProject = {
   id: string;
-  name: string;
   title: string;
   progress: number;
   status: IndexingStatus;
 };
 
-export type TService = {
-  name: string;
-  status: string;
-  url: string;
-  imageVersion: string;
+export type FormValues = {
+  [key: string]: string;
 };

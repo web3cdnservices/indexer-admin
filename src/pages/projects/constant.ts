@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export enum IndexingStatus {
+  NOTSTART,
   INDEXING,
   READY,
   TERMINATED,
-  NOTSTART,
 }
 
 export const statusColor = {
@@ -21,3 +21,9 @@ export const statusText = {
   [IndexingStatus.READY]: 'Ready',
   [IndexingStatus.TERMINATED]: 'Stop',
 };
+
+export enum FormKey {
+  ADD_PROJECT = 'ADD_PROJECT',
+  START_PROJECT = 'START_PROJECT',
+  UPDATE_PROJECT_READY = 'UPDATE_PROJECT_READY',
+}
