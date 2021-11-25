@@ -22,7 +22,7 @@ export const Text = styled.div<{
   clolor?: string;
 }>`
   // TODO: support diff font-family props
-  color: ${({ color }) => color ?? 'black'};
+  color: ${({ color }) => color ?? '#191d27'};
   font-size: ${({ size }) => size ?? 18}px;
   font-weight: ${({ fw }) => fw ?? 400};
   margin-left: ${({ ml }) => ml ?? 0}px;

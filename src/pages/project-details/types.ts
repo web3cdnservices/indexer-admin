@@ -8,3 +8,10 @@ export type TProject = {
   name: string;
   status: IndexingStatus;
 };
+
+export type TService = {
+  name: string;
+  status: string;
+  url: string;
+  imageVersion: string;
+};

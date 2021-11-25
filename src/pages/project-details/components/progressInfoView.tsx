@@ -3,6 +3,8 @@
 
 import styled from 'styled-components';
 import { Progress } from 'antd';
+import { FC } from 'react';
+import { TService } from '../types';
 
 const Container = styled.div`
   display: flex;
@@ -16,7 +18,12 @@ const ProgressBar = styled(Progress)`
   margin-right: 20px;
 `;
 
-const ProgressInfoView = () => {
+type Props = {
+  indexerService: TService;
+  queryService: TService;
+};
+
+const ProgressInfoView: FC<Props> = ({ indexerService, queryService }) => {
   return (
     <Container>
       <ProgressBar
