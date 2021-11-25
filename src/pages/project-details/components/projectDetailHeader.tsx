@@ -4,7 +4,8 @@
 import styled from 'styled-components';
 import { Hashicon } from '@emeraldpay/hashicon-react';
 import { useLocation } from 'react-router-dom';
-import { Button, Text } from '../../../components/primary';
+import { FC } from 'react';
+import { Button, Separator, Text } from '../../../components/primary';
 import { buttonItems } from '../constant';
 import { TProject } from '../types';
 
@@ -29,9 +30,17 @@ const ContentContainer = styled.div`
 `;
 
 const VersionContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
   height: 50px;
-  background-color: lightgray;
-  margin-top: 20px;
+  width: 300px;
+`;
+
+const VersionItemContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 `;
 
 const ActionContainer = styled.div`
@@ -40,6 +49,20 @@ const ActionContainer = styled.div`
   align-items: center;
   justify-content: center;
 `;
+
+type VersionProps = {
+  versionType: string;
+  value: string;
+};
+
+const VersionItem: FC<VersionProps> = ({ versionType, value }) => (
+  <VersionItemContainer>
+    <Text size={15}>{versionType}</Text>
+    <Text mt={5} color="gray" fw="400" size={13}>
+      {value}
+    </Text>
+  </VersionItemContainer>
+);
 
 const ProjectDetailsHeader = () => {
   const location = useLocation();
@@ -62,7 +85,11 @@ const ProjectDetailsHeader = () => {
           <Text fw="400" size={15}>
             {id}
           </Text>
-          <VersionContainer />
+          <VersionContainer>
+            <VersionItem versionType="INDEXED NETWORK" value="Local Network" />
+            <Separator height={50} />
+            <VersionItem versionType="VERSION" value="V0.01" />
+          </VersionContainer>
         </ContentContainer>
       </LeftContainer>
       {!!actionItems && (

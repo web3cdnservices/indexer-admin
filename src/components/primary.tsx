@@ -1,14 +1,14 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Color } from '@mui/material';
 import { Button as AntButton } from 'antd';
 import { FC } from 'react';
 import styled from 'styled-components';
 
-export const Separator = styled.div<{ height?: number }>`
-  min-height: 20px;
-  height: ${(p) => p.height || 20}px;
+export const Separator = styled.div<{ height?: number; width?: number; color?: string }>`
+  height: ${({ height }) => height ?? 1}px;
+  width: ${({ width }) => width ?? 1}px;
+  background-color: ${({ color }) => color ?? 'lightgray'};
 `;
 
 export const Text = styled.div<{
