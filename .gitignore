@@ -8,9 +8,6 @@
 # testing
 /coverage
 
-# local cotnracts
-/src/contract/*.json
-
 # production
 /build
 
