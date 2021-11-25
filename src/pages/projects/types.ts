@@ -8,6 +8,8 @@ export type TProject = {
   title: string;
   progress: number;
   status: IndexingStatus;
+  indexEndpoint?: string;
+  queryEndpoint?: string;
 };
 
 export type FormValues = {
