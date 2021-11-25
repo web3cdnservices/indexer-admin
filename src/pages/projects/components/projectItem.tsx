@@ -48,7 +48,7 @@ type Props = {
 const ProjectItem: FC<Props> = ({ id, title, progress, status }) => {
   const history = useHistory();
   return (
-    <Container onClick={() => history.push('/project', { id })}>
+    <Container onClick={() => history.push('/project', { id, name: title, status })}>
       <ItemContainer pl={15} flex={4}>
         <Hashicon hasher="keccak" value={id} size={70} />
         <ProfileContainer>

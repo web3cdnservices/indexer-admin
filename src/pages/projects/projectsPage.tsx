@@ -28,7 +28,7 @@ const Projects = () => {
           </HeaderContainer>
           <ProjecItemsHeader />
           {mockProjects.map((props) => (
-            <ProjectItem {...props} />
+            <ProjectItem key={props.id} {...props} />
           ))}
         </ContentContainer>
       )}

@@ -23,7 +23,7 @@ const projetHeaderItems = [
 const ProjecItemsHeader = () => (
   <Container>
     {projetHeaderItems.map(({ title, flex }) => (
-      <ItemContainer color="#f6f9fc" flex={flex}>
+      <ItemContainer key={title} color="#f6f9fc" flex={flex}>
         <Text color="gray">{title}</Text>
       </ItemContainer>
     ))}

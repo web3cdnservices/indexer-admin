@@ -41,6 +41,7 @@ account
 - [ ] Replace `hashIcon` with other library to generte hash icon
 - [ ] Support font family in the design
 - [ ] Move `colors` to a constant file, support theme in the future
+- [ ] The account info in the header bar, show address excpt in the account page.
 
 ## Test Values
 

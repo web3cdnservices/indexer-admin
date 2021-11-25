@@ -9,7 +9,7 @@ import deploymentDetails from '../contract/localnet.json';
 import { useIsMetaMask, useWeb3Provider } from '../hooks/web3Hook';
 
 export const contractSDKOptions = {
-  network: 'local' as SubqueryNetwork,
+  network: 'testnet' as SubqueryNetwork,
   deploymentDetails,
 };
 

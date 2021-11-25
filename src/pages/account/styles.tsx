@@ -11,8 +11,3 @@ export const Container = styled.div`
   align-items: center;
   padding: 0px 50px;
 `;
-
-export const Separator = styled.div<{ height?: number }>`
-  min-height: 20px;
-  height: ${(p) => p.height || 20}px;
-`;
