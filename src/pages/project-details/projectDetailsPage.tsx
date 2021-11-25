@@ -6,13 +6,14 @@ import ProgressInfoView from './components/progressInfoView';
 import ProjectServiceCard from './components/projectServiceCard';
 import { Container } from './styles';
 import ProjectDetailsView from './components/projectDetailsView';
+import { indexerServiceItem, queryServiceItem } from './mock';
 
 const ProjectDetailsPage = () => {
   return (
     <Container>
       <ProjectDetailsHeader />
       <ProgressInfoView />
-      <ProjectServiceCard />
+      <ProjectServiceCard indexerService={indexerServiceItem} queryService={queryServiceItem} />
       <ProjectDetailsView />
     </Container>
   );

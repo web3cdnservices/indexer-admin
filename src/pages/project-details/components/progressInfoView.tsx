@@ -3,14 +3,11 @@
 
 import styled from 'styled-components';
 import { Progress } from 'antd';
-import { FC } from 'react';
-import { TService } from '../types';
 
 const Container = styled.div`
   display: flex;
-  flex: 1;
   min-width: 350px;
-  min-height: 80px;
+  height: 40px;
 `;
 
 const ProgressBar = styled(Progress)`
@@ -18,21 +15,11 @@ const ProgressBar = styled(Progress)`
   margin-right: 20px;
 `;
 
-type Props = {
-  indexerService: TService;
-  queryService: TService;
-};
-
-const ProgressInfoView: FC<Props> = ({ indexerService, queryService }) => {
+const ProgressInfoView = () => {
+  const strokeColor = { '0%': '#4388dd', '100%': '#ff4581' };
   return (
     <Container>
-      <ProgressBar
-        percent={70}
-        strokeColor={{
-          '0%': '#4388dd',
-          '100%': '#ff4581',
-        }}
-      />
+      <ProgressBar percent={70} strokeColor={strokeColor} />
     </Container>
   );
 };

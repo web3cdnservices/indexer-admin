@@ -5,10 +5,16 @@ import { Button as AntButton } from 'antd';
 import { FC } from 'react';
 import styled from 'styled-components';
 
-export const Separator = styled.div<{ height?: number; width?: number; color?: string }>`
+export const Separator = styled.div<{
+  height?: number;
+  width?: number;
+  color?: string;
+  mr?: number;
+}>`
   height: ${({ height }) => height ?? 1}px;
   width: ${({ width }) => width ?? 1}px;
   background-color: ${({ color }) => color ?? 'lightgray'};
+  margin-right: ${({ mr }) => mr ?? 0}px;
 `;
 
 export const Text = styled.div<{

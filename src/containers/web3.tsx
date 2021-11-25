@@ -28,7 +28,7 @@ export const chainNames: Record<number, string> = {
 
 const networkConnector = new NetworkConnector({
   urls: RPC_URLS,
-  defaultChainId: 1281,
+  defaultChainId: 1287,
 });
 
 // TODO: Acala would use https://github.com/AcalaNetwork/bodhi.js

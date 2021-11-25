@@ -5,11 +5,15 @@ import React from 'react';
 import { ContractSDK, SdkOptions, SubqueryNetwork } from '@subql/contract-sdk';
 import { createContainer } from './unstated';
 import Logger from '../utils/logger';
-import deploymentDetails from '../contract/localnet.json';
+import localnetDeployment from '../contract/localnet.json';
+import testnetDeployment from '../contract/testnet.json';
 import { useIsMetaMask, useWeb3Provider } from '../hooks/web3Hook';
 
+const network: SubqueryNetwork = 'testnet';
+const deploymentDetails = network === 'testnet' ? testnetDeployment : localnetDeployment;
+
 export const contractSDKOptions = {
-  network: 'testnet' as SubqueryNetwork,
+  network,
   deploymentDetails,
 };
 
