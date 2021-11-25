@@ -3,6 +3,7 @@
 
 import styled from 'styled-components';
 import { Progress } from 'antd';
+import { FC } from 'react';
 
 const Container = styled.div`
   display: flex;
@@ -15,11 +16,15 @@ const ProgressBar = styled(Progress)`
   margin-right: 20px;
 `;
 
-const ProgressInfoView = () => {
+type Props = {
+  percent: number;
+};
+
+const ProgressInfoView: FC<Props> = ({ percent }) => {
   const strokeColor = { '0%': '#4388dd', '100%': '#ff4581' };
   return (
     <Container>
-      <ProgressBar percent={70} strokeColor={strokeColor} />
+      <ProgressBar percent={percent} strokeColor={strokeColor} />
     </Container>
   );
 };

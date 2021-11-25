@@ -7,7 +7,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-width: 600px;
+  min-width: 1270px;
   padding: 0px 50px;
   padding-bottom: 50px;
   overflow-y: scroll;

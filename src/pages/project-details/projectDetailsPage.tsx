@@ -8,11 +8,13 @@ import { Container } from './styles';
 import ProjectDetailsView from './components/projectDetailsView';
 import { indexerServiceItem, queryServiceItem } from './mock';
 
+// TODO: 1. can use the existing `query regiter` query service to get the project info: { name | owner | version }
+// TODO: 2. request coordinator service to get the `node` and `indexer` service metadata -> health | endpoint | version
 const ProjectDetailsPage = () => {
   return (
     <Container>
       <ProjectDetailsHeader />
-      <ProgressInfoView />
+      <ProgressInfoView percent={80} />
       <ProjectServiceCard indexerService={indexerServiceItem} queryService={queryServiceItem} />
       <ProjectDetailsView />
     </Container>

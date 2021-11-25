@@ -11,6 +11,9 @@ import { useController, useIsIndexer } from '../../hooks/indexerHook';
 
 const { TabPane } = Tabs;
 
+const truncateString = (value: string) =>
+  value ? `${value.substring(0, 12)}...${value.substring(value.length - 12)}` : '';
+
 // FIXME: fix tabs
 const Header = () => {
   const { account } = useWeb3();
@@ -34,8 +37,8 @@ const Header = () => {
       {isMetaMask && (
         <RightContainer>
           <Hashicon hasher="keccak" value={account ?? ''} size={40} />
-          <Text size={16} mr={40}>
-            Subquery Master
+          <Text size={16} ml={20} mr={20}>
+            {truncateString(account ?? '')}
           </Text>
         </RightContainer>
       )}

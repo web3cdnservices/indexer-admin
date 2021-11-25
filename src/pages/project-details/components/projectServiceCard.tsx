@@ -22,17 +22,13 @@ const CardContaineer = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
+  min-width: 450px;
 `;
 
 const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
 `;
-
-type Props = {
-  indexerService?: TService;
-  queryService?: TService;
-};
 
 const ServiceCard: FC<TService> = ({ name, status, url, imageVersion }) => (
   <CardContaineer>
@@ -42,16 +38,21 @@ const ServiceCard: FC<TService> = ({ name, status, url, imageVersion }) => (
       </Text>
       <StatusLabel text={status} />
     </HeaderContainer>
-    <Text color="gray" mt={10}>{`Endpoint: ${url}`}</Text>
-    <Text color="gray" mt={10}>{`Image Version: ${imageVersion}`}</Text>
+    <Text size={15} color="gray" mt={10}>{`Endpoint: ${url}`}</Text>
+    <Text size={15} color="gray" mt={10}>{`Image Version: ${imageVersion}`}</Text>
   </CardContaineer>
 );
+
+type Props = {
+  indexerService?: TService;
+  queryService?: TService;
+};
 
 const ProjectServiceCard: FC<Props> = ({ indexerService, queryService }) => {
   return (
     <Container>
       {!!indexerService && <ServiceCard {...indexerService} />}
-      {!!indexerService && !!indexerService && <Separator mr={80} height={100} />}
+      {!!indexerService && !!queryService && <Separator mr={80} height={100} />}
       {!!queryService && <ServiceCard {...queryService} />}
     </Container>
   );

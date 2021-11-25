@@ -26,5 +26,5 @@ export const RightContainer = styled.div`
   background-color: rgba(67, 136, 221, 0.24);
   border-radius: 10px;
   min-width: 260px;
-  height: 60px;
+  height: 55px;
 `;
