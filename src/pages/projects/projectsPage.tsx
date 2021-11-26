@@ -61,8 +61,7 @@ const Projects = () => {
           ))}
         </ContentContainer>
       )}
-      {!isMetaMask && <MetaMaskView />}
-      <Modal title="Add new project" visible={visible} onClose={() => setVisible(false)}>
+      <Modal title="Add new roject" visible={visible} onClose={() => setVisible(false)}>
         <ModalContent loading={loading} onClick={onAddProjectRequest} />
       </Modal>
     </Container>

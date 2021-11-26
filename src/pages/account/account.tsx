@@ -20,9 +20,9 @@ import MetaMaskView from '../login/metamaskView';
 import Modal from '../../components/actionModal';
 import { ActionType } from '../../utils/transactions';
 import ModalView from '../../components/modalView';
-import { createSteps } from './constant';
+import { createControllerSteps, createUnregisterSteps, modalTitles } from './constant';
 import { UPDAET_CONTROLLER } from '../../utils/queries';
-import { configController } from '../../utils/indexerActions';
+import { configController, unRegister } from '../../utils/indexerActions';
 import { useContractSDK } from '../../containers/contractSdk';
 
 const Registry = () => {
@@ -30,6 +30,7 @@ const Registry = () => {
   const [timestamp, setTimestamp] = useState(Date.now());
   const [currentStep, setCurrentStep] = useState(0);
   const [updatedC, setUpdatedC] = useState('');
+  const [actionType, setActionType] = useState<ActionType | undefined>(undefined);
 
   const { account } = useWeb3();
   const signer = useSigner();
@@ -54,7 +55,7 @@ const Registry = () => {
     setCurrentStep(0);
   };
 
-  const stepsConfig = createSteps(
+  const controllerStepsConfig = createControllerSteps(
     (_, values) => {
       // const privateKey = values ? values[FormKey.CONFIG_CONTROLLER] : '';
       // FIXME: fix hard code
@@ -79,6 +80,22 @@ const Registry = () => {
     }
   );
 
+  const unregisterStepConfig = createUnregisterSteps(() => {
+    unRegister(sdk, signer)
+      .then(() => {
+        checkIsIndexerChanged(false, () => {
+          onModalClose();
+          history.replace('./');
+        }).catch((e) => console.log('error:', e));
+      })
+      .catch((errorMsg) => {
+        console.log('error:', errorMsg);
+        onModalClose();
+      });
+  });
+
+  const steps = { ...controllerStepsConfig, ...unregisterStepConfig };
+
   // TODO: display empty view if the current account is invalid
 
   return (
@@ -93,6 +110,7 @@ const Registry = () => {
           desc={indexer.desc}
           loading={indexerLoading}
           onClick={() => {
+            setActionType(ActionType.unregister);
             setVisible(true);
             // FIXME: should call when sending the transaction
             // checkIsIndexerChanged(false, () => history.replace('./'));
@@ -107,21 +125,24 @@ const Registry = () => {
           buttonTitle={isIndexer ? controllerItem.buttonTitle : ''}
           desc={controllerItem.desc}
           onClick={() => {
+            setActionType(ActionType.configCntroller);
             setVisible(true);
-            // FIXME: should call and get the target controller address when sending the transaction
-            checkIsControllerChanged('0x3Cd0A705a2DC65e5b1E1205896BaA2be8A07c6e0', () =>
-              setTimestamp(Date.now())
-            );
           }}
         />
       )}
       {!isMetaMask && <MetaMaskView />}
-      <Modal visible={visible} title="Config Controller" onClose={onModalClose}>
+      <Modal
+        visible={visible}
+        // @ts-ignore
+        title={actionType ? modalTitles[actionType] : ''}
+        onClose={onModalClose}
+      >
         <ModalView
-          steps={stepsConfig[ActionType.configCntroller]}
+          // @ts-ignore
+          steps={actionType ? steps[actionType] : []}
           currentStep={currentStep}
           type={ActionType.configCntroller}
-          loading={updateControllerLoading || controllerLoading}
+          loading={updateControllerLoading || indexerLoading || controllerLoading}
         />
       </Modal>
     </Container>

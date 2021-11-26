@@ -5,7 +5,12 @@ import { createStepItem, ClickAction } from '../../components/modalView';
 import { ActionType } from '../../utils/transactions';
 import { FormKey } from '../projects/constant';
 
-export const createSteps = (
+export const modalTitles = {
+  [ActionType.configCntroller]: 'Config Controller Account',
+  [ActionType.unregister]: 'Unregister Indexer Account',
+};
+
+export const createControllerSteps = (
   onUploadController: ClickAction,
   onSendTxConfigController: ClickAction
 ) => ({
@@ -25,6 +30,19 @@ export const createSteps = (
       'Send transaction to the network to update the controller, the transaction processing time may take around 10s, it depends on the network and gas fee.',
       'Send Transction',
       onSendTxConfigController,
+      false
+    ),
+  ],
+});
+
+export const createUnregisterSteps = (onUnregister: ClickAction) => ({
+  [ActionType.unregister]: [
+    createStepItem(
+      0,
+      'Unregister from Network',
+      `Sorry to see the indexer unregister from the Subquery Network, please note that the staking token will deposit to your current account once transction processed`,
+      'Unregister',
+      onUnregister,
       false
     ),
   ],
