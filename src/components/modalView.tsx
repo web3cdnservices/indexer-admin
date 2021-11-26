@@ -17,7 +17,8 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 10px 0px;
+  padding-top: 10px;
+  padding-bottom: 25px;
 `;
 
 export const ModalSteps = styled(Steps)`
@@ -33,7 +34,22 @@ export const LoginForm = styled(Form)`
   justify-content: space-between;
 `;
 
-export type ClickAction = (type: ActionType, values: FormValues) => void;
+export const ContentContainer = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const DescContainer = styled.div`
+  display: flex;
+  width: 80%;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export type ClickAction = (type: ActionType, values?: FormValues) => void;
 
 export type StepItem = {
   index: number;
@@ -76,7 +92,7 @@ const ModalView: FC<Props> = ({ currentStep = 0, steps, type, loading }) => {
 
   const renderFormContent = (item: StepItem) => (
     <LoginForm
-      name="login"
+      name={item.formKey}
       layout="vertical"
       onFinish={(values) => item.onClick(type, values as FormValues)}
     >
@@ -96,7 +112,24 @@ const ModalView: FC<Props> = ({ currentStep = 0, steps, type, loading }) => {
     </LoginForm>
   );
 
-  const renderContent = (item: StepItem) => <Container />;
+  const renderContent = (item: StepItem) => (
+    <ContentContainer>
+      <DescContainer>
+        <Text fw="600" mt={20}>
+          {item.title}
+        </Text>
+        <Text mt={20} size={15} color="gray">
+          {item.desc}
+        </Text>
+      </DescContainer>
+      <Button
+        width={350}
+        title={item.buttonTitle}
+        loading={loading}
+        onClick={() => item.onClick(type)}
+      />
+    </ContentContainer>
+  );
 
   const renderSteps = () => {
     if (steps?.length === 1) return null;

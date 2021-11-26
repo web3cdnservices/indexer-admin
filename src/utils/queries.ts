@@ -50,3 +50,12 @@ export const GET_PROJECTS = gql`
     }
   }
 `;
+
+export const UPDAET_CONTROLLER = gql`
+  mutation UpdateController($controller: String!) {
+    updateController(controller: $controller) {
+      indexer
+      controller
+    }
+  }
+`;

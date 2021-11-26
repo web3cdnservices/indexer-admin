@@ -53,7 +53,7 @@ type Props = {
   desc: string;
   buttonTitle: string;
   onClick: () => void;
-  loading: boolean;
+  loading?: boolean;
   name?: string;
   account?: string;
   status?: string;
