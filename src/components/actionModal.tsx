@@ -19,13 +19,14 @@ const Container = styled.div`
 
 type Props = {
   visible: boolean;
+  title: string;
   onClose: () => void;
 };
 
 // TOOD: create a global modal, using context
-const ActionModal: FC<Props> = ({ visible, onClose, children }) => {
+const ActionModal: FC<Props> = ({ visible, title, onClose, children }) => {
   return (
-    <StyledModal footer={null} visible={visible} title="Developement" onCancel={onClose}>
+    <StyledModal footer={null} visible={visible} title={title} onCancel={onClose}>
       <Container>{children}</Container>
     </StyledModal>
   );

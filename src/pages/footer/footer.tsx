@@ -9,7 +9,7 @@ import { Text } from '../../components/primary';
 
 const Header = () => {
   const location = useLocation();
-  if (['/project', '/projects'].includes(location.pathname)) return null;
+  if (['/project', '/projects', '/account'].includes(location.pathname)) return null;
 
   return (
     <Container>

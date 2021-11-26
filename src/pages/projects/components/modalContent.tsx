@@ -22,8 +22,6 @@ type Props = {
   onClick: (values: FormValues) => void;
 };
 
-// TODO: create `constant` file to store the `name -> formItem key`
-
 // TODO: 1. there has 2 types content: [1 - form with button] [description with button]
 // TODO: 2. Add step and chain the actions
 const ModalContent: FC<Props> = ({ loading, onClick }) => {
