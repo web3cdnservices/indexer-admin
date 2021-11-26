@@ -16,7 +16,7 @@
   - [x] Config controller account
   - [x] unregister from network
 - [x] Display `connect with metamask` view once the extension is locked
-- [ ] Send Tx modal component
+- [x] Send Tx modal component
 account
 
 ## Projects Management
@@ -26,9 +26,9 @@ account
 - [x] Project detail page
 - [x] UI components for project detail page
 
-- [ ] add project workflow
-- [ ] Start indexing project flow
-- [ ] Update project to ready flow
+- [x] add project workflow
+- [x] Start indexing project flow
+- [x] Update project to ready flow
 
 ## Header and Footer
 
@@ -42,7 +42,7 @@ account
 - [ ] Replace `hashIcon` with other library to generte hash icon
 - [ ] Support font family in the design
 - [ ] Move `colors` to a constant file, support theme in the future
-- [ ] The account info in the header bar, show address excpt in the account page.
+- [x] The account info in the header bar, show address excpt in the account page.
 - [ ] Add `copy` button for `deploymentID` `endpoints` `addresses`
 
 ## Improvements
