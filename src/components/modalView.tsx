@@ -49,7 +49,7 @@ export const DescContainer = styled.div`
   align-items: center;
 `;
 
-export type ClickAction = (type: ActionType, values?: FormValues) => void;
+export type ClickAction = (type?: ActionType, values?: FormValues) => void;
 
 export type StepItem = {
   index: number;
@@ -59,6 +59,7 @@ export type StepItem = {
   onClick: ClickAction;
   isForm: boolean;
   formKey?: FormKey;
+  placeHolder?: string;
 };
 
 export const createStepItem = (
@@ -68,7 +69,8 @@ export const createStepItem = (
   buttonTitle: string,
   onClick: ClickAction,
   isForm: boolean,
-  formKey?: FormKey
+  formKey?: FormKey,
+  placeHolder?: string
 ) => ({
   index,
   title,
@@ -77,13 +79,14 @@ export const createStepItem = (
   onClick,
   isForm,
   formKey,
+  placeHolder,
 });
 
 type Props = {
   steps: StepItem[] | undefined;
   currentStep: number;
-  type: ActionType;
   loading: boolean;
+  type?: ActionType;
 };
 
 const ModalView: FC<Props> = ({ currentStep = 0, steps, type, loading }) => {
@@ -97,7 +100,7 @@ const ModalView: FC<Props> = ({ currentStep = 0, steps, type, loading }) => {
       onFinish={(values) => item.onClick(type, values as FormValues)}
     >
       <FormItem name={item.formKey} validateStatus="success" label={item.title}>
-        <Input size="large" placeholder="0xd6baee14e74baf30a5e409573d801575397f358ea91be5ce64" />
+        <Input size="large" placeholder={item.placeHolder} />
         {item.desc && (
           <Text mt={20} size={13} color="gray">
             {item.desc}

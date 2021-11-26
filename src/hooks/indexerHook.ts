@@ -56,12 +56,12 @@ export const useIsApproved = () => {
   return isApprove;
 };
 
-const useCheckStateChanged = (caller?: () => Promise<boolean | string> | undefined) => {
+const useCheckStateChanged = (caller?: () => Promise<boolean | string | number> | undefined) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | undefined>(undefined);
 
   const request = useCallback(
-    (targetValue: boolean | string, callBack: () => void): Promise<void> =>
+    (targetValue: boolean | string | number, callBack: () => void): Promise<void> =>
       new Promise((_, reject) => {
         if (!caller) {
           reject(new Error('Contract SDK not init'));
@@ -103,6 +103,14 @@ export const useIsIndexerChanged = () => {
   const { account } = useWeb3();
   const sdk = useContractSDK();
   return useCheckStateChanged(() => sdk?.indexerRegistry.isIndexer(account ?? ''));
+};
+
+export const useIsIndexingStatusChanged = (id: string) => {
+  const { account } = useWeb3();
+  const sdk = useContractSDK();
+  return useCheckStateChanged(() =>
+    sdk?.queryRegistry.deploymentStatusByIndexer(id, account ?? '').then((item) => item.status)
+  );
 };
 
 export const useIsApproveChanged = () => {

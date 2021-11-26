@@ -126,6 +126,30 @@ export const startIndexing = (
       .catch((error) => reject(error.message));
   });
 
+export const readyIndexing = (
+  sdk: SDK,
+  signer: Signer,
+  deploymentId: string | undefined
+): Promise<string> =>
+  new Promise((resolve, reject) => {
+    if (!sdk || !signer) {
+      reject(ErrorMessages.sdkOrSignerError);
+      return;
+    }
+
+    if (!deploymentId) {
+      reject(ErrorMessages.deploymentIdError);
+      return;
+    }
+
+    sdk.queryRegistry
+      .connect(signer)
+      .updateIndexingStatusToReady(deploymentId, Date.now())
+      .then(() => resolve(''))
+      // @ts-ignore
+      .catch((error) => reject(error.message));
+  });
+
 export const stopIndexing = (
   sdk: SDK,
   signer: Signer,

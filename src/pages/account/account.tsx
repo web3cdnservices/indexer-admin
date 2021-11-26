@@ -141,7 +141,7 @@ const Registry = () => {
           // @ts-ignore
           steps={actionType ? steps[actionType] : []}
           currentStep={currentStep}
-          type={ActionType.configCntroller}
+          type={actionType}
           loading={updateControllerLoading || indexerLoading || controllerLoading}
         />
       </Modal>

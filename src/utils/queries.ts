@@ -29,6 +29,24 @@ export const ADD_PROJECT = gql`
   }
 `;
 
+export const START_PROJECT = gql`
+  mutation StartProject($id: String!, $indexerEndpoint: String!) {
+    startProject(id: $id, indexerEndpoint: $indexerEndpoint) {
+      id
+      status
+    }
+  }
+`;
+
+export const READY_PROJECT = gql`
+  mutation ReadyProject($id: String!, $queryEndpoint: String!) {
+    updateProjectToReady(id: $id, queryEndpoint: $queryEndpoint) {
+      id
+      status
+    }
+  }
+`;
+
 export const GET_PROJECT = gql`
   query Project($id: String!) {
     project(id: $id) {

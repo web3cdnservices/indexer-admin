@@ -25,7 +25,7 @@ export const createControllerSteps = (
       FormKey.CONFIG_CONTROLLER
     ),
     createStepItem(
-      0,
+      1,
       'Update your controller to contract',
       'Send transaction to the network to update the controller, the transaction processing time may take around 10s, it depends on the network and gas fee.',
       'Send Transction',
