@@ -54,7 +54,6 @@ account
 controller private key:
 
 - `0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b`
-
 - `0x881e18e52b09f875c74620f269a66f6be5bd0f5b9e0e20e3902404ddedc6a210`
 
 - Controller Account:
@@ -63,6 +62,10 @@ controller private key:
   
 
 Explorer: `https://moonbeam-explorer.netlify.app/?network=MoonbaseAlpha`
+
+## Accounts on Testnet
+
+seed: `pizza infant coin virus hat grab audit bicycle when never emotion practice`
 
 ### Projects on Testnet
 
