@@ -24,7 +24,7 @@ const ProjectDetailsPage = () => {
       {queryEndpoint ||
         (indexEndpoint && (
           <ProjectServiceCard
-            indexerService={indexEndpoint ? indexerServiceItem : undefined}
+            indexerService={true ? indexerServiceItem : undefined}
             queryService={queryEndpoint ? queryServiceItem : undefined}
           />
         ))}

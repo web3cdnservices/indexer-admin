@@ -10,6 +10,14 @@ import { providers } from 'ethers';
 import { Props } from './unstated';
 import { useWeb3 } from '../hooks/web3Hook';
 
+export enum ChainID {
+  local = 1281,
+  test = 1287,
+  main = 1285,
+}
+
+export const ChainIDs = [ChainID.local, ChainID.test, ChainID.main];
+
 const RPC_URLS: Record<number, string> = {
   1281: 'http://127.0.0.1:9933',
   1285: 'https://moonriver.api.onfinality.io/public',

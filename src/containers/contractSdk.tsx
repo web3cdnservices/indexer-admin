@@ -7,45 +7,54 @@ import { createContainer } from './unstated';
 import Logger from '../utils/logger';
 import localnetDeployment from '../contract/localnet.json';
 import testnetDeployment from '../contract/testnet.json';
-import { useIsMetaMask, useWeb3Provider } from '../hooks/web3Hook';
-
-// TODO: updte network in runtime
-const network: SubqueryNetwork = 'local';
+import { useIsMetaMask, useWeb3 } from '../hooks/web3Hook';
+import { ChainID, ChainIDs } from './web3';
 
 const deployments = {
   local: localnetDeployment,
   testnet: testnetDeployment,
+  mainnet: testnetDeployment,
 };
 
-export const contractSDKOptions = {
-  deploymentDetails: deployments[network],
-  network,
+function createContractOptions(network: SubqueryNetwork): SdkOptions {
+  return {
+    deploymentDetails: deployments[network],
+    network,
+  };
+}
+
+const options = {
+  [ChainID.local]: createContractOptions('local'),
+  [ChainID.test]: createContractOptions('testnet'),
+  [ChainID.main]: createContractOptions('mainnet'),
 };
 
 export type SDK = ContractSDK | undefined;
 
-function useContractsImpl(logger: Logger, initialState?: SdkOptions): SDK {
+function useContractsImpl(logger: Logger): SDK {
   const [sdk, setSdk] = React.useState<ContractSDK | undefined>(undefined);
-
-  const provider = useWeb3Provider();
+  const { library, chainId } = useWeb3();
   const isMetaMask = useIsMetaMask();
 
   React.useEffect(() => {
-    if (!initialState || !initialState.network || !initialState.deploymentDetails) {
+    if (!chainId || !ChainIDs.includes(chainId)) return;
+
+    const sdkOption = options[chainId as ChainID];
+    if (!sdkOption || !sdkOption.network || !sdkOption.deploymentDetails) {
       throw new Error(
-        'Invalid initial state, contracts provider requires network and deploymentDetails'
+        'Invalid sdk options, contracts provider requires network and deploymentDetails'
       );
     }
 
-    if (provider && isMetaMask) {
+    if (library && isMetaMask) {
       try {
-        ContractSDK.create(provider, initialState).then((instance) => setSdk(instance));
+        ContractSDK.create(library, sdkOption).then((instance) => setSdk(instance));
       } catch (e) {
         logger.e('Failed to create ContractSDK instance', e);
         setSdk(undefined);
       }
     }
-  }, [logger, initialState, provider, isMetaMask]);
+  }, [logger, library, chainId, isMetaMask]);
 
   return sdk;
 }

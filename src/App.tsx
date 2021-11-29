@@ -10,7 +10,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import './App.css';
 import * as Pages from './pages';
 import { Web3Provider } from './containers';
-import { contractSDKOptions, ContractSDKProvider } from './containers/contractSdk';
+import { ContractSDKProvider } from './containers/contractSdk';
 
 const client = new ApolloClient({
   uri: 'http://localhost:3001/graphql',
@@ -20,7 +20,7 @@ const client = new ApolloClient({
 const App: FC = () => (
   <ApolloProvider client={client}>
     <Web3Provider>
-      <ContractSDKProvider initialState={contractSDKOptions}>
+      <ContractSDKProvider>
         <div className="App">
           <Pages.Header />
           <Router>
