@@ -21,6 +21,7 @@ const saveItemToLocal = (id: string) => {
   localStorage.setItem(storageKey, `${ids ?? ''}${id},`);
 };
 
+// FIXME: rmeove this one later
 export const getProjectIds = () => {
   const ids = localStorage.getItem(storageKey);
   if (!ids) return [];
@@ -30,6 +31,7 @@ export const getProjectIds = () => {
 export const createQueryProject = (sdk?: ContractSDK, signer?: JsonRpcSigner) => {
   if (sdk && signer) {
     const deploymentID = generateDepolymentID();
+    console.log('>>>cid:', bytes32ToCid(deploymentID));
     sdk.queryRegistry
       .connect(signer)
       .createQueryProject(metadata, version, deploymentID)

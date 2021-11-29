@@ -26,7 +26,6 @@ const TabBars = styled(Tabs)`
 const truncateString = (value: string) =>
   value ? `${value.substring(0, 12)}...${value.substring(value.length - 12)}` : '';
 
-// FIXME: fix tabs
 const Header = () => {
   const { account } = useWeb3();
   const history = useHistory();
@@ -37,8 +36,6 @@ const Header = () => {
   const onTabBarChange = (key: string) => {
     history.replace(key === TabbarItem.account ? '/account' : '/projects');
   };
-
-  // FIXME: rerender when router changed or contract state changed
 
   return (
     <Container>

@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useMutation, useLazyQuery } from '@apollo/client';
-import { useIsMetaMask, useSigner } from '../../hooks/web3Hook';
+import { useIsMetaMask } from '../../hooks/web3Hook';
 import { Container, ContentContainer, HeaderContainer } from './styles';
 import { Text, Button } from '../../components/primary';
 import ProjecItemsHeader from './components/projecItemsHeader';
@@ -14,16 +14,8 @@ import { ADD_PROJECT, GET_PROJECTS } from '../../utils/queries';
 import { FormValues } from './types';
 import { FormKey } from './constant';
 import { TProject } from '../project-details/types';
-import { createQueryProject, getProjectIds } from '../../mock/queryRegistry';
-import { useContractSDK } from '../../containers/contractSdk';
 
 const Projects = () => {
-  // FIXME: just for local test, output all projects, remove later
-  const sdk = useContractSDK();
-  const signer = useSigner();
-  // createQueryProject(sdk, signer)
-  // setVisible(true)
-
   const isMetaMask = useIsMetaMask();
   const [addProject, { loading }] = useMutation(ADD_PROJECT);
   const [getProjects, { data }] = useLazyQuery(GET_PROJECTS);
@@ -31,8 +23,6 @@ const Projects = () => {
 
   useEffect(() => {
     getProjects();
-    // FIXME: just for local test, output all projects, remove later
-    console.log(getProjectIds());
   }, []);
 
   const addProjectComplete = () => {
