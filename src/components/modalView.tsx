@@ -1,7 +1,7 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Form, Input, Steps } from 'antd';
+import { Form, Input, message, Steps } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
 import { FC } from 'react';
 import styled from 'styled-components';
@@ -11,6 +11,7 @@ import { FormValues } from '../pages/projects/types';
 import { RegistrySteps } from '../pages/register/styles';
 import { getStepStatus } from '../pages/register/utils';
 import { ActionType } from '../utils/transactions';
+import ActionModal, { ModalProps } from './actionModal';
 import { Button, Text } from './primary';
 
 export const Container = styled.div`
@@ -27,7 +28,7 @@ export const ModalSteps = styled(Steps)`
   margin-bottom: 40px;
 `;
 
-export const LoginForm = styled(Form)`
+export const InputForm = styled(Form)`
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -87,32 +88,43 @@ type Props = {
   currentStep: number;
   loading: boolean;
   type?: ActionType;
-};
+} & ModalProps;
 
-const ModalView: FC<Props> = ({ currentStep = 0, steps, type, loading }) => {
+const ModalView: FC<Props> = ({
+  visible,
+  title,
+  onClose,
+  currentStep = 0,
+  steps,
+  type,
+  loading,
+}) => {
   if (!steps || currentStep > steps.length - 1) return null;
   const stepItem = steps[currentStep];
 
+  // FIXME: form validation
   const renderFormContent = (item: StepItem) => (
-    <LoginForm
-      name={item.formKey}
+    <InputForm
+      name={title}
       layout="vertical"
       onFinish={(values) => item.onClick(type, values as FormValues)}
     >
-      <FormItem name={item.formKey} validateStatus="success" label={item.title}>
-        <Input size="large" placeholder={item.placeHolder} />
+      <div>
+        <FormItem name={item.formKey} label={item.title}>
+          <Input size="large" placeholder={item.placeHolder} />
+        </FormItem>
         {item.desc && (
           <Text mt={20} size={13} color="gray">
             {item.desc}
           </Text>
         )}
-      </FormItem>
+      </div>
       <FormItem>
         <ButtonContainer>
           <Button width={350} title={item.buttonTitle} loading={loading} htmlType="submit" />
         </ButtonContainer>
       </FormItem>
-    </LoginForm>
+    </InputForm>
   );
 
   const renderContent = (item: StepItem) => (
@@ -134,9 +146,8 @@ const ModalView: FC<Props> = ({ currentStep = 0, steps, type, loading }) => {
     </ContentContainer>
   );
 
-  const renderSteps = () => {
-    if (steps?.length === 1) return null;
-    return (
+  const renderSteps = () =>
+    steps?.length > 1 && (
       <ModalSteps size="small" current={currentStep}>
         {steps.map((item, i) => (
           <RegistrySteps.Step
@@ -147,13 +158,14 @@ const ModalView: FC<Props> = ({ currentStep = 0, steps, type, loading }) => {
         ))}
       </ModalSteps>
     );
-  };
 
   return (
-    <Container>
-      {renderSteps()}
-      {stepItem.isForm ? renderFormContent(stepItem) : renderContent(stepItem)}
-    </Container>
+    <ActionModal title={title} visible={visible} onClose={onClose}>
+      <Container>
+        {renderSteps()}
+        {stepItem.isForm ? renderFormContent(stepItem) : renderContent(stepItem)}
+      </Container>
+    </ActionModal>
   );
 };
 

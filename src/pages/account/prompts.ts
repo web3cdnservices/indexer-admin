@@ -6,13 +6,13 @@ const prompts = {
     title: 'Indexer Account',
     name: 'Subquery Master',
     buttonTitle: 'Unregister',
-    desc: 'Staking: 10000 SQT',
+    desc: '',
   },
   controller: {
     title: 'Controller Account',
     name: 'Controller',
     buttonTitle: 'Update Controller',
-    desc: 'Balance: 200 SQT',
+    desc: '',
   },
   emptyController: {
     title: 'Controller Account',

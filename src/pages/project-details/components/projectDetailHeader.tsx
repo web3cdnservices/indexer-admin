@@ -7,7 +7,6 @@ import { useLocation } from 'react-router-dom';
 import { FC, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { Button, Separator, Text } from '../../../components/primary';
-import Modal from '../../../components/actionModal';
 import {
   createStartIndexingSteps,
   createReadyIndexingSteps,
@@ -203,20 +202,18 @@ const ProjectDetailsHeader = () => {
           ))}
         </ActionContainer>
       )}
-      <Modal
-        visible={visible}
+
+      <ModalView
         // @ts-ignore
+        visible={visible}
         title="Start Indexing Project"
         onClose={onModalClose}
-      >
-        <ModalView
-          // @ts-ignore
-          steps={actionType ? steps[actionType] : []}
-          currentStep={currentStep}
-          type={actionType}
-          loading={loading}
-        />
-      </Modal>
+        // @ts-ignore
+        steps={actionType ? steps[actionType] : []}
+        currentStep={currentStep}
+        type={actionType}
+        loading={loading}
+      />
     </Container>
   );
 };

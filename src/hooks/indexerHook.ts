@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useEffect, useState, useCallback } from 'react';
+import { formatUnits } from '@ethersproject/units';
 import { useContractSDK } from '../containers/contractSdk';
 import { emptyControllerAccount } from '../utils/indexerActions';
 import { useSigner, useWeb3 } from './web3Hook';
@@ -185,4 +186,18 @@ export const useIndexerEvent = () => {
   }, [sdk]);
 
   return event;
+};
+
+export const useBalance = (account: Account) => {
+  const [balance, setBalance] = useState('0.00');
+  const sdk = useContractSDK();
+
+  useEffect(() => {
+    account &&
+      sdk?.sqToken.balanceOf(account).then((balance) => {
+        setBalance(Number(formatUnits(balance, 18)).toFixed(2));
+      });
+  }, [account]);
+
+  return balance;
 };

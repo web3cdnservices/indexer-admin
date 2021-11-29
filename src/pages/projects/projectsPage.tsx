@@ -9,7 +9,6 @@ import { Text, Button } from '../../components/primary';
 import ProjecItemsHeader from './components/projecItemsHeader';
 import Modal from '../../components/actionModal';
 import ProjectItem from './components/projectItem';
-import MetaMaskView from '../login/metamaskView';
 import ModalContent from './components/modalContent';
 import { ADD_PROJECT, GET_PROJECTS } from '../../utils/queries';
 import { FormValues } from './types';

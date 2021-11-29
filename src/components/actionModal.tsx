@@ -17,14 +17,14 @@ const Container = styled.div`
   min-height: 400px;
 `;
 
-type Props = {
+export type ModalProps = {
   visible: boolean;
   title: string;
   onClose: () => void;
 };
 
 // TOOD: create a global modal, using context
-const ActionModal: FC<Props> = ({ visible, title, onClose, children }) => {
+const ActionModal: FC<ModalProps> = ({ visible, title, onClose, children }) => {
   return (
     <StyledModal footer={null} visible={visible} title={title} onCancel={onClose}>
       <Container>{children}</Container>

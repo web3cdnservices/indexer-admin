@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useState } from 'react';
-
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { isValidPrivate, toBuffer, privateToAddress, bufferToHex } from 'ethereumjs-util';
 import {
+  useBalance,
   useController,
   useIsController,
   useIsControllerChanged,
@@ -17,19 +18,19 @@ import { Container } from './styles';
 import prompts from './prompts';
 import AccountCard from '../../components/accountCard';
 import MetaMaskView from '../login/metamaskView';
-import Modal from '../../components/actionModal';
 import { ActionType } from '../../utils/transactions';
 import ModalView from '../../components/modalView';
-import { createControllerSteps, createUnregisterSteps, modalTitles } from './constant';
+import { createControllerSteps, createUnregisterSteps, modalTitles } from './config';
 import { UPDAET_CONTROLLER } from '../../utils/queries';
 import { configController, unRegister } from '../../utils/indexerActions';
 import { useContractSDK } from '../../containers/contractSdk';
+import { FormKey } from '../projects/constant';
 
 const Registry = () => {
   const [visible, setVisible] = useState(false);
   const [timestamp, setTimestamp] = useState(Date.now());
   const [currentStep, setCurrentStep] = useState(0);
-  const [updatedC, setUpdatedC] = useState('');
+  const [inputController, setController] = useState('');
   const [actionType, setActionType] = useState<ActionType | undefined>(undefined);
 
   const { account } = useWeb3();
@@ -40,15 +41,16 @@ const Registry = () => {
   const isIndexer = useIsIndexer();
   const isController = useIsController(account);
   const controller = useController(account, timestamp);
+  const controllerBalance = useBalance(controller);
+  const indexerBalance = useBalance(account);
   const [updateController, { loading: updateControllerLoading }] = useMutation(UPDAET_CONTROLLER);
-
   const { request: checkIsIndexerChanged, loading: indexerLoading } = useIsIndexerChanged();
   const { request: checkIsControllerChanged, loading: controllerLoading } =
     useIsControllerChanged(account);
 
-  // TODO: `desc` should be a real time string other than fixed one
+  prompts.controller.desc = `Balance ${controllerBalance} SQT`;
   const controllerItem = !controller ? prompts.emptyController : prompts.controller;
-  const { indexer } = prompts;
+  const indexerItem = prompts.indexer;
 
   const onModalClose = () => {
     setVisible(false);
@@ -57,26 +59,25 @@ const Registry = () => {
 
   const controllerStepsConfig = createControllerSteps(
     (_, values) => {
-      // const privateKey = values ? values[FormKey.CONFIG_CONTROLLER] : '';
-      // FIXME: fix hard code
-      const privateKey = '0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b';
-      setUpdatedC('0x3Cd0A705a2DC65e5b1E1205896BaA2be8A07c6e0');
+      // FIXME: use this validation
+      const privateKey = values ? values[FormKey.CONFIG_CONTROLLER] : '';
+      if (!privateKey || !privateKey.startsWith('0x') || !isValidPrivate(toBuffer(privateKey)))
+        return;
+
+      setController(bufferToHex(privateToAddress(toBuffer(privateKey))));
       updateController({ variables: { controller: privateKey } }).then(() => {
         setCurrentStep(1);
       });
     },
     () => {
-      configController(sdk, signer, updatedC)
+      configController(sdk, signer, inputController)
         .then(() => {
-          checkIsControllerChanged(updatedC, () => {
+          checkIsControllerChanged(inputController, () => {
             setTimestamp(Date.now());
             onModalClose();
           }).catch((e) => console.log('error:', e));
         })
-        .catch((errorMsg) => {
-          console.log('error:', errorMsg);
-          onModalClose();
-        });
+        .catch(onModalClose);
     }
   );
 
@@ -88,10 +89,7 @@ const Registry = () => {
           history.replace('./');
         }).catch((e) => console.log('error:', e));
       })
-      .catch((errorMsg) => {
-        console.log('error:', errorMsg);
-        onModalClose();
-      });
+      .catch(onModalClose);
   });
 
   const steps = { ...controllerStepsConfig, ...unregisterStepConfig };
@@ -102,12 +100,12 @@ const Registry = () => {
     <Container>
       {isMetaMask && isIndexer && (
         <AccountCard
-          title={indexer.title}
-          name={indexer.name}
-          buttonTitle={indexer.buttonTitle}
+          title={indexerItem.title}
+          name={indexerItem.name}
+          buttonTitle={indexerItem.buttonTitle}
           account={account ?? ''}
           status="active"
-          desc={indexer.desc}
+          desc={`Balance: ${indexerBalance} SQT`}
           loading={indexerLoading}
           onClick={() => {
             setActionType(ActionType.unregister);
@@ -123,7 +121,7 @@ const Registry = () => {
           name={controllerItem.name}
           account={controller}
           buttonTitle={isIndexer ? controllerItem.buttonTitle : ''}
-          desc={controllerItem.desc}
+          desc={controllerItem?.desc}
           onClick={() => {
             setActionType(ActionType.configCntroller);
             setVisible(true);
@@ -131,20 +129,17 @@ const Registry = () => {
         />
       )}
       {!isMetaMask && <MetaMaskView />}
-      <Modal
+      <ModalView
         visible={visible}
         // @ts-ignore
         title={actionType ? modalTitles[actionType] : ''}
         onClose={onModalClose}
-      >
-        <ModalView
-          // @ts-ignore
-          steps={actionType ? steps[actionType] : []}
-          currentStep={currentStep}
-          type={actionType}
-          loading={updateControllerLoading || indexerLoading || controllerLoading}
-        />
-      </Modal>
+        // @ts-ignore
+        steps={actionType ? steps[actionType] : []}
+        currentStep={currentStep}
+        type={actionType}
+        loading={updateControllerLoading || indexerLoading || controllerLoading}
+      />
     </Container>
   );
 };

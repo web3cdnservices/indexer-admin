@@ -14,6 +14,7 @@ export const createControllerSteps = (
   onUploadController: ClickAction,
   onSendTxConfigController: ClickAction
 ) => ({
+  // FIXME: move descriptions to `prompts`
   [ActionType.configCntroller]: [
     createStepItem(
       0,
