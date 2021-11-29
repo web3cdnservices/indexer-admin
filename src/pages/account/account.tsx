@@ -52,6 +52,11 @@ const Registry = () => {
   const controllerItem = !controller ? prompts.emptyController : prompts.controller;
   const indexerItem = prompts.indexer;
 
+  const onModalShow = (type: ActionType) => {
+    setActionType(type);
+    setVisible(true);
+  };
+
   const onModalClose = () => {
     setVisible(false);
     setCurrentStep(0);
@@ -59,10 +64,14 @@ const Registry = () => {
 
   const controllerStepsConfig = createControllerSteps(
     (_, values) => {
-      // FIXME: use this validation
+      // FIXME: use this for validation
       const privateKey = values ? values[FormKey.CONFIG_CONTROLLER] : '';
       if (!privateKey || !privateKey.startsWith('0x') || !isValidPrivate(toBuffer(privateKey)))
         return;
+
+      // TODO: validation for the input private key.
+      // 1.check private key valid - done
+      // 2. check controller already been used through `indexerRegister`
 
       setController(bufferToHex(privateToAddress(toBuffer(privateKey))));
       updateController({ variables: { controller: privateKey } }).then(() => {
@@ -103,29 +112,23 @@ const Registry = () => {
           title={indexerItem.title}
           name={indexerItem.name}
           buttonTitle={indexerItem.buttonTitle}
+          type={ActionType.unregister}
           account={account ?? ''}
           status="active"
           desc={`Balance: ${indexerBalance} SQT`}
           loading={indexerLoading}
-          onClick={() => {
-            setActionType(ActionType.unregister);
-            setVisible(true);
-            // FIXME: should call when sending the transaction
-            // checkIsIndexerChanged(false, () => history.replace('./'));
-          }}
+          onClick={onModalShow}
         />
       )}
       {(isIndexer || isController) && (
         <AccountCard
           title={controllerItem.title}
           name={controllerItem.name}
+          type={ActionType.configCntroller}
           account={controller}
           buttonTitle={isIndexer ? controllerItem.buttonTitle : ''}
           desc={controllerItem?.desc}
-          onClick={() => {
-            setActionType(ActionType.configCntroller);
-            setVisible(true);
-          }}
+          onClick={onModalShow}
         />
       )}
       {!isMetaMask && <MetaMaskView />}

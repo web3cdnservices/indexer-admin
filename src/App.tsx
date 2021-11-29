@@ -22,8 +22,8 @@ const App: FC = () => (
     <Web3Provider>
       <ContractSDKProvider>
         <div className="App">
-          <Pages.Header />
           <Router>
+            <Pages.Header />
             <div className="Main">
               <Switch>
                 <Route component={Pages.Projects} path="/projects" />

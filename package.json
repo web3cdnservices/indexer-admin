@@ -13,9 +13,6 @@
   "dependencies": {
     "@apollo/client": "^3.4.17",
     "@emeraldpay/hashicon-react": "^0.5.1",
-    "@emotion/react": "^11.5.0",
-    "@emotion/styled": "^11.3.0",
-    "@mui/material": "^5.0.4",
     "@subql/contract-sdk": "../contracts/build/build",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",

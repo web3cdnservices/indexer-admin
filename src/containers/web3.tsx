@@ -18,6 +18,8 @@ export enum ChainID {
 
 export const ChainIDs = [ChainID.local, ChainID.test, ChainID.main];
 
+export const isSupportNetwork = (chaiId?: number) => ChainIDs.includes(chaiId ?? 0);
+
 const RPC_URLS: Record<number, string> = {
   1281: 'http://127.0.0.1:9933',
   1285: 'https://moonriver.api.onfinality.io/public',

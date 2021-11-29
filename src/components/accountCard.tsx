@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { Hashicon } from '@emeraldpay/hashicon-react';
 import StatusLabel from './statusLabel';
 import { Text, Button } from './primary';
+import { ActionType } from '../utils/transactions';
 
 const Container = styled.div`
   display: flex;
@@ -52,7 +53,8 @@ type Props = {
   title: string;
   desc: string;
   buttonTitle: string;
-  onClick: () => void;
+  type: ActionType;
+  onClick: (type: ActionType) => void;
   loading?: boolean;
   name?: string;
   account?: string;
@@ -64,6 +66,7 @@ const AccountCard: FC<Props> = ({
   desc,
   buttonTitle,
   name,
+  type,
   onClick,
   loading,
   account,
@@ -78,7 +81,7 @@ const AccountCard: FC<Props> = ({
         {!!status && <StatusLabel text={status} />}
       </MainTitleContainer>
       {!!account && !!buttonTitle && (
-        <Button title={buttonTitle} loading={loading} width={200} onClick={onClick} />
+        <Button title={buttonTitle} loading={loading} width={200} onClick={() => onClick(type)} />
       )}
     </HeaderContainer>
     {account ? (
@@ -96,7 +99,7 @@ const AccountCard: FC<Props> = ({
           {desc}
         </Text>
         {!!buttonTitle && (
-          <Button title={buttonTitle} loading={loading} width={200} onClick={onClick} />
+          <Button title={buttonTitle} loading={loading} width={200} onClick={() => onClick(type)} />
         )}
       </DescContainer>
     )}
