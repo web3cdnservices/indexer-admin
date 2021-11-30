@@ -3,8 +3,7 @@
 
 import styled from 'styled-components';
 import { Hashicon } from '@emeraldpay/hashicon-react';
-import { useLocation } from 'react-router-dom';
-import { FC, useState } from 'react';
+import { FC, useState, useCallback } from 'react';
 import { useMutation } from '@apollo/client';
 import { Button, Separator, Text } from '../../../components/primary';
 import {
@@ -12,11 +11,11 @@ import {
   createReadyIndexingSteps,
   createStopIndexingSteps,
   createButtonItem,
+  modalTitles,
 } from '../constant';
-import { TProject } from '../types';
 import { startIndexing, stopIndexing, readyIndexing } from '../../../utils/indexerActions';
 import { useIsIndexingStatusChanged } from '../../../hooks/indexerHook';
-import { IndexingStatus } from '../../projects/constant';
+import { FormKey, IndexingStatus } from '../../projects/constant';
 import { ActionType } from '../../../utils/transactions';
 import { useSigner } from '../../../hooks/web3Hook';
 import { useContractSDK } from '../../../containers/contractSdk';
@@ -78,11 +77,14 @@ const VersionItem: FC<VersionProps> = ({ versionType, value }) => (
   </VersionItemContainer>
 );
 
-const ProjectDetailsHeader = () => {
-  const location = useLocation();
-  // @ts-ignore
-  const { id, name, status }: TProject = location?.state;
+type Props = {
+  id: string;
+  status: IndexingStatus;
+};
+
+const ProjectDetailsHeader: FC<Props> = ({ id, status }) => {
   // TODO: 1. only progress reach `100%` can display `publish to ready` button
+  const name = 'Sushi Swap';
 
   const [visible, setVisible] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
@@ -94,7 +96,8 @@ const ProjectDetailsHeader = () => {
   const [startIndexingRequest] = useMutation(START_PROJECT);
   const [indexingReadyRequest] = useMutation(READY_PROJECT);
 
-  const onModalClose = () => {
+  const onModalClose = (error?: Error) => {
+    console.log('>>>action error:', error);
     setVisible(false);
     setCurrentStep(0);
   };
@@ -124,13 +127,11 @@ const ProjectDetailsHeader = () => {
   // TODO: 3. `stop indexing` button should be red color
 
   const startIndexingSteps = createStartIndexingSteps(
-    () => {
-      startIndexingRequest({
-        variables: {
-          id,
-          indexerEndpoint: 'https://api.subquery.network/sq/AcalaNetwork/karura',
-        },
-      }).then(() => setCurrentStep(1));
+    (_, values) => {
+      const indexerEndpoint = values ? values[FormKey.CONFIG_CONTROLLER] : '';
+      startIndexingRequest({ variables: { id, indexerEndpoint } })
+        .then(() => setCurrentStep(1))
+        .catch(onModalClose);
     },
     () => {
       console.log('>>>id:', id);
@@ -149,7 +150,9 @@ const ProjectDetailsHeader = () => {
           id,
           queryEndpoint: 'https://api.subquery.network/sq/AcalaNetwork/karura',
         },
-      }).then(() => setCurrentStep(1));
+      })
+        .then(() => setCurrentStep(1))
+        .catch(onModalClose);
     },
     () => {
       readyIndexing(sdk, signer, id)
@@ -169,6 +172,16 @@ const ProjectDetailsHeader = () => {
   });
 
   const steps = { ...startIndexingSteps, ...readyIndexingSteps, ...stopIndexingSteps };
+
+  const getModalTitle = useCallback(() => {
+    // @ts-ignore
+    return actionType ? modalTitles[actionType] : '';
+  }, [actionType]);
+
+  const getModalSteps = useCallback(() => {
+    // @ts-ignore
+    return actionType ? steps[actionType] : [];
+  }, [actionType]);
 
   return (
     <Container>
@@ -192,8 +205,8 @@ const ProjectDetailsHeader = () => {
         <ActionContainer>
           {actionItems.map(({ title, action, color }) => (
             <Button
-              margin={10}
               key={title}
+              margin={10}
               width={200}
               title={title}
               color={color}
@@ -204,12 +217,10 @@ const ProjectDetailsHeader = () => {
       )}
 
       <ModalView
-        // @ts-ignore
         visible={visible}
-        title="Start Indexing Project"
+        title={getModalTitle()}
         onClose={onModalClose}
-        // @ts-ignore
-        steps={actionType ? steps[actionType] : []}
+        steps={getModalSteps()}
         currentStep={currentStep}
         type={actionType}
         loading={loading}

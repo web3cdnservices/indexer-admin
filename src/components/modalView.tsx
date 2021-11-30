@@ -1,7 +1,7 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Form, Input, message, Steps } from 'antd';
+import { Form, Input, Steps } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
 import { FC } from 'react';
 import styled from 'styled-components';
@@ -151,7 +151,7 @@ const ModalView: FC<Props> = ({
       <ModalSteps size="small" current={currentStep}>
         {steps.map((item, i) => (
           <RegistrySteps.Step
-            key={item.index}
+            key={item.title}
             status={getStepStatus(currentStep, i)}
             title={item.buttonTitle}
           />

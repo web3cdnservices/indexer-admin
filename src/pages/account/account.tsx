@@ -60,7 +60,8 @@ const Registry = () => {
     setVisible(true);
   };
 
-  const onModalClose = () => {
+  const onModalClose = (error?: Error) => {
+    console.log('>>>action error:', error);
     setVisible(false);
     setCurrentStep(0);
   };
@@ -69,17 +70,21 @@ const Registry = () => {
     (_, values) => {
       // FIXME: use this for validation
       const privateKey = values ? values[FormKey.CONFIG_CONTROLLER] : '';
-      if (!privateKey || !privateKey.startsWith('0x') || !isValidPrivate(toBuffer(privateKey)))
+      if (!privateKey || !privateKey.startsWith('0x') || !isValidPrivate(toBuffer(privateKey))) {
+        console.error('>>>: inivalid private key');
         return;
+      }
 
       // TODO: validation for the input private key.
       // 1.check private key valid - done
       // 2. check controller already been used through `indexerRegister`
 
       setController(bufferToHex(privateToAddress(toBuffer(privateKey))));
-      updateController({ variables: { controller: privateKey } }).then(() => {
-        setCurrentStep(1);
-      });
+      updateController({ variables: { controller: privateKey } })
+        .then(() => {
+          setCurrentStep(1);
+        })
+        .catch(onModalClose);
     },
     () => {
       configController(sdk, signer, inputController)

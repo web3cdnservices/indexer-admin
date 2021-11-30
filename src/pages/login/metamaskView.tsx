@@ -9,7 +9,6 @@ import MetaMaskIcon from '../../resources/metamask.svg';
 import { useIsMetaMask, useIsMetaMaskInstalled, useWeb3 } from '../../hooks/web3Hook';
 import { connectWithMetaMask, switchNetwork, NetworkError } from '../../utils/metamask';
 import prompts from './prompts';
-import { ChainID } from '../../containers/web3';
 
 // TODO: move to a constant file
 const extensionUrls = {

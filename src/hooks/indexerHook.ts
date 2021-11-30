@@ -87,7 +87,7 @@ const useCheckStateChanged = (caller?: () => Promise<boolean | string | number> 
           setLoading(false);
           clearInterval(id);
           reject(new Error('Check state request time out'));
-        }, 20000);
+        }, 100000);
       }),
     [caller]
   );

@@ -70,14 +70,12 @@ const InfoView: FC<InfoProps> = ({ title, desc, ml, mt }) => (
   </InfoContainer>
 );
 
-// TODO: should get project details from ipfs
-// `useIPFS(deploymentID)` -> get IPFS address from contract, then join with the base url and get the metadata
-// create hook `useProject` ?
-const ProjectDetailsView = () => {
+type Props = {
+  id: string;
+};
+
+const ProjectDetailsView: FC<Props> = ({ id }) => {
   const { description, created, lastUpdated, websiteUrl, sourceUrl } = projectItem;
-  const location = useLocation();
-  // @ts-ignore
-  const id = location?.state?.id;
   return (
     <Container>
       <Text fw="600" mb={10} size={20}>

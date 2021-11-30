@@ -5,6 +5,7 @@ import { SubqueryNetwork } from '@subql/contract-sdk';
 import { Input } from 'antd';
 import { FC, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import { useApolloClient, HttpLink } from '@apollo/client';
 import { networks } from '../../containers/web3';
 import { useIsIndexer } from '../../hooks/indexerHook';
 import { useWeb3 } from '../../hooks/web3Hook';
@@ -22,7 +23,7 @@ import {
   LoginForm,
 } from './styles';
 import { FormKey } from '../projects/constant';
-import { createClient } from '../../hooks/loginHook';
+import { createApolloClient, saveClientUri } from '../../utils/apolloClient';
 
 type Props = {
   onConnected: () => void;
@@ -32,6 +33,7 @@ type Props = {
 const LoginView: FC<Props> = ({ onConnected }) => {
   const [{ loading, data, error }, setQueryResult] = useState<QueryResult>({});
 
+  const client = useApolloClient();
   const { account, chainId } = useWeb3();
   const isIndexer = useIsIndexer();
   const history = useHistory();
@@ -57,13 +59,15 @@ const LoginView: FC<Props> = ({ onConnected }) => {
     // FIXME: regx for url
     // const re = /^(https?):\/\/[^s$.?#].[^s]*$'/gm;
     if (serviceUrl) {
-      const apolloClient = createClient(`${serviceUrl}/graphql`);
+      const uri = `${serviceUrl}/graphql`;
       setQueryResult({ loading: true });
-      apolloClient
+      createApolloClient(uri)
         .query({ query: GET_ACCOUNT_METADATA })
         .then(({ data }) => {
           // FIXME: just delay the request for testing
           setTimeout(() => {
+            client.setLink(new HttpLink({ uri }));
+            saveClientUri(uri);
             setQueryResult({ error: undefined, loading: false, data });
           }, 2000);
         })

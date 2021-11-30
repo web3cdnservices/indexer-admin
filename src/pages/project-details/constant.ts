@@ -5,6 +5,12 @@ import { ClickAction, createStepItem } from '../../components/modalView';
 import { ActionType } from '../../utils/transactions';
 import { FormKey } from '../projects/constant';
 
+export const modalTitles = {
+  [ActionType.startIndexing]: 'Start Indexing Project',
+  [ActionType.readyIndexing]: 'Publish Indexing to Ready',
+  [ActionType.stopIndexing]: 'Stop Indexing Project',
+};
+
 export const createButtonItem = (title: string, action: () => void, color?: string) => ({
   title,
   action,

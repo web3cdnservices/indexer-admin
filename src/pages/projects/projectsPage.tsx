@@ -19,7 +19,7 @@ import MetaMaskView from '../login/metamaskView';
 const Projects = () => {
   const isMetaMask = useIsMetaMask();
   const [addProject, { loading }] = useMutation(ADD_PROJECT);
-  const [getProjects, { data }] = useLazyQuery(GET_PROJECTS);
+  const [getProjects, { data }] = useLazyQuery(GET_PROJECTS, { fetchPolicy: 'network-only' });
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -32,9 +32,16 @@ const Projects = () => {
     getProjects();
   };
 
+  const onModalClose = (error?: Error) => {
+    console.log('>>>action error:', error);
+    setVisible(false);
+  };
+
   const onAddProjectRequest = (values: FormValues) => {
     // TODO: 1. check is valid `deployment id`
-    addProject({ variables: { id: values[FormKey.ADD_PROJECT] } }).then(addProjectComplete);
+    addProject({ variables: { id: values[FormKey.ADD_PROJECT] } })
+      .then(addProjectComplete)
+      .catch(onModalClose);
   };
 
   return (

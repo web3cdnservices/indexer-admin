@@ -43,25 +43,12 @@ type Props = {
   title: string;
   progress: number;
   status: IndexingStatus;
-  indexerEnpoint?: string;
-  queryEndpoint?: string;
 };
 
-const ProjectItem: FC<Props> = ({
-  id,
-  title,
-  progress = 0,
-  status,
-  indexerEnpoint,
-  queryEndpoint,
-}) => {
+const ProjectItem: FC<Props> = ({ id, title, progress = 0, status }) => {
   const history = useHistory();
   return (
-    <Container
-      onClick={() =>
-        history.push('/project', { id, name: title, status, indexerEnpoint, queryEndpoint })
-      }
-    >
+    <Container onClick={() => history.push(`/project/${id}`)}>
       <ItemContainer pl={15} flex={7}>
         <Hashicon hasher="keccak" value={id} size={70} />
         <ProfileContainer>

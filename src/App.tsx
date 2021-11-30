@@ -11,18 +11,16 @@ import './App.css';
 import * as Pages from './pages';
 import { Web3Provider } from './containers';
 import { ContractSDKProvider } from './containers/contractSdk';
-import { useClient } from './hooks/loginHook';
+import { createApolloClient } from './utils/apolloClient';
 
 const App: FC = () => {
-  const client = useClient();
-
   const renderContents = () => (
     <Router>
       <Pages.Header />
       <div className="Main">
         <Switch>
           <Route component={Pages.Projects} path="/projects" />
-          <Route component={Pages.ProjectDetail} path="/project" />
+          <Route exact component={Pages.ProjectDetail} path="/project/:id" />
           <Route component={Pages.Account} path="/account" />
           <Route component={Pages.Login} path="/" />
         </Switch>
@@ -32,7 +30,7 @@ const App: FC = () => {
   );
 
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={createApolloClient()}>
       <Web3Provider>
         <ContractSDKProvider>
           <div className="App">{renderContents()}</div>

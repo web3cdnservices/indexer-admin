@@ -66,6 +66,7 @@ Explorer: `https://moonbeam-explorer.netlify.app/?network=MoonbaseAlpha`
 ## Accounts on Testnet
 
 seed: `pizza infant coin virus hat grab audit bicycle when never emotion practice`
+controller: `0x881e18e52b09f875c74620f269a66f6be5bd0f5b9e0e20e3902404ddedc6a210`
 
 ### Projects on Testnet
 

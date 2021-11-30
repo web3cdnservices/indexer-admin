@@ -45,19 +45,23 @@ export const ADD_PROJECT = gql`
 `;
 
 export const START_PROJECT = gql`
-  mutation StartProject($id: String!, $indexerEndpoint: String!) {
-    startProject(id: $id, indexerEndpoint: $indexerEndpoint) {
+  mutation StartProject($indexerEndpoint: String!, $id: String!) {
+    startProject(indexerEndpoint: $indexerEndpoint, id: $id) {
       id
       status
+      indexerEndpoint
+      queryEndpoint
     }
   }
 `;
 
 export const READY_PROJECT = gql`
-  mutation ReadyProject($id: String!, $queryEndpoint: String!) {
-    updateProjectToReady(id: $id, queryEndpoint: $queryEndpoint) {
+  mutation ReadyProject($queryEndpoint: String!, $id: String!) {
+    updateProjectToReady(queryEndpoint: $queryEndpoint, id: $id) {
       id
       status
+      indexerEndpoint
+      queryEndpoint
     }
   }
 `;
@@ -67,7 +71,7 @@ export const GET_PROJECT = gql`
     project(id: $id) {
       id
       status
-      nodeEndpoint
+      indexerEndpoint
       queryEndpoint
     }
   }

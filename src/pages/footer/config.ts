@@ -13,7 +13,7 @@ const createConfig = (src: string, url: string) => ({ src, url });
 
 export const linkConfigs = [
   createConfig(TelegramIcon, 'https://t.me/subquerynetwork'),
-  createConfig(DiscordIcon, 'https://www.linkedin.com/company/subquery'),
+  createConfig(DiscordIcon, 'https://www.linkedin.com/company/subquery--'),
   createConfig(GithubIcon, 'https://github.com/subquery/subql'),
   createConfig(LinkendinIcon, 'https://www.linkedin.com/company/subquery'),
   createConfig(MediumIcon, 'https://subquery.medium.com/'),

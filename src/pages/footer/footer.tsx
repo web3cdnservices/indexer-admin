@@ -19,7 +19,7 @@ const Header = () => {
         </Text>
         <IconsContainer>
           {linkConfigs.map(({ src, url }) => (
-            <Icon src={src} url={url} />
+            <Icon key={url} src={src} url={url} />
           ))}
         </IconsContainer>
       </ContentContainer>
