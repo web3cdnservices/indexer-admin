@@ -7,16 +7,24 @@ import { Web3ReactManagerFunctions } from '@web3-react/core/dist/types';
 import { InjectedConnector } from '@web3-react/injected-connector';
 import { NetworkConnector } from '@web3-react/network-connector';
 import { providers } from 'ethers';
+import { SubqueryNetwork } from '@subql/contract-sdk';
 import { Props } from './unstated';
 import { useWeb3 } from '../hooks/web3Hook';
 
+// TODO: refactor these constant values
 export enum ChainID {
   local = 1281,
-  test = 1287,
-  main = 1285,
+  testnet = 1287,
+  mainnet = 1285,
 }
 
-export const ChainIDs = [ChainID.local, ChainID.test, ChainID.main];
+export const ChainIDs = [ChainID.local, ChainID.testnet, ChainID.mainnet];
+
+export const NetworkToChainID: Record<SubqueryNetwork, ChainID> = {
+  local: ChainID.local,
+  testnet: ChainID.testnet,
+  mainnet: ChainID.mainnet,
+};
 
 export const isSupportNetwork = (chaiId?: number) => ChainIDs.includes(chaiId ?? 0);
 
@@ -29,6 +37,12 @@ const RPC_URLS: Record<number, string> = {
 export const injectedConntector = new InjectedConnector({
   supportedChainIds: [1281, 1285, 1287],
 });
+
+export const networks: Record<number, SubqueryNetwork> = {
+  1281: 'local',
+  1285: 'mainnet',
+  1287: 'testnet',
+};
 
 export const chainNames: Record<number, string> = {
   1281: 'Moonbeam Local',

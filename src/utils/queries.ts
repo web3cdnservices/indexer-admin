@@ -3,11 +3,18 @@
 
 import { gql } from '@apollo/client';
 
+export type QueryResult = {
+  loading?: boolean;
+  data?: any;
+  error?: Error;
+};
+
 export const GET_ACCOUNT_METADATA = gql`
   query {
     accountMetadata {
       indexer
       network
+      wsEndpoint
     }
   }
 `;
@@ -16,6 +23,14 @@ export const ADD_INDEXER = gql`
   mutation AddIndexer($indexer: String!) {
     addIndexer(indexer: $indexer) {
       indexer
+    }
+  }
+`;
+
+export const REMOVE_ACCOUNTS = gql`
+  mutation {
+    removeAccounts {
+      id
     }
   }
 `;

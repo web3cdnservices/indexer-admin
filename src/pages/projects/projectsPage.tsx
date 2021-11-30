@@ -14,6 +14,7 @@ import { ADD_PROJECT, GET_PROJECTS } from '../../utils/queries';
 import { FormValues } from './types';
 import { FormKey } from './constant';
 import { TProject } from '../project-details/types';
+import MetaMaskView from '../login/metamaskView';
 
 const Projects = () => {
   const isMetaMask = useIsMetaMask();
@@ -50,6 +51,7 @@ const Projects = () => {
           ))}
         </ContentContainer>
       )}
+      <MetaMaskView />
       <Modal title="Add new roject" visible={visible} onClose={() => setVisible(false)}>
         <ModalContent loading={loading} onClick={onAddProjectRequest} />
       </Modal>

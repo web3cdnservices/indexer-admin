@@ -25,8 +25,8 @@ function createContractOptions(network: SubqueryNetwork): SdkOptions {
 
 const options = {
   [ChainID.local]: createContractOptions('local'),
-  [ChainID.test]: createContractOptions('testnet'),
-  [ChainID.main]: createContractOptions('mainnet'),
+  [ChainID.testnet]: createContractOptions('testnet'),
+  [ChainID.mainnet]: createContractOptions('mainnet'),
 };
 
 export type SDK = ContractSDK | undefined;

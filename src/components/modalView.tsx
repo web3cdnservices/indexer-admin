@@ -69,7 +69,7 @@ export const createStepItem = (
   desc: string,
   buttonTitle: string,
   onClick: ClickAction,
-  isForm: boolean,
+  isForm = false,
   formKey?: FormKey,
   placeHolder?: string
 ) => ({

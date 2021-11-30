@@ -23,6 +23,7 @@ export const statusText = {
 };
 
 export enum FormKey {
+  LOGIN = 'LOGIN',
   ADD_PROJECT = 'ADD_PROJECT',
   START_PROJECT = 'START_PROJECT',
   UPDATE_PROJECT_READY = 'UPDATE_PROJECT_READY',

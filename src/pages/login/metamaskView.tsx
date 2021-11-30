@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { Panel, Title, ImageCard, Image, StyledButton } from './styles';
 import { Text } from '../../components/primary';
 import MetaMaskIcon from '../../resources/metamask.svg';
-import { useIsMetaMaskInstalled, useWeb3 } from '../../hooks/web3Hook';
+import { useIsMetaMask, useIsMetaMaskInstalled, useWeb3 } from '../../hooks/web3Hook';
 import { connectWithMetaMask, switchNetwork, NetworkError } from '../../utils/metamask';
 import prompts from './prompts';
 import { ChainID } from '../../containers/web3';
@@ -21,6 +21,7 @@ const extensionUrls = {
 
 const MetaMaskView = () => {
   const { activate, error } = useWeb3();
+  const isMetaMask = useIsMetaMask();
   const isMetaMaskInstalled = useIsMetaMaskInstalled();
   const [isEmpty, setIsEmpty] = useState(false);
 
@@ -38,7 +39,7 @@ const MetaMaskView = () => {
   const onButtonClick = () => {
     // TODO: handle `loading` status
     if (isEmpty) {
-      switchNetwork(ChainID.test);
+      switchNetwork();
       return;
     }
     if (isMetaMaskInstalled) {
@@ -51,7 +52,7 @@ const MetaMaskView = () => {
   };
 
   const data = getData();
-  return (
+  return !isMetaMask ? (
     <Panel>
       <Title align="center" weight="500">
         {data.title}
@@ -68,7 +69,7 @@ const MetaMaskView = () => {
         {data.buttonTitle}
       </StyledButton>
     </Panel>
-  );
+  ) : null;
 };
 
 export default MetaMaskView;

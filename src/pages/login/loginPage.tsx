@@ -19,7 +19,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (isConnectService && isIndexer) {
-      // FIXME: push all replace | push in utils
+      // FIXME: push all replace | push in utils | should check network as well
       history.replace('/account');
     }
   }, [isIndexer, isConnectService]);
@@ -27,7 +27,7 @@ const LoginPage = () => {
   return (
     <Container>
       {!isConnectService && <LoginView onConnected={() => setIsConenct(true)} />}
-      {isConnectService && !isMetaMask && <MetaMaskView />}
+      {isConnectService && <MetaMaskView />}
       {isConnectService && isMetaMask && <RegisterPage />}
     </Container>
   );

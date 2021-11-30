@@ -5,7 +5,9 @@
 // @ts-nocheck 
 
 import { intToHex } from 'ethereumjs-util';
-import { connect, ChainID } from '../containers/web3';
+import Config from './config';
+import { connect } from '../containers/web3';
+import { NetworkToChainID } from '../containers/web3';
 
 export const NetworkError = {
   unSupportedNetworkError: 'UnsupportedChainIdError',
@@ -19,8 +21,12 @@ export async function connectWithMetaMask(activate: Function) {
   }
 };
 
-export async function switchNetwork(chainId: ChainID) {
-  if (!window?.ethereum) return;
+export async function switchNetwork() {
+  const network = Config.getInstance().getNetwork();
+  console.log('>>>:', network);
+  if (!window?.ethereum || !network) return;
+
+  const chainId = NetworkToChainID[network];
   try {
     return window.ethereum.request({
       method: 'wallet_switchEthereumChain',
