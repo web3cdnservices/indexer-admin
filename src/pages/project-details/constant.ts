@@ -17,6 +17,12 @@ const createButtonItem = (title: string, action: () => void, color?: string) => 
   color,
 });
 
+export const createServiceItem = (url: string, version: string, status: string) => ({
+  url,
+  imageVersion: `onfinality/subql-node:${version}`,
+  status,
+});
+
 export const createButtonItems = (onButtonClick: (type: ActionType) => void) => ({
   [IndexingStatus.NOTSTART]: [
     createButtonItem('Start Indexing', () => onButtonClick(ActionType.startIndexing)),

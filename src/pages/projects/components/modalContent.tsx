@@ -5,9 +5,9 @@ import { Form, Input } from 'antd';
 import { FC } from 'react';
 import styled from 'styled-components';
 import { Button } from '../../../components/primary';
+import { FormValues } from '../../../types/types';
 import { ButtonContainer, FormItem } from '../../login/styles';
 import { FormKey } from '../constant';
-import { FormValues } from '../types';
 
 export const LoginForm = styled(Form)`
   display: flex;

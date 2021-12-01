@@ -4,22 +4,16 @@
 import { useEffect, useState } from 'react';
 import { ApolloError, useQuery } from '@apollo/client';
 import { GET_PROJECT } from '../utils/queries';
-import { useWeb3, useSigner } from './web3Hook';
+import { useWeb3 } from './web3Hook';
 import { useContractSDK } from '../containers/contractSdk';
 import { IndexingStatus } from '../pages/projects/constant';
+import { TProjectMetadata } from '../pages/project-details/types';
 
 // TODO: move to `type` file
 type TDeps = boolean | number | string;
 
-type TProject = {
-  id: string;
-  status: string;
-  nodeEndpoint: string;
-  queryEndpoint: string;
-};
-
 type ProjectResponse = {
-  data: TProject | undefined;
+  data: TProjectMetadata | undefined;
   error: ApolloError | undefined;
   loading: boolean;
 };

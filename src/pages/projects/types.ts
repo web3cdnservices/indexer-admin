@@ -11,7 +11,3 @@ export type TProject = {
   indexEndpoint?: string;
   queryEndpoint?: string;
 };
-
-export type FormValues = {
-  [key: string]: string;
-};

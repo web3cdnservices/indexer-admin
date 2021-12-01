@@ -121,7 +121,6 @@ const ProjectDetailsHeader: FC<Props> = ({ id }) => {
         .catch(onModalClose);
     },
     () => {
-      console.log('>>>id:', id);
       startIndexing(sdk, signer, id)
         .then(() => {
           checkIndexingStatusChanged(IndexingStatus.INDEXING, onModalClose).catch(onModalClose);

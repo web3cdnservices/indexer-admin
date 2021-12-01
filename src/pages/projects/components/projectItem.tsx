@@ -7,7 +7,7 @@ import { Progress } from 'antd';
 import { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 import StatusLabel from '../../../components/statusLabel';
-import { IndexingStatus, statusColor, statusText } from '../constant';
+import { statusColor, statusText } from '../constant';
 import { Text } from '../../../components/primary';
 import { ItemContainer } from '../styles';
 import { useIndexingStatus } from '../../../hooks/projectHook';

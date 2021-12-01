@@ -1,13 +1,11 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
 import StatusLabel from '../../../components/statusLabel';
 import { Separator, Text } from '../../../components/primary';
-import { TQueryMetadata, TService } from '../types';
-import { createApolloClient } from '../../../utils/apolloClient';
-import { GET_QUERY_METADATA } from '../../../utils/queries';
+import { TService } from '../types';
 
 const Container = styled.div`
   display: flex;
@@ -32,7 +30,11 @@ const HeaderContainer = styled.div`
   align-items: center;
 `;
 
-const ServiceCard: FC<TService> = ({ name, status, url, imageVersion }) => (
+type CardProps = {
+  name: string;
+} & TService;
+
+const ServiceCard: FC<CardProps> = ({ name, status, url, imageVersion }) => (
   <CardContaineer>
     <HeaderContainer>
       <Text mr={20} fw="500">
@@ -46,49 +48,20 @@ const ServiceCard: FC<TService> = ({ name, status, url, imageVersion }) => (
 );
 
 type Props = {
-  indexerEndpoint?: string;
-  queryEndpoint?: string;
+  indexerService?: TService;
+  queryService?: TService;
 };
 
-const ProjectServiceCard: FC<Props> = ({ indexerEndpoint, queryEndpoint }) => {
-  const [indexerSerive, setIndexerService] = useState<TService | undefined>(undefined);
-  const [querySerive, setQueryService] = useState<TService | undefined>(undefined);
-
-  useEffect(() => {
-    if (indexerEndpoint) {
-      // FIXME: need to have a valid indexer endpoint to have a test
-      fetch(`${indexerEndpoint}/meta`).then((response) => {
-        console.log(response);
-      });
-    }
-  }, [indexerEndpoint]);
-
-  useEffect(() => {
-    if (queryEndpoint) {
-      createApolloClient(`${queryEndpoint}/graphql`)
-        .query({ query: GET_QUERY_METADATA })
-        .then((data) => {
-          // eslint-disable-next-line dot-notation
-          const { queryNodeVersion } = data.data['_metadata'] as TQueryMetadata;
-          setQueryService({
-            url: queryEndpoint,
-            imageVersion: `onfinality/subql-node:${queryNodeVersion}`,
-            status: 'Healthy',
-            name: 'Query Service',
-          });
-        });
-    }
-  }, [queryEndpoint]);
-
-  if (!indexerSerive && !querySerive) {
+const ProjectServiceCard: FC<Props> = ({ indexerService, queryService }) => {
+  if (!indexerService && !queryService) {
     return null;
   }
 
   return (
     <Container>
-      {!!indexerSerive && <ServiceCard {...indexerSerive} />}
-      {!!indexerSerive && !!querySerive && <Separator mr={80} height={100} />}
-      {!!querySerive && <ServiceCard {...querySerive} />}
+      {!!indexerService && <ServiceCard name="Indexer Service" {...indexerService} />}
+      {!!indexerService && !!queryService && <Separator mr={80} height={100} />}
+      {!!queryService && <ServiceCard name="Query Service" {...queryService} />}
     </Container>
   );
 };

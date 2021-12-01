@@ -38,10 +38,14 @@ export const indexerRequestApprove = (
       .catch((error) => reject(error.message));
   });
 
+// FIXME: remove this after register finished
+const testMetadat = '0xab3921276c8067fe0c82def3e5ecfd8447f1961bc85768c2a56e6bd26d3c0c55';
+
 export const indexerRegistry = (
   sdk: SDK,
   signer: Signer,
-  amount: string | undefined
+  amount: string | undefined,
+  metadata = testMetadat
 ): Promise<string> =>
   new Promise((resolve, reject) => {
     if (!sdk || !signer) {
@@ -53,8 +57,6 @@ export const indexerRegistry = (
       reject(ErrorMessages.amountError);
       return;
     }
-
-    const metadata = '0xab3921276c8067fe0c82def3e5ecfd8447f1961bc85768c2a56e6bd26d3c0c55';
 
     sdk.indexerRegistry
       .connect(signer)
