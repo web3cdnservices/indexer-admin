@@ -10,8 +10,8 @@ import {
   createStartIndexingSteps,
   createReadyIndexingSteps,
   createStopIndexingSteps,
-  createButtonItem,
   modalTitles,
+  createButtonItems,
 } from '../constant';
 import { startIndexing, stopIndexing, readyIndexing } from '../../../utils/indexerActions';
 import { useIsIndexingStatusChanged } from '../../../hooks/indexerHook';
@@ -65,14 +65,14 @@ const ActionContainer = styled.div`
 
 type VersionProps = {
   versionType: string;
-  value: string;
+  value?: string;
 };
 
 const VersionItem: FC<VersionProps> = ({ versionType, value }) => (
   <VersionItemContainer>
     <Text size={15}>{versionType}</Text>
     <Text mt={5} color="gray" fw="400" size={13}>
-      {value}
+      {value ?? ''}
     </Text>
   </VersionItemContainer>
 );
@@ -85,6 +85,8 @@ type Props = {
 const ProjectDetailsHeader: FC<Props> = ({ id, status }) => {
   // TODO: 1. only progress reach `100%` can display `publish to ready` button
   const name = 'Sushi Swap';
+
+  // TODO: get `status` from contract
 
   const [visible, setVisible] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
@@ -107,29 +109,13 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status }) => {
     setVisible(true);
   };
 
-  const buttonItems = {
-    [IndexingStatus.NOTSTART]: [
-      createButtonItem('Start Indexing', () => onButtonClick(ActionType.startIndexing)),
-    ],
-    [IndexingStatus.INDEXING]: [
-      createButtonItem('Publish to Ready', () => onButtonClick(ActionType.readyIndexing)),
-      createButtonItem('Stop Indexing', () => onButtonClick(ActionType.stopIndexing)),
-    ],
-    [IndexingStatus.READY]: [
-      createButtonItem('Stop Indexing', () => onButtonClick(ActionType.stopIndexing)),
-    ],
-    [IndexingStatus.TERMINATED]: [],
-  };
-
+  const buttonItems = createButtonItems(onButtonClick);
   const actionItems = buttonItems[status];
-
-  // TODO: 2. change `id` to project owner address other than use deploymentID
-  // TODO: 3. `stop indexing` button should be red color
 
   const startIndexingSteps = createStartIndexingSteps(
     (_, values) => {
-      const indexerEndpoint = values ? values[FormKey.CONFIG_CONTROLLER] : '';
-      startIndexingRequest({ variables: { id, indexerEndpoint } })
+      const indexerEndpoint = values ? values[FormKey.START_PROJECT] : '';
+      startIndexingRequest({ variables: { indexerEndpoint, id } })
         .then(() => setCurrentStep(1))
         .catch(onModalClose);
     },
@@ -144,13 +130,9 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status }) => {
   );
 
   const readyIndexingSteps = createReadyIndexingSteps(
-    () => {
-      indexingReadyRequest({
-        variables: {
-          id,
-          queryEndpoint: 'https://api.subquery.network/sq/AcalaNetwork/karura',
-        },
-      })
+    (_, values) => {
+      const queryEndpoint = values ? values[FormKey.UPDATE_PROJECT_TO_READY] : '';
+      indexingReadyRequest({ variables: { id, queryEndpoint } })
         .then(() => setCurrentStep(1))
         .catch(onModalClose);
     },
@@ -195,7 +177,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status }) => {
             {id}
           </Text>
           <VersionContainer>
-            <VersionItem versionType="INDEXED NETWORK" value="Local Network" />
+            <VersionItem versionType="INDEXED NETWORK" value="TESTNET" />
             <Separator height={50} />
             <VersionItem versionType="VERSION" value="V0.01" />
           </VersionContainer>

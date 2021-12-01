@@ -21,15 +21,13 @@ const ProjectDetailsPage = () => {
     fetchPolicy: 'network-only',
   });
 
-  useEffect(() => {
-    console.log('>>>>id:', id);
-    getProject({ variables: { id } });
-  }, []);
+  useEffect(() => getProject({ variables: { id } }), []);
 
   const displayProejct = useCallback(() => {
     return !loading && !!data && data.project;
   }, [loading, data]);
 
+  // FIXME: this is not elegant
   const getItem = useCallback(() => {
     return data.project;
   }, [data]);

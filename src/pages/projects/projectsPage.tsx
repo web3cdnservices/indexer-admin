@@ -28,7 +28,6 @@ const Projects = () => {
 
   const addProjectComplete = () => {
     setVisible(false);
-    // FIXME: projects doesn't update after this request.
     getProjects();
   };
 
@@ -39,9 +38,9 @@ const Projects = () => {
 
   const onAddProjectRequest = (values: FormValues) => {
     // TODO: 1. check is valid `deployment id`
-    addProject({ variables: { id: values[FormKey.ADD_PROJECT] } })
-      .then(addProjectComplete)
-      .catch(onModalClose);
+    const id = values[FormKey.ADD_PROJECT];
+
+    addProject({ variables: { id } }).then(addProjectComplete).catch(onModalClose);
   };
 
   return (
