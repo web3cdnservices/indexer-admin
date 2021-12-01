@@ -1,11 +1,13 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import StatusLabel from '../../../components/statusLabel';
 import { Separator, Text } from '../../../components/primary';
-import { TService } from '../types';
+import { TQueryMetadata, TService } from '../types';
+import { createApolloClient } from '../../../utils/apolloClient';
+import { GET_QUERY_METADATA } from '../../../utils/queries';
 
 const Container = styled.div`
   display: flex;
@@ -44,16 +46,49 @@ const ServiceCard: FC<TService> = ({ name, status, url, imageVersion }) => (
 );
 
 type Props = {
-  indexerService?: TService;
-  queryService?: TService;
+  indexerEndpoint?: string;
+  queryEndpoint?: string;
 };
 
-const ProjectServiceCard: FC<Props> = ({ indexerService, queryService }) => {
+const ProjectServiceCard: FC<Props> = ({ indexerEndpoint, queryEndpoint }) => {
+  const [indexerSerive, setIndexerService] = useState<TService | undefined>(undefined);
+  const [querySerive, setQueryService] = useState<TService | undefined>(undefined);
+
+  useEffect(() => {
+    if (indexerEndpoint) {
+      // FIXME: need to have a valid indexer endpoint to have a test
+      fetch(`${indexerEndpoint}/meta`).then((response) => {
+        console.log(response);
+      });
+    }
+  }, [indexerEndpoint]);
+
+  useEffect(() => {
+    if (queryEndpoint) {
+      createApolloClient(`${queryEndpoint}/graphql`)
+        .query({ query: GET_QUERY_METADATA })
+        .then((data) => {
+          // eslint-disable-next-line dot-notation
+          const { queryNodeVersion } = data.data['_metadata'] as TQueryMetadata;
+          setQueryService({
+            url: queryEndpoint,
+            imageVersion: `onfinality/subql-node:${queryNodeVersion}`,
+            status: 'Healthy',
+            name: 'Query Service',
+          });
+        });
+    }
+  }, [queryEndpoint]);
+
+  if (!indexerSerive && !querySerive) {
+    return null;
+  }
+
   return (
     <Container>
-      {!!indexerService && <ServiceCard {...indexerService} />}
-      {!!indexerService && !!queryService && <Separator mr={80} height={100} />}
-      {!!queryService && <ServiceCard {...queryService} />}
+      {!!indexerSerive && <ServiceCard {...indexerSerive} />}
+      {!!indexerSerive && !!querySerive && <Separator mr={80} height={100} />}
+      {!!querySerive && <ServiceCard {...querySerive} />}
     </Container>
   );
 };

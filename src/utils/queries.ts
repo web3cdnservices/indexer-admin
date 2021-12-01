@@ -27,6 +27,15 @@ export const ADD_INDEXER = gql`
   }
 `;
 
+export const UPDAET_CONTROLLER = gql`
+  mutation UpdateController($controller: String!) {
+    updateController(controller: $controller) {
+      indexer
+      controller
+    }
+  }
+`;
+
 export const REMOVE_ACCOUNTS = gql`
   mutation {
     removeAccounts {
@@ -88,11 +97,18 @@ export const GET_PROJECTS = gql`
   }
 `;
 
-export const UPDAET_CONTROLLER = gql`
-  mutation UpdateController($controller: String!) {
-    updateController(controller: $controller) {
-      indexer
-      controller
+export const GET_QUERY_METADATA = gql`
+  query {
+    _metadata {
+      lastProcessedHeight
+      lastProcessedTimestamp
+      targetHeight
+      chain
+      specName
+      genesisHash
+      indexerHealthy
+      indexerNodeVersion
+      queryNodeVersion
     }
   }
 `;

@@ -11,6 +11,7 @@ const Container = styled.div<{ color?: string }>`
   background-color: ${(p) => p.color ?? 'lightgreen'};
   border-radius: 5px;
   padding: 5px 10px;
+  min-width: 80px;
 `;
 
 const Text = styled.div`

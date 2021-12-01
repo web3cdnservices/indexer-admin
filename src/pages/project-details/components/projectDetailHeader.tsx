@@ -21,6 +21,7 @@ import { useSigner } from '../../../hooks/web3Hook';
 import { useContractSDK } from '../../../containers/contractSdk';
 import ModalView from '../../../components/modalView';
 import { START_PROJECT, READY_PROJECT } from '../../../utils/queries';
+import { useIndexingStatus } from '../../../hooks/projectHook';
 
 const Container = styled.div`
   display: flex;
@@ -79,10 +80,9 @@ const VersionItem: FC<VersionProps> = ({ versionType, value }) => (
 
 type Props = {
   id: string;
-  status: IndexingStatus;
 };
 
-const ProjectDetailsHeader: FC<Props> = ({ id, status }) => {
+const ProjectDetailsHeader: FC<Props> = ({ id }) => {
   // TODO: 1. only progress reach `100%` can display `publish to ready` button
   const name = 'Sushi Swap';
 
@@ -94,6 +94,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status }) => {
 
   const signer = useSigner();
   const sdk = useContractSDK();
+  const status = useIndexingStatus(id, visible);
   const { request: checkIndexingStatusChanged, loading } = useIsIndexingStatusChanged(id);
   const [startIndexingRequest] = useMutation(START_PROJECT);
   const [indexingReadyRequest] = useMutation(READY_PROJECT);
@@ -201,7 +202,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status }) => {
       <ModalView
         visible={visible}
         title={getModalTitle()}
-        onClose={onModalClose}
+        onClose={() => onModalClose()}
         steps={getModalSteps()}
         currentStep={currentStep}
         type={actionType}

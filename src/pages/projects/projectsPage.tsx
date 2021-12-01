@@ -15,9 +15,12 @@ import { FormValues } from './types';
 import { FormKey } from './constant';
 import { TProject } from '../project-details/types';
 import MetaMaskView from '../login/metamaskView';
+import { useDefaultLoading } from '../../hooks/projectHook';
+import Loading from '../../components/loading';
 
 const Projects = () => {
   const isMetaMask = useIsMetaMask();
+  const defaultLoading = useDefaultLoading();
   const [addProject, { loading }] = useMutation(ADD_PROJECT);
   const [getProjects, { data }] = useLazyQuery(GET_PROJECTS, { fetchPolicy: 'network-only' });
   const [visible, setVisible] = useState(false);
@@ -45,7 +48,7 @@ const Projects = () => {
 
   return (
     <Container>
-      {isMetaMask && (
+      {!defaultLoading && isMetaMask && (
         <ContentContainer>
           <HeaderContainer>
             <Text size={45}>Projects</Text>
@@ -57,6 +60,7 @@ const Projects = () => {
           ))}
         </ContentContainer>
       )}
+      {defaultLoading && <Loading />}
       <MetaMaskView />
       <Modal title="Add new roject" visible={visible} onClose={() => setVisible(false)}>
         <ModalContent loading={loading} onClick={onAddProjectRequest} />
