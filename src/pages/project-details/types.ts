@@ -29,3 +29,15 @@ export type TService = {
   url: string;
   imageVersion: string;
 };
+
+export type TQueryMetadata = {
+  lastProcessedHeight: number;
+  lastProcessedTimestamp: number;
+  targetHeight: number;
+  chain: number;
+  specName: string;
+  genesisHash: string;
+  indexerHealthy: false;
+  indexerNodeVersion: string;
+  queryNodeVersion: string;
+};
