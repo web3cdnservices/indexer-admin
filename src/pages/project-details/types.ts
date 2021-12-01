@@ -3,6 +3,18 @@
 
 import { IndexingStatus } from '../projects/constant';
 
+export type Metadata = {
+  chain: string;
+  specName: string;
+  lastProcessedTimestamp: number;
+  lastProcessedHeight: number;
+  targetHeight: number;
+  genesisHash: string;
+  indexerHealthy: boolean;
+  indexerNodeVersion: string;
+  queryNodeVersion: string;
+};
+
 export type TProject = {
   id: string;
   name: string;
