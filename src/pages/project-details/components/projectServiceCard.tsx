@@ -30,7 +30,11 @@ const HeaderContainer = styled.div`
   align-items: center;
 `;
 
-const ServiceCard: FC<TService> = ({ name, status, url, imageVersion }) => (
+type CardProps = {
+  name: string;
+} & TService;
+
+const ServiceCard: FC<CardProps> = ({ name, status, url, imageVersion }) => (
   <CardContaineer>
     <HeaderContainer>
       <Text mr={20} fw="500">
@@ -49,11 +53,15 @@ type Props = {
 };
 
 const ProjectServiceCard: FC<Props> = ({ indexerService, queryService }) => {
+  if (!indexerService && !queryService) {
+    return null;
+  }
+
   return (
     <Container>
-      {!!indexerService && <ServiceCard {...indexerService} />}
+      {!!indexerService && <ServiceCard name="Indexer Service" {...indexerService} />}
       {!!indexerService && !!queryService && <Separator mr={80} height={100} />}
-      {!!queryService && <ServiceCard {...queryService} />}
+      {!!queryService && <ServiceCard name="Query Service" {...queryService} />}
     </Container>
   );
 };

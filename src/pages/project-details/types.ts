@@ -11,9 +11,28 @@ export type TProject = {
   status: IndexingStatus;
 };
 
+export type TProjectMetadata = {
+  id: string;
+  status: string;
+  indexerEndpoint: string;
+  queryEndpoint: string;
+};
+
+
 export type TService = {
-  name: string;
   status: string;
   url: string;
   imageVersion: string;
+};
+
+export type TQueryMetadata = {
+  lastProcessedHeight: number;
+  lastProcessedTimestamp: number;
+  targetHeight: number;
+  chain: number;
+  specName: string;
+  genesisHash: string;
+  indexerHealthy: false;
+  indexerNodeVersion: string;
+  queryNodeVersion: string;
 };

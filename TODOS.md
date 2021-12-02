@@ -60,7 +60,6 @@ controller private key:
   - `0x3Cd0A705a2DC65e5b1E1205896BaA2be8A07c6e0`
   - `0x798d4Ba9baf0064Ec19eB4F0a1a45785ae9D6DFc`
   
-
 Explorer: `https://moonbeam-explorer.netlify.app/?network=MoonbaseAlpha`
 
 ## Accounts on Testnet
@@ -72,9 +71,9 @@ controller: `0x881e18e52b09f875c74620f269a66f6be5bd0f5b9e0e20e3902404ddedc6a210`
 
 `Created Projects`
 
-- `QmYDpk94SCgxv4j2PyLkaD8fWJpHwJufMLX2HGjefsNHH4`
-- `QmVeDmzmkFDJp1B5biDZ4bFYgWKbwg4de9ZFCyqzmK61H1`
-- `QmWbNtPEbXY2id3yc332P4uLyAYwJ7vpBz1TgqxvnNx8xd`
+- `QmYDpk94SCgxv4j2PyLkaD8fWJpHwJufMLX2HGjefsNHH4` : `0x92d5267833fed349c8b617404cd8d01bcfffcb609eb00bdb1e45acc59c27314b`
+- `QmVeDmzmkFDJp1B5biDZ4bFYgWKbwg4de9ZFCyqzmK61H1` : `0x6c8212408c3c62fc78cbfa9d6fe5ff39348c1009114a6315b1e2256459135348`
+- `QmWbNtPEbXY2id3yc332P4uLyAYwJ7vpBz1TgqxvnNx8xd` : `0x7aa3510fe0f76233d377cce09631fb1b0093de258ca0036afb7dc704c7c1d15e`
 
 
 - `QmRHN3JoQu4rmJQy5pStAuPuBjXCLTbifvfGBe7MKyhM7U`

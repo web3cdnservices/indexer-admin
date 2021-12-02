@@ -34,7 +34,7 @@ const Header = () => {
   const controller = useController(account);
 
   const onTabBarChange = (key: string) => {
-    history.replace(key === TabbarItem.account ? '/account' : '/projects');
+    history.push(key === TabbarItem.account ? '/account' : '/projects');
   };
 
   return (

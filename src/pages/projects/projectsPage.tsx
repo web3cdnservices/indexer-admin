@@ -11,13 +11,18 @@ import Modal from '../../components/actionModal';
 import ProjectItem from './components/projectItem';
 import ModalContent from './components/modalContent';
 import { ADD_PROJECT, GET_PROJECTS } from '../../utils/queries';
-import { FormValues } from './types';
 import { FormKey } from './constant';
 import { TProject } from '../project-details/types';
 import MetaMaskView from '../login/metamaskView';
+import { useDefaultLoading } from '../../hooks/projectHook';
+import Loading from '../../components/loading';
+import { FormValues } from '../../types/types';
+import { useIsIndexer } from '../../hooks/indexerHook';
 
 const Projects = () => {
   const isMetaMask = useIsMetaMask();
+  const isIndexer = useIsIndexer();
+  const defaultLoading = useDefaultLoading();
   const [addProject, { loading }] = useMutation(ADD_PROJECT);
   const [getProjects, { data }] = useLazyQuery(GET_PROJECTS, { fetchPolicy: 'network-only' });
   const [visible, setVisible] = useState(false);
@@ -28,7 +33,6 @@ const Projects = () => {
 
   const addProjectComplete = () => {
     setVisible(false);
-    // FIXME: projects doesn't update after this request.
     getProjects();
   };
 
@@ -39,14 +43,14 @@ const Projects = () => {
 
   const onAddProjectRequest = (values: FormValues) => {
     // TODO: 1. check is valid `deployment id`
-    addProject({ variables: { id: values[FormKey.ADD_PROJECT] } })
-      .then(addProjectComplete)
-      .catch(onModalClose);
+    const id = values[FormKey.ADD_PROJECT];
+
+    addProject({ variables: { id } }).then(addProjectComplete).catch(onModalClose);
   };
 
   return (
     <Container>
-      {isMetaMask && (
+      {!defaultLoading && isMetaMask && isIndexer && (
         <ContentContainer>
           <HeaderContainer>
             <Text size={45}>Projects</Text>
@@ -58,6 +62,7 @@ const Projects = () => {
           ))}
         </ContentContainer>
       )}
+      {defaultLoading && <Loading />}
       <MetaMaskView />
       <Modal title="Add new roject" visible={visible} onClose={() => setVisible(false)}>
         <ModalContent loading={loading} onClick={onAddProjectRequest} />

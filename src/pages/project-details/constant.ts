@@ -3,7 +3,7 @@
 
 import { ClickAction, createStepItem } from '../../components/modalView';
 import { ActionType } from '../../utils/transactions';
-import { FormKey } from '../projects/constant';
+import { FormKey, IndexingStatus } from '../projects/constant';
 
 export const modalTitles = {
   [ActionType.startIndexing]: 'Start Indexing Project',
@@ -11,10 +11,30 @@ export const modalTitles = {
   [ActionType.stopIndexing]: 'Stop Indexing Project',
 };
 
-export const createButtonItem = (title: string, action: () => void, color?: string) => ({
+const createButtonItem = (title: string, action: () => void, color?: string) => ({
   title,
   action,
   color,
+});
+
+export const createServiceItem = (url: string, version: string, status: string) => ({
+  url,
+  imageVersion: `onfinality/subql-node:${version}`,
+  status,
+});
+
+export const createButtonItems = (onButtonClick: (type: ActionType) => void) => ({
+  [IndexingStatus.NOTSTART]: [
+    createButtonItem('Start Indexing', () => onButtonClick(ActionType.startIndexing)),
+  ],
+  [IndexingStatus.INDEXING]: [
+    createButtonItem('Publish to Ready', () => onButtonClick(ActionType.readyIndexing)),
+    createButtonItem('Stop Indexing', () => onButtonClick(ActionType.stopIndexing)),
+  ],
+  [IndexingStatus.READY]: [
+    createButtonItem('Stop Indexing', () => onButtonClick(ActionType.stopIndexing)),
+  ],
+  [IndexingStatus.TERMINATED]: [],
 });
 
 export const createStartIndexingSteps = (
@@ -55,7 +75,7 @@ export const createReadyIndexingSteps = (
       'Sync Endpoint',
       onSyncQueryEndpoint,
       true,
-      FormKey.UPDATE_PROJECT_READY,
+      FormKey.UPDATE_PROJECT_TO_READY,
       'https://api.subquery.network/sq/AcalaNetwork/karura'
     ),
     createStepItem(

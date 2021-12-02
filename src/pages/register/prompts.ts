@@ -16,7 +16,8 @@ const prompts = {
   },
   [RegisterStep.register]: {
     title: 'Stake to become a Subquery Indexer',
-    desc: 'Become an indexer that you can index subquery project. You need to stake a minimum of 1000 SQT to index subquery project. The time for processing the transaciton dependent on the current status of the network and the gas fee, it usually takes 30 seconds',
+    desc: '',
+    // 'Become an indexer that you can index subquery project. You need to stake a minimum of 1000 SQT to index subquery project. The time for processing the transaciton dependent on the current status of the network and the gas fee, it usually takes 30 seconds',
     buttonTitle: 'Register Indexer',
   },
   [RegisterStep.sync]: {

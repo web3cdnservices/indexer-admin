@@ -7,9 +7,10 @@ import { Progress } from 'antd';
 import { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 import StatusLabel from '../../../components/statusLabel';
-import { IndexingStatus, statusColor, statusText } from '../constant';
+import { statusColor, statusText } from '../constant';
 import { Text } from '../../../components/primary';
 import { ItemContainer } from '../styles';
+import { useIndexingStatus } from '../../../hooks/projectHook';
 
 const Container = styled.div`
   display: flex;
@@ -42,11 +43,11 @@ type Props = {
   id: string;
   title: string;
   progress: number;
-  status: IndexingStatus;
 };
 
-const ProjectItem: FC<Props> = ({ id, title, progress = 0, status }) => {
+const ProjectItem: FC<Props> = ({ id, title, progress = 0 }) => {
   const history = useHistory();
+  const status = useIndexingStatus(id);
   return (
     <Container onClick={() => history.push(`/project/${id}`)}>
       <ItemContainer pl={15} flex={7}>

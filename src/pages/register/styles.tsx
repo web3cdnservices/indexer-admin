@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import styled from 'styled-components';
-import { Steps } from 'antd';
+import { Form, Steps } from 'antd';
 
 export const ContentContainer = styled.div`
   display: flex;
@@ -31,7 +31,15 @@ export const DescContainer = styled.div<{ mt?: number }>`
 
 export const RegistrySteps = styled(Steps)`
   width: 65%;
-  margin-top: 10px;
   margin-bottom: 70px;
   min-width: 750px;
+`;
+
+export const FormContainer = styled(Form)`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 600px;
+  margin-top: 30px;
 `;

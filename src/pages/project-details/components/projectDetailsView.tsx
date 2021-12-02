@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC } from 'react';
-import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { Text } from '../../../components/primary';
 import { projectItem } from '../mock';

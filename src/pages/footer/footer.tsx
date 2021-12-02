@@ -6,9 +6,14 @@ import { Container, ContentContainer, IconsContainer } from './styles';
 import { linkConfigs } from './config';
 import Icon from '../../components/Icon';
 import { Text } from '../../components/primary';
+import { useIsMetaMask } from '../../hooks/web3Hook';
 
 const Header = () => {
   const location = useLocation();
+  const isMetamask = useIsMetaMask();
+
+  // FIXME: for register workflow, hidden footer
+  if (isMetamask) return null;
   if (['/project', '/projects', '/account'].includes(location.pathname)) return null;
 
   return (

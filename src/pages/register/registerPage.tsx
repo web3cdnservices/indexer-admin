@@ -1,7 +1,7 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Container } from '../login/styles';
@@ -15,6 +15,8 @@ import { useIsApproveChanged, useIsIndexerChanged } from '../../hooks/indexerHoo
 import { ADD_INDEXER } from '../../utils/queries';
 import { getStepIndex, getStepStatus, registerSteps } from './utils';
 import { useInitialStep } from '../../hooks/registerHook';
+import IndexerRegistryView, { RegisterFormKey } from './indexerRegistryView';
+import { FormValues } from '../../types/types';
 
 const RegisterPage = () => {
   const { account } = useWeb3();
@@ -28,6 +30,8 @@ const RegisterPage = () => {
 
   const [currentStep, setStep] = useState<RegisterStep>(initialStep);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const isRegisterStep = useCallback(() => currentStep === RegisterStep.register, [currentStep]);
 
   // send tx actions
   const moveToNextStep = () => {
@@ -61,14 +65,30 @@ const RegisterPage = () => {
       .catch(() => setLoading(false));
   };
 
+  const onIndexerRegister = (values: FormValues) => {
+    // FIXME: need to validate the form values
+    const name = values[RegisterFormKey.name];
+    // FIXME: amount at least `1000`
+    const amount = values[RegisterFormKey.amount];
+    const url = values[RegisterFormKey.endpoint];
+
+    // TODO: uploadMedata { name, url } to ipfs
+    const metadata = undefined;
+    // send tx
+    console.log('>>>values:', name, amount, url);
+    return;
+    indexerRegistry(sdk, signer, amount, metadata)
+      .then(sendRegisterIndexerTx)
+      .catch(onTransactionFailed);
+  };
+
   const registerActions = {
     [RegisterStep.onboarding]: () => setStep(RegisterStep.authorisation),
     [RegisterStep.authorisation]: () =>
       indexerRequestApprove(sdk, signer, '1000000000')
         .then(sendRequestApproveTx)
         .catch(onTransactionFailed),
-    [RegisterStep.register]: () =>
-      indexerRegistry(sdk, signer, '10000').then(sendRegisterIndexerTx).catch(onTransactionFailed),
+    [RegisterStep.register]: onIndexerRegister,
     [RegisterStep.sync]: syncIndexer,
   };
 
@@ -84,11 +104,16 @@ const RegisterPage = () => {
     );
   };
 
-  // TODO: as register step has forms, need to handle seperately
   return (
     <Container>
       {renderSteps()}
-      <RegisterView step={currentStep} loading={loading} onClick={registerActions[currentStep]} />
+      {!isRegisterStep() && (
+        // @ts-ignore
+        <RegisterView step={currentStep} loading={loading} onClick={registerActions[currentStep]} />
+      )}
+      {isRegisterStep() && (
+        <IndexerRegistryView loading={loading} onClick={registerActions[currentStep]} />
+      )}
     </Container>
   );
 };
