@@ -59,7 +59,9 @@ const ProjectDetailsPage = () => {
     }
   };
 
-  useEffect(() => getProject({ variables: { id } }), []);
+  useEffect(() => {
+    getProject({ variables: { id } });
+  }, []);
 
   useEffect(() => {
     if (data?.project) {
