@@ -17,6 +17,7 @@ import { getStepIndex, getStepStatus, registerSteps } from './utils';
 import { useInitialStep } from '../../hooks/registerHook';
 import IndexerRegistryView, { RegisterFormKey } from './indexerRegistryView';
 import { FormValues } from '../../types/types';
+import { cidToBytes32, IPFS } from '../../utils/ipfs';
 
 const RegisterPage = () => {
   const { account } = useWeb3();
@@ -65,21 +66,31 @@ const RegisterPage = () => {
       .catch(() => setLoading(false));
   };
 
-  const onIndexerRegister = (values: FormValues) => {
-    // FIXME: need to validate the form values
-    const name = values[RegisterFormKey.name];
-    // FIXME: amount at least `1000`
-    const amount = values[RegisterFormKey.amount];
-    const url = values[RegisterFormKey.endpoint];
+  const onIndexerRegister = async (values: FormValues) => {
+    try {
+      // FIXME: need to validate the form values
+      const name = values[RegisterFormKey.name];
+      // FIXME: amount at least `1000`
+      const amount = values[RegisterFormKey.amount];
+      const url = values[RegisterFormKey.endpoint];
 
-    // TODO: uploadMedata { name, url } to ipfs
-    const metadata = undefined;
-    // send tx
-    console.log('>>>values:', name, amount, url);
-    return;
-    indexerRegistry(sdk, signer, amount, metadata)
-      .then(sendRegisterIndexerTx)
-      .catch(onTransactionFailed);
+      const result = await IPFS.add(
+        JSON.stringify({
+          name,
+          url,
+        }),
+        { pin: true }
+      );
+
+      const cid = result.cid.toV0().toString();
+
+      const metadataBytes = cidToBytes32(cid);
+      await indexerRegistry(sdk, signer, amount, metadataBytes);
+
+      sendRegisterIndexerTx();
+    } catch (error) {
+      onTransactionFailed(error as Error);
+    }
   };
 
   const registerActions = {
