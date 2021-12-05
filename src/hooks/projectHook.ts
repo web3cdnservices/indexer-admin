@@ -1,13 +1,14 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useState } from 'react';
-import { ApolloError, useQuery } from '@apollo/client';
+import { useCallback, useEffect, useState } from 'react';
+import { ApolloClient, ApolloError, gql, InMemoryCache, useQuery } from '@apollo/client';
 import { GET_PROJECT } from '../utils/queries';
 import { useWeb3 } from './web3Hook';
 import { useContractSDK } from '../containers/contractSdk';
 import { IndexingStatus } from '../pages/projects/constant';
 import { TProjectMetadata } from '../pages/project-details/types';
+import { concatU8A, IPFS } from '../utils/ipfs';
 
 // TODO: move to `type` file
 type TDeps = boolean | number | string;
@@ -63,4 +64,86 @@ export const useDefaultLoading = () => {
   }, []);
 
   return loading;
+};
+
+type Metadata = any;
+type Result = {
+  id: string;
+  projectId: string;
+  deploymentId: string;
+  project: {
+    metadata: string;
+  };
+};
+
+const queryRegistryClient = new ApolloClient({
+  uri: process.env.REACT_APP_QUERY_REGISTRY_PROJECT,
+  cache: new InMemoryCache(),
+});
+
+export const QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS = gql`
+  query GetDeploymentProjects($deploymentId: String!) {
+    projectDeployments(filter: { deploymentId: { equalTo: $deploymentId } }) {
+      nodes {
+        id
+        projectId
+        deploymentId
+        project {
+          metadata
+        }
+      }
+    }
+  }
+`;
+
+export const useProjectMetadata = (deploymentId: string): Metadata | undefined => {
+  const [metadata, setMetadata] = useState<Metadata>();
+
+  const fetchMeta = useCallback(async () => {
+    try {
+      if (!deploymentId) {
+        setMetadata(undefined);
+        return;
+      }
+
+      const res = await queryRegistryClient.query<{ projectDeployments: { nodes: Result[] } }>({
+        query: QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS,
+        variables: { deploymentId },
+      });
+
+      const metadataCid = res.data.projectDeployments.nodes[0]?.project?.metadata;
+
+      if (!metadataCid) {
+        throw new Error('Unable to get metadata for project');
+      }
+
+      const results = IPFS.cat(metadataCid);
+
+      let raw: Uint8Array | undefined;
+
+      // eslint-disable-next-line no-restricted-syntax
+      for await (const result of results) {
+        if (!raw) {
+          raw = result;
+        } else {
+          raw = concatU8A(raw, result);
+        }
+      }
+
+      if (!raw) {
+        throw new Error('Unable to fetch metadata from ipfs');
+      }
+
+      setMetadata(JSON.parse(Buffer.from(raw).toString('utf8')));
+    } catch (error) {
+      setMetadata(undefined);
+      console.error('Unable to get metadata', error);
+    }
+  }, [deploymentId]);
+
+  useEffect(() => {
+    fetchMeta();
+  }, [fetchMeta]);
+
+  return metadata;
 };
