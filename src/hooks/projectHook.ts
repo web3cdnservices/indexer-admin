@@ -66,7 +66,14 @@ export const useDefaultLoading = () => {
   return loading;
 };
 
-type Metadata = any;
+type Metadata = {
+  name: string;
+  image: string;
+  description: string;
+  websiteUrl: string;
+  codeUrl: string;
+};
+
 type Result = {
   id: string;
   projectId: string;
