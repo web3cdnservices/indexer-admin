@@ -7,17 +7,17 @@ import { useIsMetaMask } from '../../hooks/web3Hook';
 import { Container, ContentContainer, HeaderContainer } from './styles';
 import { Text, Button } from '../../components/primary';
 import ProjecItemsHeader from './components/projecItemsHeader';
-import Modal from '../../components/actionModal';
 import ProjectItem from './components/projectItem';
-import ModalContent from './components/modalContent';
 import { ADD_PROJECT, GET_PROJECTS } from '../../utils/queries';
-import { FormKey } from './constant';
 import { TProject } from '../project-details/types';
 import MetaMaskView from '../login/metamaskView';
 import { useDefaultLoading } from '../../hooks/projectHook';
 import Loading from '../../components/loading';
-import { FormValues } from '../../types/types';
 import { useIsIndexer } from '../../hooks/indexerHook';
+import { createAddProjectSteps } from './constant';
+import ModalView from '../../components/modalView';
+import { ProjectFormKey } from '../../types/schemas';
+import { ActionType } from '../../utils/transactions';
 
 const Projects = () => {
   const isMetaMask = useIsMetaMask();
@@ -36,17 +36,16 @@ const Projects = () => {
     getProjects();
   };
 
-  const onModalClose = (error?: Error) => {
-    console.log('>>>action error:', error);
+  const onModalClose = () => {
     setVisible(false);
   };
 
-  const onAddProjectRequest = (values: FormValues) => {
-    // TODO: 1. check is valid `deployment id`
-    const id = values[FormKey.ADD_PROJECT];
-
+  const step = createAddProjectSteps((values, helper) => {
+    const id = values[ProjectFormKey.deploymentId];
+    // TODO: verify deployment id -> format & whether exist
+    helper.setErrors({ [ProjectFormKey.deploymentId]: 'Invalid deployment id' });
     addProject({ variables: { id } }).then(addProjectComplete).catch(onModalClose);
-  };
+  });
 
   return (
     <Container>
@@ -64,9 +63,17 @@ const Projects = () => {
       )}
       {defaultLoading && <Loading />}
       <MetaMaskView />
-      <Modal title="Add new roject" visible={visible} onClose={() => setVisible(false)}>
-        <ModalContent loading={loading} onClick={onAddProjectRequest} />
-      </Modal>
+      <ModalView
+        visible={visible}
+        // @ts-ignore
+        title={step[ActionType.addProject].title}
+        onClose={onModalClose}
+        // @ts-ignore
+        steps={step}
+        currentStep={0}
+        type={ActionType.addProject}
+        loading={loading}
+      />
     </Container>
   );
 };

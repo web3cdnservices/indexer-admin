@@ -56,7 +56,7 @@ export type FormSubmit = (values: FormikValues, helper: FormikHelpers<FormikValu
 
 export type FormConfig = {
   formKey: string;
-  placeHolder: string;
+  placeHolder?: string;
   formValues: FormikValues;
   schema: ObjectSchema<any>;
   onFormSubmit: FormSubmit;
@@ -67,29 +67,9 @@ export type StepItem = {
   title: string;
   desc: string;
   buttonTitle: string;
-  onClick: ClickAction;
-  isForm: boolean;
-  formKey?: FormKey;
-  placeHolder?: string;
-  formValues?: FormikValues;
+  onClick?: ClickAction;
   form?: FormConfig;
 };
-
-export const createStepItem = (
-  index: number,
-  title: string,
-  desc: string,
-  buttonTitle: string,
-  onClick?: ClickAction,
-  form?: FormConfig
-) => ({
-  index,
-  title,
-  desc,
-  buttonTitle,
-  onClick,
-  form,
-});
 
 type Props = {
   steps: StepItem[] | undefined;

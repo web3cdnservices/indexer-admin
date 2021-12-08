@@ -1,9 +1,15 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { ClickAction, createStepItem } from '../../components/modalView';
+import { ClickAction, FormSubmit } from '../../components/modalView';
+import {
+  initialPublishProjectValues,
+  initialStartProjectValues,
+  ProjectFormKey,
+  StartProjectSchema,
+} from '../../types/schemas';
 import { ActionType } from '../../utils/transactions';
-import { FormKey, IndexingStatus } from '../projects/constant';
+import { IndexingStatus } from '../projects/constant';
 
 export const modalTitles = {
   [ActionType.startIndexing]: 'Start Indexing Project',
@@ -25,6 +31,7 @@ export const createServiceItem = (url: string, version: string, status: string) 
 
 export const createButtonItems = (onButtonClick: (type: ActionType) => void) => ({
   [IndexingStatus.NOTSTART]: [
+    createButtonItem('Remove Project', () => onButtonClick(ActionType.removeProject)),
     createButtonItem('Start Indexing', () => onButtonClick(ActionType.startIndexing)),
   ],
   [IndexingStatus.INDEXING]: [
@@ -38,66 +45,67 @@ export const createButtonItems = (onButtonClick: (type: ActionType) => void) => 
 });
 
 export const createStartIndexingSteps = (
-  onSyncIndexerEndpoint: ClickAction,
+  onSyncIndexerEndpoint: FormSubmit,
   onSendTransaction: ClickAction
 ) => ({
   [ActionType.startIndexing]: [
-    createStepItem(
-      0,
-      'Indexer Service Endpiont',
-      'Upload the indexer service endpoint to you coordinator service, this endpoint will be used to get the metadata of the indexer service and monitor the health.',
-      'Sync Endpoint',
-      onSyncIndexerEndpoint,
-      true,
-      FormKey.START_PROJECT,
-      'https://api.subquery.network/sq/AcalaNetwork/karura'
-    ),
-    createStepItem(
-      1,
-      'Start Indexing Project',
-      'Send transaction to the network to update the controller, the transaction processing time may take around 10s, it depends on the network and gas fee.',
-      'Send Transction',
-      onSendTransaction,
-      false
-    ),
+    {
+      index: 0,
+      title: 'Indexer Service Endpiont',
+      desc: 'Upload the indexer service endpoint to you coordinator service, this endpoint will be used to get the metadata of the indexer service and monitor the health.',
+      buttonTitle: 'Sync Endpoint',
+      form: {
+        formKey: ProjectFormKey.indexerEndpoint,
+        formValues: initialStartProjectValues,
+        schema: StartProjectSchema,
+        onFormSubmit: onSyncIndexerEndpoint,
+      },
+    },
+    {
+      index: 1,
+      title: 'Start Indexing Project',
+      desc: 'Send transaction to the network to update the controller, the transaction processing time may take around 10s, it depends on the network and gas fee.',
+      buttonTitle: 'Send Transction',
+      onClick: onSendTransaction,
+    },
   ],
 });
 
 export const createReadyIndexingSteps = (
-  onSyncQueryEndpoint: ClickAction,
+  onSyncQueryEndpoint: FormSubmit,
   onSendTransaction: ClickAction
 ) => ({
   [ActionType.readyIndexing]: [
-    createStepItem(
-      0,
-      'Query Service Endpoint',
-      'Upload the query service endpoint to you coordinator service, this endpoint will be used to get the metadata of the query service and monitor the health.',
-      'Sync Endpoint',
-      onSyncQueryEndpoint,
-      true,
-      FormKey.UPDATE_PROJECT_TO_READY,
-      'https://api.subquery.network/sq/AcalaNetwork/karura'
-    ),
-    createStepItem(
-      1,
-      'Update Indexing To Ready',
-      'Send transaction to the network to update the controller, the transaction processing time may take around 10s, it depends on the network and gas fee.',
-      'Send Transction',
-      onSendTransaction,
-      false
-    ),
+    {
+      index: 0,
+      title: 'Query Service Endpoint',
+      desc: 'Upload the query service endpoint to you coordinator service, this endpoint will be used to get the metadata of the query service and monitor the health.',
+      buttonTitle: 'Sync Endpoint',
+      form: {
+        formKey: ProjectFormKey.queryEndpoint,
+        formValues: initialPublishProjectValues,
+        schema: initialPublishProjectValues,
+        onFormSubmit: onSyncQueryEndpoint,
+      },
+    },
+    {
+      index: 1,
+      title: 'Update Indexing To Ready',
+      desc: 'Send transaction to the network to update the controller, the transaction processing time may take around 10s, it depends on the network and gas fee.',
+      buttonTitle: 'Send Transction',
+      onClick: onSendTransaction,
+    },
   ],
 });
 
 export const createStopIndexingSteps = (onSendTransaction: ClickAction) => ({
   [ActionType.stopIndexing]: [
-    createStepItem(
-      0,
-      'Stop Indexing Project',
-      'Sorry to see this project will be terminated from the Subquery Network, please confirm the action and press the button to send the transaction.',
-      'Stop Indexing',
-      onSendTransaction,
-      false
-    ),
+    {
+      index: 0,
+      title: 'Stop Indexing Project',
+      desc: 'Sorry to see this project will be terminated from the Subquery Network, please confirm the action and press the button to send the transaction.',
+      buttonTitle: 'Stop Indexing',
+      onClick: onSendTransaction,
+    },
   ],
 });

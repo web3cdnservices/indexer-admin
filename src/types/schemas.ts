@@ -61,6 +61,8 @@ export const initialControllerValues = {
 // add project
 export enum ProjectFormKey {
   deploymentId = 'deploymentId',
+  indexerEndpoint = 'indexerEndpoint',
+  queryEndpoint = 'queryEndpoint',
 }
 
 export const ProjectFormSchema = yup.object({
@@ -72,7 +74,21 @@ export const initialProjectValues = {
 };
 
 // start project
+export const StartProjectSchema = yup.object({
+  [ProjectFormKey.indexerEndpoint]: yup.string().required(),
+});
+
+export const initialStartProjectValues = {
+  [ProjectFormKey.indexerEndpoint]: '',
+};
 
 // pub project to ready
+export const publishProjectSchema = yup.object({
+  [ProjectFormKey.queryEndpoint]: yup.string().required(),
+});
+
+export const initialPublishProjectValues = {
+  [ProjectFormKey.queryEndpoint]: '',
+};
 
 // stop project

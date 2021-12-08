@@ -4,6 +4,8 @@
 export enum ActionType {
   unregister = 'unregister',
   configCntroller = 'configCntroller',
+  addProject = 'addProject',
+  removeProject = 'removeProject',
   startIndexing = 'startIndexing',
   readyIndexing = 'readyIndexing',
   stopIndexing = 'stropIndexing',

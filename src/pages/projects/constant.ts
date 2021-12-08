@@ -1,6 +1,10 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import { FormSubmit } from '../../components/modalView';
+import { ProjectFormKey, initialProjectValues, ProjectFormSchema } from '../../types/schemas';
+import { ActionType } from '../../utils/transactions';
+
 export enum IndexingStatus {
   NOTSTART,
   INDEXING,
@@ -22,11 +26,19 @@ export const statusText = {
   [IndexingStatus.TERMINATED]: 'Stop',
 };
 
-export enum FormKey {
-  LOGIN = 'LOGIN',
-  NETWORK_TYPE = 'NETWORK_TYPE',
-  ADD_PROJECT = 'ADD_PROJECT',
-  START_PROJECT = 'START_PROJECT',
-  UPDATE_PROJECT_TO_READY = 'UPDATE_PROJECT_TO_READY',
-  CONFIG_CONTROLLER = 'CONFIG_CONTROLLER',
-}
+export const createAddProjectSteps = (onAddProject: FormSubmit) => ({
+  [ActionType.addProject]: [
+    {
+      index: 0,
+      title: 'Add new project',
+      desc: 'Upload the query service endpoint to you coordinator service, this endpoint will be used to get the metadata of the query service and monitor the health.',
+      buttonTitle: 'Sync Endpoint',
+      form: {
+        formKey: ProjectFormKey.deploymentId,
+        formValues: initialProjectValues,
+        schema: ProjectFormSchema,
+        onFormSubmit: onAddProject,
+      },
+    },
+  ],
+});

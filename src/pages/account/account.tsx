@@ -24,7 +24,7 @@ import { createControllerSteps, createUnregisterSteps, modalTitles } from './con
 import { UPDAET_CONTROLLER, REMOVE_ACCOUNTS } from '../../utils/queries';
 import { configController, unRegister } from '../../utils/indexerActions';
 import { useContractSDK } from '../../containers/contractSdk';
-import { FormKey } from '../projects/constant';
+import { ControllerFormKey } from '../../types/schemas';
 
 const Registry = () => {
   const [visible, setVisible] = useState(false);
@@ -67,23 +67,26 @@ const Registry = () => {
   };
 
   const controllerStepsConfig = createControllerSteps(
-    (_, values) => {
-      // FIXME: use this for validation
-      const privateKey = values ? values[FormKey.CONFIG_CONTROLLER] : '';
+    async (values, formHelper) => {
+      const privateKey = values[ControllerFormKey.privateKey];
+      // TODO: move this to helper function
       if (!privateKey || !privateKey.startsWith('0x') || !isValidPrivate(toBuffer(privateKey))) {
-        console.error('>>>: inivalid private key');
+        formHelper.setErrors({ [ControllerFormKey.privateKey]: 'Invalid private key format' });
         return;
       }
 
-      // TODO: validation for the input private key.
-      // 1.check private key valid - done
-      // 2. check controller already been used through `indexerRegister`
+      const controllerAddress = bufferToHex(privateToAddress(toBuffer(privateKey)));
+      const isExist = await sdk?.indexerRegistry.isController(controllerAddress);
+      if (isExist) {
+        formHelper.setErrors({
+          [ControllerFormKey.privateKey]: 'Controller already been used',
+        });
+        return;
+      }
 
-      setController(bufferToHex(privateToAddress(toBuffer(privateKey))));
+      setController(controllerAddress);
       updateController({ variables: { controller: privateKey } })
-        .then(() => {
-          setCurrentStep(1);
-        })
+        .then(() => setCurrentStep(1))
         .catch(onModalClose);
     },
     () => {
@@ -115,8 +118,6 @@ const Registry = () => {
   );
 
   const steps = { ...controllerStepsConfig, ...unregisterStepConfig };
-
-  // TODO: display empty view if the current account is invalid
 
   return (
     <Container>

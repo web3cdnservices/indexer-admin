@@ -15,13 +15,14 @@ import {
 } from '../constant';
 import { startIndexing, stopIndexing, readyIndexing } from '../../../utils/indexerActions';
 import { useIsIndexingStatusChanged } from '../../../hooks/indexerHook';
-import { FormKey, IndexingStatus } from '../../projects/constant';
+import { IndexingStatus } from '../../projects/constant';
 import { ActionType } from '../../../utils/transactions';
 import { useSigner } from '../../../hooks/web3Hook';
 import { useContractSDK } from '../../../containers/contractSdk';
 import ModalView from '../../../components/modalView';
 import { START_PROJECT, READY_PROJECT } from '../../../utils/queries';
 import { useIndexingStatus } from '../../../hooks/projectHook';
+import { ProjectFormKey } from '../../../types/schemas';
 
 const Container = styled.div`
   display: flex;
@@ -114,8 +115,15 @@ const ProjectDetailsHeader: FC<Props> = ({ id }) => {
   const actionItems = buttonItems[status];
 
   const startIndexingSteps = createStartIndexingSteps(
-    (_, values) => {
-      const indexerEndpoint = values ? values[FormKey.START_PROJECT] : '';
+    (values, formHelper) => {
+      const indexerEndpoint = values[ProjectFormKey.indexerEndpoint];
+      // TODO: send request to validate the indexer endpoint, `/meta`
+      const invalidEndpoint = false;
+      if (invalidEndpoint) {
+        formHelper.setErrors({ [ProjectFormKey.indexerEndpoint]: 'Invalid indexer endpoint' });
+        return;
+      }
+
       startIndexingRequest({ variables: { indexerEndpoint, id } })
         .then(() => setCurrentStep(1))
         .catch(onModalClose);
@@ -130,8 +138,15 @@ const ProjectDetailsHeader: FC<Props> = ({ id }) => {
   );
 
   const readyIndexingSteps = createReadyIndexingSteps(
-    (_, values) => {
-      const queryEndpoint = values ? values[FormKey.UPDATE_PROJECT_TO_READY] : '';
+    (values, formHelper) => {
+      const queryEndpoint = values[ProjectFormKey.queryEndpoint];
+      // TODO: send request to validate the indexer endpoint, `/meta`
+      const invalidEndpoint = false;
+      if (invalidEndpoint) {
+        formHelper.setErrors({ [ProjectFormKey.queryEndpoint]: 'Invalid query endpoint' });
+        return;
+      }
+
       indexingReadyRequest({ variables: { id, queryEndpoint } })
         .then(() => setCurrentStep(1))
         .catch(onModalClose);
