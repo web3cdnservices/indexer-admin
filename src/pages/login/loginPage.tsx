@@ -19,7 +19,6 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (isConnectService && isIndexer) {
-      // FIXME: push all replace | push in utils | should check network as well
       history.replace('/account');
     }
   }, [isIndexer, isConnectService]);
