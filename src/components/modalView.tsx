@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Steps } from 'antd';
-import { Formik, Form } from 'formik';
+import { Formik, Form, FormikValues, FormikHelpers } from 'formik';
 import { FC } from 'react';
 import styled from 'styled-components';
+import { ObjectSchema } from 'yup';
 import { FormKey } from '../pages/projects/constant';
 import { RegistrySteps } from '../pages/register/styles';
 import { getStepStatus } from '../pages/register/utils';
@@ -51,6 +52,15 @@ export const DescContainer = styled.div`
 `;
 
 export type ClickAction = (type?: ActionType, values?: FormValues) => void;
+export type FormSubmit = (values: FormikValues, helper: FormikHelpers<FormikValues>) => void;
+
+export type FormConfig = {
+  formKey: string;
+  placeHolder: string;
+  formValues: FormikValues;
+  schema: ObjectSchema<any>;
+  onFormSubmit: FormSubmit;
+};
 
 export type StepItem = {
   index: number;
@@ -61,6 +71,8 @@ export type StepItem = {
   isForm: boolean;
   formKey?: FormKey;
   placeHolder?: string;
+  formValues?: FormikValues;
+  form?: FormConfig;
 };
 
 export const createStepItem = (
@@ -68,19 +80,15 @@ export const createStepItem = (
   title: string,
   desc: string,
   buttonTitle: string,
-  onClick: ClickAction,
-  isForm = false,
-  formKey?: FormKey,
-  placeHolder?: string
+  onClick?: ClickAction,
+  form?: FormConfig
 ) => ({
   index,
   title,
   desc,
   buttonTitle,
   onClick,
-  isForm,
-  formKey,
-  placeHolder,
+  form,
 });
 
 type Props = {
@@ -103,30 +111,28 @@ const ModalView: FC<Props> = ({
   const stepItem = steps[currentStep];
 
   // FIXME: form validation
-  const renderFormContent = (item: StepItem) => (
-    <Formik
-      initialValues={{
-        name: '',
-        description: '',
-      }}
-      onSubmit={() => console.log('....')}
-    >
-      {({ errors, touched, setFieldValue, values, isSubmitting, submitForm }) => (
-        <Form>
-          <FormItem title={item.title} fieldKey={item.formKey ?? ''} />
-          <FormItem title={item.title} fieldKey={item.formKey ?? ''} />
-          {item.desc && (
-            <Text mt={20} size={13} color="gray">
-              {item.desc}
-            </Text>
-          )}
-          <ButtonContainer>
-            <SButton mt={20} title={item.buttonTitle} />
-          </ButtonContainer>
-        </Form>
-      )}
-    </Formik>
-  );
+  const renderFormContent = (item: StepItem) =>
+    item.form ? (
+      <Formik
+        initialValues={item.form.formValues}
+        validationSchema={item.form.schema}
+        onSubmit={item.form.onFormSubmit}
+      >
+        {({ errors, submitForm }) => (
+          <Form>
+            <FormItem title={item.title} fieldKey={item.formKey ?? ''} errors={errors} />
+            {item.desc && (
+              <Text mt={20} size={13} color="gray">
+                {item.desc}
+              </Text>
+            )}
+            <ButtonContainer>
+              <SButton mt={20} title={item.buttonTitle} onClick={submitForm} loading={loading} />
+            </ButtonContainer>
+          </Form>
+        )}
+      </Formik>
+    ) : null;
 
   const renderContent = (item: StepItem) => (
     <ContentContainer>

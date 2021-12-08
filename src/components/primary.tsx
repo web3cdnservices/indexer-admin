@@ -1,8 +1,9 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Button as AntButton } from 'antd';
+import { Button as AntButton, Spin } from 'antd';
 import { Button as SubButton } from '@subql/react-ui';
+import { LoadingOutlined } from '@ant-design/icons';
 import { ButtonHTMLType } from 'antd/lib/button/button';
 import { FC } from 'react';
 import styled from 'styled-components';
@@ -119,11 +120,32 @@ export const StyledSButton = styled(SubButton)<SSButtonProps>`
 
 type SButtonProps = {
   title: string;
+  loading?: boolean;
+  disabled?: boolean;
   onClick?: () => void;
 };
 
-export const SButton: FC<SButtonProps & SSButtonProps> = ({ title, ...props }) => (
-  <StyledSButton label={title} type="secondary" {...props} />
+type SpinProps = {
+  loading: boolean;
+};
+
+const AntIcon: FC<SpinProps> = ({ loading }) => (
+  <LoadingOutlined style={{ fontSize: 20, marginRight: 30, color: '#4388dd' }} spin={loading} />
+);
+
+export const SButton: FC<SButtonProps & SSButtonProps> = ({
+  title,
+  loading,
+  disabled,
+  ...props
+}) => (
+  <StyledSButton
+    label={title}
+    type="secondary"
+    leftItem={loading && <Spin indicator={<AntIcon loading />} />}
+    disabled={disabled}
+    {...props}
+  />
 );
 
 export const ButtonContainer = styled.div<{ mt?: number; alignCenter?: boolean }>`

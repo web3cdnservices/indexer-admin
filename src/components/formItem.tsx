@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { VFC } from 'react';
-import { Field } from 'formik';
+import { Field, FieldValidator, FormikErrors, FormikValues } from 'formik';
 import styled from 'styled-components';
-import { Label } from './primary';
+import { Label, Text } from './primary';
 
 const Container = styled.div`
   display: flex;
@@ -23,14 +23,19 @@ const FormField = styled(Field)`
 type Props = {
   title: string;
   fieldKey: string;
-  error?: string;
+  validate?: FieldValidator;
+  errors?: FormikErrors<FormikValues>;
 };
 
-const FormItem: VFC<Props> = ({ title, fieldKey, error }) => (
+const FormItem: VFC<Props> = ({ title, fieldKey, validate, errors }) => (
   <Container>
     <Label htmlFor={fieldKey}>{title}</Label>
-    <FormField name={fieldKey} />
-    {!!error && <div>{error}</div>}
+    <FormField name={fieldKey} validate={validate} />
+    {!!errors?.[fieldKey] && (
+      <Text mt={5} color="red" size={15}>
+        {errors[fieldKey]}
+      </Text>
+    )}
   </Container>
 );
 
