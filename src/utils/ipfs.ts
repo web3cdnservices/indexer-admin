@@ -18,3 +18,10 @@ export function bytes32ToCid(bytes: string): string {
   const hashBytes = Buffer.from(hashHex, 'hex');
   return utils.base58.encode(hashBytes);
 }
+
+export function concatU8A(a: Uint8Array, b: Uint8Array): Uint8Array {
+  const res = new Uint8Array(a.length + b.length);
+  res.set(a, 0);
+  res.set(b, a.length);
+  return res;
+}
