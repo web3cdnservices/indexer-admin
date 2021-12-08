@@ -138,15 +138,18 @@ export const SButton: FC<SButtonProps & SSButtonProps> = ({
   loading,
   disabled,
   ...props
-}) => (
-  <StyledSButton
-    label={title}
-    type="secondary"
-    leftItem={loading && <Spin indicator={<AntIcon loading />} />}
-    disabled={disabled}
-    {...props}
-  />
-);
+}) => {
+  console.log('>>>loading:', loading);
+  return (
+    <StyledSButton
+      label={title}
+      type="secondary"
+      leftItem={loading && <Spin indicator={<AntIcon loading />} />}
+      disabled={disabled}
+      {...props}
+    />
+  );
+};
 
 export const ButtonContainer = styled.div<{ mt?: number; alignCenter?: boolean }>`
   display: flex;
