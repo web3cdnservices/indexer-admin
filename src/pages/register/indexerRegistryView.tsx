@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC } from 'react';
-import { Input } from 'antd';
-import FormItem from 'antd/lib/form/FormItem';
-import { Title, StyledButton } from '../login/styles';
-import { ContentContainer, FormContainer, TextContainer } from './styles';
+import { Formik, Form } from 'formik';
+import { Title } from '../login/styles';
+import { ContentContainer, TextContainer } from './styles';
 import prompts from './prompts';
 import { RegisterStep } from './types';
 import { FormValues } from '../../types/types';
+import FormItem from '../../components/formItem';
+import { ButtonContainer, SButton } from '../../components/primary';
 
 type Props = {
   loading: boolean;
@@ -21,6 +22,7 @@ export enum RegisterFormKey {
   amount = 'register-staking-amount',
 }
 
+// FIXME: fix the forms
 const IndexerRegistryView: FC<Props> = ({ onClick, loading }) => {
   const { title, buttonTitle } = prompts[RegisterStep.register];
   return (
@@ -30,27 +32,24 @@ const IndexerRegistryView: FC<Props> = ({ onClick, loading }) => {
           {title}
         </Title>
       </TextContainer>
-      <FormContainer layout="vertical" onFinish={(values) => onClick(values as FormValues)}>
-        <FormItem name={RegisterFormKey.name} label="Name">
-          <Input size="large" placeholder="Indexer Name" />
-        </FormItem>
-        <FormItem name={RegisterFormKey.endpoint} label="Proxy Endpoint">
-          <Input size="large" placeholder="http://localhost:8003" />
-        </FormItem>
-        <FormItem name={RegisterFormKey.amount} label="Staking Amount">
-          <Input size="large" placeholder="1000" />
-        </FormItem>
-        <StyledButton
-          loading={loading}
-          width="30%"
-          type="primary"
-          shape="round"
-          size="large"
-          htmlType="submit"
-        >
-          {buttonTitle}
-        </StyledButton>
-      </FormContainer>
+      <Formik
+        initialValues={{
+          name: '',
+          description: '',
+        }}
+        onSubmit={() => console.log('....')}
+      >
+        {({ errors, touched, setFieldValue, values, isSubmitting, submitForm }) => (
+          <Form>
+            <FormItem title="Indexer Name" fieldKey={RegisterFormKey.name} />
+            <FormItem title="Proxy Endpoint" fieldKey={RegisterFormKey.endpoint} />
+            <FormItem title="Staking Amount" fieldKey={RegisterFormKey.amount} />
+            <ButtonContainer>
+              <SButton mt={20} title={buttonTitle} />
+            </ButtonContainer>
+          </Form>
+        )}
+      </Formik>
     </ContentContainer>
   );
 };

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import styled from 'styled-components';
-import { Button, Form } from 'antd';
+import { Form } from 'formik';
 
 export const Container = styled.div`
   display: flex;
@@ -35,6 +35,7 @@ export const ContentContainer = styled.div`
   flex-direction: column;
 `;
 
+// TODO: replace these components with `Text`
 export const Title = styled.div<{ size?: number; align?: string; weight?: string }>`
   text-align: ${(p) => p.align || 'left'};
   font-weight: ${(p) => p.weight || 'bold'};
@@ -47,27 +48,8 @@ export const SubTitle = styled.div<{ align?: string }>`
   margin-top: 15px;
 `;
 
-export const ButtonContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 30px;
-`;
-
-export const StyledButton = styled(Button)<{ width?: string }>`
-  background-color: #4388dd;
-  align-self: center;
-  margin-top: 50px;
-  width: ${(p) => p.width || '30%'};
-`;
-
 export const LoginForm = styled(Form)`
   margin-top: 25px;
-`;
-
-export const FormItem = styled(Form.Item)`
-  font-size: 16px;
-  font-weight: bold;
 `;
 
 export const ImageCard = styled.div`

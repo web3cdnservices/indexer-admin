@@ -1,21 +1,12 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Form, Input } from 'antd';
+import { Form, Formik } from 'formik';
 import { FC } from 'react';
-import styled from 'styled-components';
-import { Button } from '../../../components/primary';
+import FormItem from '../../../components/formItem';
+import { ButtonContainer, SButton } from '../../../components/primary';
 import { FormValues } from '../../../types/types';
-import { ButtonContainer, FormItem } from '../../login/styles';
 import { FormKey } from '../constant';
-
-export const LoginForm = styled(Form)`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 20px;
-`;
 
 type Props = {
   loading: boolean;
@@ -26,16 +17,22 @@ type Props = {
 // TODO: 2. Add step and chain the actions
 const ModalContent: FC<Props> = ({ loading, onClick }) => {
   return (
-    <LoginForm name="login" layout="vertical" onFinish={(values) => onClick(values as FormValues)}>
-      <FormItem name={FormKey.ADD_PROJECT} validateStatus="success" label="Project Deployment ID">
-        <Input size="large" placeholder="0xd6baee14e74baf30a5e409573d801575397f358ea91be5ce64" />
-      </FormItem>
-      <FormItem>
-        <ButtonContainer>
-          <Button width={250} title="Add Project" loading={loading} htmlType="submit" />
-        </ButtonContainer>
-      </FormItem>
-    </LoginForm>
+    <Formik
+      initialValues={{
+        name: '',
+        description: '',
+      }}
+      onSubmit={() => console.log('....')}
+    >
+      {({ errors, touched, setFieldValue, values, isSubmitting, submitForm }) => (
+        <Form>
+          <FormItem title="Project Deployment ID" fieldKey={FormKey.NETWORK_TYPE} />
+          <ButtonContainer mt={60}>
+            <SButton width={250} title="Add Project" />
+          </ButtonContainer>
+        </Form>
+      )}
+    </Formik>
   );
 };
 

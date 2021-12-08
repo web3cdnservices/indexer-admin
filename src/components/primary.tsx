@@ -52,7 +52,7 @@ export const Label = styled.label<TextProps>`
   margin-top: ${({ mt }) => mt ?? 0}px;
   margin-bottom: ${({ mb }) => mb ?? 0}px;
   min-width: ${({ mw }) => mw ?? 10}px;
-  font-family: ${({ ff }) => ff ?? 'Futura'};
+  // font-family: ${({ ff }) => ff ?? 'Futura'};
 `;
 
 const StyledButton = styled(AntButton)<{
@@ -111,7 +111,8 @@ type SSButtonProps = {
 
 export const StyledSButton = styled(SubButton)<SSButtonProps>`
   align-self: ${({ align }) => align ?? 'center'}px;
-  width: ${({ width }) => width ?? 150}px;
+  min-width: ${({ width }) => width ?? 150}px;
+  padding: 16px 30px;
   margin-top: ${({ mt }) => mt ?? 0}px;
   font-weight: 500;
 `;
@@ -125,9 +126,10 @@ export const SButton: FC<SButtonProps & SSButtonProps> = ({ title, ...props }) =
   <StyledSButton label={title} type="secondary" {...props} />
 );
 
-export const ButtonContainer = styled.div<{ mt?: number }>`
+export const ButtonContainer = styled.div<{ mt?: number; alignCenter?: boolean }>`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: ${({ alignCenter }) => (alignCenter ? 'center' : 'flex-end')};
   margin-top: ${({ mt }) => mt ?? 0}px;
+  width: 100%;
 `;

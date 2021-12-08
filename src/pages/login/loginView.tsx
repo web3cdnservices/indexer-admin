@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { SubqueryNetwork } from '@subql/contract-sdk';
-import { Input } from 'antd';
+import { Formik, Form } from 'formik';
 import { FC, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { useApolloClient, HttpLink } from '@apollo/client';
@@ -10,20 +10,13 @@ import { networks } from '../../containers/web3';
 import { useIsIndexer } from '../../hooks/indexerHook';
 import { useWeb3 } from '../../hooks/web3Hook';
 import { GET_ACCOUNT_METADATA, QueryResult } from '../../utils/queries';
+import { ButtonContainer, SButton } from '../../components/primary';
 import Config from '../../utils/config';
 import prompts from './prompts';
-import {
-  Panel,
-  ButtonContainer,
-  ContentContainer,
-  SubTitle,
-  Title,
-  FormItem,
-  LoginForm,
-} from './styles';
+import { Panel, ContentContainer, SubTitle, Title, LoginForm } from './styles';
 import { FormKey } from '../projects/constant';
 import { createApolloClient, saveClientUri } from '../../utils/apolloClient';
-import { SButton } from '../../components/primary';
+import FormItem from '../../components/formItem';
 
 type Props = {
   onConnected: () => void;
@@ -86,19 +79,23 @@ const LoginView: FC<Props> = ({ onConnected }) => {
       <ContentContainer>
         <Title>{login.title}</Title>
         <SubTitle>{login.desc}</SubTitle>
-        <LoginForm name="login" layout="vertical" onFinish={onConnect}>
-          <FormItem name={FormKey.LOGIN} validateStatus="success" label={login.endpointform.label}>
-            <Input placeholder={login.endpointform.palceholder} />
-          </FormItem>
-          <FormItem hidden={false} label={login.networkFormLabel}>
-            <Input disabled value="" />
-          </FormItem>
-          <FormItem>
-            <ButtonContainer>
-              <SButton width={350} title={login.buttonTitle} onClick={onConnect} />
-            </ButtonContainer>
-          </FormItem>
-        </LoginForm>
+        <Formik
+          initialValues={{
+            name: '',
+            description: '',
+          }}
+          onSubmit={() => console.log('....')}
+        >
+          {({ errors, touched, setFieldValue, values, isSubmitting, submitForm }) => (
+            <LoginForm>
+              <FormItem title={login.endpointform.label} fieldKey={FormKey.LOGIN} />
+              <FormItem title={login.networkFormLabel} fieldKey={FormKey.NETWORK_TYPE} />
+              <ButtonContainer alignCenter mt={60}>
+                <SButton width={300} title={login.buttonTitle} />
+              </ButtonContainer>
+            </LoginForm>
+          )}
+        </Formik>
       </ContentContainer>
     </Panel>
   );

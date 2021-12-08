@@ -108,12 +108,6 @@ const ModalView: FC<Props> = ({
       initialValues={{
         name: '',
         description: '',
-        websiteUrl: undefined,
-        codeUrl: undefined,
-        image: undefined,
-        version: '1.0.0',
-        versionDescription: '',
-        deploymentId: '',
       }}
       onSubmit={() => console.log('....')}
     >
@@ -127,7 +121,7 @@ const ModalView: FC<Props> = ({
             </Text>
           )}
           <ButtonContainer>
-            <SButton mt={20} width={180} title={item.buttonTitle} />
+            <SButton mt={20} title={item.buttonTitle} />
           </ButtonContainer>
         </Form>
       )}
@@ -144,7 +138,9 @@ const ModalView: FC<Props> = ({
           {item.desc}
         </Text>
       </DescContainer>
-      <SButton width={350} title={item.buttonTitle} onClick={() => item.onClick(type)} />
+      <ButtonContainer>
+        <SButton title={item.buttonTitle} onClick={() => item.onClick(type)} />
+      </ButtonContainer>
     </ContentContainer>
   );
 
