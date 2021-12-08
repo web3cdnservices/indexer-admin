@@ -14,7 +14,6 @@ import Config from '../../utils/config';
 import prompts from './prompts';
 import {
   Panel,
-  StyledButton,
   ButtonContainer,
   ContentContainer,
   SubTitle,
@@ -24,6 +23,7 @@ import {
 } from './styles';
 import { FormKey } from '../projects/constant';
 import { createApolloClient, saveClientUri } from '../../utils/apolloClient';
+import { SButton } from '../../components/primary';
 
 type Props = {
   onConnected: () => void;
@@ -54,7 +54,9 @@ const LoginView: FC<Props> = ({ onConnected }) => {
     }
   }, [loading, data, error]);
 
-  const onConnect = (values: any) => {
+  const onConnect = () => {
+    // FIXME: ffff
+    const values = { [FormKey.LOGIN]: 'http://localhost:8000' };
     const serviceUrl = values[FormKey.LOGIN] as string;
     // FIXME: regx for url
     // const re = /^(https?):\/\/[^s$.?#].[^s]*$'/gm;
@@ -93,16 +95,7 @@ const LoginView: FC<Props> = ({ onConnected }) => {
           </FormItem>
           <FormItem>
             <ButtonContainer>
-              <StyledButton
-                loading={loading}
-                width="70%"
-                type="primary"
-                htmlType="submit"
-                shape="round"
-                size="large"
-              >
-                {login.buttonTitle}
-              </StyledButton>
+              <SButton width={350} title={login.buttonTitle} onClick={onConnect} />
             </ButtonContainer>
           </FormItem>
         </LoginForm>

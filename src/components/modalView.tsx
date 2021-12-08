@@ -1,18 +1,18 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Form, Input, Steps } from 'antd';
-import FormItem from 'antd/lib/form/FormItem';
+import { Steps } from 'antd';
+import { Formik, Form } from 'formik';
 import { FC } from 'react';
 import styled from 'styled-components';
-import { ButtonContainer } from '../pages/login/styles';
 import { FormKey } from '../pages/projects/constant';
 import { RegistrySteps } from '../pages/register/styles';
 import { getStepStatus } from '../pages/register/utils';
 import { FormValues } from '../types/types';
 import { ActionType } from '../utils/transactions';
 import ActionModal, { ModalProps } from './actionModal';
-import { Button, Text } from './primary';
+import FormItem from './formItem';
+import { SButton, Text, ButtonContainer } from './primary';
 
 export const Container = styled.div`
   display: flex;
@@ -104,27 +104,34 @@ const ModalView: FC<Props> = ({
 
   // FIXME: form validation
   const renderFormContent = (item: StepItem) => (
-    <InputForm
-      name={title}
-      layout="vertical"
-      onFinish={(values) => item.onClick(type, values as FormValues)}
+    <Formik
+      initialValues={{
+        name: '',
+        description: '',
+        websiteUrl: undefined,
+        codeUrl: undefined,
+        image: undefined,
+        version: '1.0.0',
+        versionDescription: '',
+        deploymentId: '',
+      }}
+      onSubmit={() => console.log('....')}
     >
-      <div>
-        <FormItem name={item.formKey} label={item.title}>
-          <Input size="large" placeholder={item.placeHolder} />
-        </FormItem>
-        {item.desc && (
-          <Text mt={20} size={13} color="gray">
-            {item.desc}
-          </Text>
-        )}
-      </div>
-      <FormItem>
-        <ButtonContainer>
-          <Button width={350} title={item.buttonTitle} loading={loading} htmlType="submit" />
-        </ButtonContainer>
-      </FormItem>
-    </InputForm>
+      {({ errors, touched, setFieldValue, values, isSubmitting, submitForm }) => (
+        <Form>
+          <FormItem title={item.title} fieldKey={item.formKey ?? ''} />
+          <FormItem title={item.title} fieldKey={item.formKey ?? ''} />
+          {item.desc && (
+            <Text mt={20} size={13} color="gray">
+              {item.desc}
+            </Text>
+          )}
+          <ButtonContainer>
+            <SButton mt={20} width={180} title={item.buttonTitle} />
+          </ButtonContainer>
+        </Form>
+      )}
+    </Formik>
   );
 
   const renderContent = (item: StepItem) => (
@@ -137,12 +144,7 @@ const ModalView: FC<Props> = ({
           {item.desc}
         </Text>
       </DescContainer>
-      <Button
-        width={350}
-        title={item.buttonTitle}
-        loading={loading}
-        onClick={() => item.onClick(type)}
-      />
+      <SButton width={350} title={item.buttonTitle} onClick={() => item.onClick(type)} />
     </ContentContainer>
   );
 

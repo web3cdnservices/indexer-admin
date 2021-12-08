@@ -3,8 +3,8 @@
 
 import { browserName } from 'react-device-detect';
 import { useEffect, useState } from 'react';
-import { Panel, Title, ImageCard, Image, StyledButton } from './styles';
-import { Text } from '../../components/primary';
+import { Panel, Title, ImageCard, Image } from './styles';
+import { SButton, Text } from '../../components/primary';
 import MetaMaskIcon from '../../resources/metamask.svg';
 import { useIsMetaMask, useIsMetaMaskInstalled, useWeb3 } from '../../hooks/web3Hook';
 import { connectWithMetaMask, switchNetwork, NetworkError } from '../../utils/metamask';
@@ -64,9 +64,7 @@ const MetaMaskView = () => {
       <ImageCard>
         <Image src={MetaMaskIcon} />
       </ImageCard>
-      <StyledButton width="200" type="primary" shape="round" size="large" onClick={onButtonClick}>
-        {data.buttonTitle}
-      </StyledButton>
+      <SButton width={300} title={data.buttonTitle} onClick={onButtonClick} />
     </Panel>
   ) : null;
 };

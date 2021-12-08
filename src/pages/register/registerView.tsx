@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC } from 'react';
-import { Title, SubTitle, StyledButton } from '../login/styles';
+import { Title, SubTitle } from '../login/styles';
 import { ContentContainer, DescContainer, TextContainer } from './styles';
 import prompts from './prompts';
 import { RegisterStep } from './types';
+import { SButton } from '../../components/primary';
 
 type Props = {
   step: RegisterStep;
@@ -25,16 +26,7 @@ const RegisterView: FC<Props> = ({ step, onClick, loading }) => {
           <SubTitle align="center">{desc}</SubTitle>
         </DescContainer>
       </TextContainer>
-      <StyledButton
-        loading={loading}
-        width="30%"
-        type="primary"
-        shape="round"
-        size="large"
-        onClick={onClick}
-      >
-        {buttonTitle}
-      </StyledButton>
+      <SButton width={350} title={buttonTitle} onClick={onClick} />
     </ContentContainer>
   );
 };

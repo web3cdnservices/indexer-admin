@@ -5,7 +5,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 import { Hashicon } from '@emeraldpay/hashicon-react';
 import StatusLabel from './statusLabel';
-import { Text, Button } from './primary';
+import { Label, SButton, Text } from './primary';
 import { ActionType } from '../utils/transactions';
 
 const Container = styled.div`
@@ -75,13 +75,13 @@ const AccountCard: FC<Props> = ({
   <Container>
     <HeaderContainer>
       <MainTitleContainer>
-        <Text size={30} fw="500" mr={20}>
+        <Label size={30} fw="500" mr={20}>
           {title}
-        </Text>
+        </Label>
         {!!status && <StatusLabel text={status} />}
       </MainTitleContainer>
       {!!account && !!buttonTitle && (
-        <Button title={buttonTitle} loading={loading} width={200} onClick={() => onClick(type)} />
+        <SButton width={250} title={buttonTitle} onClick={() => onClick(type)} />
       )}
     </HeaderContainer>
     {account ? (
@@ -98,9 +98,7 @@ const AccountCard: FC<Props> = ({
         <Text color="gray" size={15} mb={30}>
           {desc}
         </Text>
-        {!!buttonTitle && (
-          <Button title={buttonTitle} loading={loading} width={200} onClick={() => onClick(type)} />
-        )}
+        {!!buttonTitle && <SButton width={200} title={buttonTitle} onClick={() => onClick(type)} />}
       </DescContainer>
     )}
   </Container>
