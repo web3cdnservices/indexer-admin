@@ -2,28 +2,27 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC } from 'react';
-import { Formik, Form } from 'formik';
+import { Formik, Form, FormikHelpers } from 'formik';
 import { Title } from '../login/styles';
 import { ContentContainer, TextContainer } from './styles';
 import prompts from './prompts';
 import { RegisterStep } from './types';
-import { FormValues } from '../../types/types';
 import FormItem from '../../components/formItem';
 import { ButtonContainer, SButton } from '../../components/primary';
+import {
+  initialRegisterValues,
+  RegisterFormKey,
+  RegisterFormSchema,
+  TRegisterValues,
+} from '../../types/schemas';
 
 type Props = {
   loading: boolean;
-  onClick: (values: FormValues) => void;
+  onSubmit: (values: TRegisterValues, helper: FormikHelpers<TRegisterValues>) => void;
 };
 
-export enum RegisterFormKey {
-  name = 'register-indexer-name',
-  endpoint = 'register-proxy-endpoint',
-  amount = 'register-staking-amount',
-}
-
 // FIXME: fix the forms
-const IndexerRegistryView: FC<Props> = ({ onClick, loading }) => {
+const IndexerRegistryView: FC<Props> = ({ onSubmit, loading }) => {
   const { title, buttonTitle } = prompts[RegisterStep.register];
   return (
     <ContentContainer>
@@ -33,19 +32,21 @@ const IndexerRegistryView: FC<Props> = ({ onClick, loading }) => {
         </Title>
       </TextContainer>
       <Formik
-        initialValues={{
-          name: '',
-          description: '',
-        }}
-        onSubmit={() => console.log('....')}
+        initialValues={initialRegisterValues}
+        validationSchema={RegisterFormSchema}
+        onSubmit={onSubmit}
       >
-        {({ errors, touched, setFieldValue, values, isSubmitting, submitForm }) => (
+        {({ errors, submitForm }) => (
           <Form>
-            <FormItem title="Indexer Name" fieldKey={RegisterFormKey.name} />
-            <FormItem title="Proxy Endpoint" fieldKey={RegisterFormKey.endpoint} />
-            <FormItem title="Staking Amount" fieldKey={RegisterFormKey.amount} />
+            <FormItem title="Indexer Name" fieldKey={RegisterFormKey.name} errors={errors} />
+            <FormItem
+              title="Proxy Endpoint"
+              fieldKey={RegisterFormKey.proxyEndpoint}
+              errors={errors}
+            />
+            <FormItem title="Staking Amount" fieldKey={RegisterFormKey.amount} errors={errors} />
             <ButtonContainer>
-              <SButton mt={20} title={buttonTitle} />
+              <SButton mt={20} title={buttonTitle} loading={loading} onClick={submitForm} />
             </ButtonContainer>
           </Form>
         )}

@@ -26,7 +26,7 @@ const RegisterView: FC<Props> = ({ step, onClick, loading }) => {
           <SubTitle align="center">{desc}</SubTitle>
         </DescContainer>
       </TextContainer>
-      <SButton width={350} title={buttonTitle} onClick={onClick} />
+      <SButton width={350} title={buttonTitle} loading={loading} onClick={onClick} />
     </ContentContainer>
   );
 };

@@ -5,8 +5,9 @@ import { Button as AntButton, Spin } from 'antd';
 import { Button as SubButton } from '@subql/react-ui';
 import { LoadingOutlined } from '@ant-design/icons';
 import { ButtonHTMLType } from 'antd/lib/button/button';
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import styled from 'styled-components';
+import loading from './loading';
 
 export const Separator = styled.div<{
   height?: number;
@@ -133,23 +134,19 @@ const AntIcon: FC<SpinProps> = ({ loading }) => (
   <LoadingOutlined style={{ fontSize: 20, marginRight: 30, color: '#4388dd' }} spin={loading} />
 );
 
-export const SButton: FC<SButtonProps & SSButtonProps> = ({
-  title,
-  loading,
-  disabled,
-  ...props
-}) => {
-  console.log('>>>loading:', loading);
-  return (
-    <StyledSButton
-      label={title}
-      type="secondary"
-      leftItem={loading && <Spin indicator={<AntIcon loading />} />}
-      disabled={disabled}
-      {...props}
-    />
-  );
-};
+export const SButton: FC<SButtonProps & SSButtonProps> = ({ title, loading, disabled, ...props }) =>
+  useMemo(() => {
+    console.log('>>>loading:', loading);
+    return (
+      <StyledSButton
+        label={title}
+        type="secondary"
+        leftItem={loading && <Spin indicator={<AntIcon loading />} />}
+        disabled={disabled}
+        {...props}
+      />
+    );
+  }, [title, loading, disabled]);
 
 export const ButtonContainer = styled.div<{ mt?: number; alignCenter?: boolean }>`
   display: flex;

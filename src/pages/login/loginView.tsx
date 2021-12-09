@@ -53,6 +53,8 @@ const LoginView: FC<Props> = ({ onConnected }) => {
     const uri = `${values.endpoint}/graphql`;
     helper.setStatus({ loading: true });
 
+    console.log('>>>uri:', uri);
+
     createApolloClient(uri)
       .query({ query: GET_ACCOUNT_METADATA })
       .then(({ data }) => {

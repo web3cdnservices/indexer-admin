@@ -6,10 +6,8 @@ import { Formik, Form, FormikValues, FormikHelpers } from 'formik';
 import { FC } from 'react';
 import styled from 'styled-components';
 import { ObjectSchema } from 'yup';
-import { FormKey } from '../pages/projects/constant';
 import { RegistrySteps } from '../pages/register/styles';
 import { getStepStatus } from '../pages/register/utils';
-import { FormValues } from '../types/types';
 import { ActionType } from '../utils/transactions';
 import ActionModal, { ModalProps } from './actionModal';
 import FormItem from './formItem';
@@ -51,7 +49,7 @@ export const DescContainer = styled.div`
   align-items: center;
 `;
 
-export type ClickAction = (type?: ActionType, values?: FormValues) => void;
+export type ClickAction = (type?: ActionType) => void;
 export type FormSubmit = (values: FormikValues, helper: FormikHelpers<FormikValues>) => void;
 
 export type FormConfig = {
@@ -100,7 +98,7 @@ const ModalView: FC<Props> = ({
       >
         {({ errors, submitForm }) => (
           <Form>
-            <FormItem title={item.title} fieldKey={item.formKey ?? ''} errors={errors} />
+            <FormItem title={item.title} fieldKey={item.form?.formKey ?? ''} errors={errors} />
             {item.desc && (
               <Text mt={20} size={13} color="gray">
                 {item.desc}
@@ -125,7 +123,7 @@ const ModalView: FC<Props> = ({
         </Text>
       </DescContainer>
       <ButtonContainer>
-        <SButton title={item.buttonTitle} onClick={() => item.onClick(type)} />
+        <SButton title={item.buttonTitle} onClick={() => item.onClick && item.onClick(type)} />
       </ButtonContainer>
     </ContentContainer>
   );
@@ -147,7 +145,7 @@ const ModalView: FC<Props> = ({
     <ActionModal title={title} visible={visible} onClose={onClose}>
       <Container>
         {renderSteps()}
-        {stepItem.isForm ? renderFormContent(stepItem) : renderContent(stepItem)}
+        {stepItem.form ? renderFormContent(stepItem) : renderContent(stepItem)}
       </Container>
     </ActionModal>
   );

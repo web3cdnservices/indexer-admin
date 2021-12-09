@@ -4,6 +4,7 @@
 import { useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { FormikHelpers } from 'formik';
 import { Container } from '../login/styles';
 import { RegistrySteps } from './styles';
 import RegisterView from './registerView';
@@ -15,9 +16,9 @@ import { useIsApproveChanged, useIsIndexerChanged } from '../../hooks/indexerHoo
 import { ADD_INDEXER } from '../../utils/queries';
 import { getStepIndex, getStepStatus, registerSteps } from './utils';
 import { useInitialStep } from '../../hooks/registerHook';
-import IndexerRegistryView, { RegisterFormKey } from './indexerRegistryView';
-import { FormValues } from '../../types/types';
+import IndexerRegistryView from './indexerRegistryView';
 import { cidToBytes32, IPFS } from '../../utils/ipfs';
+import { RegisterFormKey, TRegisterValues } from '../../types/schemas';
 
 const RegisterPage = () => {
   const { account } = useWeb3();
@@ -66,26 +67,19 @@ const RegisterPage = () => {
       .catch(() => setLoading(false));
   };
 
-  const onIndexerRegister = async (values: FormValues) => {
+  const onIndexerRegister = async (
+    values: TRegisterValues,
+    helper: FormikHelpers<TRegisterValues>
+  ) => {
     try {
-      // FIXME: need to validate the form values
-      const name = values[RegisterFormKey.name];
-      // FIXME: amount at least `1000`
-      const amount = values[RegisterFormKey.amount];
-      const url = values[RegisterFormKey.endpoint];
-
-      const result = await IPFS.add(
-        JSON.stringify({
-          name,
-          url,
-        }),
-        { pin: true }
-      );
-
+      const { name, proxyEndpoint, amount } = values;
+      // TODO: 1. validate `proxy endpoint`, default request `/discovery`;
+      const result = await IPFS.add(JSON.stringify({ name, url: proxyEndpoint }), { pin: true });
       const cid = result.cid.toV0().toString();
-
       const metadataBytes = cidToBytes32(cid);
-      await indexerRegistry(sdk, signer, amount, metadataBytes);
+      helper.setErrors({ [RegisterFormKey.proxyEndpoint]: 'Invalid proxy endpoint' });
+
+      await indexerRegistry(sdk, signer, amount.toString(), metadataBytes);
 
       sendRegisterIndexerTx();
     } catch (error) {
@@ -122,9 +116,7 @@ const RegisterPage = () => {
         // @ts-ignore
         <RegisterView step={currentStep} loading={loading} onClick={registerActions[currentStep]} />
       )}
-      {isRegisterStep() && (
-        <IndexerRegistryView loading={loading} onClick={registerActions[currentStep]} />
-      )}
+      {isRegisterStep() && <IndexerRegistryView loading={loading} onSubmit={onIndexerRegister} />}
     </Container>
   );
 };

@@ -40,7 +40,7 @@ export const RegisterFormSchema = yup.object({
 export const initialRegisterValues = {
   [RegisterFormKey.name]: '',
   [RegisterFormKey.proxyEndpoint]: '',
-  [RegisterFormKey.amount]: '',
+  [RegisterFormKey.amount]: 0,
 };
 
 export type TRegisterValues = yup.Asserts<typeof RegisterFormSchema>;
