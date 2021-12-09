@@ -1,23 +1,24 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
-import { useState, useEffect, useCallback } from 'react';
 import { get } from 'lodash';
-import ProjectDetailsHeader from './components/projectDetailHeader';
-import ProgressInfoView from './components/progressInfoView';
-import { createApolloClient } from '../../utils/apolloClient';
-import { GET_QUERY_METADATA, GET_PROJECT } from '../../utils/queries';
-import ProjectServiceCard from './components/projectServiceCard';
-import { Container, ContentContainer } from './styles';
-import ProjectDetailsView from './components/projectDetailsView';
+
 import Loading from '../../components/loading';
-import { useDefaultLoading } from '../../hooks/projectHook';
-import { TProjectMetadata, TQueryMetadata, TService } from './types';
-import { calculateProgress, healthStatus } from '../../utils/project';
-import { createServiceItem } from './constant';
 import { useIsIndexer } from '../../hooks/indexerHook';
+import { useDefaultLoading } from '../../hooks/projectHook';
+import { createApolloClient } from '../../utils/apolloClient';
+import { calculateProgress, healthStatus } from '../../utils/project';
+import { GET_PROJECT, GET_QUERY_METADATA } from '../../utils/queries';
+import ProgressInfoView from './components/progressInfoView';
+import ProjectDetailsHeader from './components/projectDetailHeader';
+import ProjectDetailsView from './components/projectDetailsView';
+import ProjectServiceCard from './components/projectServiceCard';
+import { createServiceItem } from './constant';
+import { Container, ContentContainer } from './styles';
+import { TProjectMetadata, TQueryMetadata, TService } from './types';
 
 // TODO: 1. can use the existing `query regiter` query service to get the project info: { name | owner | version }
 // TODO: 2. request coordinator service to get the `node` and `indexer` service metadata -> health | endpoint | version

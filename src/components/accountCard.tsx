@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC } from 'react';
-import styled from 'styled-components';
 import { Hashicon } from '@emeraldpay/hashicon-react';
-import StatusLabel from './statusLabel';
+import styled from 'styled-components';
+
+import { ActionType } from 'utils/transactions';
+
 import { Label, SButton, Text } from './primary';
-import { ActionType } from '../utils/transactions';
+import StatusLabel from './statusLabel';
 
 const Container = styled.div`
   display: flex;

@@ -1,24 +1,25 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { FormikHelpers } from 'formik';
 import { useMutation } from '@apollo/client';
-import { Container } from '../login/styles';
-import { RegistrySteps } from './styles';
-import RegisterView from './registerView';
-import { RegisterStep } from './types';
-import { indexerRegistry, indexerRequestApprove } from '../../utils/indexerActions';
-import { useSigner, useWeb3 } from '../../hooks/web3Hook';
+import { FormikHelpers } from 'formik';
+
 import { useContractSDK } from '../../containers/contractSdk';
 import { useIsApproveChanged, useIsIndexerChanged } from '../../hooks/indexerHook';
-import { getStepIndex, getStepStatus, registerSteps } from './utils';
 import { useInitialStep } from '../../hooks/registerHook';
-import IndexerRegistryView from './indexerRegistryView';
-import { cidToBytes32, IPFS } from '../../utils/ipfs';
+import { useSigner, useWeb3 } from '../../hooks/web3Hook';
 import { RegisterFormKey, TRegisterValues } from '../../types/schemas';
+import { indexerRegistry, indexerRequestApprove } from '../../utils/indexerActions';
+import { cidToBytes32, IPFS } from '../../utils/ipfs';
 import { ADD_INDEXER } from '../../utils/queries';
+import { Container } from '../login/styles';
+import IndexerRegistryView from './indexerRegistryView';
+import RegisterView from './registerView';
+import { RegistrySteps } from './styles';
+import { RegisterStep } from './types';
+import { getStepIndex, getStepStatus, registerSteps } from './utils';
 
 const RegisterPage = () => {
   const signer = useSigner();

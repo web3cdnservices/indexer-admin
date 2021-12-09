@@ -18,7 +18,6 @@ export type TProjectMetadata = {
   queryEndpoint: string;
 };
 
-
 export type TService = {
   status: string;
   url: string;

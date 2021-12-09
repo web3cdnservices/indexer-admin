@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "PORT=3003 react-scripts start -- --rest-cache",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "PORT=3003 craco start -- --rest-cache",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject",
     "start:node": "sh ./scripts/start-node.sh",
     "deploy:contract": "sh ./scripts/deploy-contract.sh && yarn upgrade @subql/contract-sdk"
   },
@@ -43,6 +43,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@craco/craco": "^6.4.3",
     "@types/antd": "^1.0.0",
     "@types/jest": "^26.0.15",
     "@types/lodash": "^4.14.177",
@@ -53,7 +54,7 @@
     "@types/react-router-dom": "^5.3.1",
     "@types/styled-components": "^5.1.15",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "@typescript-eslint/parser": "^5.0.0",
+    "@typescript-eslint/parser": "^5.6.0",
     "apollo": "^2.33.9",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
@@ -64,6 +65,8 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "husky": "^7.0.2",
     "lint-staged": "^11.2.3",
     "prettier": "^2.4.1"

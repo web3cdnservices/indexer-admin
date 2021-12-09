@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { ClickAction, FormSubmit } from '../../components/modalView';
-import { ActionType } from '../../utils/transactions';
 import {
-  initialControllerValues,
   ControllerFormKey,
   ControllerFormSchema,
+  initialControllerValues,
 } from '../../types/schemas';
+import { ActionType } from '../../utils/transactions';
 
 export const modalTitles = {
   [ActionType.configCntroller]: 'Config Controller Account',

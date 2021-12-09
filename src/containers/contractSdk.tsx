@@ -3,11 +3,12 @@
 
 import React from 'react';
 import { ContractSDK, SdkOptions, SubqueryNetwork } from '@subql/contract-sdk';
-import { createContainer } from './unstated';
-import Logger from '../utils/logger';
+
 import localnetDeployment from '../contract/localnet.json';
 import testnetDeployment from '../contract/testnet.json';
 import { useIsMetaMask, useWeb3 } from '../hooks/web3Hook';
+import Logger from '../utils/logger';
+import { createContainer } from './unstated';
 import { ChainID, isSupportNetwork } from './web3';
 
 const deployments = {

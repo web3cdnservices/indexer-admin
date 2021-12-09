@@ -2,22 +2,23 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useEffect, useState } from 'react';
-import { useMutation, useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
+
+import Loading from '../../components/loading';
+import ModalView from '../../components/modalView';
+import { Button, Text } from '../../components/primary';
+import { useIsIndexer } from '../../hooks/indexerHook';
+import { useDefaultLoading } from '../../hooks/projectHook';
 import { useIsMetaMask } from '../../hooks/web3Hook';
-import { Container, ContentContainer, HeaderContainer } from './styles';
-import { Text, Button } from '../../components/primary';
+import { ProjectFormKey } from '../../types/schemas';
+import { ADD_PROJECT, GET_PROJECTS } from '../../utils/queries';
+import { ActionType } from '../../utils/transactions';
+import MetaMaskView from '../login/metamaskView';
+import { TProject } from '../project-details/types';
 import ProjecItemsHeader from './components/projecItemsHeader';
 import ProjectItem from './components/projectItem';
-import { ADD_PROJECT, GET_PROJECTS } from '../../utils/queries';
-import { TProject } from '../project-details/types';
-import MetaMaskView from '../login/metamaskView';
-import { useDefaultLoading } from '../../hooks/projectHook';
-import Loading from '../../components/loading';
-import { useIsIndexer } from '../../hooks/indexerHook';
 import { createAddProjectSteps } from './constant';
-import ModalView from '../../components/modalView';
-import { ProjectFormKey } from '../../types/schemas';
-import { ActionType } from '../../utils/transactions';
+import { Container, ContentContainer, HeaderContainer } from './styles';
 
 const Projects = () => {
   const isMetaMask = useIsMetaMask();

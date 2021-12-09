@@ -1,15 +1,16 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { FC, VFC, useCallback, useEffect } from 'react';
+import { FC, useCallback, useEffect, VFC } from 'react';
+import { SubqueryNetwork } from '@subql/contract-sdk';
 import { Web3ReactProvider } from '@web3-react/core';
 import { Web3ReactManagerFunctions } from '@web3-react/core/dist/types';
 import { InjectedConnector } from '@web3-react/injected-connector';
 import { NetworkConnector } from '@web3-react/network-connector';
 import { providers } from 'ethers';
-import { SubqueryNetwork } from '@subql/contract-sdk';
-import { Props } from './unstated';
+
 import { useWeb3 } from '../hooks/web3Hook';
+import { Props } from './unstated';
 
 // TODO: refactor these constant values
 export enum ChainID {

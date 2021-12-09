@@ -3,15 +3,16 @@
 
 import { FC } from 'react';
 import { Route } from 'react-router';
-import 'antd/dist/antd.css';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 
-import './App.css';
-import * as Pages from './pages';
-import { Web3Provider } from './containers';
 import { ContractSDKProvider } from './containers/contractSdk';
 import { createApolloClient } from './utils/apolloClient';
+import { Web3Provider } from './containers';
+import * as Pages from './pages';
+
+import 'antd/dist/antd.css';
+import './App.css';
 
 const App: FC = () => {
   const renderContents = () => (

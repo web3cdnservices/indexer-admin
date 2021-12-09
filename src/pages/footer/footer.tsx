@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useLocation } from 'react-router-dom';
-import { Container, ContentContainer, IconsContainer } from './styles';
-import { linkConfigs } from './config';
+
 import Icon from '../../components/Icon';
 import { Text } from '../../components/primary';
 import { useIsMetaMask } from '../../hooks/web3Hook';
+import { linkConfigs } from './config';
+import { Container, ContentContainer, IconsContainer } from './styles';
 
 const Header = () => {
   const location = useLocation();

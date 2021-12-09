@@ -1,10 +1,11 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import * as crypto from 'crypto';
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { ContractSDK } from '@subql/contract-sdk';
-import { bytes32ToCid, cidToBytes32 } from '../utils/ipfs';
+import * as crypto from 'crypto';
+
+import { bytes32ToCid } from '../utils/ipfs';
 
 // For testing
 

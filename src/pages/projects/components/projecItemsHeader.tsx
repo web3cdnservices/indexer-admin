@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import styled from 'styled-components';
+
 import { Text } from '../../../components/primary';
 import { ItemContainer } from '../styles';
 

@@ -4,7 +4,11 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { toBuffer, privateToAddress, bufferToHex } from 'ethereumjs-util';
+import { bufferToHex, privateToAddress, toBuffer } from 'ethereumjs-util';
+
+import AccountCard from '../../components/accountCard';
+import ModalView from '../../components/modalView';
+import { useContractSDK } from '../../containers/contractSdk';
 import {
   useBalance,
   useController,
@@ -14,18 +18,15 @@ import {
   useIsIndexerChanged,
 } from '../../hooks/indexerHook';
 import { useIsMetaMask, useSigner, useWeb3 } from '../../hooks/web3Hook';
-import { Container } from './styles';
-import prompts from './prompts';
-import AccountCard from '../../components/accountCard';
-import MetaMaskView from '../login/metamaskView';
-import { ActionType } from '../../utils/transactions';
-import ModalView from '../../components/modalView';
-import { createControllerSteps, createUnregisterSteps, modalTitles } from './config';
-import { UPDAET_CONTROLLER, REMOVE_ACCOUNTS } from '../../utils/queries';
-import { configController, unRegister } from '../../utils/indexerActions';
-import { useContractSDK } from '../../containers/contractSdk';
 import { ControllerFormKey } from '../../types/schemas';
+import { configController, unRegister } from '../../utils/indexerActions';
+import { REMOVE_ACCOUNTS, UPDAET_CONTROLLER } from '../../utils/queries';
+import { ActionType } from '../../utils/transactions';
 import { validatePrivateKey } from '../../utils/validateService';
+import MetaMaskView from '../login/metamaskView';
+import { createControllerSteps, createUnregisterSteps, modalTitles } from './config';
+import prompts from './prompts';
+import { Container } from './styles';
 
 const Registry = () => {
   const [visible, setVisible] = useState(false);

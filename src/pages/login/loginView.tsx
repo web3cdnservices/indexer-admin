@@ -1,18 +1,17 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { SubqueryNetwork } from '@subql/contract-sdk';
-import { Formik, FormikHelpers } from 'formik';
 import { FC } from 'react';
 import { useHistory } from 'react-router';
-import { useApolloClient, HttpLink } from '@apollo/client';
+import { HttpLink, useApolloClient } from '@apollo/client';
+import { SubqueryNetwork } from '@subql/contract-sdk';
+import { Formik, FormikHelpers } from 'formik';
+
+import FormItem from '../../components/formItem';
+import { ButtonContainer, FormContainer, SButton } from '../../components/primary';
 import { networks } from '../../containers/web3';
 import { useIsIndexer } from '../../hooks/indexerHook';
 import { useWeb3 } from '../../hooks/web3Hook';
-import { ButtonContainer, FormContainer, SButton } from '../../components/primary';
-import prompts from './prompts';
-import { Panel, ContentContainer, SubTitle, Title } from './styles';
-import FormItem from '../../components/formItem';
 import {
   initialLoginValues,
   LoginFormKey,
@@ -20,6 +19,8 @@ import {
   TLoginValues,
 } from '../../types/schemas';
 import { validateCoordinatorService } from '../../utils/validateService';
+import prompts from './prompts';
+import { ContentContainer, Panel, SubTitle, Title } from './styles';
 
 type Props = {
   onConnected: () => void;

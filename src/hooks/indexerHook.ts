@@ -1,8 +1,9 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { formatUnits } from '@ethersproject/units';
+
 import { useContractSDK } from '../containers/contractSdk';
 import { emptyControllerAccount } from '../utils/indexerActions';
 import { useSigner, useWeb3 } from './web3Hook';

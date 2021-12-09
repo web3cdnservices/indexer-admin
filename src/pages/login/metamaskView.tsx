@@ -1,14 +1,15 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { browserName } from 'react-device-detect';
 import { useEffect, useState } from 'react';
-import { Panel, Title, ImageCard, Image } from './styles';
+import { browserName } from 'react-device-detect';
+
 import { SButton, Text } from '../../components/primary';
-import MetaMaskIcon from '../../resources/metamask.svg';
 import { useIsMetaMask, useIsMetaMaskInstalled, useWeb3 } from '../../hooks/web3Hook';
-import { connectWithMetaMask, switchNetwork, NetworkError } from '../../utils/metamask';
+import MetaMaskIcon from '../../resources/metamask.svg';
+import { connectWithMetaMask, NetworkError, switchNetwork } from '../../utils/metamask';
 import prompts from './prompts';
+import { Image, ImageCard, Panel, Title } from './styles';
 
 // TODO: move to a constant file
 const extensionUrls = {

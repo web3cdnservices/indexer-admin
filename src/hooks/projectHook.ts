@@ -3,12 +3,13 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { ApolloClient, ApolloError, gql, InMemoryCache, useQuery } from '@apollo/client';
+
+import { useContractSDK } from '../containers/contractSdk';
+import { TProjectMetadata } from '../pages/project-details/types';
+import { IndexingStatus } from '../pages/projects/constant';
+import { concatU8A, IPFS } from '../utils/ipfs';
 import { GET_PROJECT } from '../utils/queries';
 import { useWeb3 } from './web3Hook';
-import { useContractSDK } from '../containers/contractSdk';
-import { IndexingStatus } from '../pages/projects/constant';
-import { TProjectMetadata } from '../pages/project-details/types';
-import { concatU8A, IPFS } from '../utils/ipfs';
 
 // TODO: move to `type` file
 type TDeps = boolean | number | string;

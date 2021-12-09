@@ -1,15 +1,16 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Tabs } from 'antd';
-import { Hashicon } from '@emeraldpay/hashicon-react';
-import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
-import { Container, LeftContainer, RightContainer } from './styles';
-import SubqueryIcon from '../../resources/subquery.svg';
+import { Hashicon } from '@emeraldpay/hashicon-react';
+import { Tabs } from 'antd';
+import styled from 'styled-components';
+
 import { Text } from '../../components/primary';
-import { useIsMetaMask, useWeb3 } from '../../hooks/web3Hook';
 import { useController, useIsIndexer } from '../../hooks/indexerHook';
+import { useIsMetaMask, useWeb3 } from '../../hooks/web3Hook';
+import SubqueryIcon from '../../resources/subquery.svg';
+import { Container, LeftContainer, RightContainer } from './styles';
 
 enum TabbarItem {
   account = 'Account',

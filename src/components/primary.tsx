@@ -1,12 +1,12 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Button as AntButton, Spin } from 'antd';
-import { Button as SubButton } from '@subql/react-ui';
-import { LoadingOutlined } from '@ant-design/icons';
-import { Form } from 'formik';
-import { ButtonHTMLType } from 'antd/lib/button/button';
 import { FC, useMemo } from 'react';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Button as SubButton } from '@subql/react-ui';
+import { Button as AntButton, Spin } from 'antd';
+import { ButtonHTMLType } from 'antd/lib/button/button';
+import { Form } from 'formik';
 import styled from 'styled-components';
 
 export const Separator = styled.div<{

@@ -2,11 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC } from 'react';
-import { Formik, Form, FormikHelpers } from 'formik';
-import { Title } from '../login/styles';
-import { ContentContainer, TextContainer } from './styles';
-import prompts from './prompts';
-import { RegisterStep } from './types';
+import { Formik, FormikHelpers } from 'formik';
+
 import FormItem from '../../components/formItem';
 import { ButtonContainer, FormContainer, SButton } from '../../components/primary';
 import {
@@ -15,6 +12,10 @@ import {
   RegisterFormSchema,
   TRegisterValues,
 } from '../../types/schemas';
+import { Title } from '../login/styles';
+import prompts from './prompts';
+import { ContentContainer, TextContainer } from './styles';
+import { RegisterStep } from './types';
 
 type Props = {
   loading: boolean;

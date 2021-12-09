@@ -1,16 +1,17 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import styled from 'styled-components';
-import { Hashicon } from '@emeraldpay/hashicon-react';
-import { Progress } from 'antd';
 import { FC } from 'react';
 import { useHistory } from 'react-router-dom';
-import StatusLabel from '../../../components/statusLabel';
-import { statusColor, statusText } from '../constant';
+import { Hashicon } from '@emeraldpay/hashicon-react';
+import { Progress } from 'antd';
+import styled from 'styled-components';
+
 import { Text } from '../../../components/primary';
-import { ItemContainer } from '../styles';
+import StatusLabel from '../../../components/statusLabel';
 import { useIndexingStatus } from '../../../hooks/projectHook';
+import { statusColor, statusText } from '../constant';
+import { ItemContainer } from '../styles';
 
 const Container = styled.div`
   display: flex;

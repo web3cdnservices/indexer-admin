@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useEffect, useState } from 'react';
-import { useWeb3React } from '@web3-react/core';
-import { providers } from 'ethers';
-import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
 import { JsonRpcSigner } from '@ethersproject/providers';
+import { useWeb3React } from '@web3-react/core';
+import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
+import { providers } from 'ethers';
 
 export const useIsMetaMaskInstalled = (): boolean => {
   // @ts-ignore

@@ -1,17 +1,18 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Steps } from 'antd';
-import { Formik, Form, FormikValues, FormikHelpers } from 'formik';
 import { FC } from 'react';
+import { Steps } from 'antd';
+import { Form, Formik, FormikHelpers, FormikValues } from 'formik';
 import styled from 'styled-components';
 import { ObjectSchema } from 'yup';
+
 import { RegistrySteps } from '../pages/register/styles';
 import { getStepStatus } from '../pages/register/utils';
 import { ActionType } from '../utils/transactions';
 import ActionModal, { ModalProps } from './actionModal';
 import FormItem from './formItem';
-import { SButton, Text, ButtonContainer } from './primary';
+import { ButtonContainer, SButton, Text } from './primary';
 
 export const Container = styled.div`
   display: flex;

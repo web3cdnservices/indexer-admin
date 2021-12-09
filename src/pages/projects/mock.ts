@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import * as crypto from 'crypto';
+
 import { IndexingStatus } from './constant';
 
 const createProjectItem = (id: string, title: string, progress: number, status: number) => ({

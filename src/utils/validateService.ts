@@ -4,6 +4,7 @@
 import { SubqueryNetwork } from '@subql/contract-sdk';
 import { isValidPrivate, toBuffer } from 'ethereumjs-util';
 import { FormikHelpers } from 'formik';
+
 import { LoginFormKey, TLoginValues } from '../types/schemas';
 import { createApolloClient, saveClientUri } from './apolloClient';
 import Config from './config';

@@ -1,28 +1,29 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import styled from 'styled-components';
-import { Hashicon } from '@emeraldpay/hashicon-react';
-import { FC, useState, useCallback } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { useMutation } from '@apollo/client';
+import { Hashicon } from '@emeraldpay/hashicon-react';
+import styled from 'styled-components';
+
+import ModalView from '../../../components/modalView';
 import { Button, Separator, Text } from '../../../components/primary';
+import { useContractSDK } from '../../../containers/contractSdk';
+import { useIsIndexingStatusChanged } from '../../../hooks/indexerHook';
+import { useIndexingStatus } from '../../../hooks/projectHook';
+import { useSigner } from '../../../hooks/web3Hook';
+import { ProjectFormKey } from '../../../types/schemas';
+import { readyIndexing, startIndexing, stopIndexing } from '../../../utils/indexerActions';
+import { READY_PROJECT, START_PROJECT } from '../../../utils/queries';
+import { ActionType } from '../../../utils/transactions';
+import { IndexingStatus } from '../../projects/constant';
 import {
-  createStartIndexingSteps,
+  createButtonItems,
   createReadyIndexingSteps,
+  createStartIndexingSteps,
   createStopIndexingSteps,
   modalTitles,
-  createButtonItems,
 } from '../constant';
-import { startIndexing, stopIndexing, readyIndexing } from '../../../utils/indexerActions';
-import { useIsIndexingStatusChanged } from '../../../hooks/indexerHook';
-import { IndexingStatus } from '../../projects/constant';
-import { ActionType } from '../../../utils/transactions';
-import { useSigner } from '../../../hooks/web3Hook';
-import { useContractSDK } from '../../../containers/contractSdk';
-import ModalView from '../../../components/modalView';
-import { START_PROJECT, READY_PROJECT } from '../../../utils/queries';
-import { useIndexingStatus } from '../../../hooks/projectHook';
-import { ProjectFormKey } from '../../../types/schemas';
 
 const Container = styled.div`
   display: flex;
