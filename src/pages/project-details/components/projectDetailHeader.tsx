@@ -4,18 +4,19 @@
 import { FC, useCallback, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { Hashicon } from '@emeraldpay/hashicon-react';
+import { useContractSDK } from 'containers/contractSdk';
 import styled from 'styled-components';
 
-import ModalView from '../../../components/modalView';
-import { Button, Separator, Text } from '../../../components/primary';
-import { useContractSDK } from '../../../containers/contractSdk';
-import { useIsIndexingStatusChanged } from '../../../hooks/indexerHook';
-import { useIndexingStatus } from '../../../hooks/projectHook';
-import { useSigner } from '../../../hooks/web3Hook';
-import { ProjectFormKey } from '../../../types/schemas';
-import { readyIndexing, startIndexing, stopIndexing } from '../../../utils/indexerActions';
-import { READY_PROJECT, START_PROJECT } from '../../../utils/queries';
-import { ActionType } from '../../../utils/transactions';
+import ModalView from 'components/modalView';
+import { Button, Separator, Text } from 'components/primary';
+import { useIsIndexingStatusChanged } from 'hooks/indexerHook';
+import { useIndexingStatus } from 'hooks/projectHook';
+import { useSigner } from 'hooks/web3Hook';
+import { ProjectFormKey } from 'types/schemas';
+import { readyIndexing, startIndexing, stopIndexing } from 'utils/indexerActions';
+import { READY_PROJECT, START_PROJECT } from 'utils/queries';
+import { ActionType } from 'utils/transactions';
+
 import { IndexingStatus } from '../../projects/constant';
 import {
   createButtonItems,

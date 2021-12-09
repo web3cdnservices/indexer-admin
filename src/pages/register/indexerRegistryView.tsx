@@ -4,14 +4,15 @@
 import { FC } from 'react';
 import { Formik, FormikHelpers } from 'formik';
 
-import FormItem from '../../components/formItem';
-import { ButtonContainer, FormContainer, SButton } from '../../components/primary';
+import FormItem from 'components/formItem';
+import { ButtonContainer, FormContainer, SButton } from 'components/primary';
 import {
   initialRegisterValues,
   RegisterFormKey,
   RegisterFormSchema,
   TRegisterValues,
-} from '../../types/schemas';
+} from 'types/schemas';
+
 import { Title } from '../login/styles';
 import prompts from './prompts';
 import { ContentContainer, TextContainer } from './styles';

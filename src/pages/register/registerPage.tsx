@@ -4,16 +4,17 @@
 import { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { useContractSDK } from 'containers/contractSdk';
 import { FormikHelpers } from 'formik';
 
-import { useContractSDK } from '../../containers/contractSdk';
-import { useIsApproveChanged, useIsIndexerChanged } from '../../hooks/indexerHook';
-import { useInitialStep } from '../../hooks/registerHook';
-import { useSigner, useWeb3 } from '../../hooks/web3Hook';
-import { RegisterFormKey, TRegisterValues } from '../../types/schemas';
-import { indexerRegistry, indexerRequestApprove } from '../../utils/indexerActions';
-import { cidToBytes32, IPFS } from '../../utils/ipfs';
-import { ADD_INDEXER } from '../../utils/queries';
+import { useIsApproveChanged, useIsIndexerChanged } from 'hooks/indexerHook';
+import { useInitialStep } from 'hooks/registerHook';
+import { useSigner, useWeb3 } from 'hooks/web3Hook';
+import { RegisterFormKey, TRegisterValues } from 'types/schemas';
+import { indexerRegistry, indexerRequestApprove } from 'utils/indexerActions';
+import { cidToBytes32, IPFS } from 'utils/ipfs';
+import { ADD_INDEXER } from 'utils/queries';
+
 import { Container } from '../login/styles';
 import IndexerRegistryView from './indexerRegistryView';
 import RegisterView from './registerView';

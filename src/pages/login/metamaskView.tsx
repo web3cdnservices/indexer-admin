@@ -4,10 +4,12 @@
 import { useEffect, useState } from 'react';
 import { browserName } from 'react-device-detect';
 
-import { SButton, Text } from '../../components/primary';
-import { useIsMetaMask, useIsMetaMaskInstalled, useWeb3 } from '../../hooks/web3Hook';
-import MetaMaskIcon from '../../resources/metamask.svg';
-import { connectWithMetaMask, NetworkError, switchNetwork } from '../../utils/metamask';
+import { SButton, Text } from 'components/primary';
+import { useIsMetaMask, useIsMetaMaskInstalled, useWeb3 } from 'hooks/web3Hook';
+// @ts-ignore
+import MetaMaskIcon from 'resources/metamask.svg';
+import { connectWithMetaMask, NetworkError, switchNetwork } from 'utils/metamask';
+
 import prompts from './prompts';
 import { Image, ImageCard, Panel, Title } from './styles';
 

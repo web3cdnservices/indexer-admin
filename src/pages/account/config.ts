@@ -1,13 +1,9 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { ClickAction, FormSubmit } from '../../components/modalView';
-import {
-  ControllerFormKey,
-  ControllerFormSchema,
-  initialControllerValues,
-} from '../../types/schemas';
-import { ActionType } from '../../utils/transactions';
+import { ClickAction, FormSubmit } from 'components/modalView';
+import { ControllerFormKey, ControllerFormSchema, initialControllerValues } from 'types/schemas';
+import { ActionType } from 'utils/transactions';
 
 export const modalTitles = {
   [ActionType.configCntroller]: 'Config Controller Account',

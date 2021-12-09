@@ -11,6 +11,7 @@ const { resolve } = require('path');
       types: resolve(__dirname, 'src/types'),
       utils: resolve(__dirname, 'src/utils'),
       resources: resolve(__dirname, 'src/resources'),
+      contract: resolve(__dirname, 'src/contract'),
     }
    }
 };

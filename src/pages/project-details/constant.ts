@@ -1,14 +1,15 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { ClickAction, FormSubmit } from '../../components/modalView';
+import { ClickAction, FormSubmit } from 'components/modalView';
 import {
   initialPublishProjectValues,
   initialStartProjectValues,
   ProjectFormKey,
   StartProjectSchema,
-} from '../../types/schemas';
-import { ActionType } from '../../utils/transactions';
+} from 'types/schemas';
+import { ActionType } from 'utils/transactions';
+
 import { IndexingStatus } from '../projects/constant';
 
 export const modalTitles = {
@@ -17,7 +18,13 @@ export const modalTitles = {
   [ActionType.stopIndexing]: 'Stop Indexing Project',
 };
 
-const createButtonItem = (title: string, action: () => void, color?: string) => ({
+type TButtonItem = {
+  title: string;
+  action: () => void;
+  color?: string;
+};
+
+const createButtonItem = (title: string, action: () => void, color?: string): TButtonItem => ({
   title,
   action,
   color,

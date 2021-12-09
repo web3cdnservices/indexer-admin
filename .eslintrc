@@ -73,7 +73,7 @@
               ["^react", "^@?\\w"],
               // Internal packages.
               [
-                "^(src|components|hooks|container|pages|types|utils|resources)(/.*|$)"
+                "^(src|components|hooks|container|pages|types|utils|resources|contract)(/.*|$)"
               ],
               // Other local imports. Put same-folder imports and `.` last.
               [

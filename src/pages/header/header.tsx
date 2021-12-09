@@ -1,15 +1,17 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+// @ts-nocheck
 import { useHistory } from 'react-router-dom';
 import { Hashicon } from '@emeraldpay/hashicon-react';
 import { Tabs } from 'antd';
 import styled from 'styled-components';
 
-import { Text } from '../../components/primary';
-import { useController, useIsIndexer } from '../../hooks/indexerHook';
-import { useIsMetaMask, useWeb3 } from '../../hooks/web3Hook';
-import SubqueryIcon from '../../resources/subquery.svg';
+import { Text } from 'components/primary';
+import { useController, useIsIndexer } from 'hooks/indexerHook';
+import { useIsMetaMask, useWeb3 } from 'hooks/web3Hook';
+import SubqueryIcon from 'resources/subquery.svg';
+
 import { Container, LeftContainer, RightContainer } from './styles';
 
 enum TabbarItem {

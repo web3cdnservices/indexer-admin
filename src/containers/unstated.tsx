@@ -3,7 +3,7 @@
 
 import { createContext, ReactNode, useContext, useMemo } from 'react';
 
-import Logger from '../utils/logger';
+import Logger from 'utils/logger';
 
 const EMPTY: unique symbol = Symbol(undefined);
 

@@ -7,9 +7,10 @@ import { Form, Formik, FormikHelpers, FormikValues } from 'formik';
 import styled from 'styled-components';
 import { ObjectSchema } from 'yup';
 
-import { RegistrySteps } from '../pages/register/styles';
-import { getStepStatus } from '../pages/register/utils';
-import { ActionType } from '../utils/transactions';
+import { RegistrySteps } from 'pages/register/styles';
+import { getStepStatus } from 'pages/register/utils';
+import { ActionType } from 'utils/transactions';
+
 import ActionModal, { ModalProps } from './actionModal';
 import FormItem from './formItem';
 import { ButtonContainer, SButton, Text } from './primary';

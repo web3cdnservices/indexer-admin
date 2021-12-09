@@ -3,7 +3,8 @@
 
 import { FC } from 'react';
 
-import { SButton } from '../../components/primary';
+import { SButton } from 'components/primary';
+
 import { SubTitle, Title } from '../login/styles';
 import prompts from './prompts';
 import { ContentContainer, DescContainer, TextContainer } from './styles';

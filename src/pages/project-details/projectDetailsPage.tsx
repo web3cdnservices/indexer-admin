@@ -6,12 +6,13 @@ import { useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import { get } from 'lodash';
 
-import Loading from '../../components/loading';
-import { useIsIndexer } from '../../hooks/indexerHook';
-import { useDefaultLoading } from '../../hooks/projectHook';
-import { createApolloClient } from '../../utils/apolloClient';
-import { calculateProgress, healthStatus } from '../../utils/project';
-import { GET_PROJECT, GET_QUERY_METADATA } from '../../utils/queries';
+import Loading from 'components/loading';
+import { useIsIndexer } from 'hooks/indexerHook';
+import { useDefaultLoading } from 'hooks/projectHook';
+import { createApolloClient } from 'utils/apolloClient';
+import { calculateProgress, healthStatus } from 'utils/project';
+import { GET_PROJECT, GET_QUERY_METADATA } from 'utils/queries';
+
 import ProgressInfoView from './components/progressInfoView';
 import ProjectDetailsHeader from './components/projectDetailHeader';
 import ProjectDetailsView from './components/projectDetailsView';

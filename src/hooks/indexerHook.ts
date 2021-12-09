@@ -3,9 +3,10 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { formatUnits } from '@ethersproject/units';
+import { useContractSDK } from 'containers/contractSdk';
 
-import { useContractSDK } from '../containers/contractSdk';
-import { emptyControllerAccount } from '../utils/indexerActions';
+import { emptyControllerAccount } from 'utils/indexerActions';
+
 import { useSigner, useWeb3 } from './web3Hook';
 
 type Account = string | null | undefined;

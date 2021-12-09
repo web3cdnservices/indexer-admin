@@ -3,9 +3,10 @@
 
 import { useLocation } from 'react-router-dom';
 
-import Icon from '../../components/Icon';
-import { Text } from '../../components/primary';
-import { useIsMetaMask } from '../../hooks/web3Hook';
+import Icon from 'components/Icon';
+import { Text } from 'components/primary';
+import { useIsMetaMask } from 'hooks/web3Hook';
+
 import { linkConfigs } from './config';
 import { Container, ContentContainer, IconsContainer } from './styles';
 

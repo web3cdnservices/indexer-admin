@@ -3,12 +3,13 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { ApolloClient, ApolloError, gql, InMemoryCache, useQuery } from '@apollo/client';
+import { useContractSDK } from 'containers/contractSdk';
 
-import { useContractSDK } from '../containers/contractSdk';
+import { concatU8A, IPFS } from 'utils/ipfs';
+import { GET_PROJECT } from 'utils/queries';
+
 import { TProjectMetadata } from '../pages/project-details/types';
 import { IndexingStatus } from '../pages/projects/constant';
-import { concatU8A, IPFS } from '../utils/ipfs';
-import { GET_PROJECT } from '../utils/queries';
 import { useWeb3 } from './web3Hook';
 
 // TODO: move to `type` file

@@ -5,7 +5,7 @@ import { JsonRpcSigner } from '@ethersproject/providers';
 import { ContractSDK } from '@subql/contract-sdk';
 import * as crypto from 'crypto';
 
-import { bytes32ToCid } from '../utils/ipfs';
+import { bytes32ToCid } from 'utils/ipfs';
 
 // For testing
 

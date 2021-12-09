@@ -3,7 +3,8 @@
 
 import styled from 'styled-components';
 
-import { Text } from '../../../components/primary';
+import { Text } from 'components/primary';
+
 import { ItemContainer } from '../styles';
 
 const Container = styled.div`

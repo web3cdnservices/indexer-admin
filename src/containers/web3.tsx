@@ -9,7 +9,8 @@ import { InjectedConnector } from '@web3-react/injected-connector';
 import { NetworkConnector } from '@web3-react/network-connector';
 import { providers } from 'ethers';
 
-import { useWeb3 } from '../hooks/web3Hook';
+import { useWeb3 } from 'hooks/web3Hook';
+
 import { Props } from './unstated';
 
 // TODO: refactor these constant values

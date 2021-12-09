@@ -6,8 +6,8 @@
 
 import { intToHex } from 'ethereumjs-util';
 import Config from './config';
-import { connect } from '../containers/web3';
-import { NetworkToChainID } from '../containers/web3';
+import { connect } from 'containers/web3';
+import { NetworkToChainID } from 'containers/web3';
 
 export const NetworkError = {
   unSupportedNetworkError: 'UnsupportedChainIdError',

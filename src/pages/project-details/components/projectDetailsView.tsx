@@ -4,7 +4,8 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { Text } from '../../../components/primary';
+import { Text } from 'components/primary';
+
 import { projectItem } from '../mock';
 
 const Container = styled.div`

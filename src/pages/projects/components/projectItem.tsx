@@ -7,9 +7,10 @@ import { Hashicon } from '@emeraldpay/hashicon-react';
 import { Progress } from 'antd';
 import styled from 'styled-components';
 
-import { Text } from '../../../components/primary';
-import StatusLabel from '../../../components/statusLabel';
-import { useIndexingStatus } from '../../../hooks/projectHook';
+import { Text } from 'components/primary';
+import StatusLabel from 'components/statusLabel';
+import { useIndexingStatus } from 'hooks/projectHook';
+
 import { statusColor, statusText } from '../constant';
 import { ItemContainer } from '../styles';
 

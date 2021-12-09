@@ -4,8 +4,9 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { Separator, Text } from '../../../components/primary';
-import StatusLabel from '../../../components/statusLabel';
+import { Separator, Text } from 'components/primary';
+import StatusLabel from 'components/statusLabel';
+
 import { TService } from '../types';
 
 const Container = styled.div`
