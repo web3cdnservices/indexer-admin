@@ -50,6 +50,7 @@ export const SubTitle = styled.div<{ align?: string }>`
 
 export const LoginForm = styled(Form)`
   margin-top: 25px;
+  width: 100%;
 `;
 
 export const ImageCard = styled.div`

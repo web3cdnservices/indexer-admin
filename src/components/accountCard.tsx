@@ -81,7 +81,7 @@ const AccountCard: FC<Props> = ({
         {!!status && <StatusLabel text={status} />}
       </MainTitleContainer>
       {!!account && !!buttonTitle && (
-        <SButton width={250} title={buttonTitle} onClick={() => onClick(type)} />
+        <SButton width={250} title={buttonTitle} loading={loading} onClick={() => onClick(type)} />
       )}
     </HeaderContainer>
     {account ? (
@@ -98,7 +98,14 @@ const AccountCard: FC<Props> = ({
         <Text color="gray" size={15} mb={30}>
           {desc}
         </Text>
-        {!!buttonTitle && <SButton width={200} title={buttonTitle} onClick={() => onClick(type)} />}
+        {!!buttonTitle && (
+          <SButton
+            width={200}
+            title={buttonTitle}
+            loading={loading}
+            onClick={() => onClick(type)}
+          />
+        )}
       </DescContainer>
     )}
   </Container>

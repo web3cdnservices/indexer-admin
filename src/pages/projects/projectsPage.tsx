@@ -66,10 +66,10 @@ const Projects = () => {
       <ModalView
         visible={visible}
         // @ts-ignore
-        title={step[ActionType.addProject].title}
+        title={step.addProject[0].title}
         onClose={onModalClose}
         // @ts-ignore
-        steps={step}
+        steps={step.addProject}
         currentStep={0}
         type={ActionType.addProject}
         loading={loading}

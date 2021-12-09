@@ -32,7 +32,7 @@ export const createAddProjectSteps = (onAddProject: FormSubmit) => ({
       index: 0,
       title: 'Add new project',
       desc: 'Upload the query service endpoint to you coordinator service, this endpoint will be used to get the metadata of the query service and monitor the health.',
-      buttonTitle: 'Sync Endpoint',
+      buttonTitle: 'Add project',
       form: {
         formKey: ProjectFormKey.deploymentId,
         formValues: initialProjectValues,

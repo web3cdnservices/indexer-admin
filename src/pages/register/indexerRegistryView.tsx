@@ -8,7 +8,7 @@ import { ContentContainer, TextContainer } from './styles';
 import prompts from './prompts';
 import { RegisterStep } from './types';
 import FormItem from '../../components/formItem';
-import { ButtonContainer, SButton } from '../../components/primary';
+import { ButtonContainer, FormContainer, SButton } from '../../components/primary';
 import {
   initialRegisterValues,
   RegisterFormKey,
@@ -37,7 +37,7 @@ const IndexerRegistryView: FC<Props> = ({ onSubmit, loading }) => {
         onSubmit={onSubmit}
       >
         {({ errors, submitForm }) => (
-          <Form>
+          <FormContainer>
             <FormItem title="Indexer Name" fieldKey={RegisterFormKey.name} errors={errors} />
             <FormItem
               title="Proxy Endpoint"
@@ -45,10 +45,10 @@ const IndexerRegistryView: FC<Props> = ({ onSubmit, loading }) => {
               errors={errors}
             />
             <FormItem title="Staking Amount" fieldKey={RegisterFormKey.amount} errors={errors} />
-            <ButtonContainer>
+            <ButtonContainer alignCenter>
               <SButton mt={20} title={buttonTitle} loading={loading} onClick={submitForm} />
             </ButtonContainer>
-          </Form>
+          </FormContainer>
         )}
       </Formik>
     </ContentContainer>

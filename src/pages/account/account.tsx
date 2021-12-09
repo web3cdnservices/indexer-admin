@@ -1,10 +1,10 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { isValidPrivate, toBuffer, privateToAddress, bufferToHex } from 'ethereumjs-util';
+import { toBuffer, privateToAddress, bufferToHex } from 'ethereumjs-util';
 import {
   useBalance,
   useController,
@@ -25,6 +25,7 @@ import { UPDAET_CONTROLLER, REMOVE_ACCOUNTS } from '../../utils/queries';
 import { configController, unRegister } from '../../utils/indexerActions';
 import { useContractSDK } from '../../containers/contractSdk';
 import { ControllerFormKey } from '../../types/schemas';
+import { validatePrivateKey } from '../../utils/validateService';
 
 const Registry = () => {
   const [visible, setVisible] = useState(false);
@@ -55,6 +56,12 @@ const Registry = () => {
   const controllerItem = !controller ? prompts.emptyController : prompts.controller;
   const indexerItem = prompts.indexer;
 
+  useEffect(() => {
+    if (!isIndexer || !isController) {
+      history.replace('/');
+    }
+  }, [isIndexer, isController]);
+
   const onModalShow = (type: ActionType) => {
     setActionType(type);
     setVisible(true);
@@ -68,16 +75,19 @@ const Registry = () => {
 
   const controllerStepsConfig = createControllerSteps(
     async (values, formHelper) => {
+      formHelper.setStatus({ loading: true });
       const privateKey = values[ControllerFormKey.privateKey];
-      // TODO: move this to helper function
-      if (!privateKey || !privateKey.startsWith('0x') || !isValidPrivate(toBuffer(privateKey))) {
-        formHelper.setErrors({ [ControllerFormKey.privateKey]: 'Invalid private key format' });
+      const error = validatePrivateKey(privateKey);
+      if (error) {
+        formHelper.setStatus({ loading: false });
+        formHelper.setErrors({ [ControllerFormKey.privateKey]: error });
         return;
       }
 
       const controllerAddress = bufferToHex(privateToAddress(toBuffer(privateKey)));
       const isExist = await sdk?.indexerRegistry.isController(controllerAddress);
       if (isExist) {
+        formHelper.setStatus({ loading: false });
         formHelper.setErrors({
           [ControllerFormKey.privateKey]: 'Controller already been used',
         });
@@ -85,9 +95,13 @@ const Registry = () => {
       }
 
       setController(controllerAddress);
-      updateController({ variables: { controller: privateKey } })
-        .then(() => setCurrentStep(1))
-        .catch(onModalClose);
+      try {
+        await updateController({ variables: { controller: privateKey } });
+        setCurrentStep(1);
+      } catch {
+        onModalClose();
+      }
+      formHelper.setStatus({ loading: false });
     },
     () => {
       configController(sdk, signer, inputController)

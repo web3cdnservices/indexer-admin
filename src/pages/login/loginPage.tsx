@@ -15,19 +15,19 @@ const LoginPage = () => {
   const { account } = useWeb3();
   const isMetaMask = useIsMetaMask();
   const isIndexer = useIsIndexer(account);
-  const [isConnectService, setIsConenct] = useState(false);
+  const [isConnected, setIsConenct] = useState(false);
 
   useEffect(() => {
-    if (isConnectService && isIndexer) {
+    if (isConnected && isIndexer) {
       history.replace('/account');
     }
-  }, [isIndexer, isConnectService]);
+  }, [isIndexer, isConnected]);
 
   return (
     <Container>
-      {!isConnectService && <LoginView onConnected={() => setIsConenct(true)} />}
-      {isConnectService && <MetaMaskView />}
-      {isConnectService && isMetaMask && <RegisterPage />}
+      {!isConnected && <LoginView onConnected={() => setIsConenct(true)} />}
+      {isConnected && <MetaMaskView />}
+      {isConnected && isMetaMask && <RegisterPage />}
     </Container>
   );
 };

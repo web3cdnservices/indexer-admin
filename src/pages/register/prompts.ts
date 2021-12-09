@@ -20,11 +20,6 @@ const prompts = {
     // 'Become an indexer that you can index subquery project. You need to stake a minimum of 1000 SQT to index subquery project. The time for processing the transaciton dependent on the current status of the network and the gas fee, it usually takes 30 seconds',
     buttonTitle: 'Register Indexer',
   },
-  [RegisterStep.sync]: {
-    title: 'Sync indexer with coordinator service',
-    desc: 'Add you indexer account to coordinator service, become an indexer that you can index subquery project. You need to stake a minimum of 1000 SQT to index subquery project',
-    buttonTitle: 'Sync',
-  },
 };
 
 export default prompts;

@@ -5,7 +5,6 @@ export enum RegisterStep {
   onboarding = 'onboarding',
   authorisation = 'authorisation',
   register = 'register',
-  sync = 'sync',
 }
 
 export enum StepStatus {
