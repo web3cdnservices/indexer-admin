@@ -4,10 +4,10 @@
 import { Button as AntButton, Spin } from 'antd';
 import { Button as SubButton } from '@subql/react-ui';
 import { LoadingOutlined } from '@ant-design/icons';
+import { Form } from 'formik';
 import { ButtonHTMLType } from 'antd/lib/button/button';
 import { FC, useMemo } from 'react';
 import styled from 'styled-components';
-import loading from './loading';
 
 export const Separator = styled.div<{
   height?: number;
@@ -113,7 +113,7 @@ type SSButtonProps = {
 
 export const StyledSButton = styled(SubButton)<SSButtonProps>`
   align-self: ${({ align }) => align ?? 'center'}px;
-  min-width: ${({ width }) => width ?? 150}px;
+  width: ${({ width }) => width ?? 150}px;
   padding: 16px 30px;
   margin-top: ${({ mt }) => mt ?? 0}px;
   font-weight: 500;
@@ -135,9 +135,8 @@ const AntIcon: FC<SpinProps> = ({ loading }) => (
 );
 
 export const SButton: FC<SButtonProps & SSButtonProps> = ({ title, loading, disabled, ...props }) =>
-  useMemo(() => {
-    console.log('>>>loading:', loading);
-    return (
+  useMemo(
+    () => (
       <StyledSButton
         label={title}
         type="secondary"
@@ -145,13 +144,19 @@ export const SButton: FC<SButtonProps & SSButtonProps> = ({ title, loading, disa
         disabled={disabled}
         {...props}
       />
-    );
-  }, [title, loading, disabled]);
+    ),
+    [title, loading, disabled]
+  );
 
 export const ButtonContainer = styled.div<{ mt?: number; alignCenter?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: ${({ alignCenter }) => (alignCenter ? 'center' : 'flex-end')};
+  margin-top: ${({ mt }) => mt ?? 0}px;
+  width: 100%;
+`;
+
+export const FormContainer = styled(Form)<{ mt?: number }>`
   margin-top: ${({ mt }) => mt ?? 0}px;
   width: 100%;
 `;

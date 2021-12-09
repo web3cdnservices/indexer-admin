@@ -9,12 +9,9 @@ import { useApolloClient, HttpLink } from '@apollo/client';
 import { networks } from '../../containers/web3';
 import { useIsIndexer } from '../../hooks/indexerHook';
 import { useWeb3 } from '../../hooks/web3Hook';
-import { GET_ACCOUNT_METADATA } from '../../utils/queries';
-import { ButtonContainer, SButton } from '../../components/primary';
-import Config from '../../utils/config';
+import { ButtonContainer, FormContainer, SButton } from '../../components/primary';
 import prompts from './prompts';
-import { Panel, ContentContainer, SubTitle, Title, LoginForm } from './styles';
-import { createApolloClient, saveClientUri } from '../../utils/apolloClient';
+import { Panel, ContentContainer, SubTitle, Title } from './styles';
 import FormItem from '../../components/formItem';
 import {
   initialLoginValues,
@@ -22,6 +19,7 @@ import {
   loginFormSchema,
   TLoginValues,
 } from '../../types/schemas';
+import { validateCoordinatorService } from '../../utils/validateService';
 
 type Props = {
   onConnected: () => void;
@@ -36,39 +34,16 @@ const LoginView: FC<Props> = ({ onConnected }) => {
 
   const isValidNetwork = (network: SubqueryNetwork) => network === networks[chainId ?? 0];
 
-  const onConnect = (data: any) => {
-    if (data && data.accountMetadata) {
-      const { indexer, network, wsEndpoint } = data.accountMetadata;
-      Config.getInstance().config({ network, wsEndpoint });
-
-      if (isValidNetwork(network) && isIndexer && indexer === account) {
-        history.replace('/account');
-      } else {
-        onConnected();
-      }
-    }
-  };
-
-  const handleSubmit = (values: TLoginValues, helper: FormikHelpers<TLoginValues>) => {
+  const handleSubmit = async (values: TLoginValues, helper: FormikHelpers<TLoginValues>) => {
     const uri = `${values.endpoint}/graphql`;
-    helper.setStatus({ loading: true });
+    const { indexer, network } = await validateCoordinatorService(uri, helper);
 
-    console.log('>>>uri:', uri);
-
-    createApolloClient(uri)
-      .query({ query: GET_ACCOUNT_METADATA })
-      .then(({ data }) => {
-        client.setLink(new HttpLink({ uri }));
-        saveClientUri(uri);
-        setTimeout(() => {
-          onConnect(data);
-          helper.setStatus({ loading: false });
-        }, 2000);
-      })
-      .catch(() => {
-        helper.setErrors({ [LoginFormKey.endpoint]: 'Invalid service endpoint' });
-        helper.setStatus({ loading: false });
-      });
+    client.setLink(new HttpLink({ uri }));
+    if (isValidNetwork(network) && isIndexer && indexer === account) {
+      history.replace('/account');
+    } else if (indexer && network) {
+      onConnected();
+    }
   };
 
   return (
@@ -82,7 +57,7 @@ const LoginView: FC<Props> = ({ onConnected }) => {
           onSubmit={handleSubmit}
         >
           {({ status, errors, submitForm }) => (
-            <LoginForm>
+            <FormContainer mt={25}>
               <FormItem
                 title={login.endpointform.label}
                 fieldKey={LoginFormKey.endpoint}
@@ -101,7 +76,7 @@ const LoginView: FC<Props> = ({ onConnected }) => {
                   onClick={submitForm}
                 />
               </ButtonContainer>
-            </LoginForm>
+            </FormContainer>
           )}
         </Formik>
       </ContentContainer>

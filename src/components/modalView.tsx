@@ -87,8 +87,6 @@ const ModalView: FC<Props> = ({
 }) => {
   if (!steps || currentStep > steps.length - 1) return null;
   const stepItem = steps[currentStep];
-
-  // FIXME: form validation
   const renderFormContent = (item: StepItem) =>
     item.form ? (
       <Formik
@@ -96,18 +94,26 @@ const ModalView: FC<Props> = ({
         validationSchema={item.form.schema}
         onSubmit={item.form.onFormSubmit}
       >
-        {({ errors, submitForm }) => (
-          <Form>
-            <FormItem title={item.title} fieldKey={item.form?.formKey ?? ''} errors={errors} />
-            {item.desc && (
-              <Text mt={20} size={13} color="gray">
-                {item.desc}
-              </Text>
-            )}
+        {({ status, errors, submitForm }) => (
+          <InputForm>
+            <div>
+              <FormItem title={item.title} fieldKey={item.form?.formKey ?? ''} errors={errors} />
+              {item.desc && (
+                <Text mt={20} size={13} color="gray">
+                  {item.desc}
+                </Text>
+              )}
+            </div>
             <ButtonContainer>
-              <SButton mt={20} title={item.buttonTitle} onClick={submitForm} loading={loading} />
+              <SButton
+                width={300}
+                mt={20}
+                title={item.buttonTitle}
+                onClick={submitForm}
+                loading={loading || status?.loading}
+              />
             </ButtonContainer>
-          </Form>
+          </InputForm>
         )}
       </Formik>
     ) : null;
@@ -123,7 +129,11 @@ const ModalView: FC<Props> = ({
         </Text>
       </DescContainer>
       <ButtonContainer>
-        <SButton title={item.buttonTitle} onClick={() => item.onClick && item.onClick(type)} />
+        <SButton
+          width={300}
+          title={item.buttonTitle}
+          onClick={() => item.onClick && item.onClick(type)}
+        />
       </ButtonContainer>
     </ContentContainer>
   );
