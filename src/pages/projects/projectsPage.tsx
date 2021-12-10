@@ -3,12 +3,11 @@
 
 import { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client';
+import { useLoading } from 'containers/loadingContext';
 
-import Loading from 'components/loading';
 import ModalView from 'components/modalView';
 import { Button, Text } from 'components/primary';
 import { useIsIndexer } from 'hooks/indexerHook';
-import { useDefaultLoading } from 'hooks/projectHook';
 import { useIsMetaMask } from 'hooks/web3Hook';
 import { ProjectFormKey } from 'types/schemas';
 import { ADD_PROJECT, GET_PROJECTS } from 'utils/queries';
@@ -24,13 +23,16 @@ import { Container, ContentContainer, HeaderContainer } from './styles';
 const Projects = () => {
   const isMetaMask = useIsMetaMask();
   const isIndexer = useIsIndexer();
-  const defaultLoading = useDefaultLoading();
+  const { setPageLoading } = useLoading();
   const [addProject, { loading }] = useMutation(ADD_PROJECT);
   const [getProjects, { data }] = useLazyQuery(GET_PROJECTS, { fetchPolicy: 'network-only' });
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    getProjects();
+    setPageLoading(true);
+    getProjects()
+      .then(() => setPageLoading(false))
+      .catch(() => setPageLoading(false));
   }, []);
 
   const addProjectComplete = () => {
@@ -51,7 +53,7 @@ const Projects = () => {
 
   return (
     <Container>
-      {!defaultLoading && isMetaMask && isIndexer && (
+      {isMetaMask && isIndexer && (
         <ContentContainer>
           <HeaderContainer>
             <Text size={45}>Projects</Text>
@@ -63,7 +65,6 @@ const Projects = () => {
           ))}
         </ContentContainer>
       )}
-      {defaultLoading && <Loading />}
       <MetaMaskView />
       <ModalView
         visible={visible}

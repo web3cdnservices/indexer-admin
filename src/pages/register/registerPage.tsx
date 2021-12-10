@@ -1,13 +1,15 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { useContractSDK } from 'containers/contractSdk';
+import { useLoading } from 'containers/loadingContext';
 import { FormikHelpers } from 'formik';
+import { isUndefined } from 'lodash';
 
-import { useIsApproveChanged, useIsIndexerChanged } from 'hooks/indexerHook';
+import { useIsApproveChanged, useIsIndexer, useIsIndexerChanged } from 'hooks/indexerHook';
 import { useInitialStep } from 'hooks/registerHook';
 import { useSigner, useWeb3 } from 'hooks/web3Hook';
 import { RegisterFormKey, TRegisterValues } from 'types/schemas';
@@ -25,10 +27,12 @@ import { getStepIndex, getStepStatus, registerSteps } from './utils';
 const RegisterPage = () => {
   const signer = useSigner();
   const { account } = useWeb3();
+  const isIndexer = useIsIndexer();
   const sdk = useContractSDK();
   const history = useHistory();
   const initialStep = useInitialStep();
   const [addIndexer] = useMutation(ADD_INDEXER);
+  const { setPageLoading } = useLoading();
   const { request: checkIsApproveChanged } = useIsApproveChanged();
   const { request: checkIsIndexerChanged } = useIsIndexerChanged();
 
@@ -36,6 +40,11 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const isRegisterStep = useCallback(() => currentStep === RegisterStep.register, [currentStep]);
+
+  useEffect(() => {
+    setPageLoading(isUndefined(isIndexer));
+    if (isIndexer) setStep(RegisterStep.sync);
+  }, [isIndexer]);
 
   const moveToNextStep = () => {
     setLoading(false);
@@ -48,10 +57,11 @@ const RegisterPage = () => {
     setLoading(false);
   };
 
-  const onIndexerRegistered = async () => {
+  const onSyncIndexer = async () => {
+    setLoading(true);
     await addIndexer({ variables: { indexer: account } });
-    history.replace('/account');
     setLoading(false);
+    history.replace('/account');
   };
 
   const sendRequestApproveTx = () => {
@@ -61,7 +71,7 @@ const RegisterPage = () => {
 
   const sendRegisterIndexerTx = () => {
     setLoading(true);
-    checkIsIndexerChanged(true, onIndexerRegistered);
+    checkIsIndexerChanged(true, onSyncIndexer);
   };
 
   const onIndexerRegister = async (
@@ -92,6 +102,7 @@ const RegisterPage = () => {
         .then(sendRequestApproveTx)
         .catch(onTransactionFailed),
     [RegisterStep.register]: onIndexerRegister,
+    [RegisterStep.sync]: onSyncIndexer,
   };
 
   const renderSteps = () => {

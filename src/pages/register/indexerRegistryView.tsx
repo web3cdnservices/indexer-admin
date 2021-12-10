@@ -4,7 +4,7 @@
 import { FC } from 'react';
 import { Formik, FormikHelpers } from 'formik';
 
-import FormItem from 'components/formItem';
+import { FieldItem } from 'components/formItem';
 import { ButtonContainer, FormContainer, SButton } from 'components/primary';
 import {
   initialRegisterValues,
@@ -40,13 +40,13 @@ const IndexerRegistryView: FC<Props> = ({ onSubmit, loading }) => {
       >
         {({ errors, submitForm }) => (
           <FormContainer>
-            <FormItem title="Indexer Name" fieldKey={RegisterFormKey.name} errors={errors} />
-            <FormItem
+            <FieldItem title="Indexer Name" fieldKey={RegisterFormKey.name} errors={errors} />
+            <FieldItem
               title="Proxy Endpoint"
               fieldKey={RegisterFormKey.proxyEndpoint}
               errors={errors}
             />
-            <FormItem title="Staking Amount" fieldKey={RegisterFormKey.amount} errors={errors} />
+            <FieldItem title="Staking Amount" fieldKey={RegisterFormKey.amount} errors={errors} />
             <ButtonContainer alignCenter>
               <SButton mt={20} title={buttonTitle} loading={loading} onClick={submitForm} />
             </ButtonContainer>

@@ -5,8 +5,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { Text } from 'components/primary';
-
-import { projectItem } from '../mock';
+import { ProjectDetails } from 'hooks/projectHook';
 
 const Container = styled.div`
   display: flex;
@@ -73,10 +72,11 @@ const InfoView: FC<InfoProps> = ({ title, desc, ml, mt }) => (
 
 type Props = {
   id: string;
+  project: ProjectDetails;
 };
 
-const ProjectDetailsView: FC<Props> = ({ id }) => {
-  const { description, created, lastUpdated, websiteUrl, sourceUrl } = projectItem;
+const ProjectDetailsView: FC<Props> = ({ id, project }) => {
+  const { description, websiteUrl, codeUrl } = project;
   return (
     <Container>
       <Text fw="600" mb={10} size={20}>
@@ -87,14 +87,14 @@ const ProjectDetailsView: FC<Props> = ({ id }) => {
         <LeftContainer>
           <InfoView title="Description" desc={description} />
           <BottomContainer>
-            <InfoView title="Created" desc={created} />
-            <InfoView ml={150} title="Last Updated" desc={lastUpdated} />
+            <InfoView title="Created" desc="3 days ago" />
+            <InfoView ml={150} title="Last Updated" desc="5 days ago" />
           </BottomContainer>
         </LeftContainer>
         <RightContainer>
           <InfoView title="Deployment ID" desc={id} />
           <InfoView mt={30} title="Website URL" desc={websiteUrl} />
-          <InfoView mt={30} title="Source Code URL" desc={sourceUrl} />
+          <InfoView mt={30} title="Source Code URL" desc={codeUrl} />
         </RightContainer>
       </ContentContainer>
     </Container>

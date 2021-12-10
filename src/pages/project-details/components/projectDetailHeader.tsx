@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import ModalView from 'components/modalView';
 import { Button, Separator, Text } from 'components/primary';
 import { useIsIndexingStatusChanged } from 'hooks/indexerHook';
-import { useIndexingStatus } from 'hooks/projectHook';
+import { ProjectDetails, useIndexingStatus } from 'hooks/projectHook';
 import { useSigner } from 'hooks/web3Hook';
 import { ProjectFormKey } from 'types/schemas';
 import { readyIndexing, startIndexing, stopIndexing } from 'utils/indexerActions';
@@ -83,12 +83,11 @@ const VersionItem: FC<VersionProps> = ({ versionType, value }) => (
 
 type Props = {
   id: string;
+  project?: ProjectDetails;
 };
 
-const ProjectDetailsHeader: FC<Props> = ({ id }) => {
+const ProjectDetailsHeader: FC<Props> = ({ id, project }) => {
   // TODO: 1. only progress reach `100%` can display `publish to ready` button
-  const name = 'Sushi Swap';
-
   // TODO: get `status` from contract
 
   const [visible, setVisible] = useState(false);
@@ -188,7 +187,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id }) => {
         <Hashicon hasher="keccak" value={id} size={150} />
         <ContentContainer>
           <Text fw="600" size={30}>
-            {name}
+            {project?.name}
           </Text>
           <Text fw="400" size={15}>
             {id}
@@ -196,7 +195,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id }) => {
           <VersionContainer>
             <VersionItem versionType="INDEXED NETWORK" value="TESTNET" />
             <Separator height={50} />
-            <VersionItem versionType="VERSION" value="V0.01" />
+            <VersionItem versionType="VERSION" value={`V${project?.version}`} />
           </VersionContainer>
         </ContentContainer>
       </LeftContainer>

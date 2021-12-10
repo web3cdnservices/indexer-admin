@@ -8,11 +8,17 @@ import { SubqueryNetwork } from '@subql/contract-sdk';
 import { networks } from 'containers/web3';
 import { Formik, FormikHelpers } from 'formik';
 
-import FormItem from 'components/formItem';
+import { FieldItem } from 'components/formItem';
 import { ButtonContainer, FormContainer, SButton } from 'components/primary';
 import { useIsIndexer } from 'hooks/indexerHook';
 import { useWeb3 } from 'hooks/web3Hook';
-import { initialLoginValues, LoginFormKey, loginFormSchema, TLoginValues } from 'types/schemas';
+import {
+  initialLoginValues,
+  LoginFormKey,
+  loginFormSchema,
+  networkOptions,
+  TLoginValues,
+} from 'types/schemas';
 import { validateCoordinatorService } from 'utils/validateService';
 
 import prompts from './prompts';
@@ -32,8 +38,9 @@ const LoginView: FC<Props> = ({ onConnected }) => {
   const isValidNetwork = (network: SubqueryNetwork) => network === networks[chainId ?? 0];
 
   const handleSubmit = async (values: TLoginValues, helper: FormikHelpers<TLoginValues>) => {
-    const uri = `${values.endpoint}/graphql`;
-    const { indexer, network } = await validateCoordinatorService(uri, helper);
+    const { endpoint, networkType } = values;
+    const uri = `${endpoint}/graphql`;
+    const { indexer, network } = await validateCoordinatorService(uri, networkType, helper);
 
     client.setLink(new HttpLink({ uri }));
     if (isValidNetwork(network) && isIndexer && indexer === account) {
@@ -53,16 +60,20 @@ const LoginView: FC<Props> = ({ onConnected }) => {
           validationSchema={loginFormSchema.shape({})}
           onSubmit={handleSubmit}
         >
-          {({ status, errors, submitForm }) => (
+          {({ status, values, handleChange, errors, submitForm }) => (
             <FormContainer mt={25}>
-              <FormItem
-                title={login.endpointform.label}
+              <FieldItem
+                title={login.endpoint.label}
+                placeholder={login.endpoint.palceholder}
                 fieldKey={LoginFormKey.endpoint}
                 errors={errors}
               />
-              <FormItem
-                title={login.networkFormLabel}
+              <FieldItem
+                title={login.network.label}
                 fieldKey={LoginFormKey.networkType}
+                value={values?.[LoginFormKey.networkType]}
+                options={['Select a network', ...networkOptions]}
+                onChange={handleChange}
                 errors={errors}
               />
               <ButtonContainer alignCenter mt={60}>

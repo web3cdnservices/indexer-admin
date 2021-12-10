@@ -12,7 +12,7 @@ import { getStepStatus } from 'pages/register/utils';
 import { ActionType } from 'utils/transactions';
 
 import ActionModal, { ModalProps } from './actionModal';
-import FormItem from './formItem';
+import { FieldItem } from './formItem';
 import { ButtonContainer, SButton, Text } from './primary';
 
 export const Container = styled.div`
@@ -99,7 +99,7 @@ const ModalView: FC<Props> = ({
         {({ status, errors, submitForm }) => (
           <InputForm>
             <div>
-              <FormItem title={item.title} fieldKey={item.form?.formKey ?? ''} errors={errors} />
+              <FieldItem title={item.title} fieldKey={item.form?.formKey ?? ''} errors={errors} />
               {item.desc && (
                 <Text mt={20} size={13} color="gray">
                   {item.desc}

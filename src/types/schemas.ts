@@ -9,14 +9,23 @@ export enum LoginFormKey {
   networkType = 'networkType',
 }
 
+export const networkOptions = ['mainnet', 'testnet', 'local'];
+
 export const loginFormSchema = yup.object({
   [LoginFormKey.endpoint]: yup.string().required(),
-  [LoginFormKey.networkType]: yup.string().required(),
+  [LoginFormKey.networkType]: yup
+    .string()
+    .test(
+      'Select a network',
+      'Must select a network',
+      (network) => !!(network && networkOptions.includes(network))
+    )
+    .required(),
 });
 
 export const initialLoginValues = {
   [LoginFormKey.endpoint]: '',
-  [LoginFormKey.networkType]: '',
+  [LoginFormKey.networkType]: 'Mainnet',
 };
 
 export type TLoginValues = yup.Asserts<typeof loginFormSchema>;

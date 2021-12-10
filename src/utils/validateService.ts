@@ -12,17 +12,27 @@ import Config from './config';
 import { GET_ACCOUNT_METADATA } from './queries';
 
 // endpoints validation
-export function validateCoordinatorService(url: string, helper: FormikHelpers<TLoginValues>) {
+export function validateCoordinatorService(
+  url: string,
+  networkType: string,
+  helper: FormikHelpers<TLoginValues>
+) {
   helper.setStatus({ loading: true });
-  return new Promise<{ indexer: string; network: SubqueryNetwork }>((resolve) => {
+  return new Promise<{ indexer: string; network: SubqueryNetwork }>((resolve, reject) => {
     createApolloClient(url)
       .query({ query: GET_ACCOUNT_METADATA })
       .then(({ data }) => {
         if (data && data.accountMetadata) {
           const { indexer, network, wsEndpoint } = data.accountMetadata;
-          Config.getInstance().config({ network, wsEndpoint });
-          saveClientUri(url);
-          resolve({ indexer, network });
+          if (network !== networkType) {
+            helper.setErrors({
+              [LoginFormKey.networkType]: `Inconsistent network type with coordinator service: ${network}`,
+            });
+          } else {
+            Config.getInstance().config({ network, wsEndpoint });
+            saveClientUri(url);
+            resolve({ indexer, network });
+          }
         }
         helper.setStatus({ loading: false });
       })

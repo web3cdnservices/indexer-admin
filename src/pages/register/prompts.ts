@@ -20,6 +20,11 @@ const prompts = {
     // 'Become an indexer that you can index subquery project. You need to stake a minimum of 1000 SQT to index subquery project. The time for processing the transaciton dependent on the current status of the network and the gas fee, it usually takes 30 seconds',
     buttonTitle: 'Register Indexer',
   },
+  [RegisterStep.sync]: {
+    title: 'Sync the indexer with coordinator service',
+    desc: 'The cuurent conenct account is an indexer, press sync if you want to sync this account with you coordinator service, otherwise you can switch you account in the wallet to select the correct account.',
+    buttonTitle: 'Sync',
+  },
 };
 
 export default prompts;

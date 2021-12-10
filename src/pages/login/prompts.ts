@@ -6,11 +6,14 @@ const prompts = {
     title: 'Welcome to Indexer Admin',
     desc: "Let's connect with coordinator service to use the indexer admin",
     buttonTitle: 'Connect',
-    endpointform: {
+    endpoint: {
       label: 'Coordinator Service Endpoint',
-      palceholder: 'https://you.coordinator.service',
+      palceholder: 'http://localhost:8000',
     },
-    networkFormLabel: 'Network Type',
+    network: {
+      label: 'Network Type',
+      placeholder: 'Select a network',
+    },
   },
   metamask: {
     install: {

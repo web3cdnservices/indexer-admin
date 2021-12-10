@@ -11,10 +11,10 @@ import { useSigner, useWeb3 } from './web3Hook';
 
 type Account = string | null | undefined;
 
-export const useIsIndexer = (address?: Account) => {
+export const useIsIndexer = (address?: Account): boolean | undefined => {
   const { account: currentAccount } = useWeb3();
   const account = address ?? currentAccount;
-  const [isIndexer, setIsIndexer] = useState(false);
+  const [isIndexer, setIsIndexer] = useState<boolean | undefined>(undefined);
   const sdk = useContractSDK();
 
   useEffect(() => {

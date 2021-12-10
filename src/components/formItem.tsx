@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { VFC } from 'react';
-import { Field, FieldValidator, FormikErrors, FormikValues } from 'formik';
+import { Field, FormikErrors, FormikHandlers, FormikValues } from 'formik';
 import styled from 'styled-components';
 
 import { Label, Text } from './primary';
@@ -21,17 +21,48 @@ const FormField = styled(Field)`
   font-size: 16px;
 `;
 
+const Option = styled.option`
+  padding: 10px 10px;
+  background-color: green;
+`;
+
 type Props = {
   title: string;
   fieldKey: string;
-  validate?: FieldValidator;
+  placeholder?: string;
+  value?: string;
+  options?: string[];
+  onChange?: FormikHandlers['handleChange'];
   errors?: FormikErrors<FormikValues>;
 };
 
-const FormItem: VFC<Props> = ({ title, fieldKey, validate, errors }) => (
+export const FieldItem: VFC<Props> = ({
+  title,
+  value,
+  placeholder,
+  fieldKey,
+  options,
+  onChange,
+  errors,
+}) => (
   <Container>
     <Label htmlFor={fieldKey}>{title}</Label>
-    <FormField name={fieldKey} validate={validate} />
+    {!options && <FormField placeholder={placeholder} name={fieldKey} />}
+    {!!options && (
+      <FormField
+        as="select"
+        name={fieldKey}
+        placeholder={placeholder}
+        onChange={onChange}
+        value={value}
+      >
+        {options.map((val) => (
+          <Option key={val} value={val}>
+            {val}
+          </Option>
+        ))}
+      </FormField>
+    )}
     {!!errors?.[fieldKey] && (
       <Text mt={5} color="red" size={15}>
         {errors[fieldKey]}
@@ -39,5 +70,3 @@ const FormItem: VFC<Props> = ({ title, fieldKey, validate, errors }) => (
     )}
   </Container>
 );
-
-export default FormItem;

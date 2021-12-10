@@ -4,12 +4,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
+import { useLoading } from 'containers/loadingContext';
 import { get } from 'lodash';
 
-import Loading from 'components/loading';
 import { useIsIndexer } from 'hooks/indexerHook';
-import { useDefaultLoading } from 'hooks/projectHook';
+import { useProjectMetadata } from 'hooks/projectHook';
 import { createApolloClient } from 'utils/apolloClient';
+import { bytes32ToCid } from 'utils/ipfs';
 import { calculateProgress, healthStatus } from 'utils/project';
 import { GET_PROJECT, GET_QUERY_METADATA } from 'utils/queries';
 
@@ -26,8 +27,8 @@ import { TProjectMetadata, TQueryMetadata, TService } from './types';
 const ProjectDetailsPage = () => {
   const { id } = useParams() as { id: string };
   const isIndexer = useIsIndexer();
-  const defaultLoading = useDefaultLoading();
-  // TODO: code gen -> schema -> get response type
+  const projectInfo = useProjectMetadata(bytes32ToCid(id));
+  const { setPageLoading } = useLoading();
   const [getProject, { data, loading }] = useLazyQuery(GET_PROJECT, {
     fetchPolicy: 'network-only',
   });
@@ -61,6 +62,11 @@ const ProjectDetailsPage = () => {
     }
   };
 
+  // TODO: reorganised these status
+  useEffect(() => {
+    // setPageLoading(isUndefined(projectInfo) || isUndefined(projectMeta));
+  }, [projectInfo, projectMeta]);
+
   useEffect(() => {
     getProject({ variables: { id } });
   }, []);
@@ -81,20 +87,19 @@ const ProjectDetailsPage = () => {
   }, [projectMeta?.queryEndpoint]);
 
   const displayProejct = useCallback(() => {
-    return isIndexer && !defaultLoading && !loading && !!data && data.project;
-  }, [loading, data, defaultLoading]);
+    return isIndexer && !loading && !!data && data.project;
+  }, [loading, data]);
 
   return (
     <Container>
       {displayProejct() && (
         <ContentContainer>
-          <ProjectDetailsHeader id={id} />
+          <ProjectDetailsHeader id={id} project={projectInfo} />
           <ProgressInfoView percent={progress} />
           <ProjectServiceCard indexerService={indexerSerive} queryService={querySerive} />
-          <ProjectDetailsView id={id} />
+          {projectInfo && <ProjectDetailsView id={id} project={projectInfo} />}
         </ContentContainer>
       )}
-      {(loading || defaultLoading) && <Loading />}
     </Container>
   );
 };

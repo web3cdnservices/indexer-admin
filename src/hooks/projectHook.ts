@@ -58,22 +58,14 @@ export const useIndexingStatus = (deploymentId: string, deps?: TDeps) => {
   return status;
 };
 
-export const useDefaultLoading = () => {
-  const [loading, setLoaing] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => setLoaing(false), 1500);
-  }, []);
-
-  return loading;
-};
-
-type Metadata = {
+export type ProjectDetails = {
   name: string;
   image: string;
   description: string;
   websiteUrl: string;
   codeUrl: string;
+  version: string;
+  versionDescription: string;
 };
 
 type Result = {
@@ -105,8 +97,8 @@ export const QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS = gql`
   }
 `;
 
-export const useProjectMetadata = (deploymentId: string): Metadata | undefined => {
-  const [metadata, setMetadata] = useState<Metadata>();
+export const useProjectMetadata = (deploymentId: string): ProjectDetails | undefined => {
+  const [metadata, setMetadata] = useState<ProjectDetails>();
 
   const fetchMeta = useCallback(async () => {
     try {

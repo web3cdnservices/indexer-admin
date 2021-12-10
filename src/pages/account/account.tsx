@@ -5,7 +5,9 @@ import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { useContractSDK } from 'containers/contractSdk';
+import { useLoading } from 'containers/loadingContext';
 import { bufferToHex, privateToAddress, toBuffer } from 'ethereumjs-util';
+import { isUndefined } from 'lodash';
 
 import AccountCard from 'components/accountCard';
 import ModalView from 'components/modalView';
@@ -46,6 +48,7 @@ const Registry = () => {
   const controller = useController(account, timestamp);
   const controllerBalance = useBalance(controller);
   const indexerBalance = useBalance(account);
+  const { setPageLoading } = useLoading();
   const [updateController, { loading: updateControllerLoading }] = useMutation(UPDAET_CONTROLLER);
   const [removeAccounts, { loading: removeAccountsLoading }] = useMutation(REMOVE_ACCOUNTS);
   const { request: checkIsIndexerChanged, loading: indexerLoading } = useIsIndexerChanged();
@@ -59,10 +62,11 @@ const Registry = () => {
   const indexerItem = prompts.indexer;
 
   useEffect(() => {
-    if (!isIndexer || !isController) {
+    setPageLoading(isUndefined(isIndexer));
+    if (!isUndefined(isIndexer) && !isIndexer) {
       history.replace('/');
     }
-  }, [isIndexer, isController]);
+  }, [isIndexer]);
 
   const onModalShow = (type: ActionType) => {
     setActionType(type);
