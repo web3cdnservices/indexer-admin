@@ -3,8 +3,8 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { ApolloClient, ApolloError, gql, InMemoryCache, useQuery } from '@apollo/client';
-import { useContractSDK } from 'containers/contractSdk';
 
+import { useContractSDK } from 'containers/contractSdk';
 import { concatU8A, IPFS } from 'utils/ipfs';
 import { GET_PROJECT } from 'utils/queries';
 

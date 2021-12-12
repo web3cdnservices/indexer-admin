@@ -1,6 +1,10 @@
+// Copyright 2020-2021 OnFinality Limited authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { resolve } = require('path');
 
- module.exports = {
+module.exports = {
   webpack: {
     alias: {
       src: resolve(__dirname, 'src/'),
@@ -12,6 +16,6 @@ const { resolve } = require('path');
       utils: resolve(__dirname, 'src/utils'),
       resources: resolve(__dirname, 'src/resources'),
       contract: resolve(__dirname, 'src/contract'),
-    }
-   }
+    },
+  },
 };

@@ -5,11 +5,11 @@ import { FC } from 'react';
 import { useHistory } from 'react-router';
 import { HttpLink, useApolloClient } from '@apollo/client';
 import { SubqueryNetwork } from '@subql/contract-sdk';
-import { networks } from 'containers/web3';
 import { Formik, FormikHelpers } from 'formik';
 
 import { FieldItem } from 'components/formItem';
 import { ButtonContainer, FormContainer, SButton } from 'components/primary';
+import { networks } from 'containers/web3';
 import { useIsIndexer } from 'hooks/indexerHook';
 import { useWeb3 } from 'hooks/web3Hook';
 import {

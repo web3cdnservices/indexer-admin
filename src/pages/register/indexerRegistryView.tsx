@@ -48,7 +48,13 @@ const IndexerRegistryView: FC<Props> = ({ onSubmit, loading }) => {
             />
             <FieldItem title="Staking Amount" fieldKey={RegisterFormKey.amount} errors={errors} />
             <ButtonContainer alignCenter>
-              <SButton mt={20} title={buttonTitle} loading={loading} onClick={submitForm} />
+              <SButton
+                mt={20}
+                width={300}
+                title={buttonTitle}
+                loading={loading}
+                onClick={submitForm}
+              />
             </ButtonContainer>
           </FormContainer>
         )}

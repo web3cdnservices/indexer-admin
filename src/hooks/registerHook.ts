@@ -1,11 +1,32 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { RegisterStep } from '../pages/register/types';
-import { useIsApproved } from './indexerHook';
+import { useEffect, useState } from 'react';
+import { isUndefined } from 'lodash';
 
-export const useInitialStep = (): RegisterStep => {
+import { useContractSDK } from 'containers/contractSdk';
+import { useWeb3 } from 'hooks/web3Hook';
+import { RegisterStep } from 'pages/register/types';
+
+export const useIsApproved = () => {
+  const [isApprove, setIsApprove] = useState<boolean | undefined>();
+  const { account } = useWeb3();
+  const sdk = useContractSDK();
+
+  useEffect(() => {
+    if (!sdk || !account) return;
+    sdk.sqToken
+      .allowance(account, sdk?.staking.address)
+      .then((amount) => setIsApprove(!!amount))
+      .catch(() => setIsApprove(false));
+  }, [sdk, account]);
+
+  return isApprove;
+};
+
+export const useInitialStep = (): RegisterStep | undefined => {
   const isApproved = useIsApproved();
+  if (isUndefined(isApproved)) return undefined;
 
   if (isApproved) return RegisterStep.register;
   return RegisterStep.onboarding;

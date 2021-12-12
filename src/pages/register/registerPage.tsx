@@ -4,11 +4,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { useContractSDK } from 'containers/contractSdk';
-import { useLoading } from 'containers/loadingContext';
 import { FormikHelpers } from 'formik';
 import { isUndefined } from 'lodash';
 
+import { useContractSDK } from 'containers/contractSdk';
+import { useLoading } from 'containers/loadingContext';
 import { useIsApproveChanged, useIsIndexer, useIsIndexerChanged } from 'hooks/indexerHook';
 import { useInitialStep } from 'hooks/registerHook';
 import { useSigner, useWeb3 } from 'hooks/web3Hook';
@@ -36,15 +36,16 @@ const RegisterPage = () => {
   const { request: checkIsApproveChanged } = useIsApproveChanged();
   const { request: checkIsIndexerChanged } = useIsIndexerChanged();
 
-  const [currentStep, setStep] = useState<RegisterStep>(initialStep);
+  const [currentStep, setStep] = useState<RegisterStep>();
   const [loading, setLoading] = useState<boolean>(false);
 
   const isRegisterStep = useCallback(() => currentStep === RegisterStep.register, [currentStep]);
 
   useEffect(() => {
-    setPageLoading(isUndefined(isIndexer));
+    setPageLoading(isUndefined(initialStep) || isUndefined(isIndexer));
+    if (initialStep) setStep(initialStep);
     if (isIndexer) setStep(RegisterStep.sync);
-  }, [isIndexer]);
+  }, [initialStep, isIndexer]);
 
   const moveToNextStep = () => {
     setLoading(false);
@@ -120,11 +121,13 @@ const RegisterPage = () => {
   return (
     <Container>
       {renderSteps()}
-      {!isRegisterStep() && (
+      {currentStep && !isRegisterStep() && (
         // @ts-ignore
         <RegisterView step={currentStep} loading={loading} onClick={registerActions[currentStep]} />
       )}
-      {isRegisterStep() && <IndexerRegistryView loading={loading} onSubmit={onIndexerRegister} />}
+      {currentStep && isRegisterStep() && (
+        <IndexerRegistryView loading={loading} onSubmit={onIndexerRegister} />
+      )}
     </Container>
   );
 };

@@ -4,9 +4,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
-import { useLoading } from 'containers/loadingContext';
 import { get } from 'lodash';
 
+import { useLoading } from 'containers/loadingContext';
 import { useIsIndexer } from 'hooks/indexerHook';
 import { useProjectMetadata } from 'hooks/projectHook';
 import { createApolloClient } from 'utils/apolloClient';
@@ -18,7 +18,7 @@ import ProgressInfoView from './components/progressInfoView';
 import ProjectDetailsHeader from './components/projectDetailHeader';
 import ProjectDetailsView from './components/projectDetailsView';
 import ProjectServiceCard from './components/projectServiceCard';
-import { createServiceItem } from './constant';
+import { createServiceItem } from './config';
 import { Container, ContentContainer } from './styles';
 import { TProjectMetadata, TQueryMetadata, TService } from './types';
 

@@ -3,10 +3,10 @@
 
 import { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { useLoading } from 'containers/loadingContext';
 
 import ModalView from 'components/modalView';
 import { Button, Text } from 'components/primary';
+import { useLoading } from 'containers/loadingContext';
 import { useIsIndexer } from 'hooks/indexerHook';
 import { useIsMetaMask } from 'hooks/web3Hook';
 import { ProjectFormKey } from 'types/schemas';

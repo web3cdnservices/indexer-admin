@@ -18,7 +18,7 @@ export function validateCoordinatorService(
   helper: FormikHelpers<TLoginValues>
 ) {
   helper.setStatus({ loading: true });
-  return new Promise<{ indexer: string; network: SubqueryNetwork }>((resolve, reject) => {
+  return new Promise<{ indexer: string; network: SubqueryNetwork }>((resolve) => {
     createApolloClient(url)
       .query({ query: GET_ACCOUNT_METADATA })
       .then(({ data }) => {

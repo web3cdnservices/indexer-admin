@@ -4,13 +4,13 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { useContractSDK } from 'containers/contractSdk';
-import { useLoading } from 'containers/loadingContext';
 import { bufferToHex, privateToAddress, toBuffer } from 'ethereumjs-util';
 import { isUndefined } from 'lodash';
 
 import AccountCard from 'components/accountCard';
 import ModalView from 'components/modalView';
+import { useContractSDK } from 'containers/contractSdk';
+import { useLoading } from 'containers/loadingContext';
 import {
   useBalance,
   useController,

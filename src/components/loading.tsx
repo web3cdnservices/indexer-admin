@@ -3,8 +3,9 @@
 
 import { FC } from 'react';
 import { Space, Spin } from 'antd';
-import { useLoading } from 'containers/loadingContext';
 import styled from 'styled-components';
+
+import { useLoading } from 'containers/loadingContext';
 
 const Container = styled.div`
   position: absolute;

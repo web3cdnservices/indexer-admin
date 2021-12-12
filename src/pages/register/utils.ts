@@ -7,7 +7,7 @@ export const registerSteps = Object.entries(RegisterStep)
   .map(([key]) => key)
   .slice(1);
 
-export const getStepIndex = (step: RegisterStep): number =>
+export const getStepIndex = (step?: RegisterStep): number =>
   registerSteps.findIndex((s) => s === step);
 
 export const getStepStatus = (currentIndex: number, index: number): StepStatus => {

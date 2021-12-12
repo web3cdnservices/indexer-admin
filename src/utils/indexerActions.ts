@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { SDK } from 'containers/contractSdk';
-
 import { Signer } from 'hooks/web3Hook';
 
 export const emptyControllerAccount = '0x0000000000000000000000000000000000000000';

@@ -3,11 +3,10 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { formatUnits } from '@ethersproject/units';
+
 import { useContractSDK } from 'containers/contractSdk';
-
+import { useWeb3 } from 'hooks/web3Hook';
 import { emptyControllerAccount } from 'utils/indexerActions';
-
-import { useSigner, useWeb3 } from './web3Hook';
 
 type Account = string | null | undefined;
 
@@ -39,24 +38,6 @@ export const useIsController = (account: Account) => {
   }, [account, sdk]);
 
   return isController;
-};
-
-export const useIsApproved = () => {
-  const [isApprove, setIsApprove] = useState(false);
-  const sdk = useContractSDK();
-  const signer = useSigner();
-
-  // TODO: set `amount` to max value
-  useEffect(() => {
-    if (!sdk || !signer) return;
-    sdk.sqToken
-      .connect(signer)
-      .callStatic.approve(sdk.staking.address, 1000000000)
-      .then((approved) => setIsApprove(approved))
-      .catch(() => setIsApprove(false));
-  }, [sdk, signer]);
-
-  return isApprove;
 };
 
 const useCheckStateChanged = (caller?: () => Promise<boolean | string | number> | undefined) => {
@@ -117,11 +98,11 @@ export const useIsIndexingStatusChanged = (id: string) => {
 };
 
 export const useIsApproveChanged = () => {
+  const { account } = useWeb3();
   const sdk = useContractSDK();
-  const signer = useSigner();
   return useCheckStateChanged(() => {
-    if (!sdk || !signer) return undefined;
-    return sdk.sqToken.connect(signer).callStatic.approve(sdk.staking.address, 1000000000);
+    if (!sdk || !account) return undefined;
+    return sdk.sqToken.allowance(account, sdk?.staking.address).then((amount) => !!amount);
   });
 };
 
