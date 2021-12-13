@@ -4,3 +4,5 @@
 export type FormValues = {
   [key: string]: string;
 };
+
+export type HookDependency = boolean | number | string;

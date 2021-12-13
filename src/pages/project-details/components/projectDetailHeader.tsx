@@ -1,11 +1,11 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useMemo, useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { Hashicon } from '@emeraldpay/hashicon-react';
 import styled from 'styled-components';
 
+import Avatar from 'components/avatar';
 import ModalView from 'components/modalView';
 import { Button, Separator, Text } from 'components/primary';
 import { useContractSDK } from 'containers/contractSdk';
@@ -14,13 +14,16 @@ import { ProjectDetails, useIndexingStatus } from 'hooks/projectHook';
 import { useSigner } from 'hooks/web3Hook';
 import { ProjectFormKey } from 'types/schemas';
 import { readyIndexing, startIndexing, stopIndexing } from 'utils/indexerActions';
-import { READY_PROJECT, START_PROJECT } from 'utils/queries';
+import { cidToBytes32 } from 'utils/ipfs';
+import { READY_PROJECT, REMOVE_PROJECT, START_PROJECT } from 'utils/queries';
 import { ActionType } from 'utils/transactions';
+import { verifyQueryService } from 'utils/validateService';
 
 import { IndexingStatus } from '../../projects/constant';
 import {
   createButtonItems,
   createReadyIndexingSteps,
+  createRemoveProjectSteps,
   createStartIndexingSteps,
   createStopIndexingSteps,
   modalTitles,
@@ -83,7 +86,7 @@ const VersionItem: FC<VersionProps> = ({ versionType, value }) => (
 
 type Props = {
   id: string;
-  project?: ProjectDetails;
+  project: ProjectDetails;
 };
 
 const ProjectDetailsHeader: FC<Props> = ({ id, project }) => {
@@ -92,7 +95,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, project }) => {
 
   const [visible, setVisible] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [actionType, setActionType] = useState<ActionType | undefined>(undefined);
+  const [actionType, setActionType] = useState<ActionType>();
 
   const signer = useSigner();
   const sdk = useContractSDK();
@@ -100,77 +103,85 @@ const ProjectDetailsHeader: FC<Props> = ({ id, project }) => {
   const { request: checkIndexingStatusChanged, loading } = useIsIndexingStatusChanged(id);
   const [startIndexingRequest] = useMutation(START_PROJECT);
   const [indexingReadyRequest] = useMutation(READY_PROJECT);
+  const [removeProjectRequest] = useMutation(REMOVE_PROJECT);
 
-  const onModalClose = (error?: Error) => {
-    console.log('>>>action error:', error);
+  const onModalClose = () => {
     setVisible(false);
     setCurrentStep(0);
   };
 
-  const onButtonClick = (type: ActionType) => {
-    setActionType(type);
-    setVisible(true);
-  };
+  const actionItems = useMemo(() => {
+    const buttonItems = createButtonItems((type: ActionType) => {
+      setActionType(type);
+      setVisible(true);
+    });
+    return buttonItems[status];
+  }, [status]);
 
-  const buttonItems = createButtonItems(onButtonClick);
-  const actionItems = buttonItems[status];
+  const removeProjectSteps = createRemoveProjectSteps(() => {
+    removeProjectRequest();
+  });
 
   const startIndexingSteps = createStartIndexingSteps(
-    (values, formHelper) => {
-      const indexerEndpoint = values[ProjectFormKey.indexerEndpoint];
-      // TODO: send request to validate the indexer endpoint, `/meta`
-      const invalidEndpoint = false;
-      if (invalidEndpoint) {
+    async (values, formHelper) => {
+      try {
+        const indexerEndpoint = values[ProjectFormKey.indexerEndpoint];
+        // FIXME: send request to validate the indexer endpoint, `/meta`
+        await verifyQueryService(indexerEndpoint);
+        await startIndexingRequest({ variables: { indexerEndpoint, id } });
+        setCurrentStep(1);
+      } catch (_) {
         formHelper.setErrors({ [ProjectFormKey.indexerEndpoint]: 'Invalid indexer endpoint' });
-        return;
       }
-
-      startIndexingRequest({ variables: { indexerEndpoint, id } })
-        .then(() => setCurrentStep(1))
-        .catch(onModalClose);
     },
-    () => {
-      startIndexing(sdk, signer, id)
-        .then(() => {
-          checkIndexingStatusChanged(IndexingStatus.INDEXING, onModalClose).catch(onModalClose);
-        })
-        .catch(onModalClose);
+    async () => {
+      try {
+        await startIndexing(sdk, signer, id);
+        await checkIndexingStatusChanged(IndexingStatus.INDEXING, onModalClose);
+      } catch (_) {
+        onModalClose();
+      }
     }
   );
 
   const readyIndexingSteps = createReadyIndexingSteps(
-    (values, formHelper) => {
+    async (values, formHelper) => {
       const queryEndpoint = values[ProjectFormKey.queryEndpoint];
-      // TODO: send request to validate the indexer endpoint, `/meta`
-      const invalidEndpoint = false;
-      if (invalidEndpoint) {
+      try {
+        await verifyQueryService(queryEndpoint);
+        await indexingReadyRequest({ variables: { id, queryEndpoint } });
+        setCurrentStep(1);
+      } catch (e) {
         formHelper.setErrors({ [ProjectFormKey.queryEndpoint]: 'Invalid query endpoint' });
-        return;
       }
-
-      indexingReadyRequest({ variables: { id, queryEndpoint } })
-        .then(() => setCurrentStep(1))
-        .catch(onModalClose);
     },
-    () => {
-      readyIndexing(sdk, signer, id)
-        .then(() => {
-          checkIndexingStatusChanged(IndexingStatus.READY, onModalClose).catch(onModalClose);
-        })
-        .catch(onModalClose);
+    async () => {
+      try {
+        await readyIndexing(sdk, signer, id);
+        await checkIndexingStatusChanged(IndexingStatus.READY, onModalClose);
+      } catch (e) {
+        onModalClose();
+      }
     }
   );
 
-  const stopIndexingSteps = createStopIndexingSteps(() => {
-    stopIndexing(sdk, signer, id)
-      .then(() => {
-        checkIndexingStatusChanged(IndexingStatus.TERMINATED, onModalClose).catch(onModalClose);
-      })
-      .catch(onModalClose);
+  const stopIndexingSteps = createStopIndexingSteps(async () => {
+    try {
+      await stopIndexing(sdk, signer, id);
+      await checkIndexingStatusChanged(IndexingStatus.TERMINATED, onModalClose);
+    } catch (e) {
+      onModalClose();
+    }
   });
 
-  const steps = { ...startIndexingSteps, ...readyIndexingSteps, ...stopIndexingSteps };
+  const steps = {
+    ...removeProjectSteps,
+    ...startIndexingSteps,
+    ...readyIndexingSteps,
+    ...stopIndexingSteps,
+  };
 
+  // FIXME: these ts-ignore
   const getModalTitle = useCallback(() => {
     // @ts-ignore
     return actionType ? modalTitles[actionType] : '';
@@ -184,25 +195,25 @@ const ProjectDetailsHeader: FC<Props> = ({ id, project }) => {
   return (
     <Container>
       <LeftContainer>
-        <Hashicon hasher="keccak" value={id} size={150} />
+        <Avatar address={cidToBytes32(id)} size={100} />
         <ContentContainer>
           <Text fw="600" size={30}>
-            {project?.name}
+            {project.name}
           </Text>
           <Text fw="400" size={15}>
-            {id}
+            {project.owner}
           </Text>
           <VersionContainer>
             <VersionItem versionType="INDEXED NETWORK" value="TESTNET" />
             <Separator height={50} />
-            <VersionItem versionType="VERSION" value={`V${project?.version}`} />
+            <VersionItem versionType="VERSION" value={`V${project.version}`} />
           </VersionContainer>
         </ContentContainer>
       </LeftContainer>
       {!!actionItems && (
         <ActionContainer>
           {actionItems.map(({ title, action }) => (
-            <Button key={title} width={200} title={title} onClick={action} />
+            <Button mt={10} key={title} width={200} title={title} onClick={action} />
           ))}
         </ActionContainer>
       )}

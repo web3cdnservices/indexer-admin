@@ -2,11 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // @ts-nocheck
-import { useHistory } from 'react-router-dom';
-import { Hashicon } from '@emeraldpay/hashicon-react';
-import { Tabs } from 'antd';
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
+import Avatar from 'components/avatar';
 import { Text } from 'components/primary';
 import { useController, useIsIndexer } from 'hooks/indexerHook';
 import { useIsMetaMask, useWeb3 } from 'hooks/web3Hook';
@@ -19,11 +18,16 @@ enum TabbarItem {
   projects = 'Projects',
 }
 
-const { TabPane } = Tabs;
-
-const TabBars = styled(Tabs)`
+const TabBar = styled(NavLink)`
   margin-left: 50px;
   margin-top: 20px;
+  color: #1a202c;
+  text-decoration: none;
+  font-family: Futura;
+  font-size: 16px;
+  :hover {
+    text-decoration: underline;
+  }
 `;
 
 const truncateString = (value: string) =>
@@ -31,31 +35,33 @@ const truncateString = (value: string) =>
 
 const Header = () => {
   const { account } = useWeb3();
-  const history = useHistory();
   const isMetaMask = useIsMetaMask();
   const isIndexer = useIsIndexer();
   const controller = useController(account);
+  const activeStyle = { fontWeight: 500, color: '#4388dd' };
 
-  const onTabBarChange = (key: string) => {
-    history.push(key === TabbarItem.account ? '/account' : '/projects');
-  };
+  const renderTabbars = () => (
+    <div>
+      <TabBar to="/account" activeStyle={activeStyle}>
+        {TabbarItem.account}
+      </TabBar>
+      {controller && (
+        <TabBar to="/projects" activeStyle={activeStyle}>
+          {TabbarItem.projects}
+        </TabBar>
+      )}
+    </div>
+  );
 
   return (
     <Container>
       <LeftContainer>
         <img src={SubqueryIcon} alt="subquery" />
-        {isIndexer && (
-          <TabBars renderTabBar={undefined} onChange={onTabBarChange}>
-            <TabPane tab={TabbarItem.account} key={TabbarItem.account} />
-            {isIndexer && controller && (
-              <TabPane tab={TabbarItem.projects} key={TabbarItem.projects} />
-            )}
-          </TabBars>
-        )}
+        {isIndexer && renderTabbars()}
       </LeftContainer>
       {isMetaMask && (
         <RightContainer>
-          <Hashicon hasher="keccak" value={account ?? ''} size={40} />
+          <Avatar address={account ?? ''} size={40} />
           <Text size={16} ml={20} mr={20}>
             {truncateString(account ?? '')}
           </Text>

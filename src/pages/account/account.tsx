@@ -26,7 +26,7 @@ import { REMOVE_ACCOUNTS, UPDAET_CONTROLLER } from 'utils/queries';
 import { ActionType } from 'utils/transactions';
 import { validatePrivateKey } from 'utils/validateService';
 
-import MetaMaskView from '../login/metamaskView';
+import MetaMaskView from '../metamask/metamaskView';
 import { createControllerSteps, createUnregisterSteps, modalTitles } from './config';
 import prompts from './prompts';
 import { Container } from './styles';
@@ -36,7 +36,7 @@ const Registry = () => {
   const [timestamp, setTimestamp] = useState(Date.now());
   const [currentStep, setCurrentStep] = useState(0);
   const [inputController, setController] = useState('');
-  const [actionType, setActionType] = useState<ActionType | undefined>(undefined);
+  const [actionType, setActionType] = useState<ActionType>();
 
   const { account } = useWeb3();
   const signer = useSigner();
@@ -45,7 +45,7 @@ const Registry = () => {
   const isMetaMask = useIsMetaMask();
   const isIndexer = useIsIndexer();
   const isController = useIsController(account);
-  const controller = useController(account, timestamp);
+  const controller = useController(timestamp);
   const controllerBalance = useBalance(controller);
   const indexerBalance = useBalance(account);
   const { setPageLoading } = useLoading();

@@ -10,16 +10,8 @@ import { useIsMetaMask, useIsMetaMaskInstalled, useWeb3 } from 'hooks/web3Hook';
 import MetaMaskIcon from 'resources/metamask.svg';
 import { connectWithMetaMask, NetworkError, switchNetwork } from 'utils/metamask';
 
+import { Image, ImageCard, Panel, Title } from '../login/styles';
 import prompts from './prompts';
-import { Image, ImageCard, Panel, Title } from './styles';
-
-// TODO: move to a constant file
-const extensionUrls = {
-  Chrome: 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
-  Firefox: 'https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/',
-  Brave: 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
-  Edge: 'https://microsoftedge.microsoft.com/addons/detail/metamask/ejbalbakoplchlghecdalmeeeajnimhm',
-};
 
 const MetaMaskView = () => {
   const { activate, error } = useWeb3();
@@ -32,10 +24,10 @@ const MetaMaskView = () => {
   }, [error]);
 
   const getData = () => {
-    const { metamask } = prompts;
-    if (!isMetaMaskInstalled) return metamask.install;
-    if (isEmpty) return metamask.error;
-    return metamask.connect;
+    const { install, connect, error } = prompts;
+    if (!isMetaMaskInstalled) return install;
+    if (isEmpty) return error;
+    return connect;
   };
 
   const onButtonClick = () => {
@@ -48,7 +40,7 @@ const MetaMaskView = () => {
       connectWithMetaMask(activate);
     } else {
       // @ts-ignore
-      const url = extensionUrls[browserName] ?? '';
+      const url = extensionInstallUrls[browserName] ?? '';
       url && window.open(url, '_blank', 'noopener,noreferrer');
     }
   };

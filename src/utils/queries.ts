@@ -53,6 +53,14 @@ export const ADD_PROJECT = gql`
   }
 `;
 
+export const REMOVE_PROJECT = gql`
+  mutation RemoveProject($id: String!) {
+    removeProject(id: $id) {
+      status
+    }
+  }
+`;
+
 export const START_PROJECT = gql`
   mutation StartProject($indexerEndpoint: String!, $id: String!) {
     startProject(indexerEndpoint: $indexerEndpoint, id: $id) {
@@ -109,6 +117,27 @@ export const GET_QUERY_METADATA = gql`
       indexerHealthy
       indexerNodeVersion
       queryNodeVersion
+    }
+  }
+`;
+
+// query project registry
+export const QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS = gql`
+  query GetDeploymentProjects($deploymentId: String!) {
+    projectDeployments(filter: { deploymentId: { equalTo: $deploymentId } }) {
+      nodes {
+        id
+        projectId
+        deploymentId
+        project {
+          owner
+          currentVersion
+          currentDeployment
+          createdTimestamp
+          updatedTimestamp
+          metadata
+        }
+      }
     }
   }
 `;

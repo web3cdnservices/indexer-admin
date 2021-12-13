@@ -9,7 +9,7 @@ import { useWeb3 } from 'hooks/web3Hook';
 import { RegisterStep } from 'pages/register/types';
 
 export const useIsApproved = () => {
-  const [isApprove, setIsApprove] = useState<boolean | undefined>();
+  const [isApprove, setIsApprove] = useState<boolean>();
   const { account } = useWeb3();
   const sdk = useContractSDK();
 

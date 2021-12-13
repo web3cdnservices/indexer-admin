@@ -12,7 +12,7 @@ export enum LoginFormKey {
 export const networkOptions = ['mainnet', 'testnet', 'local'];
 
 export const loginFormSchema = yup.object({
-  [LoginFormKey.endpoint]: yup.string().required(),
+  [LoginFormKey.endpoint]: yup.string().defined(),
   [LoginFormKey.networkType]: yup
     .string()
     .test(
@@ -20,7 +20,7 @@ export const loginFormSchema = yup.object({
       'Must select a network',
       (network) => !!(network && networkOptions.includes(network))
     )
-    .required(),
+    .defined(),
 });
 
 export const initialLoginValues = {
@@ -38,12 +38,12 @@ export enum RegisterFormKey {
 }
 
 export const RegisterFormSchema = yup.object({
-  [RegisterFormKey.name]: yup.string().required(),
-  [RegisterFormKey.proxyEndpoint]: yup.string().required(),
+  [RegisterFormKey.name]: yup.string().defined(),
+  [RegisterFormKey.proxyEndpoint]: yup.string().defined(),
   [RegisterFormKey.amount]: yup
     .number()
     .min(1000, 'Staking token should large than 1000 SQT')
-    .required(),
+    .defined(),
 });
 
 export const initialRegisterValues = {
@@ -60,7 +60,7 @@ export enum ControllerFormKey {
 }
 
 export const ControllerFormSchema = yup.object({
-  [ControllerFormKey.privateKey]: yup.string().required(),
+  [ControllerFormKey.privateKey]: yup.string().defined(),
 });
 
 export const initialControllerValues = {
@@ -74,8 +74,12 @@ export enum ProjectFormKey {
   queryEndpoint = 'queryEndpoint',
 }
 
+export const CIDv0 = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}/i);
 export const ProjectFormSchema = yup.object({
-  [ProjectFormKey.deploymentId]: yup.string().required(),
+  [ProjectFormKey.deploymentId]: yup
+    .string()
+    .matches(CIDv0, `Doesn't match deployment id format`)
+    .defined(),
 });
 
 export const initialProjectValues = {
@@ -84,7 +88,7 @@ export const initialProjectValues = {
 
 // start project
 export const StartProjectSchema = yup.object({
-  [ProjectFormKey.indexerEndpoint]: yup.string().required(),
+  [ProjectFormKey.indexerEndpoint]: yup.string().defined(),
 });
 
 export const initialStartProjectValues = {
@@ -93,7 +97,7 @@ export const initialStartProjectValues = {
 
 // pub project to ready
 export const publishProjectSchema = yup.object({
-  [ProjectFormKey.queryEndpoint]: yup.string().required(),
+  [ProjectFormKey.queryEndpoint]: yup.string().defined(),
 });
 
 export const initialPublishProjectValues = {

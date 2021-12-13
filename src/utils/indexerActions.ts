@@ -4,6 +4,8 @@
 import { SDK } from 'containers/contractSdk';
 import { Signer } from 'hooks/web3Hook';
 
+import { cidToBytes32 } from './ipfs';
+
 export const emptyControllerAccount = '0x0000000000000000000000000000000000000000';
 
 const ErrorMessages = {
@@ -122,7 +124,7 @@ export const startIndexing = (
 
     sdk.queryRegistry
       .connect(signer)
-      .startIndexing(deploymentId)
+      .startIndexing(cidToBytes32(deploymentId))
       .then(() => resolve(''))
       // @ts-ignore
       .catch((error) => reject(error.message));
@@ -146,7 +148,7 @@ export const readyIndexing = (
 
     sdk.queryRegistry
       .connect(signer)
-      .updateIndexingStatusToReady(deploymentId, Date.now())
+      .updateIndexingStatusToReady(cidToBytes32(deploymentId), Date.now())
       .then(() => resolve(''))
       // @ts-ignore
       .catch((error) => reject(error.message));
@@ -170,7 +172,7 @@ export const stopIndexing = (
 
     sdk.queryRegistry
       .connect(signer)
-      .stopIndexing(deploymentId)
+      .stopIndexing(cidToBytes32(deploymentId))
       .then(() => resolve(''))
       // @ts-ignore
       .catch((error) => reject(error.message));

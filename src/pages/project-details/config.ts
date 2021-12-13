@@ -13,6 +13,7 @@ import { ActionType } from 'utils/transactions';
 import { IndexingStatus } from '../projects/constant';
 
 export const modalTitles = {
+  [ActionType.removeProject]: 'Remove Project',
   [ActionType.startIndexing]: 'Start Indexing Project',
   [ActionType.readyIndexing]: 'Publish Indexing to Ready',
   [ActionType.stopIndexing]: 'Stop Indexing Project',
@@ -38,8 +39,8 @@ export const createServiceItem = (url: string, version: string, status: string) 
 
 export const createButtonItems = (onButtonClick: (type: ActionType) => void) => ({
   [IndexingStatus.NOTSTART]: [
-    createButtonItem('Remove Project', () => onButtonClick(ActionType.removeProject)),
     createButtonItem('Start Indexing', () => onButtonClick(ActionType.startIndexing)),
+    createButtonItem('Remove Project', () => onButtonClick(ActionType.removeProject)),
   ],
   [IndexingStatus.INDEXING]: [
     createButtonItem('Publish to Ready', () => onButtonClick(ActionType.readyIndexing)),
@@ -49,6 +50,18 @@ export const createButtonItems = (onButtonClick: (type: ActionType) => void) => 
     createButtonItem('Stop Indexing', () => onButtonClick(ActionType.stopIndexing)),
   ],
   [IndexingStatus.TERMINATED]: [],
+});
+
+export const createRemoveProjectSteps = (onRemoveProject: ClickAction) => ({
+  [ActionType.removeProject]: [
+    {
+      index: 0,
+      title: 'Remove Project',
+      desc: 'Remove the project from your coordinator service, you can add it back at anytime.',
+      buttonTitle: 'Remove Project',
+      onClick: onRemoveProject,
+    },
+  ],
 });
 
 export const createStartIndexingSteps = (

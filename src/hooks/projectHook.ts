@@ -2,44 +2,30 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useCallback, useEffect, useState } from 'react';
-import { ApolloClient, ApolloError, gql, InMemoryCache, useQuery } from '@apollo/client';
+import { ApolloClient, InMemoryCache, useLazyQuery } from '@apollo/client';
 
 import { useContractSDK } from 'containers/contractSdk';
-import { concatU8A, IPFS } from 'utils/ipfs';
-import { GET_PROJECT } from 'utils/queries';
+import { useWeb3 } from 'hooks/web3Hook';
+import { TProjectMetadata } from 'pages/project-details/types';
+import { IndexingStatus } from 'pages/projects/constant';
+import { HookDependency } from 'types/types';
+import { cidToBytes32, concatU8A, IPFS } from 'utils/ipfs';
+import { GET_PROJECT, QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS } from 'utils/queries';
 
-import { TProjectMetadata } from '../pages/project-details/types';
-import { IndexingStatus } from '../pages/projects/constant';
-import { useWeb3 } from './web3Hook';
-
-// TODO: move to `type` file
-type TDeps = boolean | number | string;
-
-type ProjectResponse = {
-  data: TProjectMetadata | undefined;
-  error: ApolloError | undefined;
-  loading: boolean;
-};
-
-const INITIALISED_PROJECT = {
-  data: undefined,
-  error: undefined,
-  loading: false,
-};
-
-export const useProject = (deploymentId: string) => {
-  // TODO: validate `deploymentID`
-  const [project, setProject] = useState<ProjectResponse>(INITIALISED_PROJECT);
-  const { data, error, loading } = useQuery(GET_PROJECT, { variables: { id: deploymentId } });
+export const useProjectService = (deploymentId: string) => {
+  const [projectService, setService] = useState<TProjectMetadata>();
+  const [getProjectService, { data }] = useLazyQuery(GET_PROJECT, {
+    fetchPolicy: 'network-only',
+  });
 
   useEffect(() => {
-    setProject({ data, error, loading });
-  }, [deploymentId, data, error, loading]);
+    data ? setService(data.project) : getProjectService({ variables: { id: deploymentId } });
+  }, [deploymentId, data]);
 
-  return project;
+  return projectService;
 };
 
-export const useIndexingStatus = (deploymentId: string, deps?: TDeps) => {
+export const useIndexingStatus = (deploymentId: string, deps?: HookDependency) => {
   const [status, setStatus] = useState(IndexingStatus.NOTSTART);
   const { account } = useWeb3();
   const sdk = useContractSDK();
@@ -47,7 +33,7 @@ export const useIndexingStatus = (deploymentId: string, deps?: TDeps) => {
   useEffect(() => {
     if (sdk && account && deploymentId) {
       sdk.queryRegistry
-        .deploymentStatusByIndexer(deploymentId, account)
+        .deploymentStatusByIndexer(cidToBytes32(deploymentId), account)
         .then(({ status }) => {
           setStatus(status);
         })
@@ -59,13 +45,19 @@ export const useIndexingStatus = (deploymentId: string, deps?: TDeps) => {
 };
 
 export type ProjectDetails = {
+  id: string;
   name: string;
+  owner: string;
   image: string;
   description: string;
   websiteUrl: string;
   codeUrl: string;
   version: string;
+  currentDeployment: string;
+  currentVersion: string;
   versionDescription: string;
+  createdTimestamp: string;
+  updatedTimestamp: string;
 };
 
 type Result = {
@@ -82,63 +74,48 @@ const queryRegistryClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-export const QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS = gql`
-  query GetDeploymentProjects($deploymentId: String!) {
-    projectDeployments(filter: { deploymentId: { equalTo: $deploymentId } }) {
-      nodes {
-        id
-        projectId
-        deploymentId
-        project {
-          metadata
-        }
-      }
-    }
-  }
-`;
+export const getProject = async (deploymentId: string) => {
+  const result = await queryRegistryClient.query<{ projectDeployments: { nodes: Result[] } }>({
+    query: QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS,
+    variables: { deploymentId },
+  });
+  return result;
+};
 
-export const useProjectMetadata = (deploymentId: string): ProjectDetails | undefined => {
-  const [metadata, setMetadata] = useState<ProjectDetails>();
+export const getProjectDetails = async (deploymentId: string) => {
+  const res = await getProject(deploymentId);
+  const projectInfo = res.data.projectDeployments.nodes[0]?.project;
+  if (!projectInfo) {
+    throw new Error('Unable to get metadata for project');
+  }
+
+  const metadataCid = projectInfo.metadata;
+  const results = IPFS.cat(metadataCid);
+  let raw: Uint8Array | undefined;
+  // eslint-disable-next-line no-restricted-syntax
+  for await (const result of results) {
+    raw = raw ? concatU8A(raw, result) : result;
+  }
+  if (!raw) {
+    throw new Error('Unable to fetch metadata from ipfs');
+  }
+
+  const metadata = JSON.parse(Buffer.from(raw).toString('utf8'));
+  const projectDetails = { ...projectInfo, ...metadata, id: deploymentId };
+  return projectDetails;
+};
+
+export const useProjectDetails = (data: ProjectDetails): ProjectDetails | undefined => {
+  const [project, setProject] = useState<ProjectDetails | undefined>(data);
+  const deploymentId = data.id;
 
   const fetchMeta = useCallback(async () => {
     try {
-      if (!deploymentId) {
-        setMetadata(undefined);
-        return;
-      }
-
-      const res = await queryRegistryClient.query<{ projectDeployments: { nodes: Result[] } }>({
-        query: QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS,
-        variables: { deploymentId },
-      });
-
-      const metadataCid = res.data.projectDeployments.nodes[0]?.project?.metadata;
-
-      if (!metadataCid) {
-        throw new Error('Unable to get metadata for project');
-      }
-
-      const results = IPFS.cat(metadataCid);
-
-      let raw: Uint8Array | undefined;
-
-      // eslint-disable-next-line no-restricted-syntax
-      for await (const result of results) {
-        if (!raw) {
-          raw = result;
-        } else {
-          raw = concatU8A(raw, result);
-        }
-      }
-
-      if (!raw) {
-        throw new Error('Unable to fetch metadata from ipfs');
-      }
-
-      setMetadata(JSON.parse(Buffer.from(raw).toString('utf8')));
+      const projectDetails = await getProjectDetails(deploymentId);
+      setProject(projectDetails);
     } catch (error) {
-      setMetadata(undefined);
-      console.error('Unable to get metadata', error);
+      setProject(undefined);
+      console.error('Unable to get project details', error);
     }
   }, [deploymentId]);
 
@@ -146,5 +123,5 @@ export const useProjectMetadata = (deploymentId: string): ProjectDetails | undef
     fetchMeta();
   }, [fetchMeta]);
 
-  return metadata;
+  return project;
 };

@@ -7,13 +7,14 @@ import { formatUnits } from '@ethersproject/units';
 import { useContractSDK } from 'containers/contractSdk';
 import { useWeb3 } from 'hooks/web3Hook';
 import { emptyControllerAccount } from 'utils/indexerActions';
+import { cidToBytes32 } from 'utils/ipfs';
 
 type Account = string | null | undefined;
 
 export const useIsIndexer = (address?: Account): boolean | undefined => {
   const { account: currentAccount } = useWeb3();
   const account = address ?? currentAccount;
-  const [isIndexer, setIsIndexer] = useState<boolean | undefined>(undefined);
+  const [isIndexer, setIsIndexer] = useState<boolean>();
   const sdk = useContractSDK();
 
   useEffect(() => {
@@ -42,7 +43,7 @@ export const useIsController = (account: Account) => {
 
 const useCheckStateChanged = (caller?: () => Promise<boolean | string | number> | undefined) => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | undefined>(undefined);
+  const [error, setError] = useState<Error>();
 
   const request = useCallback(
     (targetValue: boolean | string | number, callBack: () => void): Promise<void> =>
@@ -93,7 +94,9 @@ export const useIsIndexingStatusChanged = (id: string) => {
   const { account } = useWeb3();
   const sdk = useContractSDK();
   return useCheckStateChanged(() =>
-    sdk?.queryRegistry.deploymentStatusByIndexer(id, account ?? '').then((item) => item.status)
+    sdk?.queryRegistry
+      .deploymentStatusByIndexer(cidToBytes32(id), account ?? '')
+      .then((item) => item.status)
   );
 };
 
@@ -106,17 +109,16 @@ export const useIsApproveChanged = () => {
   });
 };
 
-export const useController = (account: Account, refresh?: number) => {
-  const [controller, setController] = useState('');
+export const useController = (refresh?: number) => {
+  const [controller, setController] = useState<string>();
+  const { account } = useWeb3();
   const sdk = useContractSDK();
 
   useEffect(() => {
     sdk?.indexerRegistry
       .indexerToController(account ?? '')
-      .then((controller) => {
-        setController(controller === emptyControllerAccount ? '' : controller);
-      })
-      .catch(() => setController(''));
+      .then((controller) => setController(controller === emptyControllerAccount ? '' : controller))
+      .catch(() => setController(undefined));
   }, [account, sdk, refresh]);
 
   return controller;

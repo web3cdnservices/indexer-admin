@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC } from 'react';
-import { Hashicon } from '@emeraldpay/hashicon-react';
 import styled from 'styled-components';
 
 import { ActionType } from 'utils/transactions';
 
+import Avatar from './avatar';
 import { Button, ButtonContainer, Label, Text } from './primary';
 import StatusLabel from './statusLabel';
 
@@ -88,7 +88,7 @@ const AccountCard: FC<Props> = ({
     </HeaderContainer>
     {account ? (
       <ContentContainer>
-        <Hashicon hasher="keccak" value={account ?? ''} size={100} />
+        <Avatar address={account ?? ''} size={100} />
         <DescContainer ml={20}>
           <Text>{name}</Text>
           <Text mt={10}>{account}</Text>

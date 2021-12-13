@@ -30,7 +30,7 @@ type Props = {
   title: string;
   fieldKey: string;
   placeholder?: string;
-  value?: string;
+  value?: string | number;
   options?: string[];
   onChange?: FormikHandlers['handleChange'];
   errors?: FormikErrors<FormikValues>;

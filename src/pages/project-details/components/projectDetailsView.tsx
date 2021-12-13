@@ -75,8 +75,17 @@ type Props = {
   project: ProjectDetails;
 };
 
+const formatDate = (date: string) => new Date(date).toLocaleDateString();
+
 const ProjectDetailsView: FC<Props> = ({ id, project }) => {
-  const { description, websiteUrl, codeUrl } = project;
+  const {
+    description,
+    websiteUrl,
+    codeUrl,
+    currentDeployment,
+    createdTimestamp,
+    updatedTimestamp,
+  } = project;
   return (
     <Container>
       <Text fw="600" mb={10} size={20}>
@@ -87,12 +96,12 @@ const ProjectDetailsView: FC<Props> = ({ id, project }) => {
         <LeftContainer>
           <InfoView title="Description" desc={description} />
           <BottomContainer>
-            <InfoView title="Created" desc="3 days ago" />
-            <InfoView ml={150} title="Last Updated" desc="5 days ago" />
+            <InfoView title="Created" desc={formatDate(createdTimestamp)} />
+            <InfoView ml={150} title="Last Updated" desc={formatDate(updatedTimestamp)} />
           </BottomContainer>
         </LeftContainer>
         <RightContainer>
-          <InfoView title="Deployment ID" desc={id} />
+          <InfoView title="Deployment ID" desc={currentDeployment} />
           <InfoView mt={30} title="Website URL" desc={websiteUrl} />
           <InfoView mt={30} title="Source Code URL" desc={codeUrl} />
         </RightContainer>

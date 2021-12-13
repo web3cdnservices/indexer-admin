@@ -34,7 +34,7 @@ const options = {
 export type SDK = ContractSDK | undefined;
 
 function useContractsImpl(logger: Logger): SDK {
-  const [sdk, setSdk] = React.useState<ContractSDK | undefined>(undefined);
+  const [sdk, setSdk] = React.useState<ContractSDK>();
   const { library, chainId } = useWeb3();
   const isMetaMask = useIsMetaMask();
 

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC } from 'react';
-import { Space, Spin } from 'antd';
+import { Spinner } from '@subql/react-ui';
 import styled from 'styled-components';
 
 import { useLoading } from 'containers/loadingContext';
@@ -23,9 +23,7 @@ const Loading: FC = () => {
   if (!pageLoading) return null;
   return (
     <Container>
-      <Space size="middle">
-        <Spin size="large" />
-      </Space>
+      <Spinner size={30} />
     </Container>
   );
 };
