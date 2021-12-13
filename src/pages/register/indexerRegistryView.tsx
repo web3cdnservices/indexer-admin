@@ -5,7 +5,7 @@ import { FC } from 'react';
 import { Formik, FormikHelpers } from 'formik';
 
 import { FieldItem } from 'components/formItem';
-import { ButtonContainer, FormContainer, SButton } from 'components/primary';
+import { Button, ButtonContainer, FormContainer } from 'components/primary';
 import {
   initialRegisterValues,
   RegisterFormKey,
@@ -47,8 +47,8 @@ const IndexerRegistryView: FC<Props> = ({ onSubmit, loading }) => {
               errors={errors}
             />
             <FieldItem title="Staking Amount" fieldKey={RegisterFormKey.amount} errors={errors} />
-            <ButtonContainer alignCenter>
-              <SButton
+            <ButtonContainer>
+              <Button
                 mt={20}
                 width={300}
                 title={buttonTitle}

@@ -121,21 +121,18 @@ const Registry = () => {
     }
   );
 
-  const unregisterStepConfig = createUnregisterSteps(
-    () => {
-      removeAccounts().then(() => setCurrentStep(1));
-    },
-    () => {
-      unRegister(sdk, signer)
-        .then(() => {
-          checkIsIndexerChanged(false, () => {
-            onModalClose();
-            history.replace('./');
-          }).catch((e) => console.log('error:', e));
-        })
-        .catch(onModalClose);
+  const unregisterStepConfig = createUnregisterSteps(async () => {
+    try {
+      await unRegister(sdk, signer);
+      checkIsIndexerChanged(false, () => {
+        onModalClose();
+        history.replace('./');
+      });
+      await removeAccounts();
+    } catch (e) {
+      onModalClose();
     }
-  );
+  });
 
   const steps = { ...controllerStepsConfig, ...unregisterStepConfig };
 

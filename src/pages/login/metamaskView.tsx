@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import { browserName } from 'react-device-detect';
 
-import { SButton, Text } from 'components/primary';
+import { Button, Text } from 'components/primary';
 import { useIsMetaMask, useIsMetaMaskInstalled, useWeb3 } from 'hooks/web3Hook';
 // @ts-ignore
 import MetaMaskIcon from 'resources/metamask.svg';
@@ -67,7 +67,7 @@ const MetaMaskView = () => {
       <ImageCard>
         <Image src={MetaMaskIcon} />
       </ImageCard>
-      <SButton width={300} title={data.buttonTitle} onClick={onButtonClick} />
+      <Button width={300} title={data.buttonTitle} onClick={onButtonClick} />
     </Panel>
   ) : null;
 };

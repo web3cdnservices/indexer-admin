@@ -38,22 +38,12 @@ export const createControllerSteps = (
   ],
 });
 
-export const createUnregisterSteps = (
-  onRemoveAccounts: ClickAction,
-  onUnregister: ClickAction
-) => ({
+export const createUnregisterSteps = (onUnregister: ClickAction) => ({
   [ActionType.unregister]: [
-    {
-      indexer: 0,
-      title: 'Remove accounts from Server',
-      desc: 'To unregister from the network, need to remove all the accounts from you coordinator server',
-      buttonTitle: 'Remove Accounts',
-      onClick: onRemoveAccounts,
-    },
     {
       index: 1,
       title: 'Unregister from Network',
-      desc: `Sorry to see the indexer unregister from the Subquery Network, please note that the staking token will deposit to your current account once transction processed`,
+      desc: `Sorry to see the indexer unregister from the Subquery Network, please note that all the data in your coordinator service will be removed, and the staking token will deposit to your current account once transction processed`,
       buttonTitle: 'Unregister',
       onClick: onUnregister,
     },

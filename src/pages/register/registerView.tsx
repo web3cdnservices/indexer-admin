@@ -3,7 +3,7 @@
 
 import { FC } from 'react';
 
-import { SButton } from 'components/primary';
+import { Button } from 'components/primary';
 
 import { SubTitle, Title } from '../login/styles';
 import prompts from './prompts';
@@ -28,7 +28,7 @@ const RegisterView: FC<Props> = ({ step, onClick, loading }) => {
           <SubTitle align="center">{desc}</SubTitle>
         </DescContainer>
       </TextContainer>
-      <SButton width={350} title={buttonTitle} loading={loading} onClick={onClick} />
+      <Button width={350} title={buttonTitle} loading={loading} onClick={onClick} />
     </ContentContainer>
   );
 };

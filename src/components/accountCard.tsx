@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 import { ActionType } from 'utils/transactions';
 
-import { Label, SButton, Text } from './primary';
+import { Button, ButtonContainer, Label, Text } from './primary';
 import StatusLabel from './statusLabel';
 
 const Container = styled.div`
@@ -83,7 +83,7 @@ const AccountCard: FC<Props> = ({
         {!!status && <StatusLabel text={status} />}
       </MainTitleContainer>
       {!!account && !!buttonTitle && (
-        <SButton width={250} title={buttonTitle} loading={loading} onClick={() => onClick(type)} />
+        <Button width={250} title={buttonTitle} loading={loading} onClick={() => onClick(type)} />
       )}
     </HeaderContainer>
     {account ? (
@@ -101,12 +101,14 @@ const AccountCard: FC<Props> = ({
           {desc}
         </Text>
         {!!buttonTitle && (
-          <SButton
-            width={200}
-            title={buttonTitle}
-            loading={loading}
-            onClick={() => onClick(type)}
-          />
+          <ButtonContainer align="left">
+            <Button
+              width={200}
+              title={buttonTitle}
+              loading={loading}
+              onClick={() => onClick(type)}
+            />
+          </ButtonContainer>
         )}
       </DescContainer>
     )}

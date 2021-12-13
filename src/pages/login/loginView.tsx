@@ -8,7 +8,7 @@ import { SubqueryNetwork } from '@subql/contract-sdk';
 import { Formik, FormikHelpers } from 'formik';
 
 import { FieldItem } from 'components/formItem';
-import { ButtonContainer, FormContainer, SButton } from 'components/primary';
+import { Button, ButtonContainer, FormContainer } from 'components/primary';
 import { networks } from 'containers/web3';
 import { useIsIndexer } from 'hooks/indexerHook';
 import { useWeb3 } from 'hooks/web3Hook';
@@ -76,8 +76,8 @@ const LoginView: FC<Props> = ({ onConnected }) => {
                 onChange={handleChange}
                 errors={errors}
               />
-              <ButtonContainer alignCenter mt={60}>
-                <SButton
+              <ButtonContainer mt={60}>
+                <Button
                   width={300}
                   title={login.buttonTitle}
                   loading={status?.loading}

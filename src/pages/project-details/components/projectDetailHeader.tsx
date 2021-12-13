@@ -201,15 +201,8 @@ const ProjectDetailsHeader: FC<Props> = ({ id, project }) => {
       </LeftContainer>
       {!!actionItems && (
         <ActionContainer>
-          {actionItems.map(({ title, action, color }) => (
-            <Button
-              key={title}
-              margin={10}
-              width={200}
-              title={title}
-              color={color}
-              onClick={action}
-            />
+          {actionItems.map(({ title, action }) => (
+            <Button key={title} width={200} title={title} onClick={action} />
           ))}
         </ActionContainer>
       )}

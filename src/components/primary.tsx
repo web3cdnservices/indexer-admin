@@ -4,8 +4,7 @@
 import { FC, useMemo } from 'react';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Button as SubButton } from '@subql/react-ui';
-import { Button as AntButton, Spin } from 'antd';
-import { ButtonHTMLType } from 'antd/lib/button/button';
+import { Spin } from 'antd';
 import { Form } from 'formik';
 import styled from 'styled-components';
 
@@ -57,69 +56,22 @@ export const Label = styled.label<TextProps>`
   // font-family: ${({ ff }) => ff ?? 'Futura'};
 `;
 
-const StyledButton = styled(AntButton)<{
-  width?: number;
-  align?: string;
-  margin?: number;
-  color?: string;
-}>`
-  background-color: ${({ color }) => color ?? '#4388dd'};
-  align-self: ${({ align }) => align ?? 'center'}px;
-  width: ${({ width }) => width ?? 150}px;
-  margin: ${({ margin }) => margin ?? 0}px;
-`;
-
-type ButtonProps = {
-  title: string;
-  onClick?: () => void;
-  htmlType?: ButtonHTMLType;
-  loading?: boolean;
-  color?: string;
-  width?: number;
-  margin?: number;
-};
-
-export const Button: FC<ButtonProps> = ({
-  title,
-  onClick,
-  loading,
-  htmlType,
-  color,
-  width,
-  margin,
-}) => (
-  <StyledButton
-    loading={!!loading}
-    align="center"
-    width={width}
-    type="primary"
-    shape="round"
-    size="large"
-    color={color}
-    margin={margin}
-    onClick={onClick}
-    htmlType={htmlType ?? 'button'}
-  >
-    {title}
-  </StyledButton>
-);
-
 // new buttons
-type SSButtonProps = {
+type StyledButtonProps = {
   align?: string;
   width?: number;
   mt?: number;
 };
 
-export const StyledSButton = styled(SubButton)<SSButtonProps>`
+export const StyledButton = styled(SubButton)<StyledButtonProps>`
   align-self: ${({ align }) => align ?? 'center'}px;
-  width: ${({ width }) => width ?? 150}px;
+  min-width: ${({ width }) => width ?? 150}px;
   padding: 16px 30px;
   margin-top: ${({ mt }) => mt ?? 0}px;
   font-weight: 500;
 `;
 
-type SButtonProps = {
+type ButtonProps = {
   title: string;
   loading?: boolean;
   disabled?: boolean;
@@ -134,26 +86,43 @@ const AntIcon: FC<SpinProps> = ({ loading }) => (
   <LoadingOutlined style={{ fontSize: 20, marginRight: 30, color: '#4388dd' }} spin={loading} />
 );
 
-export const SButton: FC<SButtonProps & SSButtonProps> = ({ title, loading, disabled, ...props }) =>
+export const Button: FC<ButtonProps & StyledButtonProps> = ({
+  title,
+  loading,
+  disabled,
+  ...props
+}) =>
   useMemo(
     () => (
-      <StyledSButton
+      <StyledButton
         label={title}
         type="secondary"
         leftItem={loading && <Spin indicator={<AntIcon loading />} />}
-        disabled={disabled}
+        disabled={disabled || loading}
         {...props}
       />
     ),
     [title, loading, disabled]
   );
 
-export const ButtonContainer = styled.div<{ mt?: number; alignCenter?: boolean }>`
+type Align = 'left' | 'right' | 'centre';
+
+export const ButtonContainer = styled.div<{ mt?: number; align?: Align }>`
   display: flex;
   align-items: center;
-  justify-content: ${({ alignCenter }) => (alignCenter ? 'center' : 'flex-end')};
   margin-top: ${({ mt }) => mt ?? 0}px;
   width: 100%;
+  justify-content: ${({ align }) => {
+    if (!align) return 'center';
+    switch (align) {
+      case 'left':
+        return 'flex-start';
+      case 'right':
+        return 'flex-end';
+      default:
+        return 'center';
+    }
+  }};
 `;
 
 export const FormContainer = styled(Form)<{ mt?: number }>`

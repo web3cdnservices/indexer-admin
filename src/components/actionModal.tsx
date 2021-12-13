@@ -14,7 +14,7 @@ const StyledModal = styled(Modal)`
 const Container = styled.div`
   display: flex;
   min-width: 600px;
-  min-height: 400px;
+  min-height: 300px;
 `;
 
 export type ModalProps = {

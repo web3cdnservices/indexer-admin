@@ -13,7 +13,7 @@ import { ActionType } from 'utils/transactions';
 
 import ActionModal, { ModalProps } from './actionModal';
 import { FieldItem } from './formItem';
-import { ButtonContainer, SButton, Text } from './primary';
+import { Button, ButtonContainer, Text } from './primary';
 
 export const Container = styled.div`
   display: flex;
@@ -38,7 +38,6 @@ export const InputForm = styled(Form)`
 
 export const ContentContainer = styled.div`
   display: flex;
-  flex: 1;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -106,9 +105,9 @@ const ModalView: FC<Props> = ({
                 </Text>
               )}
             </div>
-            <ButtonContainer>
-              <SButton
-                width={300}
+            <ButtonContainer align="right" mt={50}>
+              <Button
+                width={260}
                 mt={20}
                 title={item.buttonTitle}
                 onClick={submitForm}
@@ -130,11 +129,12 @@ const ModalView: FC<Props> = ({
           {item.desc}
         </Text>
       </DescContainer>
-      <ButtonContainer>
-        <SButton
-          width={300}
+      <ButtonContainer align="right" mt={100}>
+        <Button
+          width={200}
           title={item.buttonTitle}
           onClick={() => item.onClick && item.onClick(type)}
+          loading={loading}
         />
       </ButtonContainer>
     </ContentContainer>
