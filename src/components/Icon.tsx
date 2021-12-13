@@ -2,19 +2,26 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC } from 'react';
+import styled from 'styled-components';
+
+const Image = styled.img<{ size?: number }>`
+  width: ${({ size }) => size ?? 30}px;
+  height: ${({ size }) => size ?? 30}px;
+`;
 
 type Props = {
   src: string;
+  size?: number;
   url?: string;
 };
 
-const Icon: FC<Props> = ({ src, url }) =>
+const Icon: FC<Props> = ({ src, size, url }) =>
   url ? (
     <a href={url}>
-      <img src={src} alt={url} />
+      <Image size={size} src={src} alt={url} />
     </a>
   ) : (
-    <img src={src} alt={src} />
+    <Image size={size} src={src} alt={src} />
   );
 
 export default Icon;

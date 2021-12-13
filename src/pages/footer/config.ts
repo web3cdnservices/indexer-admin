@@ -1,14 +1,13 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-// @ts-nocheck
-import DiscordIcon from '../../resources/discord.svg';
-import GithubIcon from '../../resources/github.svg';
-import LinkendinIcon from '../../resources/linkendin.svg';
-import MatrixIcon from '../../resources/matrix.svg';
-import MediumIcon from '../../resources/medium.svg';
-import TelegramIcon from '../../resources/telegram.svg';
-import TwitterIcon from '../../resources/twitter.svg';
+import DiscordIcon from 'resources/discord.svg';
+import GithubIcon from 'resources/github.svg';
+import LinkendinIcon from 'resources/linkendin.svg';
+import MatrixIcon from 'resources/matrix.svg';
+import MediumIcon from 'resources/medium.svg';
+import TelegramIcon from 'resources/telegram.svg';
+import TwitterIcon from 'resources/twitter.svg';
 
 const createConfig = (src: string, url: string) => ({ src, url });
 

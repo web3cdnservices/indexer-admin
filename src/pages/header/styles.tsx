@@ -23,8 +23,6 @@ export const RightContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0px 20px;
-  background-color: rgba(67, 136, 221, 0.24);
-  border-radius: 10px;
   min-width: 260px;
   height: 55px;
 `;

@@ -3,20 +3,19 @@
 
 const prompts = {
   install: {
-    title: 'No MetaMask Extension found in the browser',
-    buttonTitle: 'Install MetaMask Extension',
-    desc: '',
+    title: 'Install MetaMask to use Indexer App',
+    buttonTitle: 'Install MetaMask in the extension market',
+    desc: 'No MetaMask Extension found in the browser.  Please click the button to install the MetaMask Extension before connect with the network.',
   },
   connect: {
-    title: 'Connect wallet to use Indexer Admin',
-    buttonTitle: 'Connect with MetaMask',
-    desc: '',
+    title: 'Connect wallet to use Indexer App',
+    buttonTitle: 'Connect with MetaMask browser extension',
+    desc: 'Use the indexer app to connect with you coordinator service and Subquery network, you can manage you accounts and projects.',
   },
   error: {
     title: 'Unsupportted network Type',
-    // FIXME: `the correct network` -> the network type get from coordinator service
-    desc: 'Please press the button to swith to the correct network',
-    buttonTitle: 'Swtich Network',
+    desc: 'MetaMask connect with an unsupported network, please press the button to swith to the correct network',
+    buttonTitle: 'Swtich to the supportted network',
   },
 };
 

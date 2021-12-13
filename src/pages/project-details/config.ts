@@ -6,6 +6,7 @@ import {
   initialPublishProjectValues,
   initialStartProjectValues,
   ProjectFormKey,
+  publishProjectSchema,
   StartProjectSchema,
 } from 'types/schemas';
 import { ActionType } from 'utils/transactions';
@@ -39,8 +40,8 @@ export const createServiceItem = (url: string, version: string, status: string) 
 
 export const createButtonItems = (onButtonClick: (type: ActionType) => void) => ({
   [IndexingStatus.NOTSTART]: [
-    createButtonItem('Start Indexing', () => onButtonClick(ActionType.startIndexing)),
-    createButtonItem('Remove Project', () => onButtonClick(ActionType.removeProject)),
+    createButtonItem('Config Service', () => onButtonClick(ActionType.startIndexing)),
+    createButtonItem('Start Indexing', () => onButtonClick(ActionType.removeProject)),
   ],
   [IndexingStatus.INDEXING]: [
     createButtonItem('Publish to Ready', () => onButtonClick(ActionType.readyIndexing)),
@@ -104,7 +105,7 @@ export const createReadyIndexingSteps = (
       form: {
         formKey: ProjectFormKey.queryEndpoint,
         formValues: initialPublishProjectValues,
-        schema: initialPublishProjectValues,
+        schema: publishProjectSchema,
         onFormSubmit: onSyncQueryEndpoint,
       },
     },

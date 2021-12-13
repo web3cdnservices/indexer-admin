@@ -2,11 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // @ts-nocheck
-import { NavLink } from 'react-router-dom';
+import { useMemo } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
+import { Address, Dropdown } from '@subql/react-ui';
+import buttonStyles from '@subql/react-ui/dist/components/Button/Button.module.css';
 import styled from 'styled-components';
 
-import Avatar from 'components/avatar';
-import { Text } from 'components/primary';
+import { Button, Separator } from 'components/primary';
+import { chainNames } from 'containers/web3';
 import { useController, useIsIndexer } from 'hooks/indexerHook';
 import { useIsMetaMask, useWeb3 } from 'hooks/web3Hook';
 import SubqueryIcon from 'resources/subquery.svg';
@@ -30,15 +33,23 @@ const TabBar = styled(NavLink)`
   }
 `;
 
-const truncateString = (value: string) =>
-  value ? `${value.substring(0, 12)}...${value.substring(value.length - 12)}` : '';
-
 const Header = () => {
-  const { account } = useWeb3();
+  const { account, deactivate, chainId } = useWeb3();
+  const { pathname } = useLocation();
   const isMetaMask = useIsMetaMask();
   const isIndexer = useIsIndexer();
   const controller = useController(account);
   const activeStyle = { fontWeight: 500, color: '#4388dd' };
+  const dropdownStyle = { border: 'unset !important', padding: 15, width: 100 };
+
+  const onSelected = (key: string) => {
+    if (key === 'disconnect') {
+      deactivate();
+    }
+  };
+
+  const isRootPage = useMemo(() => pathname === '/', [pathname]);
+  const network = useMemo(() => chainNames[chainId] ?? 'Unsupport Network', [chainId]);
 
   const renderTabbars = () => (
     <div>
@@ -53,18 +64,36 @@ const Header = () => {
     </div>
   );
 
+  const renderAddress = () =>
+    isRootPage ? (
+      <Address address={account} size="large" />
+    ) : (
+      <Dropdown
+        items={[{ key: 'disconnect', label: 'Disconnect' }]}
+        onSelected={onSelected}
+        dropdownStyle={{ ...buttonStyles.secondary, ...dropdownStyle }}
+      >
+        <Address address={account} size="large" />
+      </Dropdown>
+    );
+
   return (
     <Container>
       <LeftContainer>
         <img src={SubqueryIcon} alt="subquery" />
-        {isIndexer && renderTabbars()}
+        {!isRootPage && isIndexer && renderTabbars()}
       </LeftContainer>
       {isMetaMask && (
         <RightContainer>
-          <Avatar address={account ?? ''} size={40} />
-          <Text size={16} ml={20} mr={20}>
-            {truncateString(account ?? '')}
-          </Text>
+          <Button
+            type="secondary"
+            label={network}
+            size="small"
+            disabled
+            leftItem={<i className="bi-link-45deg" role="img" aria-label="link" />}
+          />
+          <Separator width={30} color="#f6f9fc" />
+          {account && renderAddress()}
         </RightContainer>
       )}
     </Container>

@@ -12,7 +12,7 @@ import { useLoading } from 'containers/loadingContext';
 import { useIsApproveChanged, useIsIndexer, useIsIndexerChanged } from 'hooks/indexerHook';
 import { useInitialStep } from 'hooks/registerHook';
 import { useSigner, useWeb3 } from 'hooks/web3Hook';
-import { RegisterFormKey, TRegisterValues } from 'types/schemas';
+import { TRegisterValues } from 'types/schemas';
 import { indexerRegistry, indexerRequestApprove } from 'utils/indexerActions';
 import { cidToBytes32, IPFS } from 'utils/ipfs';
 import { ADD_INDEXER } from 'utils/queries';
@@ -86,7 +86,7 @@ const RegisterPage = () => {
       const metadataBytes = cidToBytes32(cid);
 
       // TODO: 1. validate `proxy endpoint`, default request `/discovery`;
-      helper.setErrors({ [RegisterFormKey.proxyEndpoint]: 'Invalid proxy endpoint' });
+      // helper.setErrors({ [RegisterFormKey.proxyEndpoint]: 'Invalid proxy endpoint' });
 
       await indexerRegistry(sdk, signer, amount.toString(), metadataBytes);
 

@@ -79,6 +79,7 @@ const LoginView: FC<Props> = ({ onConnected }) => {
               <ButtonContainer mt={60}>
                 <Button
                   width={300}
+                  type="primary"
                   title={login.buttonTitle}
                   loading={status?.loading}
                   onClick={submitForm}

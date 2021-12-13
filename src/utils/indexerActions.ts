@@ -81,30 +81,26 @@ export const unRegister = (sdk: SDK, signer: Signer) =>
       .catch((error) => reject(error.message));
   });
 
-export const configController = (sdk: SDK, signer: Signer, controller: string | undefined) =>
-  new Promise((resolve, reject) => {
-    if (!sdk || !signer) {
-      reject(ErrorMessages.sdkOrSignerError);
-      return;
-    }
+export const configController = async (
+  sdk: SDK,
+  signer: Signer,
+  controller: string | undefined
+) => {
+  if (!sdk || !signer) {
+    throw new Error(ErrorMessages.sdkOrSignerError);
+  }
+  if (!controller) {
+    throw new Error(ErrorMessages.controllerError);
+  }
 
-    if (!controller) {
-      reject(ErrorMessages.controllerError);
-      return;
-    }
+  const indexer = await sdk.indexerRegistry.controllerToIndexer(controller);
+  if (indexer !== emptyControllerAccount) {
+    throw new Error(ErrorMessages.controllerExist);
+  }
 
-    sdk.indexerRegistry.controllerToIndexer(controller).then((indexer) => {
-      if (indexer === emptyControllerAccount) {
-        sdk.indexerRegistry
-          .connect(signer)
-          .setControllerAccount(controller)
-          .then(() => resolve(''))
-          .catch((error) => reject(error.message));
-      } else {
-        reject(ErrorMessages.controllerExist);
-      }
-    });
-  });
+  const tx = await sdk.indexerRegistry.connect(signer).setControllerAccount(controller);
+  return tx;
+};
 
 export const startIndexing = (
   sdk: SDK,

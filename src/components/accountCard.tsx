@@ -57,6 +57,7 @@ type Props = {
   buttonTitle: string;
   type: ActionType;
   onClick: (type: ActionType) => void;
+  disabled?: boolean;
   loading?: boolean;
   name?: string;
   account?: string;
@@ -70,6 +71,7 @@ const AccountCard: FC<Props> = ({
   name,
   type,
   onClick,
+  disabled,
   loading,
   account,
   status,
@@ -83,7 +85,13 @@ const AccountCard: FC<Props> = ({
         {!!status && <StatusLabel text={status} />}
       </MainTitleContainer>
       {!!account && !!buttonTitle && (
-        <Button width={250} title={buttonTitle} loading={loading} onClick={() => onClick(type)} />
+        <Button
+          width={250}
+          title={buttonTitle}
+          loading={loading}
+          disabled={disabled}
+          onClick={() => onClick(type)}
+        />
       )}
     </HeaderContainer>
     {account ? (
@@ -106,6 +114,7 @@ const AccountCard: FC<Props> = ({
               width={200}
               title={buttonTitle}
               loading={loading}
+              disabled={disabled}
               onClick={() => onClick(type)}
             />
           </ButtonContainer>
