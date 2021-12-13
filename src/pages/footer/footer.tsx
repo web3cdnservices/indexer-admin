@@ -14,7 +14,6 @@ const Header = () => {
   const location = useLocation();
   const isMetamask = useIsMetaMask();
 
-  // FIXME: for register workflow, hidden footer
   if (isMetamask) return null;
   if (['/project', '/projects', '/account'].includes(location.pathname)) return null;
 
@@ -26,7 +25,7 @@ const Header = () => {
         </Text>
         <IconsContainer>
           {linkConfigs.map(({ src, url }) => (
-            <Icon key={url} src={src} url={url} />
+            <Icon size={50} key={url} src={src} url={url} />
           ))}
         </IconsContainer>
       </ContentContainer>

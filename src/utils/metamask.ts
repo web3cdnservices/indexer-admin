@@ -1,13 +1,12 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-/* eslint-disable */ 
-// @ts-nocheck 
+/* eslint-disable */
+// @ts-nocheck
 
 import { intToHex } from 'ethereumjs-util';
 import Config from './config';
-import { connect } from 'containers/web3';
-import { NetworkToChainID } from 'containers/web3';
+import { connect, NetworkToChainID, chainNames, RPC_URLS } from 'containers/web3';
 
 export const NetworkError = {
   unSupportedNetworkError: 'UnsupportedChainIdError',
@@ -19,32 +18,46 @@ export async function connectWithMetaMask(activate: Function) {
     await connect(activate);
     return;
   }
-};
+}
+
+function addNetwork(chainId: number) {
+  const nativeCurrency = {
+    name: 'SQT',
+    symbol: 'SQT',
+    decimals: 18,
+  };
+
+  ethereum
+    .request({
+      method: 'wallet_addEthereumChain',
+      params: [
+        {
+          chainId: intToHex(chainId),
+          chainName: chainNames[chainId],
+          rpcUrl: RPC_URLS[chainId],
+          nativeCurrency,
+        },
+      ],
+    })
+    .catch((e) => console.error('Add Ethereum network failed', e));
+}
 
 export async function switchNetwork() {
   const network = Config.getInstance().getNetwork();
-  console.log('>>>:', network);
   if (!window?.ethereum || !network) return;
-
   const chainId = NetworkToChainID[network];
+
   try {
     return window.ethereum.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: intToHex(chainId) }],
     });
-  } catch (switchError) {
+  } catch (e) {
     // This error code indicates that the chain has not been added to MetaMask.
-    if (switchError.code === 4902) {
-      // TODO: https://docs.metamask.io/guide/rpc-api.html#other-rpc-methods
-      try {
-        await ethereum.request({
-          method: 'wallet_addEthereumChain',
-          params: [{ chainId: '0xf00', rpcUrl: 'https://...' /* ... */ }],
-        });
-      } catch (addError) {
-        // handle "add" error
-      }
+    if (e.code === 4902) {
+      addNetwork();
+    } else {
+      console.error('Switch Ethereum network failed', e);
     }
-    // handle other "switch" errors
   }
 }

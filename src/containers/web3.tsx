@@ -30,7 +30,7 @@ export const NetworkToChainID: Record<SubqueryNetwork, ChainID> = {
 
 export const isSupportNetwork = (chaiId?: number) => ChainIDs.includes(chaiId ?? 0);
 
-const RPC_URLS: Record<number, string> = {
+export const RPC_URLS: Record<number, string> = {
   1281: 'http://127.0.0.1:9933',
   1285: 'https://moonriver.api.onfinality.io/public',
   1287: 'https://moonbeam-alpha.api.onfinality.io/public',

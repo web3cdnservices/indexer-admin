@@ -6,11 +6,13 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 
 import Loading from 'components/loading';
+import Toast from 'components/toast';
+import { Web3Provider } from 'containers';
+import { ContractSDKProvider } from 'containers/contractSdk';
+import { LoadingProvider } from 'containers/loadingContext';
+import { ToastProvider } from 'containers/toastContext';
+import { createApolloClient } from 'utils/apolloClient';
 
-import { ContractSDKProvider } from './containers/contractSdk';
-import { LoadingProvider } from './containers/loadingContext';
-import { createApolloClient } from './utils/apolloClient';
-import { Web3Provider } from './containers';
 import * as Pages from './pages';
 
 import 'antd/dist/antd.css';
@@ -27,6 +29,7 @@ const AppContents = () => (
         <Route component={Pages.Login} path="/" />
       </Switch>
       <Loading />
+      <Toast />
     </div>
     <Pages.Footer />
   </Router>
@@ -38,9 +41,11 @@ const App: FC = () => {
       <Web3Provider>
         <ContractSDKProvider>
           <LoadingProvider>
-            <div className="App">
-              <AppContents />
-            </div>
+            <ToastProvider>
+              <div className="App">
+                <AppContents />
+              </div>
+            </ToastProvider>
           </LoadingProvider>
         </ContractSDKProvider>
       </Web3Provider>

@@ -53,7 +53,7 @@ export const Label = styled.label<TextProps>`
   margin-top: ${({ mt }) => mt ?? 0}px;
   margin-bottom: ${({ mb }) => mb ?? 0}px;
   min-width: ${({ mw }) => mw ?? 10}px;
-  // font-family: ${({ ff }) => ff ?? 'Futura'};
+  font-family: ${({ ff }) => ff ?? 'Futura'};
 `;
 
 // new buttons
@@ -75,6 +75,8 @@ type ButtonProps = {
   title: string;
   loading?: boolean;
   disabled?: boolean;
+  leftItem?: React.ReactNode;
+  type?: 'primary' | 'secondary';
   onClick?: () => void;
 };
 
@@ -90,13 +92,14 @@ export const Button: FC<ButtonProps & StyledButtonProps> = ({
   title,
   loading,
   disabled,
+  type,
   ...props
 }) =>
   useMemo(
     () => (
       <StyledButton
         label={title}
-        type="secondary"
+        type={type ?? 'secondary'}
         leftItem={loading && <Spin indicator={<AntIcon loading />} />}
         disabled={disabled || loading}
         {...props}

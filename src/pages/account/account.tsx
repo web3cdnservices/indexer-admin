@@ -1,7 +1,7 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { bufferToHex, privateToAddress, toBuffer } from 'ethereumjs-util';
@@ -11,6 +11,7 @@ import AccountCard from 'components/accountCard';
 import ModalView from 'components/modalView';
 import { useContractSDK } from 'containers/contractSdk';
 import { useLoading } from 'containers/loadingContext';
+import { useToast } from 'containers/toastContext';
 import {
   useBalance,
   useController,
@@ -49,13 +50,20 @@ const Registry = () => {
   const controllerBalance = useBalance(controller);
   const indexerBalance = useBalance(account);
   const { setPageLoading } = useLoading();
+  const { dispatchToast, closeToast } = useToast();
   const [updateController, { loading: updateControllerLoading }] = useMutation(UPDAET_CONTROLLER);
   const [removeAccounts, { loading: removeAccountsLoading }] = useMutation(REMOVE_ACCOUNTS);
   const { request: checkIsIndexerChanged, loading: indexerLoading } = useIsIndexerChanged();
   const { request: checkIsControllerChanged, loading: controllerLoading } =
     useIsControllerChanged(account);
-  const loading =
-    updateControllerLoading || removeAccountsLoading || indexerLoading || controllerLoading;
+
+  const loadingActions = useMemo(
+    () => ({
+      [ActionType.unregister]: indexerLoading,
+      [ActionType.configCntroller]: controllerLoading,
+    }),
+    [indexerLoading, controllerLoading]
+  );
 
   prompts.controller.desc = `Balance ${controllerBalance} SQT`;
   const controllerItem = !controller ? prompts.emptyController : prompts.controller;
@@ -67,6 +75,17 @@ const Registry = () => {
       history.replace('/');
     }
   }, [isIndexer]);
+
+  useEffect(() => {
+    if (indexerLoading || controllerLoading) {
+      dispatchToast({
+        type: 'loading',
+        text: 'Transaction processing: 0xskfakf34faskdfjaksdjfakdfjaksfjakfa',
+      });
+    } else {
+      closeToast();
+    }
+  }, [indexerLoading, controllerLoading]);
 
   const onModalShow = (type: ActionType) => {
     setActionType(type);
@@ -112,9 +131,9 @@ const Registry = () => {
     () => {
       configController(sdk, signer, inputController)
         .then(() => {
+          onModalClose();
           checkIsControllerChanged(inputController, () => {
             setTimestamp(Date.now());
-            onModalClose();
           }).catch((e) => console.log('error:', e));
         })
         .catch(onModalClose);
@@ -124,6 +143,7 @@ const Registry = () => {
   const unregisterStepConfig = createUnregisterSteps(async () => {
     try {
       await unRegister(sdk, signer);
+      onModalClose();
       checkIsIndexerChanged(false, () => {
         onModalClose();
         history.replace('./');
@@ -147,7 +167,7 @@ const Registry = () => {
           account={account ?? ''}
           status="active"
           desc={`Balance: ${indexerBalance} SQT`}
-          loading={indexerLoading}
+          disabled={indexerLoading}
           onClick={onModalShow}
         />
       )}
@@ -157,23 +177,27 @@ const Registry = () => {
           name={controllerItem.name}
           type={ActionType.configCntroller}
           account={controller}
+          disabled={controllerLoading}
           buttonTitle={isIndexer ? controllerItem.buttonTitle : ''}
           desc={controllerItem?.desc}
           onClick={onModalShow}
         />
       )}
       <MetaMaskView />
-      <ModalView
-        visible={visible}
-        // @ts-ignore
-        title={actionType ? modalTitles[actionType] : ''}
-        onClose={onModalClose}
-        // @ts-ignore
-        steps={actionType ? steps[actionType] : []}
-        currentStep={currentStep}
-        type={actionType}
-        loading={loading}
-      />
+      {actionType && (
+        <ModalView
+          visible={visible}
+          // @ts-ignore
+          title={modalTitles[actionType]}
+          onClose={onModalClose}
+          // @ts-ignore
+          steps={steps[actionType]}
+          currentStep={currentStep}
+          type={actionType}
+          // @ts-ignore
+          loading={loadingActions[actionType]}
+        />
+      )}
     </Container>
   );
 };
