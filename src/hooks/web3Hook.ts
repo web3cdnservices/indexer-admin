@@ -7,7 +7,7 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
 import { providers } from 'ethers';
 
-export const useIsMetaMaskInstalled = (): boolean => {
+export function useIsMetaMaskInstalled(): boolean {
   // @ts-ignore
   const { ethereum } = window;
   const [isMetaMask, setIsMetaMask] = useState(false);
@@ -17,18 +17,18 @@ export const useIsMetaMaskInstalled = (): boolean => {
   }, [ethereum]);
 
   return isMetaMask;
-};
+}
 
 export const useWeb3 = (): Web3ReactContextInterface<providers.Web3Provider> => useWeb3React();
 
-export const useWeb3Provider = (): providers.Web3Provider | undefined => {
+export function useWeb3Provider(): providers.Web3Provider | undefined {
   const { library } = useWeb3();
   return library;
-};
+}
 
 export type Signer = JsonRpcSigner | undefined;
 
-export const useSigner = (): Signer => {
+export function useSigner(): Signer {
   const [signer, setSigner] = useState<JsonRpcSigner>();
   const { active, account, library } = useWeb3();
 
@@ -37,9 +37,9 @@ export const useSigner = (): Signer => {
   }, [active, account]);
 
   return signer;
-};
+}
 
-export const useIsMetaMask = (): boolean => {
+export function useIsMetaMask(): boolean {
   const [isMetaMask, setIsMetaMask] = useState(false);
   const { active, library } = useWeb3();
 
@@ -48,4 +48,4 @@ export const useIsMetaMask = (): boolean => {
   }, [active, library?.provider.isMetaMask]);
 
   return isMetaMask;
-};
+}

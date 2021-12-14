@@ -3,10 +3,12 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { ApolloClient, InMemoryCache, useLazyQuery } from '@apollo/client';
+import { isEmpty, isUndefined } from 'lodash';
 
 import { useContractSDK } from 'containers/contractSdk';
+import { useLoading } from 'containers/loadingContext';
 import { useWeb3 } from 'hooks/web3Hook';
-import { TProjectMetadata } from 'pages/project-details/types';
+import { TProject, TProjectMetadata } from 'pages/project-details/types';
 import { IndexingStatus } from 'pages/projects/constant';
 import { HookDependency } from 'types/types';
 import { cidToBytes32, concatU8A, IPFS } from 'utils/ipfs';
@@ -52,6 +54,7 @@ export type ProjectDetails = {
   description: string;
   websiteUrl: string;
   codeUrl: string;
+  status: IndexingStatus;
   version: string;
   currentDeployment: string;
   currentVersion: string;
@@ -74,7 +77,7 @@ const queryRegistryClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-export const getProject = async (deploymentId: string) => {
+export const getProjectInfo = async (deploymentId: string) => {
   const result = await queryRegistryClient.query<{ projectDeployments: { nodes: Result[] } }>({
     query: QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS,
     variables: { deploymentId },
@@ -82,8 +85,8 @@ export const getProject = async (deploymentId: string) => {
   return result;
 };
 
-export const getProjectDetails = async (deploymentId: string) => {
-  const res = await getProject(deploymentId);
+export const getProjectDetails = async (deploymentId: string): Promise<ProjectDetails> => {
+  const res = await getProjectInfo(deploymentId);
   const projectInfo = res.data.projectDeployments.nodes[0]?.project;
   if (!projectInfo) {
     throw new Error('Unable to get metadata for project');
@@ -101,7 +104,7 @@ export const getProjectDetails = async (deploymentId: string) => {
   }
 
   const metadata = JSON.parse(Buffer.from(raw).toString('utf8'));
-  const projectDetails = { ...projectInfo, ...metadata, id: deploymentId };
+  const projectDetails: ProjectDetails = { ...projectInfo, ...metadata, id: deploymentId };
   return projectDetails;
 };
 
@@ -125,3 +128,47 @@ export const useProjectDetails = (data: ProjectDetails): ProjectDetails | undefi
 
   return project;
 };
+
+export function useProjectDetailList(data: any) {
+  const projects = data?.getProjects as TProject[];
+  const [projectDetailList, setProjecList] = useState<ProjectDetails[]>();
+  const { setPageLoading } = useLoading();
+  const { account } = useWeb3();
+  const sdk = useContractSDK();
+
+  const getProjectStatus = useCallback(
+    async (deploymentId: string) => {
+      if (!sdk || !account || !deploymentId) return IndexingStatus.NOTSTART;
+      const { status } = await sdk.queryRegistry.deploymentStatusByIndexer(
+        cidToBytes32(deploymentId),
+        account
+      );
+      return status;
+    },
+    [sdk, account]
+  );
+
+  const getProjectDetailList = useCallback(async () => {
+    if (isUndefined(projects)) return;
+    if (isEmpty(projects)) {
+      setPageLoading(false);
+      return;
+    }
+
+    try {
+      const result = await Promise.all(
+        projects.map(({ id }) => Promise.all([getProjectDetails(id), getProjectStatus(id)]))
+      );
+      setProjecList(result.map(([detail, status]) => ({ ...detail, status })));
+      setPageLoading(false);
+    } catch (_) {
+      setPageLoading(false);
+    }
+  }, [projects]);
+
+  useEffect(() => {
+    getProjectDetailList();
+  }, [getProjectDetailList]);
+
+  return projectDetailList;
+}

@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import Avatar from 'components/avatar';
 import { Text } from 'components/primary';
 import StatusLabel from 'components/statusLabel';
-import { ProjectDetails, useIndexingStatus } from 'hooks/projectHook';
+import { ProjectDetails } from 'hooks/projectHook';
 import { cidToBytes32 } from 'utils/ipfs';
 
 import { statusColor, statusText } from '../constant';
@@ -46,8 +46,7 @@ type Props = ProjectDetails;
 
 const ProjectItem: FC<Props> = (props) => {
   const history = useHistory();
-  const { id, name } = props;
-  const status = useIndexingStatus(id);
+  const { id, name, status } = props;
   return (
     <Container onClick={() => history.push(`/project/${id}`, { data: props })}>
       <ItemContainer pl={15} flex={7}>

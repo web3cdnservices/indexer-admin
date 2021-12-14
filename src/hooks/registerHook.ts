@@ -17,7 +17,7 @@ export const useIsApproved = () => {
     if (!sdk || !account) return;
     sdk.sqToken
       .allowance(account, sdk?.staking.address)
-      .then((amount) => setIsApprove(!!amount))
+      .then((amount) => setIsApprove(!amount.eq(0)))
       .catch(() => setIsApprove(false));
   }, [sdk, account]);
 

@@ -16,76 +16,45 @@ const ErrorMessages = {
   controllerError: 'Controller can not be empty',
 };
 
-// TODO: refactor
-export const indexerRequestApprove = (
-  sdk: SDK,
-  signer: Signer,
-  amount: string | undefined
-): Promise<string> =>
-  new Promise((resolve, reject) => {
-    if (!sdk || !signer) {
-      reject(ErrorMessages.sdkOrSignerError);
-      return;
-    }
+export async function indexerRequestApprove(sdk: SDK, signer: Signer, amount: string | undefined) {
+  if (!sdk || !signer) {
+    throw new Error(ErrorMessages.sdkOrSignerError);
+  }
+  if (!amount) {
+    throw new Error(ErrorMessages.amountError);
+  }
 
-    if (!amount) {
-      reject(ErrorMessages.amountError);
-      return;
-    }
+  const tx = await sdk.sqToken.connect(signer).approve(sdk.staking.address, amount);
+  return tx;
+}
 
-    sdk.sqToken
-      .connect(signer)
-      .approve(sdk.staking.address, amount)
-      .then(() => resolve(''))
-      .catch((error) => reject(error.message));
-  });
-
-// FIXME: remove this after register finished
-const testMetadat = '0xab3921276c8067fe0c82def3e5ecfd8447f1961bc85768c2a56e6bd26d3c0c55';
-
-export const indexerRegistry = (
+export async function indexerRegistry(
   sdk: SDK,
   signer: Signer,
   amount: string | undefined,
-  metadata = testMetadat
-): Promise<string> =>
-  new Promise((resolve, reject) => {
-    if (!sdk || !signer) {
-      reject(ErrorMessages.sdkOrSignerError);
-      return;
-    }
+  metadata: string
+) {
+  if (!sdk || !signer) {
+    throw new Error(ErrorMessages.sdkOrSignerError);
+  }
+  if (!amount) {
+    throw new Error(ErrorMessages.amountError);
+  }
 
-    if (!amount) {
-      reject(ErrorMessages.amountError);
-      return;
-    }
+  const tx = await sdk.indexerRegistry.connect(signer).registerIndexer(amount, metadata);
+  return tx;
+}
 
-    sdk.indexerRegistry
-      .connect(signer)
-      .registerIndexer(amount, metadata)
-      .then(() => resolve(''))
-      .catch((error) => reject(error.message));
-  });
+export async function unRegister(sdk: SDK, signer: Signer) {
+  if (!sdk || !signer) {
+    throw new Error(ErrorMessages.sdkOrSignerError);
+  }
 
-export const unRegister = (sdk: SDK, signer: Signer) =>
-  new Promise((resolve, reject) => {
-    if (!sdk || !signer) {
-      reject(ErrorMessages.sdkOrSignerError);
-      return;
-    }
+  const tx = sdk.indexerRegistry.connect(signer).unregisterIndexer();
+  return tx;
+}
 
-    sdk.indexerRegistry
-      .connect(signer)
-      .unregisterIndexer()
-      .then(() => resolve(''))
-      .catch((error) => reject(error.message));
-  });
-
-export const configController = async (
-  sdk: SDK,
-  signer: Signer,
-  controller: string | undefined
-) => {
+export async function configController(sdk: SDK, signer: Signer, controller: string | undefined) {
   if (!sdk || !signer) {
     throw new Error(ErrorMessages.sdkOrSignerError);
   }
@@ -100,76 +69,42 @@ export const configController = async (
 
   const tx = await sdk.indexerRegistry.connect(signer).setControllerAccount(controller);
   return tx;
-};
+}
 
-export const startIndexing = (
-  sdk: SDK,
-  signer: Signer,
-  deploymentId: string | undefined
-): Promise<string> =>
-  new Promise((resolve, reject) => {
-    if (!sdk || !signer) {
-      reject(ErrorMessages.sdkOrSignerError);
-      return;
-    }
+export async function startIndexing(sdk: SDK, signer: Signer, deploymentId: string | undefined) {
+  if (!sdk || !signer) {
+    throw new Error(ErrorMessages.sdkOrSignerError);
+  }
+  if (!deploymentId) {
+    throw new Error(ErrorMessages.deploymentIdError);
+  }
 
-    if (!deploymentId) {
-      reject(ErrorMessages.deploymentIdError);
-      return;
-    }
+  const tx = await sdk.queryRegistry.connect(signer).startIndexing(cidToBytes32(deploymentId));
+  return tx;
+}
 
-    sdk.queryRegistry
-      .connect(signer)
-      .startIndexing(cidToBytes32(deploymentId))
-      .then(() => resolve(''))
-      // @ts-ignore
-      .catch((error) => reject(error.message));
-  });
+export async function readyIndexing(sdk: SDK, signer: Signer, deploymentId: string | undefined) {
+  if (!sdk || !signer) {
+    throw new Error(ErrorMessages.sdkOrSignerError);
+  }
+  if (!deploymentId) {
+    throw new Error(ErrorMessages.deploymentIdError);
+  }
 
-export const readyIndexing = (
-  sdk: SDK,
-  signer: Signer,
-  deploymentId: string | undefined
-): Promise<string> =>
-  new Promise((resolve, reject) => {
-    if (!sdk || !signer) {
-      reject(ErrorMessages.sdkOrSignerError);
-      return;
-    }
+  const tx = await sdk.queryRegistry
+    .connect(signer)
+    .updateIndexingStatusToReady(cidToBytes32(deploymentId), Date.now());
+  return tx;
+}
 
-    if (!deploymentId) {
-      reject(ErrorMessages.deploymentIdError);
-      return;
-    }
+export async function stopIndexing(sdk: SDK, signer: Signer, deploymentId: string | undefined) {
+  if (!sdk || !signer) {
+    throw new Error(ErrorMessages.sdkOrSignerError);
+  }
+  if (!deploymentId) {
+    throw new Error(ErrorMessages.deploymentIdError);
+  }
 
-    sdk.queryRegistry
-      .connect(signer)
-      .updateIndexingStatusToReady(cidToBytes32(deploymentId), Date.now())
-      .then(() => resolve(''))
-      // @ts-ignore
-      .catch((error) => reject(error.message));
-  });
-
-export const stopIndexing = (
-  sdk: SDK,
-  signer: Signer,
-  deploymentId: string | undefined
-): Promise<string> =>
-  new Promise((resolve, reject) => {
-    if (!sdk || !signer) {
-      reject(ErrorMessages.sdkOrSignerError);
-      return;
-    }
-
-    if (!deploymentId) {
-      reject(ErrorMessages.deploymentIdError);
-      return;
-    }
-
-    sdk.queryRegistry
-      .connect(signer)
-      .stopIndexing(cidToBytes32(deploymentId))
-      .then(() => resolve(''))
-      // @ts-ignore
-      .catch((error) => reject(error.message));
-  });
+  const tx = await sdk.queryRegistry.connect(signer).stopIndexing(cidToBytes32(deploymentId));
+  return tx;
+}

@@ -1,19 +1,18 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { isEmpty, isUndefined } from 'lodash';
+import { isUndefined } from 'lodash';
 
 import ModalView from 'components/modalView';
 import { Button, Text } from 'components/primary';
 import { useLoading } from 'containers/loadingContext';
 import { useController, useIsIndexer } from 'hooks/indexerHook';
-import { getProject, getProjectDetails, ProjectDetails } from 'hooks/projectHook';
+import { getProjectInfo, ProjectDetails, useProjectDetailList } from 'hooks/projectHook';
 import { useIsMetaMask } from 'hooks/web3Hook';
 import MetaMaskView from 'pages/metamask/metamaskView';
-import { TProject } from 'pages/project-details/types';
 import { ProjectFormKey } from 'types/schemas';
 import { ADD_PROJECT, GET_PROJECTS } from 'utils/queries';
 import { ActionType } from 'utils/transactions';
@@ -30,9 +29,9 @@ const Projects = () => {
   const history = useHistory();
   const { setPageLoading } = useLoading();
   const [addProject, { loading }] = useMutation(ADD_PROJECT);
-  const [getProjects, { data }] = useLazyQuery(GET_PROJECTS, { fetchPolicy: 'network-only' });
+  const [getProjectList, { data }] = useLazyQuery(GET_PROJECTS, { fetchPolicy: 'network-only' });
 
-  const [projects, setProjects] = useState<ProjectDetails[]>();
+  const projectDetailList = useProjectDetailList(data);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -45,33 +44,10 @@ const Projects = () => {
     }
   }, [isIndexer]);
 
-  const getProjectDetailList = useCallback(async () => {
-    const projectList = data?.getProjects as TProject[];
-    if (isUndefined(projectList)) return;
-    if (isEmpty(projectList)) {
-      setPageLoading(false);
-      return;
-    }
-
-    try {
-      const projectDetailList = await Promise.all(
-        projectList.map(({ id }) => getProjectDetails(id))
-      );
-      setProjects(projectDetailList);
-      setPageLoading(false);
-    } catch (_) {
-      setPageLoading(false);
-    }
-  }, [data]);
-
   useEffect(() => {
     setPageLoading(true);
-    getProjects();
+    getProjectList();
   }, []);
-
-  useEffect(() => {
-    getProjectDetailList();
-  }, [getProjectDetailList]);
 
   const onModalClose = () => {
     setVisible(false);
@@ -80,12 +56,12 @@ const Projects = () => {
   const step = createAddProjectSteps(async (values, helper) => {
     try {
       const id = values[ProjectFormKey.deploymentId];
-      const r = await getProject(id);
+      const r = await getProjectInfo(id);
       console.log('>>>add project:', r);
       await addProject({ variables: { id } });
 
       setVisible(false);
-      getProjects();
+      getProjectList();
     } catch (_) {
       helper.setErrors({ [ProjectFormKey.deploymentId]: 'Invalid deployment id' });
     }
@@ -99,9 +75,11 @@ const Projects = () => {
             <Text size={45}>Projects</Text>
             <Button title="Add Project" onClick={() => setVisible(true)} />
           </HeaderContainer>
-          {!!projects && <ProjecItemsHeader />}
-          {!!projects &&
-            projects.map((props: ProjectDetails) => <ProjectItem key={props.id} {...props} />)}
+          {!!projectDetailList && <ProjecItemsHeader />}
+          {!!projectDetailList &&
+            projectDetailList.map((props: ProjectDetails) => (
+              <ProjectItem key={props.id} {...props} />
+            ))}
         </ContentContainer>
       )}
       <MetaMaskView />
