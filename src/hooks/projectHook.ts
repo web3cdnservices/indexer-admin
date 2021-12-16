@@ -3,16 +3,21 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { ApolloClient, InMemoryCache, useLazyQuery } from '@apollo/client';
-import { isEmpty, isUndefined } from 'lodash';
+import { get, isEmpty, isUndefined } from 'lodash';
 
 import { useContractSDK } from 'containers/contractSdk';
 import { useLoading } from 'containers/loadingContext';
 import { useWeb3 } from 'hooks/web3Hook';
-import { TServiceMetadata } from 'pages/project-details/types';
+import { TQueryMetadata, TServiceMetadata } from 'pages/project-details/types';
 import { IndexingStatus } from 'pages/projects/constant';
 import { HookDependency } from 'types/types';
+import { createApolloClient } from 'utils/apolloClient';
 import { cidToBytes32, concatU8A, IPFS } from 'utils/ipfs';
-import { GET_PROJECT, QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS } from 'utils/queries';
+import {
+  GET_PROJECT,
+  GET_QUERY_METADATA,
+  QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS,
+} from 'utils/queries';
 
 export const useProjectService = (deploymentId: string) => {
   const [projectService, setService] = useState<TServiceMetadata>();
@@ -59,6 +64,7 @@ export type ProjectDetails = {
   versionDescription: string;
   createdTimestamp: string;
   updatedTimestamp: string;
+  queryMetadata: TQueryMetadata | undefined;
 } & TServiceMetadata;
 
 type Result = {
@@ -134,16 +140,14 @@ export function useProjectDetailList(data: any) {
   const { setPageLoading } = useLoading();
   const { account } = useWeb3();
   const sdk = useContractSDK();
-  const [getServiceMetadata] = useLazyQuery(GET_PROJECT, {
-    fetchPolicy: 'network-only',
-  });
 
-  const getServiceData = (id: string) => async () => {
-    console.log('>>>request....');
-    const result = await getServiceMetadata({ variables: { id } });
-    console.log('>>>result:', result.data.project);
-    return result.data.project;
-  };
+  const getQueryServiceData = useCallback(async (url) => {
+    if (!url) return undefined;
+
+    const data = await createApolloClient(`${url}/graphql`).query({ query: GET_QUERY_METADATA });
+    const metadata = get(data, 'data._metadata', null) as TQueryMetadata;
+    return metadata;
+  }, []);
 
   const getProjectStatus = useCallback(
     async (deploymentId: string) => {
@@ -167,11 +171,17 @@ export function useProjectDetailList(data: any) {
 
     try {
       const result = await Promise.all(
-        projects.map(({ id }) =>
-          Promise.all([getProjectDetails(id), getServiceData(id), getProjectStatus(id)])
+        projects.map(({ id, queryEndpoint }) =>
+          Promise.all([
+            getProjectDetails(id),
+            getQueryServiceData(queryEndpoint),
+            getProjectStatus(id),
+          ])
         )
       );
-      setProjecList(result.map(([detail, service, status]) => ({ ...detail, ...service, status })));
+      setProjecList(
+        result.map(([detail, queryMetadata, status]) => ({ ...detail, status, queryMetadata }))
+      );
       setPageLoading(false);
     } catch (e) {
       console.error('Get project details failed:', e);
