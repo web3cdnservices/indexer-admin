@@ -6,7 +6,6 @@ import { useLocation, useParams } from 'react-router-dom';
 import { get, isUndefined } from 'lodash';
 
 import { useLoading } from 'containers/loadingContext';
-import { useToast } from 'containers/toastContext';
 import {
   ProjectDetails,
   useIndexingStatus,
@@ -31,11 +30,10 @@ import { TQueryMetadata, TService } from './types';
 const ProjectDetailsPage = () => {
   const { id } = useParams() as { id: string };
   const { data: projectDetails } = useLocation().state as { data: ProjectDetails };
+  const status = useIndexingStatus(id);
   const projectInfo = useProjectDetails(projectDetails);
   const projectService = useProjectService(id);
   const { setPageLoading } = useLoading();
-  const toastContext = useToast();
-  const status = useIndexingStatus(id, toastContext.toast?.type);
 
   const [indexerSerive, setIndexerService] = useState<TService>();
   const [querySerive, setQueryService] = useState<TService>();

@@ -16,7 +16,7 @@ import { IndexingStatus } from 'pages/projects/constant';
 import { ProjectFormKey } from 'types/schemas';
 import { readyIndexing, startIndexing, stopIndexing } from 'utils/indexerActions';
 import { cidToBytes32 } from 'utils/ipfs';
-import { CONFIG_SERVICES, UPDATE_PROJECT_STATUS } from 'utils/queries';
+import { CONFIG_SERVICES } from 'utils/queries';
 import { ActionType, handleTransaction } from 'utils/transactions';
 import { verifyQueryService } from 'utils/validateService';
 
@@ -109,7 +109,6 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, serviceConfiged 
   const sdk = useContractSDK();
   const toastContext = useToast();
   const [updateServices, { loading }] = useMutation(CONFIG_SERVICES);
-  const [updateProjectStatusRequest] = useMutation(UPDATE_PROJECT_STATUS);
 
   const onModalClose = (e?: unknown) => {
     console.error('Transaction error:', e);
@@ -130,21 +129,14 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, serviceConfiged 
     return buttonItems[status];
   }, [status, serviceConfiged]);
 
-  const updateProjectStatus = useCallback(
-    (status: IndexingStatus) => {
-      updateProjectStatusRequest({ variables: { id, status } });
-    },
-    [id]
-  );
-
   const configServicesSteps = createConfigServicesSteps(async (values, formHelper) => {
     try {
       const indexerEndpoint = values[ProjectFormKey.indexerEndpoint];
       const queryEndpoint = values[ProjectFormKey.queryEndpoint];
       await verifyQueryService(queryEndpoint);
       await updateServices({ variables: { queryEndpoint, indexerEndpoint, id } });
+      onModalClose();
     } catch (e) {
-      console.log('>>>e:', e);
       formHelper.setErrors({ [ProjectFormKey.queryEndpoint]: 'Invalid query endpoint' });
     }
   });
@@ -160,7 +152,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, serviceConfiged 
 
   const indexingAction = async (
     type: ActionType.startIndexing | ActionType.readyIndexing | ActionType.stopIndexing,
-    onSuccess: () => void
+    onSuccess?: () => void
   ) => {
     try {
       const tx = await indexingTransactions[type]();
@@ -172,15 +164,17 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, serviceConfiged 
   };
 
   const startIndexingSteps = createStartIndexingSteps(() =>
-    indexingAction(ActionType.startIndexing, () => updateProjectStatus(IndexingStatus.INDEXING))
+    indexingAction(ActionType.startIndexing)
   );
 
   const readyIndexingSteps = createReadyIndexingSteps(() =>
-    indexingAction(ActionType.readyIndexing, () => updateProjectStatus(IndexingStatus.READY))
+    indexingAction(ActionType.readyIndexing)
   );
 
   const stopIndexingSteps = createStopIndexingSteps(() =>
-    indexingAction(ActionType.stopIndexing, () => updateProjectStatus(IndexingStatus.TERMINATED))
+    indexingAction(ActionType.stopIndexing, () =>
+      updateServices({ variables: { queryEndpoint: '', indexerEndpoint: '', id } })
+    )
   );
 
   const steps = {

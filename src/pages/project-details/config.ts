@@ -121,7 +121,7 @@ export const createStopIndexingSteps = (onSendTransaction: ClickAction) => ({
     {
       index: 0,
       title: 'Stop Indexing Project',
-      desc: 'Sorry to see this project will be terminated from the Subquery Network, please confirm the action and press the button to send the transaction.',
+      desc: 'Sorry to see this project will be terminated from the Subquery Network, please note that the service endpoint for this project will also be removed once the transaction processed. The transaction processing time may take around 10s, it depends on the network and gas fee. You will see the processing status on the top of the page once you confim the transaction on the MetaMask.',
       buttonTitle: 'Stop Indexing',
       onClick: onSendTransaction,
     },

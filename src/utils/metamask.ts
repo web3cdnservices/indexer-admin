@@ -7,6 +7,7 @@
 import { intToHex } from 'ethereumjs-util';
 import Config from './config';
 import { connect, NetworkToChainID, chainNames, RPC_URLS } from 'containers/web3';
+import { chain } from 'lodash';
 
 export const NetworkError = {
   unSupportedNetworkError: 'UnsupportedChainIdError',
@@ -22,10 +23,12 @@ export async function connectWithMetaMask(activate: Function) {
 
 function addNetwork(chainId: number) {
   const nativeCurrency = {
-    name: 'SQT',
-    symbol: 'SQT',
+    name: 'DEV',
+    symbol: 'DEV',
     decimals: 18,
   };
+
+  console.info('Add Ethereum network trye', chainId);
 
   ethereum
     .request({
@@ -34,7 +37,7 @@ function addNetwork(chainId: number) {
         {
           chainId: intToHex(chainId),
           chainName: chainNames[chainId],
-          rpcUrl: RPC_URLS[chainId],
+          rpcUrls: [RPC_URLS[chainId]],
           nativeCurrency,
         },
       ],
@@ -47,17 +50,16 @@ export async function switchNetwork() {
   if (!window?.ethereum || !network) return;
   const chainId = NetworkToChainID[network];
 
-  try {
-    return window.ethereum.request({
+  window.ethereum
+    .request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: intToHex(chainId) }],
+    })
+    .catch((e) => {
+      if (e.code === 4902) {
+        addNetwork(chainId);
+      } else {
+        console.error('Switch Ethereum network failed', e);
+      }
     });
-  } catch (e) {
-    // This error code indicates that the chain has not been added to MetaMask.
-    if (e.code === 4902) {
-      addNetwork();
-    } else {
-      console.error('Switch Ethereum network failed', e);
-    }
-  }
 }

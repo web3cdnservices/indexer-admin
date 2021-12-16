@@ -7,10 +7,10 @@ import { get, isEmpty, isUndefined } from 'lodash';
 
 import { useContractSDK } from 'containers/contractSdk';
 import { useLoading } from 'containers/loadingContext';
+import { useToast } from 'containers/toastContext';
 import { useWeb3 } from 'hooks/web3Hook';
 import { TQueryMetadata, TServiceMetadata } from 'pages/project-details/types';
 import { IndexingStatus } from 'pages/projects/constant';
-import { HookDependency } from 'types/types';
 import { createApolloClient } from 'utils/apolloClient';
 import { cidToBytes32, concatU8A, IPFS } from 'utils/ipfs';
 import {
@@ -20,6 +20,7 @@ import {
 } from 'utils/queries';
 
 export const useProjectService = (deploymentId: string) => {
+  const { toast } = useToast();
   const [projectService, setService] = useState<TServiceMetadata>();
   const [getProjectService, { data }] = useLazyQuery(GET_PROJECT, {
     fetchPolicy: 'network-only',
@@ -27,14 +28,15 @@ export const useProjectService = (deploymentId: string) => {
 
   useEffect(() => {
     data ? setService(data.project) : getProjectService({ variables: { id: deploymentId } });
-  }, [deploymentId, data]);
+  }, [deploymentId, data, toast?.type]);
 
   return projectService;
 };
 
-export const useIndexingStatus = (deploymentId: string, deps?: HookDependency) => {
+export const useIndexingStatus = (deploymentId: string) => {
   const [status, setStatus] = useState(IndexingStatus.NOTSTART);
   const { account } = useWeb3();
+  const toastContext = useToast();
   const sdk = useContractSDK();
 
   useEffect(() => {
@@ -46,7 +48,7 @@ export const useIndexingStatus = (deploymentId: string, deps?: HookDependency) =
         })
         .catch((error) => console.error(error));
     }
-  }, [sdk, account, deploymentId, deps]);
+  }, [sdk, account, deploymentId, toastContext.toast?.type]);
 
   return status;
 };
@@ -114,6 +116,7 @@ export const getProjectDetails = async (deploymentId: string): Promise<ProjectDe
 
 export const useProjectDetails = (data: ProjectDetails): ProjectDetails | undefined => {
   const [project, setProject] = useState<ProjectDetails | undefined>(data);
+  const { toast } = useToast();
   const deploymentId = data.id;
   // TODO: add query metadata and status in the request
 
@@ -129,7 +132,7 @@ export const useProjectDetails = (data: ProjectDetails): ProjectDetails | undefi
 
   useEffect(() => {
     fetchMeta();
-  }, [fetchMeta]);
+  }, [fetchMeta, toast?.type]);
 
   return project;
 };
