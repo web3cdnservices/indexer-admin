@@ -8,17 +8,15 @@ const Container = styled.div<{ color?: string }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid;
-  border-color: ${(p) => p.color ?? 'rgba(70, 219, 103, 0.9)'};
+  background-color: ${(p) => p.color ?? 'lightgreen'};
   border-radius: 5px;
   padding: 5px 10px;
   min-width: 80px;
 `;
 
-const Text = styled.div<{ color?: string }>`
+const Text = styled.div`
   font-size: 13px;
-  font-weight: bold;
-  color: ${(p) => p.color ?? 'rgba(70, 219, 103, 0.9)'};
+  color: black;
 `;
 
 type Props = {

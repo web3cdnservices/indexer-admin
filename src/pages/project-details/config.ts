@@ -46,7 +46,10 @@ export const createButtonItems = (onButtonClick: (type: ActionType) => void) => 
   [IndexingStatus.READY]: [
     createButtonItem('Stop Indexing', () => onButtonClick(ActionType.stopIndexing)),
   ],
-  [IndexingStatus.TERMINATED]: [],
+  [IndexingStatus.TERMINATED]: [
+    createButtonItem('Config Services', () => onButtonClick(ActionType.configServices)),
+    createButtonItem('Start Indexing', () => onButtonClick(ActionType.startIndexing)),
+  ],
 });
 
 export const createRemoveProjectSteps = (onRemoveProject: ClickAction) => ({

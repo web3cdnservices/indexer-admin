@@ -21,7 +21,6 @@ const MetaMaskView = () => {
   const isMetaMask = useIsMetaMask();
   const isMetaMaskInstalled = useIsMetaMaskInstalled();
   const [isNetworkError, setNetworkError] = useState(false);
-  console.log('>>.ff:', isMetaMask);
 
   useEffect(() => {
     setNetworkError(error?.name === NetworkError.unSupportedNetworkError);

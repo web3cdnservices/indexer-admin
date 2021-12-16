@@ -10,7 +10,7 @@ import ModalView from 'components/modalView';
 import { Button, Separator, Text } from 'components/primary';
 import { useContractSDK } from 'containers/contractSdk';
 import { useToast } from 'containers/toastContext';
-import { ProjectDetails, useIndexingStatus } from 'hooks/projectHook';
+import { ProjectDetails } from 'hooks/projectHook';
 import { useSigner } from 'hooks/web3Hook';
 import { IndexingStatus } from 'pages/projects/constant';
 import { ProjectFormKey } from 'types/schemas';
@@ -72,10 +72,10 @@ const ActionContainer = styled.div`
 
 type VersionProps = {
   versionType: string;
-  value?: string;
+  value?: string | number;
 };
 
-const VersionItem: FC<VersionProps> = ({ versionType, value }) => (
+export const TagItem: FC<VersionProps> = ({ versionType, value }) => (
   <VersionItemContainer>
     <Text size={15}>{versionType}</Text>
     <Text mt={5} color="gray" fw="400" size={13}>
@@ -86,11 +86,12 @@ const VersionItem: FC<VersionProps> = ({ versionType, value }) => (
 
 type Props = {
   id: string;
+  status: IndexingStatus;
   project: ProjectDetails;
   serviceConfiged: boolean;
 };
 
-const ProjectDetailsHeader: FC<Props> = ({ id, project, serviceConfiged }) => {
+const ProjectDetailsHeader: FC<Props> = ({ id, status, project, serviceConfiged }) => {
   // TODO: 1. only progress reach `100%` can display `publish to ready` button
   // TODO: get `status` from contract
 
@@ -101,7 +102,6 @@ const ProjectDetailsHeader: FC<Props> = ({ id, project, serviceConfiged }) => {
   const signer = useSigner();
   const sdk = useContractSDK();
   const toastContext = useToast();
-  const status = useIndexingStatus(id, toastContext.toast?.type);
   const [updateServices, { loading }] = useMutation(CONFIG_SERVICES);
 
   const onModalClose = (e?: unknown) => {
@@ -116,7 +116,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, project, serviceConfiged }) => {
       setVisible(true);
     });
 
-    if (status === IndexingStatus.NOTSTART && !serviceConfiged) {
+    if ([IndexingStatus.NOTSTART, IndexingStatus.TERMINATED].includes(status) && !serviceConfiged) {
       return [buttonItems[status][0]];
     }
 
@@ -196,9 +196,9 @@ const ProjectDetailsHeader: FC<Props> = ({ id, project, serviceConfiged }) => {
             {project.owner}
           </Text>
           <VersionContainer>
-            <VersionItem versionType="INDEXED NETWORK" value="TESTNET" />
+            <TagItem versionType="INDEXED NETWORK" value="TESTNET" />
             <Separator height={50} />
-            <VersionItem versionType="VERSION" value={`V${project.version}`} />
+            <TagItem versionType="VERSION" value={`V${project.version}`} />
           </VersionContainer>
         </ContentContainer>
       </LeftContainer>
@@ -209,7 +209,6 @@ const ProjectDetailsHeader: FC<Props> = ({ id, project, serviceConfiged }) => {
           ))}
         </ActionContainer>
       )}
-
       <ModalView
         visible={visible}
         title={getModalTitle()}

@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC } from 'react';
+import { Tag } from '@subql/react-ui';
 import styled from 'styled-components';
 
 import { Separator, Text } from 'components/primary';
-import StatusLabel from 'components/statusLabel';
 
 import { TService } from '../types';
 
@@ -42,7 +42,7 @@ const ServiceCard: FC<CardProps> = ({ name, status, url, imageVersion }) => (
       <Text mr={20} fw="500">
         {name}
       </Text>
-      <StatusLabel text={status} color={status === 'Healthy' ? 'lightgreen' : 'red'} />
+      <Tag text={status} state={status === 'Healthy' ? 'success' : 'error'} />
     </HeaderContainer>
     <Text size={15} color="gray" mt={10}>{`Endpoint: ${url}`}</Text>
     <Text size={15} color="gray" mt={10}>{`Image Version: ${imageVersion}`}</Text>

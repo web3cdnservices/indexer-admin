@@ -6,7 +6,13 @@ import { useLocation, useParams } from 'react-router-dom';
 import { get, isUndefined } from 'lodash';
 
 import { useLoading } from 'containers/loadingContext';
-import { ProjectDetails, useProjectDetails, useProjectService } from 'hooks/projectHook';
+import { useToast } from 'containers/toastContext';
+import {
+  ProjectDetails,
+  useIndexingStatus,
+  useProjectDetails,
+  useProjectService,
+} from 'hooks/projectHook';
 import { createApolloClient } from 'utils/apolloClient';
 import { calculateProgress, healthStatus } from 'utils/project';
 import { GET_QUERY_METADATA } from 'utils/queries';
@@ -15,6 +21,7 @@ import ProgressInfoView from './components/progressInfoView';
 import ProjectDetailsHeader from './components/projectDetailHeader';
 import ProjectDetailsView from './components/projectDetailsView';
 import ProjectServiceCard from './components/projectServiceCard';
+import ProjectStatusView from './components/projectStatusView';
 import { createServiceItem } from './config';
 import { Container, ContentContainer } from './styles';
 import { TQueryMetadata, TService } from './types';
@@ -27,10 +34,13 @@ const ProjectDetailsPage = () => {
   const projectInfo = useProjectDetails(projectDetails);
   const projectService = useProjectService(id);
   const { setPageLoading } = useLoading();
+  const toastContext = useToast();
+  const status = useIndexingStatus(id, toastContext.toast?.type);
 
   const [indexerSerive, setIndexerService] = useState<TService>();
   const [querySerive, setQueryService] = useState<TService>();
   const [progress, setProgress] = useState(0);
+  const [queryMetadata, setQueryMeta] = useState<TQueryMetadata>();
 
   const updateServicesInfo = (data: any) => {
     const metadata = get(data, '_metadata', null) as TQueryMetadata;
@@ -42,6 +52,7 @@ const ProjectDetailsPage = () => {
         targetHeight,
         indexerHealthy,
       } = metadata;
+      setQueryMeta(metadata);
       setProgress(calculateProgress(targetHeight, lastProcessedHeight));
       setQueryService(
         createServiceItem(projectService.queryEndpoint, queryNodeVersion, healthStatus(true))
@@ -71,14 +82,20 @@ const ProjectDetailsPage = () => {
 
   return (
     <Container>
-      <ContentContainer>
-        {projectInfo && (
-          <ProjectDetailsHeader id={id} project={projectInfo} serviceConfiged={!!querySerive} />
-        )}
-        <ProgressInfoView percent={progress} />
-        <ProjectServiceCard indexerService={indexerSerive} queryService={querySerive} />
-        {projectInfo && <ProjectDetailsView id={id} project={projectInfo} />}
-      </ContentContainer>
+      {projectInfo && (
+        <ContentContainer>
+          <ProjectDetailsHeader
+            id={id}
+            status={status}
+            project={projectInfo}
+            serviceConfiged={!!querySerive}
+          />
+          <ProjectStatusView status={status} metadata={queryMetadata} />
+          <ProgressInfoView percent={progress} />
+          <ProjectServiceCard indexerService={indexerSerive} queryService={querySerive} />
+          <ProjectDetailsView id={id} project={projectInfo} />
+        </ContentContainer>
+      )}
     </Container>
   );
 };
