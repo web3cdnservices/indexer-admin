@@ -18,7 +18,7 @@ const prompts = {
     title: 'Controller Account',
     name: '',
     buttonTitle: 'Config Controller',
-    desc: 'Controller account is a delegator of the indexer, need to config a controller account before you start the journey to indexing project, controller account will config in you coordinator service and send the status of the indexing service to the contract autimatically',
+    desc: 'Controller account is a delegator of the indexer, need to config a controller account before you start the journey to indexing the projects, controller account will config in you coordinator service and send the status of the indexing services to the contract autimatically',
   },
 };
 

@@ -4,6 +4,7 @@
 import { SubqueryNetwork } from '@subql/contract-sdk';
 
 type TConfig = {
+  indexer?: string;
   network?: SubqueryNetwork;
   coordinatorEndpoint?: string;
   wsEndpoint?: string;
@@ -17,6 +18,8 @@ class Config {
 
   private wsEndpoint?: string;
 
+  private indexer?: string;
+
   private coordinatorEndpoint?: string;
 
   static getInstance() {
@@ -27,10 +30,11 @@ class Config {
   }
 
   config(configItem: TConfig) {
-    const { network, wsEndpoint, coordinatorEndpoint } = configItem;
+    const { indexer, network, wsEndpoint, coordinatorEndpoint } = configItem;
     if (network) this.network = network;
     if (wsEndpoint) this.wsEndpoint = wsEndpoint;
     if (coordinatorEndpoint) this.coordinatorEndpoint = coordinatorEndpoint;
+    if (indexer) this.indexer = indexer;
   }
 
   getNetwork() {
@@ -39,6 +43,10 @@ class Config {
 
   getWSEndpoint() {
     return this.wsEndpoint;
+  }
+
+  getIndexer() {
+    return this.indexer;
   }
 }
 

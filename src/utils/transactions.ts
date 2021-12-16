@@ -16,11 +16,11 @@ export enum ActionType {
 }
 
 export function txLoadingToast(txHash: string): ToastProps {
-  return { type: 'loading', text: `Transaction processing: ${txHash}` };
+  return { type: 'loading', text: `Processing transaction: ${txHash}` };
 }
 
 export function txSuccessToast(txHash: string): ToastProps {
-  return { type: 'success', text: `Transaction success: ${txHash}` };
+  return { type: 'success', text: `Transaction completed: ${txHash}` };
 }
 
 export function txErrorToast(message: string): ToastProps {

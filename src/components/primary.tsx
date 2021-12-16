@@ -29,11 +29,13 @@ type TextProps = {
   mb?: number;
   mw?: number;
   clolor?: string;
+  alignCenter?: boolean;
   ff?: string;
 };
 
 export const Text = styled.div<TextProps>`
   color: ${({ color }) => color ?? '#1A202C'};
+  text-align: ${({ alignCenter }) => (alignCenter ? 'center' : 'left')};
   font-size: ${({ size }) => size ?? 18}px;
   font-weight: ${({ fw }) => fw ?? 400};
   margin-left: ${({ ml }) => ml ?? 0}px;
@@ -64,9 +66,9 @@ type StyledButtonProps = {
 };
 
 export const StyledButton = styled(SubButton)<StyledButtonProps>`
-  align-self: ${({ align }) => align ?? 'center'}px;
+  align-self: ${({ align }) => align ?? 'center'};
   min-width: ${({ width }) => width ?? 150}px;
-  padding: 16px 30px;
+  padding: 16px 50px;
   margin-top: ${({ mt }) => mt ?? 0}px;
   font-weight: 500;
 `;
@@ -82,10 +84,18 @@ type ButtonProps = {
 
 type SpinProps = {
   loading: boolean;
+  type?: 'primary' | 'secondary';
 };
 
-const AntIcon: FC<SpinProps> = ({ loading }) => (
-  <LoadingOutlined style={{ fontSize: 20, marginRight: 30, color: '#4388dd' }} spin={loading} />
+const AntIcon: FC<SpinProps> = ({ loading, type }) => (
+  <LoadingOutlined
+    style={{
+      fontSize: 20,
+      marginRight: 30,
+      color: `${type === 'primary' ? '#fff' : '#4388dd'}`,
+    }}
+    spin={loading}
+  />
 );
 
 export const Button: FC<ButtonProps & StyledButtonProps> = ({
@@ -100,7 +110,7 @@ export const Button: FC<ButtonProps & StyledButtonProps> = ({
       <StyledButton
         label={title}
         type={type ?? 'secondary'}
-        leftItem={loading && <Spin indicator={<AntIcon loading />} />}
+        leftItem={loading && <Spin indicator={<AntIcon type={type} loading />} />}
         disabled={disabled || loading}
         {...props}
       />

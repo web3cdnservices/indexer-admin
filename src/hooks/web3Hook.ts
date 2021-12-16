@@ -39,8 +39,8 @@ export function useSigner(): Signer {
   return signer;
 }
 
-export function useIsMetaMask(): boolean {
-  const [isMetaMask, setIsMetaMask] = useState(false);
+export function useIsMetaMask(): boolean | undefined {
+  const [isMetaMask, setIsMetaMask] = useState<boolean>();
   const { active, library } = useWeb3();
 
   useEffect(() => {

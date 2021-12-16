@@ -15,7 +15,7 @@ const Header = () => {
   const isMetamask = useIsMetaMask();
 
   if (isMetamask) return null;
-  if (['/project', '/projects', '/account'].includes(location.pathname)) return null;
+  if (['/project/', '/account'].includes(location.pathname)) return null;
 
   return (
     <Container>

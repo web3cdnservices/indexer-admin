@@ -4,26 +4,24 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { isUndefined } from 'lodash';
+import { isEmpty, isUndefined } from 'lodash';
 
 import ModalView from 'components/modalView';
 import { Button, Text } from 'components/primary';
 import { useLoading } from 'containers/loadingContext';
 import { useController, useIsIndexer } from 'hooks/indexerHook';
 import { getProjectInfo, ProjectDetails, useProjectDetailList } from 'hooks/projectHook';
-import { useIsMetaMask } from 'hooks/web3Hook';
-import MetaMaskView from 'pages/metamask/metamaskView';
 import { ProjectFormKey } from 'types/schemas';
 import { ADD_PROJECT, GET_PROJECTS } from 'utils/queries';
 import { ActionType } from 'utils/transactions';
 
 import ProjecItemsHeader from './components/projecItemsHeader';
 import ProjectItem from './components/projectItem';
+import EmptyView from './components/projectsEmptyView';
 import { createAddProjectSteps } from './constant';
 import { Container, ContentContainer, HeaderContainer } from './styles';
 
 const Projects = () => {
-  const isMetaMask = useIsMetaMask();
   const isIndexer = useIsIndexer();
   const controller = useController();
   const history = useHistory();
@@ -35,14 +33,13 @@ const Projects = () => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    setPageLoading(isUndefined(isIndexer));
-    // FIXME: move this to root page logic
+    setPageLoading(isUndefined(isIndexer) || isUndefined(projectDetailList));
     if (!isUndefined(isIndexer) && !isIndexer) {
       history.replace('/');
     } else if (!isUndefined(controller) && !controller) {
       history.replace('/account');
     }
-  }, [isIndexer]);
+  }, [isIndexer, projectDetailList]);
 
   useEffect(() => {
     setPageLoading(true);
@@ -56,8 +53,7 @@ const Projects = () => {
   const step = createAddProjectSteps(async (values, helper) => {
     try {
       const id = values[ProjectFormKey.deploymentId];
-      const r = await getProjectInfo(id);
-      console.log('>>>add project:', r);
+      await getProjectInfo(id);
       await addProject({ variables: { id } });
 
       setVisible(false);
@@ -67,22 +63,25 @@ const Projects = () => {
     }
   });
 
+  const renderProjects = () =>
+    !isUndefined(projectDetailList) && !isEmpty(projectDetailList) ? (
+      <ContentContainer>
+        <HeaderContainer>
+          <Text size={45}>Projects</Text>
+          <Button title="Add Project" onClick={() => setVisible(true)} />
+        </HeaderContainer>
+        <ProjecItemsHeader />
+        {projectDetailList.map((props: ProjectDetails) => (
+          <ProjectItem key={props.id} {...props} />
+        ))}
+      </ContentContainer>
+    ) : (
+      <EmptyView onClick={() => setVisible(true)} />
+    );
+
   return (
     <Container>
-      {isMetaMask && isIndexer && (
-        <ContentContainer>
-          <HeaderContainer>
-            <Text size={45}>Projects</Text>
-            <Button title="Add Project" onClick={() => setVisible(true)} />
-          </HeaderContainer>
-          {!!projectDetailList && <ProjecItemsHeader />}
-          {!!projectDetailList &&
-            projectDetailList.map((props: ProjectDetails) => (
-              <ProjectItem key={props.id} {...props} />
-            ))}
-        </ContentContainer>
-      )}
-      <MetaMaskView />
+      {isIndexer && renderProjects()}
       <ModalView
         visible={visible}
         // @ts-ignore

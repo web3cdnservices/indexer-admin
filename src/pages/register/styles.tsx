@@ -15,7 +15,6 @@ export const ContentContainer = styled.div`
   padding: 60px;
   min-width: 650px;
   min-height: 450px;
-  width: 60%;
 `;
 
 export const TextContainer = styled.div`
@@ -30,9 +29,10 @@ export const DescContainer = styled.div<{ mt?: number }>`
 `;
 
 export const RegistrySteps = styled(Steps)`
-  width: 65%;
+  width: 55%;
   margin-bottom: 70px;
-  min-width: 750px;
+  min-width: 650px;
+  max-width: 70%;
 `;
 
 export const FormContainer = styled(Form)`

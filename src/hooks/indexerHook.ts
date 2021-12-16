@@ -79,17 +79,6 @@ const useCheckStateChanged = (caller?: () => Promise<boolean | string | number> 
   return { request, loading, error };
 };
 
-export const useIsControllerChanged = (indexer: Account) => {
-  const sdk = useContractSDK();
-  return useCheckStateChanged(() => sdk?.indexerRegistry.indexerToController(indexer ?? ''));
-};
-
-export const useIsIndexerChanged = () => {
-  const { account } = useWeb3();
-  const sdk = useContractSDK();
-  return useCheckStateChanged(() => sdk?.indexerRegistry.isIndexer(account ?? ''));
-};
-
 export const useIsIndexingStatusChanged = (id: string) => {
   const { account } = useWeb3();
   const sdk = useContractSDK();
@@ -98,15 +87,6 @@ export const useIsIndexingStatusChanged = (id: string) => {
       .deploymentStatusByIndexer(cidToBytes32(id), account ?? '')
       .then((item) => item.status)
   );
-};
-
-export const useIsApproveChanged = () => {
-  const { account } = useWeb3();
-  const sdk = useContractSDK();
-  return useCheckStateChanged(() => {
-    if (!sdk || !account) return undefined;
-    return sdk.sqToken.allowance(account, sdk?.staking.address).then((amount) => !!amount);
-  });
 };
 
 export const useController = (refresh?: number) => {

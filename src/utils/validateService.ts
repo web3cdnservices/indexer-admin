@@ -29,7 +29,7 @@ export function validateCoordinatorService(
               [LoginFormKey.networkType]: `Inconsistent network type with coordinator service: ${network}`,
             });
           } else {
-            Config.getInstance().config({ network, wsEndpoint });
+            Config.getInstance().config({ indexer, network, wsEndpoint });
             saveClientUri(url);
             resolve({ indexer, network });
           }

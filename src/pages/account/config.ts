@@ -30,8 +30,8 @@ export const createControllerSteps = (
     },
     {
       index: 1,
-      title: 'Update your controller to contract',
-      desc: 'Send transaction to the network to update the controller, the transaction processing time may take around 10s, it depends on the network and gas fee.',
+      title: 'Update your controller on contract',
+      desc: 'Press the button to send the transaction to network and update the controller account on contract. The transaction processing time may take around 10s, it depends on the network status and gas fee. You will see the processing status on the top of the page once you confim the transaction on the MetaMask.',
       buttonTitle: 'Send Transction',
       onClick: onSendTxConfigController,
     },
@@ -42,7 +42,7 @@ export const createUnregisterSteps = (onUnregister: ClickAction) => ({
   [ActionType.unregister]: [
     {
       index: 1,
-      title: 'Unregister from Network',
+      title: 'Unregister from network',
       desc: `Sorry to see the indexer unregister from the Subquery Network, please note that all the data in your coordinator service will be removed, and the staking token will deposit to your current account once transction processed`,
       buttonTitle: 'Unregister',
       onClick: onUnregister,

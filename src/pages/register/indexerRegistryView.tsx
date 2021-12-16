@@ -48,6 +48,7 @@ const IndexerRegistryView: FC<Props> = ({ onSubmit, loading }) => {
               <Button
                 mt={20}
                 width={300}
+                type="primary"
                 title={buttonTitle}
                 loading={loading}
                 onClick={submitForm}

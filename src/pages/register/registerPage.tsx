@@ -1,25 +1,27 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { FormikHelpers } from 'formik';
 import { isUndefined } from 'lodash';
 
+import IntroductionView from 'components/introductionView';
 import { useContractSDK } from 'containers/contractSdk';
 import { useLoading } from 'containers/loadingContext';
-import { useIsApproveChanged, useIsIndexer, useIsIndexerChanged } from 'hooks/indexerHook';
+import { useIsIndexer, useTokenBalance } from 'hooks/indexerHook';
 import { useInitialStep } from 'hooks/registerHook';
 import { useSigner, useWeb3 } from 'hooks/web3Hook';
-import { TRegisterValues } from 'types/schemas';
+import { RegisterFormKey, TRegisterValues } from 'types/schemas';
+import Config from 'utils/config';
 import { indexerRegistry, indexerRequestApprove } from 'utils/indexerActions';
-import { cidToBytes32, IPFS } from 'utils/ipfs';
+import { createIndexerMetadata } from 'utils/ipfs';
 import { ADD_INDEXER } from 'utils/queries';
 
 import { Container } from '../login/styles';
 import IndexerRegistryView from './indexerRegistryView';
-import RegisterView from './registerView';
+import prompts from './prompts';
 import { RegistrySteps } from './styles';
 import { RegisterStep } from './types';
 import { getStepIndex, getStepStatus, registerSteps } from './utils';
@@ -29,12 +31,11 @@ const RegisterPage = () => {
   const { account } = useWeb3();
   const isIndexer = useIsIndexer();
   const sdk = useContractSDK();
+  const tokenBalance = useTokenBalance(account);
   const history = useHistory();
   const initialStep = useInitialStep();
   const [addIndexer] = useMutation(ADD_INDEXER);
   const { setPageLoading } = useLoading();
-  const { request: checkIsApproveChanged } = useIsApproveChanged();
-  const { request: checkIsIndexerChanged } = useIsIndexerChanged();
 
   const [currentStep, setStep] = useState<RegisterStep>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -47,14 +48,22 @@ const RegisterPage = () => {
     if (isIndexer) setStep(RegisterStep.sync);
   }, [initialStep, isIndexer]);
 
+  useEffect(() => {
+    if (isIndexer && account === Config.getInstance().getIndexer()) {
+      history.replace('/account');
+    }
+  }, [isIndexer]);
+
+  const item = useMemo(() => currentStep && prompts[currentStep], [currentStep]);
+
   const moveToNextStep = () => {
     setLoading(false);
     setStep(registerSteps[getStepIndex(currentStep) + 1] as RegisterStep);
   };
 
-  // TODO: show alert when tx failed
-  const onTransactionFailed = (error: Error) => {
-    console.log('>>>tx failed:', error);
+  const onTransactionFailed = (error: any) => {
+    // TODO: show alert
+    console.error('Send transaction failed:', error);
     setLoading(false);
   };
 
@@ -65,14 +74,18 @@ const RegisterPage = () => {
     history.replace('/account');
   };
 
-  const sendRequestApproveTx = () => {
+  const onApprove = async () => {
     setLoading(true);
-    checkIsApproveChanged(true, moveToNextStep);
-  };
-
-  const sendRegisterIndexerTx = () => {
-    setLoading(true);
-    checkIsIndexerChanged(true, onSyncIndexer);
+    try {
+      const tx = await indexerRequestApprove(sdk, signer, '1000000000');
+      const receipt = await tx.wait(1);
+      if (!receipt.status) {
+        throw new Error('Send approve transaction failed');
+      }
+      moveToNextStep();
+    } catch (e) {
+      onTransactionFailed(e);
+    }
   };
 
   const onIndexerRegister = async (
@@ -80,28 +93,34 @@ const RegisterPage = () => {
     helper: FormikHelpers<TRegisterValues>
   ) => {
     try {
+      setLoading(true);
       const { name, proxyEndpoint, amount } = values;
-      const result = await IPFS.add(JSON.stringify({ name, url: proxyEndpoint }), { pin: true });
-      const cid = result.cid.toV0().toString();
-      const metadataBytes = cidToBytes32(cid);
+      if (Number(tokenBalance) < amount) {
+        setLoading(false);
+        helper.setErrors({
+          [RegisterFormKey.amount]: `Account balance ${tokenBalance} is not enough for staking ${amount} SQT`,
+        });
+        return;
+      }
 
+      const indexerMetadata = await createIndexerMetadata(name, proxyEndpoint);
       // TODO: 1. validate `proxy endpoint`, default request `/discovery`;
       // helper.setErrors({ [RegisterFormKey.proxyEndpoint]: 'Invalid proxy endpoint' });
 
-      await indexerRegistry(sdk, signer, amount.toString(), metadataBytes);
-
-      sendRegisterIndexerTx();
-    } catch (error) {
-      onTransactionFailed(error as Error);
+      const tx = await indexerRegistry(sdk, signer, amount.toString(), indexerMetadata);
+      const receipt = await tx.wait(1);
+      if (!receipt.status) {
+        throw new Error('Send indexer registry transaction failed');
+      }
+      moveToNextStep();
+    } catch (e) {
+      onTransactionFailed(e);
     }
   };
 
   const registerActions = {
     [RegisterStep.onboarding]: () => setStep(RegisterStep.authorisation),
-    [RegisterStep.authorisation]: () =>
-      indexerRequestApprove(sdk, signer, '1000000000')
-        .then(sendRequestApproveTx)
-        .catch(onTransactionFailed),
+    [RegisterStep.authorisation]: onApprove,
     [RegisterStep.register]: onIndexerRegister,
     [RegisterStep.sync]: onSyncIndexer,
   };
@@ -121,9 +140,9 @@ const RegisterPage = () => {
   return (
     <Container>
       {renderSteps()}
-      {currentStep && !isRegisterStep() && (
+      {currentStep && item && !isRegisterStep() && (
         // @ts-ignore
-        <RegisterView step={currentStep} loading={loading} onClick={registerActions[currentStep]} />
+        <IntroductionView item={item} loading={loading} onClick={registerActions[currentStep]} />
       )}
       {currentStep && isRegisterStep() && (
         <IndexerRegistryView loading={loading} onSubmit={onIndexerRegister} />

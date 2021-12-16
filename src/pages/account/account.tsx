@@ -63,14 +63,15 @@ const Registry = () => {
     setVisible(true);
   };
 
-  const onModalClose = (error?: Error) => {
-    console.log('>>>action error:', error);
+  const onModalClose = (error?: unknown) => {
+    console.error('Transaction error:', error);
     setVisible(false);
     setCurrentStep(0);
   };
 
   const controllerStepsConfig = createControllerSteps(
     async (values, formHelper) => {
+      // FIXME: refactor this part
       formHelper.setStatus({ loading: true });
       const privateKey = values[ControllerFormKey.privateKey];
       const error = validatePrivateKey(privateKey);
@@ -90,12 +91,20 @@ const Registry = () => {
         return;
       }
 
+      if (controllerAddress === account) {
+        formHelper.setStatus({ loading: false });
+        formHelper.setErrors({
+          [ControllerFormKey.privateKey]: 'Can not use indexer account as controller account',
+        });
+        return;
+      }
+
       setController(controllerAddress);
       try {
         await updateController({ variables: { controller: privateKey } });
         setCurrentStep(1);
-      } catch {
-        onModalClose();
+      } catch (e) {
+        onModalClose(e);
       }
       formHelper.setStatus({ loading: false });
     },

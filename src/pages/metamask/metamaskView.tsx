@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { browserName } from 'react-device-detect';
+import { isUndefined } from 'lodash';
 
 import Icon from 'components/Icon';
 import { Button, Label, Text } from 'components/primary';
@@ -20,6 +21,7 @@ const MetaMaskView = () => {
   const isMetaMask = useIsMetaMask();
   const isMetaMaskInstalled = useIsMetaMaskInstalled();
   const [isNetworkError, setNetworkError] = useState(false);
+  console.log('>>.ff:', isMetaMask);
 
   useEffect(() => {
     setNetworkError(error?.name === NetworkError.unSupportedNetworkError);
@@ -62,12 +64,14 @@ const MetaMaskView = () => {
     </MetaMaskContainer>
   );
 
-  return !isMetaMask ? (
+  return !isUndefined(isMetaMask) && !isMetaMask ? (
     <Container>
       <Label size={35} fw="400">
         {data.title}
       </Label>
-      <Text mt={15}>{data.desc}</Text>
+      <Text alignCenter mt={15}>
+        {data.desc}
+      </Text>
       <Button
         mt={50}
         type="secondary"

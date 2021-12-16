@@ -122,14 +122,14 @@ const ModalView: FC<Props> = ({
   const renderContent = (item: StepItem) => (
     <ContentContainer>
       <DescContainer>
-        <Text fw="600" mt={20}>
+        <Text fw="500" mt={10} size={25}>
           {item.title}
         </Text>
-        <Text mt={20} size={15} color="gray">
+        <Text alignCenter mt={20} size={15} color="gray">
           {item.desc}
         </Text>
       </DescContainer>
-      <ButtonContainer align="right" mt={100}>
+      <ButtonContainer align="right" mt={60}>
         <Button
           width={200}
           title={item.buttonTitle}

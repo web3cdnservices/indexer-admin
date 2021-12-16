@@ -25,3 +25,9 @@ export function concatU8A(a: Uint8Array, b: Uint8Array): Uint8Array {
   res.set(b, a.length);
   return res;
 }
+
+export async function createIndexerMetadata(name: string, url: string): Promise<string> {
+  const result = await IPFS.add(JSON.stringify({ name, url }), { pin: true });
+  const cid = result.cid.toV0().toString();
+  return cidToBytes32(cid);
+}

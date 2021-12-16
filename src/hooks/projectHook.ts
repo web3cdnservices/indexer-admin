@@ -132,6 +132,7 @@ export const useProjectDetails = (data: ProjectDetails): ProjectDetails | undefi
 export function useProjectDetailList(data: any) {
   const projects = data?.getProjects as TProject[];
   const [projectDetailList, setProjecList] = useState<ProjectDetails[]>();
+
   const { setPageLoading } = useLoading();
   const { account } = useWeb3();
   const sdk = useContractSDK();
@@ -152,6 +153,7 @@ export function useProjectDetailList(data: any) {
     if (isUndefined(projects)) return;
     if (isEmpty(projects)) {
       setPageLoading(false);
+      setProjecList([]);
       return;
     }
 
