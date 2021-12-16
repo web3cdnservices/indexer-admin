@@ -173,16 +173,38 @@ export const useIndexerEvent = () => {
   return event;
 };
 
-export const useBalance = (account: Account) => {
+export const useTokenBalance = (account: Account) => {
   const [balance, setBalance] = useState('0.00');
   const sdk = useContractSDK();
 
   useEffect(() => {
     account &&
-      sdk?.sqToken.balanceOf(account).then((balance) => {
-        setBalance(Number(formatUnits(balance, 18)).toFixed(2));
+      sdk?.sqToken.balanceOf(account).then((value) => {
+        setBalance(Number(formatUnits(value, 18)).toFixed(2));
       });
   }, [account]);
+
+  return balance;
+};
+
+export const useBalance = (account: Account) => {
+  const [balance, setBalance] = useState('0.00');
+  const { library } = useWeb3();
+
+  const getBalance = useCallback(async () => {
+    if (!account || !library) return;
+    try {
+      const value = await library?.getBalance(account);
+      const fixedValue = Number(formatUnits(value, 18)).toFixed(4);
+      setBalance(fixedValue);
+    } catch (e) {
+      console.error('Get balance failed for:', account);
+    }
+  }, [account]);
+
+  useEffect(() => {
+    getBalance();
+  }, [getBalance]);
 
   return balance;
 };

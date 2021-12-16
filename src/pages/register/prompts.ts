@@ -11,7 +11,7 @@ const prompts = {
   },
   [RegisterStep.authorisation]: {
     title: 'Request approve authorisation',
-    desc: 'Indexer Admin app need your to approve the authorisation request, Indexer Admin Admin app need your to approve the authorisation request. The time for processing the transaciton dependent on the current status of the network and the gas fee, it usually takes 30 seconds',
+    desc: 'Indexer Admin app need you to approve the authorisation request to deposit the SQT token into Subquery Staking contract, this is a one-time operation for the specific account. Please press the approve button then confirm and send the transaction on MetaMask.',
     buttonTitle: 'Approve',
   },
   [RegisterStep.register]: {
@@ -22,7 +22,7 @@ const prompts = {
   },
   [RegisterStep.sync]: {
     title: 'Sync the indexer with coordinator service',
-    desc: 'The cuurent conenct account is an indexer, press sync if you want to sync this account with you coordinator service, otherwise you can switch you account in the wallet to select the correct account.',
+    desc: 'This connect account has been an indexer already, please press the sync button to sync this account with you coordinator service, otherwise you can switch you account in the wallet to select the correct account.',
     buttonTitle: 'Sync',
   },
 };

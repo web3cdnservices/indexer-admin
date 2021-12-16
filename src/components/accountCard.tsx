@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { ActionType } from 'utils/transactions';
 
 import Avatar from './avatar';
-import { Button, ButtonContainer, Label, Text } from './primary';
+import { Button, ButtonContainer, Text } from './primary';
 import StatusLabel from './statusLabel';
 
 const Container = styled.div`
@@ -79,9 +79,9 @@ const AccountCard: FC<Props> = ({
   <Container>
     <HeaderContainer>
       <MainTitleContainer>
-        <Label size={30} fw="500" mr={20}>
+        <Text size={30} fw="bold" mr={20}>
           {title}
-        </Label>
+        </Text>
         {!!status && <StatusLabel text={status} />}
       </MainTitleContainer>
       {!!account && !!buttonTitle && (

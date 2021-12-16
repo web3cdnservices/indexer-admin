@@ -8,7 +8,7 @@ import { SubqueryNetwork } from '@subql/contract-sdk';
 import { Formik, FormikHelpers } from 'formik';
 
 import { FieldItem } from 'components/formItem';
-import { Button, ButtonContainer, FormContainer } from 'components/primary';
+import { Button, ButtonContainer, FormContainer, Text } from 'components/primary';
 import { networks } from 'containers/web3';
 import { useIsIndexer } from 'hooks/indexerHook';
 import { useWeb3 } from 'hooks/web3Hook';
@@ -22,7 +22,7 @@ import {
 import { validateCoordinatorService } from 'utils/validateService';
 
 import prompts from './prompts';
-import { ContentContainer, Panel, SubTitle, Title } from './styles';
+import { ContentContainer, Panel, SubTitle } from './styles';
 
 type Props = {
   onConnected: () => void;
@@ -53,7 +53,9 @@ const LoginView: FC<Props> = ({ onConnected }) => {
   return (
     <Panel>
       <ContentContainer>
-        <Title>{login.title}</Title>
+        <Text fw="600" size={28}>
+          {login.title}
+        </Text>
         <SubTitle>{login.desc}</SubTitle>
         <Formik
           initialValues={initialLoginValues}

@@ -1,7 +1,7 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { bufferToHex, privateToAddress, toBuffer } from 'ethereumjs-util';
@@ -12,19 +12,12 @@ import ModalView from 'components/modalView';
 import { useContractSDK } from 'containers/contractSdk';
 import { useLoading } from 'containers/loadingContext';
 import { useToast } from 'containers/toastContext';
-import {
-  useBalance,
-  useController,
-  useIsController,
-  useIsControllerChanged,
-  useIsIndexer,
-  useIsIndexerChanged,
-} from 'hooks/indexerHook';
+import { useBalance, useController, useIsController, useIsIndexer } from 'hooks/indexerHook';
 import { useIsMetaMask, useSigner, useWeb3 } from 'hooks/web3Hook';
 import { ControllerFormKey } from 'types/schemas';
 import { configController, unRegister } from 'utils/indexerActions';
 import { REMOVE_ACCOUNTS, UPDAET_CONTROLLER } from 'utils/queries';
-import { ActionType } from 'utils/transactions';
+import { ActionType, handleTransaction } from 'utils/transactions';
 import { validatePrivateKey } from 'utils/validateService';
 
 import MetaMaskView from '../metamask/metamaskView';
@@ -50,22 +43,11 @@ const Registry = () => {
   const controllerBalance = useBalance(controller);
   const indexerBalance = useBalance(account);
   const { setPageLoading } = useLoading();
-  const { dispatchToast, closeToast } = useToast();
-  const [updateController, { loading: updateControllerLoading }] = useMutation(UPDAET_CONTROLLER);
-  const [removeAccounts, { loading: removeAccountsLoading }] = useMutation(REMOVE_ACCOUNTS);
-  const { request: checkIsIndexerChanged, loading: indexerLoading } = useIsIndexerChanged();
-  const { request: checkIsControllerChanged, loading: controllerLoading } =
-    useIsControllerChanged(account);
+  const toastContext = useToast();
+  const [updateController] = useMutation(UPDAET_CONTROLLER);
+  const [removeAccounts] = useMutation(REMOVE_ACCOUNTS);
 
-  const loadingActions = useMemo(
-    () => ({
-      [ActionType.unregister]: indexerLoading,
-      [ActionType.configCntroller]: controllerLoading,
-    }),
-    [indexerLoading, controllerLoading]
-  );
-
-  prompts.controller.desc = `Balance ${controllerBalance} SQT`;
+  prompts.controller.desc = `Balance ${controllerBalance} DEV`;
   const controllerItem = !controller ? prompts.emptyController : prompts.controller;
   const indexerItem = prompts.indexer;
 
@@ -75,17 +57,6 @@ const Registry = () => {
       history.replace('/');
     }
   }, [isIndexer]);
-
-  useEffect(() => {
-    if (indexerLoading || controllerLoading) {
-      dispatchToast({
-        type: 'loading',
-        text: 'Transaction processing: 0xskfakf34faskdfjaksdjfakdfjaksfjakfa',
-      });
-    } else {
-      closeToast();
-    }
-  }, [indexerLoading, controllerLoading]);
 
   const onModalShow = (type: ActionType) => {
     setActionType(type);
@@ -128,27 +99,22 @@ const Registry = () => {
       }
       formHelper.setStatus({ loading: false });
     },
-    () => {
-      configController(sdk, signer, inputController)
-        .then(() => {
-          onModalClose();
-          checkIsControllerChanged(inputController, () => {
-            setTimestamp(Date.now());
-          }).catch((e) => console.log('error:', e));
-        })
-        .catch(onModalClose);
+    async () => {
+      try {
+        const tx = await configController(sdk, signer, inputController);
+        onModalClose();
+        await handleTransaction(tx, toastContext, () => setTimestamp(Date.now()));
+      } catch (e) {
+        onModalClose();
+      }
     }
   );
 
   const unregisterStepConfig = createUnregisterSteps(async () => {
     try {
-      await unRegister(sdk, signer);
+      const tx = await unRegister(sdk, signer);
       onModalClose();
-      checkIsIndexerChanged(false, () => {
-        onModalClose();
-        history.replace('./');
-      });
-      await removeAccounts();
+      await handleTransaction(tx, toastContext, () => removeAccounts());
     } catch (e) {
       onModalClose();
     }
@@ -166,8 +132,7 @@ const Registry = () => {
           type={ActionType.unregister}
           account={account ?? ''}
           status="active"
-          desc={`Balance: ${indexerBalance} SQT`}
-          disabled={indexerLoading}
+          desc={`Balance: ${indexerBalance} DEV`}
           onClick={onModalShow}
         />
       )}
@@ -177,7 +142,6 @@ const Registry = () => {
           name={controllerItem.name}
           type={ActionType.configCntroller}
           account={controller}
-          disabled={controllerLoading}
           buttonTitle={isIndexer ? controllerItem.buttonTitle : ''}
           desc={controllerItem?.desc}
           onClick={onModalShow}
@@ -194,8 +158,6 @@ const Registry = () => {
           steps={steps[actionType]}
           currentStep={currentStep}
           type={actionType}
-          // @ts-ignore
-          loading={loadingActions[actionType]}
         />
       )}
     </Container>

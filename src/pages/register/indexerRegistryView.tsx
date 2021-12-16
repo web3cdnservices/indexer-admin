@@ -5,7 +5,7 @@ import { FC } from 'react';
 import { Formik, FormikHelpers } from 'formik';
 
 import { FieldItem } from 'components/formItem';
-import { Button, ButtonContainer, FormContainer } from 'components/primary';
+import { Button, ButtonContainer, FormContainer, Text } from 'components/primary';
 import {
   initialRegisterValues,
   RegisterFormKey,
@@ -13,9 +13,8 @@ import {
   TRegisterValues,
 } from 'types/schemas';
 
-import { Title } from '../login/styles';
 import prompts from './prompts';
-import { ContentContainer, TextContainer } from './styles';
+import { ContentContainer } from './styles';
 import { RegisterStep } from './types';
 
 type Props = {
@@ -28,11 +27,9 @@ const IndexerRegistryView: FC<Props> = ({ onSubmit, loading }) => {
   const { title, buttonTitle } = prompts[RegisterStep.register];
   return (
     <ContentContainer>
-      <TextContainer>
-        <Title size={35} align="center" weight="500">
-          {title}
-        </Title>
-      </TextContainer>
+      <Text mb={50} size={35} fw="bold">
+        {title}
+      </Text>
       <Formik
         initialValues={initialRegisterValues}
         validationSchema={RegisterFormSchema}

@@ -8,9 +8,8 @@ import { Address, Dropdown } from '@subql/react-ui';
 import buttonStyles from '@subql/react-ui/dist/components/Button/Button.module.css';
 import styled from 'styled-components';
 
-import { Button, Separator } from 'components/primary';
-import { chainNames } from 'containers/web3';
-import { useController, useIsIndexer } from 'hooks/indexerHook';
+import { Separator } from 'components/primary';
+import { useController, useIsIndexer, useTokenBalance } from 'hooks/indexerHook';
 import { useIsMetaMask, useWeb3 } from 'hooks/web3Hook';
 import SubqueryIcon from 'resources/subquery.svg';
 
@@ -34,13 +33,16 @@ const TabBar = styled(NavLink)`
 `;
 
 const Header = () => {
-  const { account, deactivate, chainId } = useWeb3();
+  const { account, deactivate } = useWeb3();
   const { pathname } = useLocation();
   const isMetaMask = useIsMetaMask();
   const isIndexer = useIsIndexer();
   const controller = useController(account);
+  const tokenBalance = useTokenBalance(account);
   const activeStyle = { fontWeight: 500, color: '#4388dd' };
   const dropdownStyle = { border: 'unset !important', padding: 15, width: 100 };
+
+  const createItem = (key: string, label: string) => ({ key, label });
 
   const onSelected = (key: string) => {
     if (key === 'disconnect') {
@@ -49,7 +51,15 @@ const Header = () => {
   };
 
   const isRootPage = useMemo(() => pathname === '/', [pathname]);
-  const network = useMemo(() => chainNames[chainId] ?? 'Unsupport Network', [chainId]);
+  const accountDetails = useMemo(
+    () => [
+      createItem('balance', `Token: ${tokenBalance} SQT`),
+      createItem('disconnect', 'Disconnect'),
+    ],
+    [tokenBalance]
+  );
+  // TODO: get this back while fix the status style
+  // const network = useMemo(() => chainNames[chainId] ?? 'Unsupport Network', [chainId]);
 
   const renderTabbars = () => (
     <div>
@@ -69,7 +79,7 @@ const Header = () => {
       <Address address={account} size="large" />
     ) : (
       <Dropdown
-        items={[{ key: 'disconnect', label: 'Disconnect' }]}
+        items={accountDetails}
         onSelected={onSelected}
         dropdownStyle={{ ...buttonStyles.secondary, ...dropdownStyle }}
       >
@@ -85,13 +95,13 @@ const Header = () => {
       </LeftContainer>
       {isMetaMask && (
         <RightContainer>
-          <Button
+          {/* <Button
             type="secondary"
             label={network}
             size="small"
             disabled
             leftItem={<i className="bi-link-45deg" role="img" aria-label="link" />}
-          />
+          /> */}
           <Separator width={30} color="#f6f9fc" />
           {account && renderAddress()}
         </RightContainer>

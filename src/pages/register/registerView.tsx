@@ -3,9 +3,9 @@
 
 import { FC } from 'react';
 
-import { Button } from 'components/primary';
+import { Button, Text } from 'components/primary';
 
-import { SubTitle, Title } from '../login/styles';
+import { SubTitle } from '../login/styles';
 import prompts from './prompts';
 import { ContentContainer, DescContainer, TextContainer } from './styles';
 import { RegisterStep } from './types';
@@ -21,9 +21,9 @@ const RegisterView: FC<Props> = ({ step, onClick, loading }) => {
   return (
     <ContentContainer>
       <TextContainer>
-        <Title size={35} align="center" weight="500">
+        <Text size={35} fw="bold">
           {title}
-        </Title>
+        </Text>
         <DescContainer mt={20}>
           <SubTitle align="center">{desc}</SubTitle>
         </DescContainer>

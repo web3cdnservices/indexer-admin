@@ -73,7 +73,7 @@ export type StepItem = {
 type Props = {
   steps: StepItem[] | undefined;
   currentStep: number;
-  loading: boolean;
+  loading?: boolean;
   type?: ActionType;
 } & ModalProps;
 

@@ -10,7 +10,7 @@ export type ToastProps = {
   text: string;
 };
 
-type ToastContext = {
+export type ToastContext = {
   toast: ToastProps | undefined;
   dispatchToast: (toast: ToastProps | undefined) => void;
   closeToast: () => void;

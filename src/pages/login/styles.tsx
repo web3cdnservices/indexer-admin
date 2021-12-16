@@ -35,13 +35,6 @@ export const ContentContainer = styled.div`
   flex-direction: column;
 `;
 
-// TODO: replace these components with `Text`
-export const Title = styled.div<{ size?: number; align?: string; weight?: string }>`
-  text-align: ${(p) => p.align || 'left'};
-  font-weight: ${(p) => p.weight || 'bold'};
-  font-size: ${(p) => p.size || 28}px;
-`;
-
 export const SubTitle = styled.div<{ align?: string }>`
   text-align: ${(p) => p.align || 'left'};
   font-size: 16px;
