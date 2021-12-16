@@ -17,5 +17,10 @@ export const ContentContainer = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100%;
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
   overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
+  }
 `;

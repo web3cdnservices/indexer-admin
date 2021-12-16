@@ -16,11 +16,6 @@
   overflow: scroll;
 }
 
-.ant-tabs-ink-bar {
-  background-color: #f6f9fc;
-  height: 0px;
-}
-
 .ant-modal-header {
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;

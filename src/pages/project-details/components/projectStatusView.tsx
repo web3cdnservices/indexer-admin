@@ -28,8 +28,8 @@ const ProjectStatusView: FC<Props> = ({ status, metadata }) => (
     <StatusLabel text={statusText[status]} color={statusColor[status]} />
     {metadata && (
       <Container>
-        <TagItem versionType="TARGET BLOCK" value={metadata.targetHeight} />
-        <TagItem versionType="CURRENT BLOCK" value={metadata.lastProcessedHeight} />
+        <TagItem versionType="Current Block" prefix="#" value={metadata.targetHeight} />
+        <TagItem versionType="Latest Block" prefix="#" value={metadata.lastProcessedHeight} />
       </Container>
     )}
   </Container>

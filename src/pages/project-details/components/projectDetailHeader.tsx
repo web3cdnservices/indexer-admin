@@ -73,16 +73,22 @@ const ActionContainer = styled.div`
 type VersionProps = {
   versionType: string;
   value?: string | number;
+  prefix?: string;
 };
 
-export const TagItem: FC<VersionProps> = ({ versionType, value }) => (
-  <VersionItemContainer>
-    <Text size={15}>{versionType}</Text>
-    <Text mt={5} color="gray" fw="400" size={13}>
-      {value ?? ''}
-    </Text>
-  </VersionItemContainer>
-);
+export const TagItem: FC<VersionProps> = ({ versionType, value = '', prefix = '' }) => {
+  const color = prefix ? '#4388dd' : 'gray';
+  return (
+    <VersionItemContainer>
+      <Text size={15} fw="500">
+        {versionType}
+      </Text>
+      <Text mt={5} color={color} fw="500" size={13}>
+        {`${prefix}${value}`}
+      </Text>
+    </VersionItemContainer>
+  );
+};
 
 type Props = {
   id: string;
