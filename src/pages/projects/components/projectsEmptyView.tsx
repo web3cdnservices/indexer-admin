@@ -20,16 +20,24 @@ type Props = {
   onClick: () => void;
 };
 
+const linkUrl = 'https://testnet.thechaindata.com/explorer';
+const ExplorerLink = () => (
+  <a target="_blank" href={linkUrl} rel="noreferrer">
+    SubQuery Explorer
+  </a>
+);
+
 const EmptyView: FC<Props> = ({ onClick }) => {
   return (
     <Container>
       <IntroductionView
         item={{
           title: 'Start to index a Subquery project',
-          desc: 'Go to Subquery Explorer to start exploring query projects, pick the project you are interesting and copy the deployment id in the page, then press the add project button and paste in deployment id, add the project into you coordinator service, and you can manage the projects at any time. ',
+          desc: 'Go to Subquery Explorer to start exploring query projects, pick the project you are interesting and copy the deployment id in the page, then press the add project button and paste in deployment id, add the project into you coordinator service, and you can manage the projects in indexer app. ',
           buttonTitle: 'Add Project',
         }}
         onClick={onClick}
+        link={ExplorerLink()}
       />
     </Container>
   );

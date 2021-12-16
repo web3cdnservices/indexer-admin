@@ -34,10 +34,11 @@ type Content = {
 type Props = {
   item: Content;
   onClick: () => void;
+  link?: JSX.Element;
   loading?: boolean;
 };
 
-const IntroductionView: FC<Props> = ({ item, onClick, loading }) => {
+const IntroductionView: FC<Props> = ({ item, onClick, loading, link }) => {
   const { title, desc, buttonTitle } = item;
   return (
     <Container>
@@ -47,6 +48,7 @@ const IntroductionView: FC<Props> = ({ item, onClick, loading }) => {
         </Text>
         <Text alignCenter mt={35}>
           {desc}
+          {link}
         </Text>
       </TextContainer>
       <Button type="primary" title={buttonTitle} loading={loading} onClick={onClick} />

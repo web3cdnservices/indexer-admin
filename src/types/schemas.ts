@@ -86,22 +86,13 @@ export const initialProjectValues = {
   [ProjectFormKey.deploymentId]: '',
 };
 
-// start project
-export const StartProjectSchema = yup.object({
+// config services
+export const ConfigServicesSchema = yup.object({
   [ProjectFormKey.indexerEndpoint]: yup.string().defined(),
-});
-
-export const initialStartProjectValues = {
-  [ProjectFormKey.indexerEndpoint]: '',
-};
-
-// pub project to ready
-export const publishProjectSchema = yup.object({
   [ProjectFormKey.queryEndpoint]: yup.string().defined(),
 });
 
-export const initialPublishProjectValues = {
+export const initialServiceValues = {
+  [ProjectFormKey.indexerEndpoint]: '',
   [ProjectFormKey.queryEndpoint]: '',
 };
-
-// stop project

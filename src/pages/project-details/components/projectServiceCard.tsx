@@ -42,7 +42,7 @@ const ServiceCard: FC<CardProps> = ({ name, status, url, imageVersion }) => (
       <Text mr={20} fw="500">
         {name}
       </Text>
-      <StatusLabel text={status} />
+      <StatusLabel text={status} color={status === 'Healthy' ? 'lightgreen' : 'red'} />
     </HeaderContainer>
     <Text size={15} color="gray" mt={10}>{`Endpoint: ${url}`}</Text>
     <Text size={15} color="gray" mt={10}>{`Image Version: ${imageVersion}`}</Text>

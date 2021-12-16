@@ -53,12 +53,18 @@ export const DescContainer = styled.div`
 export type ClickAction = (type?: ActionType) => void;
 export type FormSubmit = (values: FormikValues, helper: FormikHelpers<FormikValues>) => void;
 
-export type FormConfig = {
+export type TFieldItem = {
+  title: string;
   formKey: string;
+  placeholder?: string;
+};
+
+export type FormConfig = {
   placeHolder?: string;
   formValues: FormikValues;
   schema: ObjectSchema<any>;
   onFormSubmit: FormSubmit;
+  items: TFieldItem[];
 };
 
 export type StepItem = {
@@ -98,7 +104,14 @@ const ModalView: FC<Props> = ({
         {({ status, errors, submitForm }) => (
           <InputForm>
             <div>
-              <FieldItem title={item.title} fieldKey={item.form?.formKey ?? ''} errors={errors} />
+              {item.form?.items.map(({ title, formKey, placeholder }) => (
+                <FieldItem
+                  title={title}
+                  fieldKey={formKey ?? ''}
+                  placeholder={placeholder ?? ''}
+                  errors={errors}
+                />
+              ))}
               {item.desc && (
                 <Text mt={20} size={13} color="gray">
                   {item.desc}

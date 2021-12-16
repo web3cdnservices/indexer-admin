@@ -8,14 +8,14 @@ import { isEmpty, isUndefined } from 'lodash';
 import { useContractSDK } from 'containers/contractSdk';
 import { useLoading } from 'containers/loadingContext';
 import { useWeb3 } from 'hooks/web3Hook';
-import { TProject, TProjectMetadata } from 'pages/project-details/types';
+import { TServiceMetadata } from 'pages/project-details/types';
 import { IndexingStatus } from 'pages/projects/constant';
 import { HookDependency } from 'types/types';
 import { cidToBytes32, concatU8A, IPFS } from 'utils/ipfs';
 import { GET_PROJECT, QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS } from 'utils/queries';
 
 export const useProjectService = (deploymentId: string) => {
-  const [projectService, setService] = useState<TProjectMetadata>();
+  const [projectService, setService] = useState<TServiceMetadata>();
   const [getProjectService, { data }] = useLazyQuery(GET_PROJECT, {
     fetchPolicy: 'network-only',
   });
@@ -47,21 +47,19 @@ export const useIndexingStatus = (deploymentId: string, deps?: HookDependency) =
 };
 
 export type ProjectDetails = {
-  id: string;
   name: string;
   owner: string;
   image: string;
   description: string;
   websiteUrl: string;
   codeUrl: string;
-  status: IndexingStatus;
   version: string;
   currentDeployment: string;
   currentVersion: string;
   versionDescription: string;
   createdTimestamp: string;
   updatedTimestamp: string;
-};
+} & TServiceMetadata;
 
 type Result = {
   id: string;
@@ -130,12 +128,22 @@ export const useProjectDetails = (data: ProjectDetails): ProjectDetails | undefi
 };
 
 export function useProjectDetailList(data: any) {
-  const projects = data?.getProjects as TProject[];
+  const projects = data?.getProjects as TServiceMetadata[];
   const [projectDetailList, setProjecList] = useState<ProjectDetails[]>();
 
   const { setPageLoading } = useLoading();
   const { account } = useWeb3();
   const sdk = useContractSDK();
+  const [getServiceMetadata] = useLazyQuery(GET_PROJECT, {
+    fetchPolicy: 'network-only',
+  });
+
+  const getServiceData = (id: string) => async () => {
+    console.log('>>>request....');
+    const result = await getServiceMetadata({ variables: { id } });
+    console.log('>>>result:', result.data.project);
+    return result.data.project;
+  };
 
   const getProjectStatus = useCallback(
     async (deploymentId: string) => {
@@ -159,11 +167,14 @@ export function useProjectDetailList(data: any) {
 
     try {
       const result = await Promise.all(
-        projects.map(({ id }) => Promise.all([getProjectDetails(id), getProjectStatus(id)]))
+        projects.map(({ id }) =>
+          Promise.all([getProjectDetails(id), getServiceData(id), getProjectStatus(id)])
+        )
       );
-      setProjecList(result.map(([detail, status]) => ({ ...detail, status })));
+      setProjecList(result.map(([detail, service, status]) => ({ ...detail, ...service, status })));
       setPageLoading(false);
-    } catch (_) {
+    } catch (e) {
+      console.error('Get project details failed:', e);
       setPageLoading(false);
     }
   }, [projects]);

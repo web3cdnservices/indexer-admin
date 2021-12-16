@@ -61,6 +61,20 @@ export const REMOVE_PROJECT = gql`
   }
 `;
 
+export const CONFIG_SERVICES = gql`
+  mutation UpdateServices($queryEndpoint: String, $indexerEndpoint: String!, $id: String!) {
+    updateProjectServices(
+      queryEndpoint: $queryEndpoint
+      indexerEndpoint: $indexerEndpoint
+      id: $id
+    ) {
+      status
+      indexerEndpoint
+      queryEndpoint
+    }
+  }
+`;
+
 export const START_PROJECT = gql`
   mutation StartProject($indexerEndpoint: String!, $id: String!) {
     startProject(indexerEndpoint: $indexerEndpoint, id: $id) {

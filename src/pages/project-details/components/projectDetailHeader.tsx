@@ -9,21 +9,21 @@ import Avatar from 'components/avatar';
 import ModalView from 'components/modalView';
 import { Button, Separator, Text } from 'components/primary';
 import { useContractSDK } from 'containers/contractSdk';
-import { useIsIndexingStatusChanged } from 'hooks/indexerHook';
+import { useToast } from 'containers/toastContext';
 import { ProjectDetails, useIndexingStatus } from 'hooks/projectHook';
 import { useSigner } from 'hooks/web3Hook';
+import { IndexingStatus } from 'pages/projects/constant';
 import { ProjectFormKey } from 'types/schemas';
 import { readyIndexing, startIndexing, stopIndexing } from 'utils/indexerActions';
 import { cidToBytes32 } from 'utils/ipfs';
-import { READY_PROJECT, REMOVE_PROJECT, START_PROJECT } from 'utils/queries';
-import { ActionType } from 'utils/transactions';
+import { CONFIG_SERVICES } from 'utils/queries';
+import { ActionType, handleTransaction } from 'utils/transactions';
 import { verifyQueryService } from 'utils/validateService';
 
-import { IndexingStatus } from '../../projects/constant';
 import {
   createButtonItems,
+  createConfigServicesSteps,
   createReadyIndexingSteps,
-  createRemoveProjectSteps,
   createStartIndexingSteps,
   createStopIndexingSteps,
   modalTitles,
@@ -87,9 +87,10 @@ const VersionItem: FC<VersionProps> = ({ versionType, value }) => (
 type Props = {
   id: string;
   project: ProjectDetails;
+  serviceConfiged: boolean;
 };
 
-const ProjectDetailsHeader: FC<Props> = ({ id, project }) => {
+const ProjectDetailsHeader: FC<Props> = ({ id, project, serviceConfiged }) => {
   // TODO: 1. only progress reach `100%` can display `publish to ready` button
   // TODO: get `status` from contract
 
@@ -99,13 +100,12 @@ const ProjectDetailsHeader: FC<Props> = ({ id, project }) => {
 
   const signer = useSigner();
   const sdk = useContractSDK();
-  const status = useIndexingStatus(id, visible);
-  const { request: checkIndexingStatusChanged, loading } = useIsIndexingStatusChanged(id);
-  const [startIndexingRequest] = useMutation(START_PROJECT);
-  const [indexingReadyRequest] = useMutation(READY_PROJECT);
-  const [removeProjectRequest] = useMutation(REMOVE_PROJECT);
+  const toastContext = useToast();
+  const status = useIndexingStatus(id, toastContext.toast?.type);
+  const [updateServices, { loading }] = useMutation(CONFIG_SERVICES);
 
-  const onModalClose = () => {
+  const onModalClose = (e?: unknown) => {
+    console.error('Transaction error:', e);
     setVisible(false);
     setCurrentStep(0);
   };
@@ -115,67 +115,59 @@ const ProjectDetailsHeader: FC<Props> = ({ id, project }) => {
       setActionType(type);
       setVisible(true);
     });
+
+    if (status === IndexingStatus.NOTSTART && !serviceConfiged) {
+      return [buttonItems[status][0]];
+    }
+
     return buttonItems[status];
-  }, [status]);
+  }, [status, serviceConfiged]);
 
-  const removeProjectSteps = createRemoveProjectSteps(() => {
-    removeProjectRequest();
-  });
-
-  const startIndexingSteps = createStartIndexingSteps(
-    async (values, formHelper) => {
-      try {
-        const indexerEndpoint = values[ProjectFormKey.indexerEndpoint];
-        // FIXME: send request to validate the indexer endpoint, `/meta`
-        await verifyQueryService(indexerEndpoint);
-        await startIndexingRequest({ variables: { indexerEndpoint, id } });
-        setCurrentStep(1);
-      } catch (_) {
-        formHelper.setErrors({ [ProjectFormKey.indexerEndpoint]: 'Invalid indexer endpoint' });
-      }
-    },
-    async () => {
-      try {
-        await startIndexing(sdk, signer, id);
-        await checkIndexingStatusChanged(IndexingStatus.INDEXING, onModalClose);
-      } catch (_) {
-        onModalClose();
-      }
-    }
-  );
-
-  const readyIndexingSteps = createReadyIndexingSteps(
-    async (values, formHelper) => {
-      const queryEndpoint = values[ProjectFormKey.queryEndpoint];
-      try {
-        await verifyQueryService(queryEndpoint);
-        await indexingReadyRequest({ variables: { id, queryEndpoint } });
-        setCurrentStep(1);
-      } catch (e) {
-        formHelper.setErrors({ [ProjectFormKey.queryEndpoint]: 'Invalid query endpoint' });
-      }
-    },
-    async () => {
-      try {
-        await readyIndexing(sdk, signer, id);
-        await checkIndexingStatusChanged(IndexingStatus.READY, onModalClose);
-      } catch (e) {
-        onModalClose();
-      }
-    }
-  );
-
-  const stopIndexingSteps = createStopIndexingSteps(async () => {
+  const configServicesSteps = createConfigServicesSteps(async (values, formHelper) => {
     try {
-      await stopIndexing(sdk, signer, id);
-      await checkIndexingStatusChanged(IndexingStatus.TERMINATED, onModalClose);
+      const indexerEndpoint = values[ProjectFormKey.indexerEndpoint];
+      const queryEndpoint = values[ProjectFormKey.queryEndpoint];
+      await verifyQueryService(queryEndpoint);
+      await updateServices({ variables: { queryEndpoint, indexerEndpoint, id } });
     } catch (e) {
-      onModalClose();
+      console.log('>>>e:', e);
+      formHelper.setErrors({ [ProjectFormKey.queryEndpoint]: 'Invalid query endpoint' });
     }
   });
+
+  const indexingTransactions = useMemo(
+    () => ({
+      [ActionType.startIndexing]: () => startIndexing(sdk, signer, id),
+      [ActionType.readyIndexing]: () => readyIndexing(sdk, signer, id),
+      [ActionType.stopIndexing]: () => stopIndexing(sdk, signer, id),
+    }),
+    [sdk, signer, id]
+  );
+
+  const indexingAction = async (
+    type: ActionType.startIndexing | ActionType.readyIndexing | ActionType.stopIndexing
+  ) => {
+    try {
+      const tx = await indexingTransactions[type]();
+      onModalClose();
+      await handleTransaction(tx, toastContext);
+    } catch (e) {
+      onModalClose(e);
+    }
+  };
+
+  const startIndexingSteps = createStartIndexingSteps(() =>
+    indexingAction(ActionType.startIndexing)
+  );
+
+  const readyIndexingSteps = createReadyIndexingSteps(() =>
+    indexingAction(ActionType.readyIndexing)
+  );
+
+  const stopIndexingSteps = createStopIndexingSteps(() => indexingAction(ActionType.stopIndexing));
 
   const steps = {
-    ...removeProjectSteps,
+    ...configServicesSteps,
     ...startIndexingSteps,
     ...readyIndexingSteps,
     ...stopIndexingSteps,
@@ -213,7 +205,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, project }) => {
       {!!actionItems && (
         <ActionContainer>
           {actionItems.map(({ title, action }) => (
-            <Button mt={10} key={title} width={200} title={title} onClick={action} />
+            <Button mt={10} key={title} width={230} title={title} onClick={action} />
           ))}
         </ActionContainer>
       )}

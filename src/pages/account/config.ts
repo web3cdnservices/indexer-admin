@@ -22,10 +22,15 @@ export const createControllerSteps = (
       desc: 'Upload your controller private key to the coordinator service, the private key will be encrypted and save in you service db',
       buttonTitle: 'Add Controller',
       form: {
-        formKey: ControllerFormKey.privateKey,
         formValues: initialControllerValues,
         schema: ControllerFormSchema,
         onFormSubmit: onUploadController,
+        items: [
+          {
+            formKey: ControllerFormKey.privateKey,
+            title: 'Controller Private Key',
+          },
+        ],
       },
     },
     {

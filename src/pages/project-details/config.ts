@@ -2,19 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { ClickAction, FormSubmit } from 'components/modalView';
-import {
-  initialPublishProjectValues,
-  initialStartProjectValues,
-  ProjectFormKey,
-  publishProjectSchema,
-  StartProjectSchema,
-} from 'types/schemas';
+import { ConfigServicesSchema, initialServiceValues, ProjectFormKey } from 'types/schemas';
 import { ActionType } from 'utils/transactions';
 
 import { IndexingStatus } from '../projects/constant';
 
 export const modalTitles = {
   [ActionType.removeProject]: 'Remove Project',
+  [ActionType.configServices]: 'Config Project Services',
   [ActionType.startIndexing]: 'Start Indexing Project',
   [ActionType.readyIndexing]: 'Publish Indexing to Ready',
   [ActionType.stopIndexing]: 'Stop Indexing Project',
@@ -40,8 +35,9 @@ export const createServiceItem = (url: string, version: string, status: string) 
 
 export const createButtonItems = (onButtonClick: (type: ActionType) => void) => ({
   [IndexingStatus.NOTSTART]: [
-    createButtonItem('Config Service', () => onButtonClick(ActionType.startIndexing)),
-    createButtonItem('Start Indexing', () => onButtonClick(ActionType.removeProject)),
+    createButtonItem('Config Services', () => onButtonClick(ActionType.configServices)),
+    createButtonItem('Start Indexing', () => onButtonClick(ActionType.startIndexing)),
+    // createButtonItem('Remove Project', () => onButtonClick(ActionType.removeProject)),
   ],
   [IndexingStatus.INDEXING]: [
     createButtonItem('Publish to Ready', () => onButtonClick(ActionType.readyIndexing)),
@@ -65,54 +61,52 @@ export const createRemoveProjectSteps = (onRemoveProject: ClickAction) => ({
   ],
 });
 
-export const createStartIndexingSteps = (
-  onSyncIndexerEndpoint: FormSubmit,
-  onSendTransaction: ClickAction
-) => ({
-  [ActionType.startIndexing]: [
+export const createConfigServicesSteps = (onSyncIndexerEndpoint: FormSubmit) => ({
+  [ActionType.configServices]: [
     {
       index: 0,
       title: 'Indexer Service Endpiont',
-      desc: 'Upload the indexer service endpoint to you coordinator service, this endpoint will be used to get the metadata of the indexer service and monitor the health.',
+      desc: 'Upload the indexer endpoint and query endpoint to you coordinator service.',
       buttonTitle: 'Sync Endpoint',
       form: {
-        formKey: ProjectFormKey.indexerEndpoint,
-        formValues: initialStartProjectValues,
-        schema: StartProjectSchema,
+        formValues: initialServiceValues,
+        schema: ConfigServicesSchema,
         onFormSubmit: onSyncIndexerEndpoint,
+        items: [
+          {
+            formKey: ProjectFormKey.indexerEndpoint,
+            title: 'Indexer Service Endpiont',
+            placeholder: 'https://api.subquery.network/example',
+          },
+          {
+            formKey: ProjectFormKey.queryEndpoint,
+            title: 'Query Service Endpiont',
+            placeholder: 'https://api.subquery.network/example',
+          },
+        ],
       },
     },
+  ],
+});
+
+export const createStartIndexingSteps = (onSendTransaction: ClickAction) => ({
+  [ActionType.startIndexing]: [
     {
       index: 1,
       title: 'Start Indexing Project',
-      desc: 'Send transaction to the network to update the controller, the transaction processing time may take around 10s, it depends on the network and gas fee.',
+      desc: 'Send transaction to start indexing the project on contract, the controller account on coordinator service will start to update the status of indexing service on the contract once the transaction completed. The transaction processing time may take around 10s, it depends on the network and gas fee. You will see the processing status on the top of the page once you confim the transaction on the MetaMask.',
       buttonTitle: 'Send Transction',
       onClick: onSendTransaction,
     },
   ],
 });
 
-export const createReadyIndexingSteps = (
-  onSyncQueryEndpoint: FormSubmit,
-  onSendTransaction: ClickAction
-) => ({
+export const createReadyIndexingSteps = (onSendTransaction: ClickAction) => ({
   [ActionType.readyIndexing]: [
-    {
-      index: 0,
-      title: 'Query Service Endpoint',
-      desc: 'Upload the query service endpoint to you coordinator service, this endpoint will be used to get the metadata of the query service and monitor the health.',
-      buttonTitle: 'Sync Endpoint',
-      form: {
-        formKey: ProjectFormKey.queryEndpoint,
-        formValues: initialPublishProjectValues,
-        schema: publishProjectSchema,
-        onFormSubmit: onSyncQueryEndpoint,
-      },
-    },
     {
       index: 1,
       title: 'Update Indexing To Ready',
-      desc: 'Send transaction to the network to update the controller, the transaction processing time may take around 10s, it depends on the network and gas fee.',
+      desc: 'Send transaction to change indexing status to ready on contract, the explorer will display you query endpoint once the transaction completed. The transaction processing time may take around 10s, it depends on the network and gas fee. You will see the processing status on the top of the page once you confim the transaction on the MetaMask.',
       buttonTitle: 'Send Transction',
       onClick: onSendTransaction,
     },

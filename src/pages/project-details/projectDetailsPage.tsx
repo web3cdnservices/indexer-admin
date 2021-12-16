@@ -72,7 +72,9 @@ const ProjectDetailsPage = () => {
   return (
     <Container>
       <ContentContainer>
-        {projectInfo && <ProjectDetailsHeader id={id} project={projectInfo} />}
+        {projectInfo && (
+          <ProjectDetailsHeader id={id} project={projectInfo} serviceConfiged={!!querySerive} />
+        )}
         <ProgressInfoView percent={progress} />
         <ProjectServiceCard indexerService={indexerSerive} queryService={querySerive} />
         {projectInfo && <ProjectDetailsView id={id} project={projectInfo} />}

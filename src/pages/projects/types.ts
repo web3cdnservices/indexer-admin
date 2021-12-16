@@ -5,8 +5,6 @@ import { IndexingStatus } from './constant';
 
 export type TProject = {
   id: string;
-  title: string;
-  progress: number;
   status: IndexingStatus;
   indexEndpoint?: string;
   queryEndpoint?: string;

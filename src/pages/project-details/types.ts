@@ -5,15 +5,14 @@ import { IndexingStatus } from '../projects/constant';
 
 export type TProject = {
   id: string;
-  name: string;
-  title: string;
-  progress: number;
+  indexerEndpoint: string;
+  queryEndpoint: string;
   status: IndexingStatus;
 };
 
-export type TProjectMetadata = {
+export type TServiceMetadata = {
   id: string;
-  status: string;
+  status: IndexingStatus;
   indexerEndpoint: string;
   queryEndpoint: string;
 };

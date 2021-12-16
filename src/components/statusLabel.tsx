@@ -8,15 +8,17 @@ const Container = styled.div<{ color?: string }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${(p) => p.color ?? 'lightgreen'};
+  border: 1px solid;
+  border-color: ${(p) => p.color ?? 'rgba(70, 219, 103, 0.9)'};
   border-radius: 5px;
   padding: 5px 10px;
   min-width: 80px;
 `;
 
-const Text = styled.div`
+const Text = styled.div<{ color?: string }>`
   font-size: 13px;
-  color: black;
+  font-weight: bold;
+  color: ${(p) => p.color ?? 'rgba(70, 219, 103, 0.9)'};
 `;
 
 type Props = {
@@ -26,7 +28,7 @@ type Props = {
 
 const StatusLabel: FC<Props> = ({ text, color }) => (
   <Container color={color}>
-    <Text>{text}</Text>
+    <Text color={color}>{text}</Text>
   </Container>
 );
 

@@ -10,6 +10,7 @@ export enum ActionType {
   configCntroller = 'configCntroller',
   addProject = 'addProject',
   removeProject = 'removeProject',
+  configServices = 'configServices',
   startIndexing = 'startIndexing',
   readyIndexing = 'readyIndexing',
   stopIndexing = 'stropIndexing',
