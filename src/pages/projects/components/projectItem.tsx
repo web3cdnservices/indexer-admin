@@ -1,7 +1,7 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Progress } from 'antd';
 import styled from 'styled-components';
@@ -11,6 +11,7 @@ import { Text } from 'components/primary';
 import StatusLabel from 'components/statusLabel';
 import { ProjectDetails } from 'hooks/projectHook';
 import { cidToBytes32 } from 'utils/ipfs';
+import { calculateProgress } from 'utils/project';
 
 import { statusColor, statusText } from '../constant';
 import { ItemContainer } from '../styles';
@@ -44,9 +45,18 @@ const ProgressBar = styled(Progress)`
 
 type Props = ProjectDetails;
 
+const strokeColor = { '0%': '#4388dd', '100%': '#ff4581' };
+
 const ProjectItem: FC<Props> = (props) => {
   const history = useHistory();
-  const { id, name, status } = props;
+  const { id, name, status, queryMetadata } = props;
+
+  const progress = useMemo(() => {
+    if (!queryMetadata) return 0;
+    const { targetHeight, lastProcessedHeight } = queryMetadata;
+    return calculateProgress(targetHeight, lastProcessedHeight);
+  }, [queryMetadata]);
+
   return (
     <Container onClick={() => history.push(`/project/${id}`, { data: props })}>
       <ItemContainer pl={15} flex={7}>
@@ -61,7 +71,7 @@ const ProjectItem: FC<Props> = (props) => {
         </ProfileContainer>
       </ItemContainer>
       <ItemContainer flex={6}>
-        <ProgressBar percent={0} />
+        <ProgressBar percent={progress} strokeColor={strokeColor} />
       </ItemContainer>
       <ItemContainer flex={1}>
         <StatusLabel text={statusText[status]} color={statusColor[status]} />
