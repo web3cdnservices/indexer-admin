@@ -6,6 +6,7 @@ import { formatUnits } from '@ethersproject/units';
 
 import { useContractSDK } from 'containers/contractSdk';
 import { useWeb3 } from 'hooks/web3Hook';
+import { HookDependency } from 'types/types';
 import { emptyControllerAccount } from 'utils/indexerActions';
 import { cidToBytes32 } from 'utils/ipfs';
 
@@ -153,7 +154,7 @@ export const useIndexerEvent = () => {
   return event;
 };
 
-export const useTokenBalance = (account: Account) => {
+export const useTokenBalance = (account: Account, deps?: HookDependency) => {
   const [balance, setBalance] = useState('0.00');
   const sdk = useContractSDK();
 
@@ -162,7 +163,7 @@ export const useTokenBalance = (account: Account) => {
       sdk?.sqToken.balanceOf(account).then((value) => {
         setBalance(Number(formatUnits(value, 18)).toFixed(2));
       });
-  }, [account]);
+  }, [account, deps]);
 
   return balance;
 };

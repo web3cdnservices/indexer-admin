@@ -75,24 +75,11 @@ export const CONFIG_SERVICES = gql`
   }
 `;
 
-export const START_PROJECT = gql`
-  mutation StartProject($indexerEndpoint: String!, $id: String!) {
-    startProject(indexerEndpoint: $indexerEndpoint, id: $id) {
+export const UPDATE_PROJECT_STATUS = gql`
+  mutation UpdateProjectStatus($status: float!, $id: String!) {
+    updateProjectStatus(status: $status, id: $id) {
       id
       status
-      indexerEndpoint
-      queryEndpoint
-    }
-  }
-`;
-
-export const READY_PROJECT = gql`
-  mutation ReadyProject($queryEndpoint: String!, $id: String!) {
-    updateProjectToReady(queryEndpoint: $queryEndpoint, id: $id) {
-      id
-      status
-      indexerEndpoint
-      queryEndpoint
     }
   }
 `;

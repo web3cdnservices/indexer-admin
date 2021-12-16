@@ -38,7 +38,7 @@ const Header = () => {
   const isMetaMask = useIsMetaMask();
   const isIndexer = useIsIndexer();
   const controller = useController(account);
-  const tokenBalance = useTokenBalance(account);
+  const tokenBalance = useTokenBalance(account, pathname);
   const activeStyle = { fontWeight: 500, color: '#4388dd' };
   const dropdownStyle = { border: 'unset !important', padding: 15, width: 100 };
 

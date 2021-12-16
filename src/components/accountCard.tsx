@@ -2,13 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC } from 'react';
+import { Tag } from '@subql/react-ui';
 import styled from 'styled-components';
 
 import { ActionType } from 'utils/transactions';
 
 import Avatar from './avatar';
 import { Button, ButtonContainer, Text } from './primary';
-import StatusLabel from './statusLabel';
 
 const Container = styled.div`
   display: flex;
@@ -82,7 +82,7 @@ const AccountCard: FC<Props> = ({
         <Text size={30} fw="bold" mr={20}>
           {title}
         </Text>
-        {!!status && <StatusLabel text={status} />}
+        {!!status && <Tag text={status} state="success" />}
       </MainTitleContainer>
       {!!account && !!buttonTitle && (
         <Button

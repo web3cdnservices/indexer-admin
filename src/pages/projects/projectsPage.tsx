@@ -32,8 +32,6 @@ const Projects = () => {
   const projectDetailList = useProjectDetailList(data);
   const [visible, setVisible] = useState(false);
 
-  console.log('>>>projectDetailList:', projectDetailList);
-
   useEffect(() => {
     setPageLoading(isUndefined(isIndexer) || isUndefined(projectDetailList));
     if (!isUndefined(isIndexer) && !isIndexer) {
