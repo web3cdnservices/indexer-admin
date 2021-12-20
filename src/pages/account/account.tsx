@@ -1,18 +1,16 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { bufferToHex, privateToAddress, toBuffer } from 'ethereumjs-util';
-import { isUndefined } from 'lodash';
 
 import AccountCard from 'components/accountCard';
 import ModalView from 'components/modalView';
 import { useContractSDK } from 'containers/contractSdk';
-import { useLoading } from 'containers/loadingContext';
 import { useToast } from 'containers/toastContext';
 import { useBalance, useController, useIsController, useIsIndexer } from 'hooks/indexerHook';
+import { useRouter } from 'hooks/routerHook';
 import { useIsMetaMask, useSigner, useWeb3 } from 'hooks/web3Hook';
 import { ControllerFormKey } from 'types/schemas';
 import { configController, unRegister } from 'utils/indexerActions';
@@ -34,28 +32,20 @@ const Registry = () => {
   const { account } = useWeb3();
   const signer = useSigner();
   const sdk = useContractSDK();
-  const history = useHistory();
   const isMetaMask = useIsMetaMask();
   const isIndexer = useIsIndexer();
   const isController = useIsController(account);
   const controller = useController(timestamp);
   const controllerBalance = useBalance(controller);
   const indexerBalance = useBalance(account);
-  const { setPageLoading } = useLoading();
   const toastContext = useToast();
   const [updateController] = useMutation(UPDAET_CONTROLLER);
   const [removeAccounts] = useMutation(REMOVE_ACCOUNTS);
+  useRouter();
 
   prompts.controller.desc = `Balance ${controllerBalance} DEV`;
   const controllerItem = !controller ? prompts.emptyController : prompts.controller;
   const indexerItem = prompts.indexer;
-
-  useEffect(() => {
-    setPageLoading(isUndefined(isIndexer));
-    if (!isUndefined(isIndexer) && !isIndexer) {
-      history.replace('/');
-    }
-  }, [isIndexer]);
 
   const onModalShow = (type: ActionType) => {
     setActionType(type);

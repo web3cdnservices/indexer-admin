@@ -2,15 +2,15 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { isEmpty, isUndefined } from 'lodash';
 
 import ModalView from 'components/modalView';
 import { Button, Text } from 'components/primary';
 import { useLoading } from 'containers/loadingContext';
-import { useController, useIsIndexer } from 'hooks/indexerHook';
+import { useIsIndexer } from 'hooks/indexerHook';
 import { getProjectInfo, ProjectDetails, useProjectDetailList } from 'hooks/projectHook';
+import { useRouter } from 'hooks/routerHook';
 import { ProjectFormKey } from 'types/schemas';
 import { ADD_PROJECT, GET_PROJECTS } from 'utils/queries';
 import { ActionType } from 'utils/transactions';
@@ -23,23 +23,17 @@ import { Container, ContentContainer, HeaderContainer } from './styles';
 
 const Projects = () => {
   const isIndexer = useIsIndexer();
-  const controller = useController();
-  const history = useHistory();
   const { setPageLoading } = useLoading();
   const [addProject, { loading }] = useMutation(ADD_PROJECT);
   const [getProjectList, { data }] = useLazyQuery(GET_PROJECTS, { fetchPolicy: 'network-only' });
+  useRouter();
 
   const projectDetailList = useProjectDetailList(data);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    setPageLoading(isUndefined(isIndexer) || isUndefined(projectDetailList));
-    if (!isUndefined(isIndexer) && !isIndexer) {
-      history.replace('/');
-    } else if (!isUndefined(controller) && !controller) {
-      history.replace('/account');
-    }
-  }, [isIndexer, projectDetailList]);
+    setPageLoading(isUndefined(projectDetailList));
+  }, [projectDetailList]);
 
   useEffect(() => {
     setPageLoading(true);

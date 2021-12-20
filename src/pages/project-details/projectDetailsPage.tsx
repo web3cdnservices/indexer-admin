@@ -12,6 +12,7 @@ import {
   useProjectDetails,
   useProjectService,
 } from 'hooks/projectHook';
+import { useRouter } from 'hooks/routerHook';
 import { createApolloClient } from 'utils/apolloClient';
 import { calculateProgress, healthStatus } from 'utils/project';
 import { GET_QUERY_METADATA } from 'utils/queries';
@@ -34,6 +35,7 @@ const ProjectDetailsPage = () => {
   const projectInfo = useProjectDetails(projectDetails);
   const projectService = useProjectService(id);
   const { setPageLoading } = useLoading();
+  useRouter();
 
   const [indexerSerive, setIndexerService] = useState<TService>();
   const [querySerive, setQueryService] = useState<TService>();

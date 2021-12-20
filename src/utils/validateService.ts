@@ -3,6 +3,7 @@
 
 /* eslint-disable */
 import { isValidPrivate, toBuffer } from 'ethereumjs-util';
+import { isUndefined } from 'lodash';
 import { createApolloClient } from './apolloClient';
 import { GET_QUERY_METADATA } from './queries';
 
@@ -19,7 +20,7 @@ export function isMetaMaskRejectError(e: Error): boolean {
 }
 
 // fields validation
-export const validatePrivateKey = (privateKey: string): string => {
+export function validatePrivateKey(privateKey: string): string {
   try {
     if (!privateKey.startsWith('0x')) {
       return 'Private key must start with 0x';
@@ -31,4 +32,8 @@ export const validatePrivateKey = (privateKey: string): string => {
     return 'Invalid private key';
   }
   return '';
-};
+}
+
+export function isFalse(value: boolean | string | undefined) {
+  return !isUndefined(value) && !value;
+}

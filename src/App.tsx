@@ -12,7 +12,7 @@ import { ContractSDKProvider } from 'containers/contractSdk';
 import { CoordinatorIndexerProvider } from 'containers/coordinatorIndexer';
 import { LoadingProvider } from 'containers/loadingContext';
 import { ToastProvider } from 'containers/toastContext';
-import { createApolloClient } from 'utils/apolloClient';
+import { createApolloClient, defaultServiceUrl } from 'utils/apolloClient';
 
 import * as Pages from './pages';
 
@@ -38,13 +38,9 @@ const AppContents = () => (
 );
 
 const App: FC = () => {
+  const client = createApolloClient(window.env.COORDINATOR_GRAPHQL ?? defaultServiceUrl);
   return (
-    <ApolloProvider
-      client={createApolloClient(
-        window.env.COORDINATOR_GRAPHQL ??
-          `${window.location.protocol}//${window.location.host}/graphql`
-      )}
-    >
+    <ApolloProvider client={client}>
       <Web3Provider>
         <ContractSDKProvider>
           <CoordinatorIndexerProvider>
