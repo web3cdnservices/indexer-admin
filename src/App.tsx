@@ -9,6 +9,7 @@ import Loading from 'components/loading';
 import Toast from 'components/toast';
 import { Web3Provider } from 'containers';
 import { ContractSDKProvider } from 'containers/contractSdk';
+import { CoordinatorIndexerProvider } from 'containers/coordinatorIndexer';
 import { LoadingProvider } from 'containers/loadingContext';
 import { ToastProvider } from 'containers/toastContext';
 import { createApolloClient } from 'utils/apolloClient';
@@ -26,6 +27,7 @@ const AppContents = () => (
         <Route component={Pages.Projects} path="/projects" />
         <Route exact component={Pages.ProjectDetail} path="/project/:id" />
         <Route component={Pages.Account} path="/account" />
+        <Route component={Pages.Register} path="/register" />
         <Route component={Pages.Login} path="/" />
       </Switch>
       <Loading />
@@ -37,16 +39,23 @@ const AppContents = () => (
 
 const App: FC = () => {
   return (
-    <ApolloProvider client={createApolloClient()}>
+    <ApolloProvider
+      client={createApolloClient(
+        window.env.COORDINATOR_GRAPHQL ??
+          `${window.location.protocol}//${window.location.host}/graphql`
+      )}
+    >
       <Web3Provider>
         <ContractSDKProvider>
-          <LoadingProvider>
-            <ToastProvider>
-              <div className="App">
-                <AppContents />
-              </div>
-            </ToastProvider>
-          </LoadingProvider>
+          <CoordinatorIndexerProvider>
+            <LoadingProvider>
+              <ToastProvider>
+                <div className="App">
+                  <AppContents />
+                </div>
+              </ToastProvider>
+            </LoadingProvider>
+          </CoordinatorIndexerProvider>
         </ContractSDKProvider>
       </Web3Provider>
     </ApolloProvider>

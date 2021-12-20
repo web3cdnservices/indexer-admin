@@ -4,7 +4,7 @@
 import { utils } from 'ethers';
 import { create } from 'ipfs-http-client';
 
-export const IPFS = create({ url: process.env.REACT_APP_IPFS_GATEWAY });
+export const IPFS = create({ url: window.env.IPFS_GATEWAY });
 
 export function cidToBytes32(cid: string): string {
   return `0x${Buffer.from(utils.base58.decode(cid)).slice(2).toString('hex')}`;

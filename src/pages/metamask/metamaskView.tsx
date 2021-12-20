@@ -1,7 +1,7 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { browserName } from 'react-device-detect';
 import { isUndefined } from 'lodash';
 
@@ -26,7 +26,7 @@ const MetaMaskView = () => {
     setNetworkError(error?.name === NetworkError.unSupportedNetworkError);
   }, [error]);
 
-  const getData = useCallback(() => {
+  const data = useMemo(() => {
     const { install, connect, error } = prompts;
     if (!isMetaMaskInstalled) return install;
     if (isNetworkError) return error;
@@ -47,7 +47,6 @@ const MetaMaskView = () => {
     }
   }, [isNetworkError, isMetaMaskInstalled]);
 
-  const data = getData();
   const renderMetaMaskItem = () => (
     <MetaMaskContainer>
       <div>

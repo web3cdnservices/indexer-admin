@@ -9,12 +9,10 @@ export type QueryResult = {
   error?: Error;
 };
 
-export const GET_ACCOUNT_METADATA = gql`
+export const GET_COORDINATOR_INDEXER = gql`
   query {
     accountMetadata {
       indexer
-      network
-      wsEndpoint
     }
   }
 `;

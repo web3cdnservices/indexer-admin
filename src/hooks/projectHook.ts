@@ -79,7 +79,7 @@ type Result = {
 };
 
 const queryRegistryClient = new ApolloClient({
-  uri: process.env.REACT_APP_QUERY_REGISTRY_PROJECT,
+  uri: window.env.REGISTRY_PROJECT,
   cache: new InMemoryCache(),
 });
 
