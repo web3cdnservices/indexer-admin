@@ -8,6 +8,7 @@ import { isUndefined } from 'lodash';
 
 import IntroductionView from 'components/introductionView';
 import { useContractSDK } from 'containers/contractSdk';
+import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useLoading } from 'containers/loadingContext';
 import { useIsIndexer, useTokenBalance } from 'hooks/indexerHook';
 import { useInitialStep } from 'hooks/registerHook';
@@ -15,13 +16,13 @@ import { useSigner, useWeb3 } from 'hooks/web3Hook';
 import { RegisterFormKey, TRegisterValues } from 'types/schemas';
 import { indexerRegistry, indexerRequestApprove } from 'utils/indexerActions';
 import { createIndexerMetadata } from 'utils/ipfs';
+
 import { Container } from '../login/styles';
 import IndexerRegistryView from './indexerRegistryView';
 import prompts from './prompts';
 import { RegistrySteps } from './styles';
 import { RegisterStep } from './types';
 import { getStepIndex, getStepStatus, registerSteps } from './utils';
-import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 
 const RegisterPage = () => {
   const signer = useSigner();

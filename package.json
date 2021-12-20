@@ -1,5 +1,5 @@
 {
-  "name": "indexer-admin",
+  "name": "@subql/indexer-admin",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,6 +7,8 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject",
+    "prepare": "husky install",
+    "lint": "eslint src/**/*.{ts,tsx}",
     "start:node": "sh ./scripts/start-node.sh",
     "deploy:contract": "sh ./scripts/deploy-contract.sh && yarn upgrade @subql/contract-sdk"
   },

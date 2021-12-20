@@ -18,7 +18,7 @@ const LoginPage = () => {
 
   React.useEffect(() => {
     load();
-  }, [load])
+  }, [load]);
 
   if (loading) {
     // TODO loading UI
@@ -29,8 +29,8 @@ const LoginPage = () => {
     <Container>
       {!account ? (
         <MetaMaskView />
-        ) : (
-        <Redirect to={isIndexer && coordinatorIndexer ? '/account' : '/register'}/>
+      ) : (
+        <Redirect to={isIndexer && coordinatorIndexer ? '/account' : '/register'} />
       )}
     </Container>
   );

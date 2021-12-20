@@ -41,7 +41,8 @@ const App: FC = () => {
   return (
     <ApolloProvider
       client={createApolloClient(
-        window.env.COORDINATOR_GRAPHQL ?? `${window.location.protocol}//${window.location.host}/graphql`
+        window.env.COORDINATOR_GRAPHQL ??
+          `${window.location.protocol}//${window.location.host}/graphql`
       )}
     >
       <Web3Provider>
