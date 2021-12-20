@@ -3,7 +3,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import { FormikHelpers } from 'formik';
 import { isUndefined } from 'lodash';
 
@@ -14,17 +13,15 @@ import { useIsIndexer, useTokenBalance } from 'hooks/indexerHook';
 import { useInitialStep } from 'hooks/registerHook';
 import { useSigner, useWeb3 } from 'hooks/web3Hook';
 import { RegisterFormKey, TRegisterValues } from 'types/schemas';
-import Config from 'utils/config';
 import { indexerRegistry, indexerRequestApprove } from 'utils/indexerActions';
 import { createIndexerMetadata } from 'utils/ipfs';
-import { ADD_INDEXER } from 'utils/queries';
-
 import { Container } from '../login/styles';
 import IndexerRegistryView from './indexerRegistryView';
 import prompts from './prompts';
 import { RegistrySteps } from './styles';
 import { RegisterStep } from './types';
 import { getStepIndex, getStepStatus, registerSteps } from './utils';
+import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 
 const RegisterPage = () => {
   const signer = useSigner();
@@ -34,7 +31,7 @@ const RegisterPage = () => {
   const tokenBalance = useTokenBalance(account);
   const history = useHistory();
   const initialStep = useInitialStep();
-  const [addIndexer] = useMutation(ADD_INDEXER);
+  const { indexer: coordinatorIndexer, updateIndexer } = useCoordinatorIndexer();
   const { setPageLoading } = useLoading();
 
   const [currentStep, setStep] = useState<RegisterStep>();
@@ -49,7 +46,7 @@ const RegisterPage = () => {
   }, [initialStep, isIndexer]);
 
   useEffect(() => {
-    if (isIndexer && account === Config.getInstance().getIndexer()) {
+    if (isIndexer && account === coordinatorIndexer) {
       history.replace('/account');
     }
   }, [isIndexer]);
@@ -69,7 +66,10 @@ const RegisterPage = () => {
 
   const onSyncIndexer = async () => {
     setLoading(true);
-    await addIndexer({ variables: { indexer: account } });
+    if (!account) {
+      throw new Error('Account not found');
+    }
+    await updateIndexer(account);
     setLoading(false);
     history.replace('/account');
   };

@@ -5,16 +5,14 @@
 // @ts-nocheck
 
 import { intToHex } from 'ethereumjs-util';
-import Config from './config';
 import { connect, NetworkToChainID, chainNames, RPC_URLS } from 'containers/web3';
-import { chain } from 'lodash';
 
 export const NetworkError = {
   unSupportedNetworkError: 'UnsupportedChainIdError',
 };
 
 export async function connectWithMetaMask(activate: Function) {
-  if (window?.ethereum) {
+  if (window.ethereum) {
     await window.ethereum.request({ method: 'eth_requestAccounts' });
     await connect(activate);
     return;
@@ -46,7 +44,7 @@ function addNetwork(chainId: number) {
 }
 
 export async function switchNetwork() {
-  const network = Config.getInstance().getNetwork();
+  const network = window.env.NETWORK;
   if (!window?.ethereum || !network) return;
   const chainId = NetworkToChainID[network];
 

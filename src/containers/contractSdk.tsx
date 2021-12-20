@@ -49,12 +49,12 @@ function useContractsImpl(logger: Logger): SDK {
     }
 
     if (library && isMetaMask) {
-      try {
-        ContractSDK.create(library, sdkOption).then((instance) => setSdk(instance));
-      } catch (e) {
-        logger.e('Failed to create ContractSDK instance', e);
-        setSdk(undefined);
-      }
+      ContractSDK.create(library, sdkOption)
+        .then((instance) => setSdk(instance))
+        .catch((e) => {
+          logger.e('Failed to create ContractSDK instance', e);
+          setSdk(undefined);
+        });
     }
   }, [logger, library, chainId, isMetaMask]);
 
