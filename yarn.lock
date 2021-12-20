@@ -2344,16 +2344,10 @@
     dotenv "^10.0.0"
     fs "^0.0.1-security"
 
-"@subql/react-ui@git+ssh://git@github.com:subquery/react-ui.git":
-  version "1.0.1-9"
-  resolved "git+ssh://git@github.com:subquery/react-ui.git#fd3832481def4468704039b086efc1df5a664029"
-  dependencies:
-    eslint-plugin-react "^7.27.1"
-    react-jazzicon "^0.1.3"
-
-"@subql/react-ui@subquery/react-ui":
+"@subql/react-ui@^1.0.1-19":
   version "1.0.1-19"
-  resolved "https://codeload.github.com/subquery/react-ui/tar.gz/3b1920dbc6b181b326bc5cff4a31cba9382ebe6d"
+  resolved "https://registry.yarnpkg.com/@subql/react-ui/-/react-ui-1.0.1-19.tgz#823f92689da83ccd76714df5ca875ec937c3f2f0"
+  integrity sha512-uvKYQ978I66rj4y3dAt4LNcNIQNq1ArTcYFfdif3Re6YRg7johCGMfBp6S1kKO4LdhliXJVAanAte4TYj50YRA==
   dependencies:
     clsx "^1.1.1"
     eslint-plugin-react "^7.27.1"
