@@ -77,7 +77,7 @@ type Props = {
 
 const formatDate = (date: string) => new Date(date).toLocaleDateString();
 
-const ProjectDetailsView: FC<Props> = ({ id, project }) => {
+const ProjectDetailsView: FC<Props> = ({ project }) => {
   const {
     description,
     websiteUrl,
