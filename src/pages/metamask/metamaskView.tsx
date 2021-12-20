@@ -3,10 +3,10 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { browserName } from 'react-device-detect';
-import { isUndefined } from 'lodash';
 
 import Icon from 'components/Icon';
 import { Button, Label, Text } from 'components/primary';
+import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useIsMetaMask, useIsMetaMaskInstalled, useWeb3 } from 'hooks/web3Hook';
 import ArrowIcon from 'resources/arrow.svg';
 import MetaMaskIcon from 'resources/metamask.svg';
@@ -17,7 +17,8 @@ import prompts from './prompts';
 import { Container, ContentContainer, MetaMaskContainer } from './styles';
 
 const MetaMaskView = () => {
-  const { activate, error } = useWeb3();
+  const { account, activate, error } = useWeb3();
+  const { indexer } = useCoordinatorIndexer();
   const isMetaMask = useIsMetaMask();
   const isMetaMaskInstalled = useIsMetaMaskInstalled();
   const [isNetworkError, setNetworkError] = useState(false);
@@ -27,58 +28,58 @@ const MetaMaskView = () => {
   }, [error]);
 
   const data = useMemo(() => {
-    const { install, connect, error } = prompts;
+    const { install, connect, invalidNetwork, invalidAccount } = prompts(indexer);
     if (!isMetaMaskInstalled) return install;
-    if (isNetworkError) return error;
-    return connect;
-  }, [isNetworkError, isMetaMaskInstalled]);
+    if (isNetworkError) return invalidNetwork;
+    if (!isMetaMask) return connect;
+    return invalidAccount;
+  }, [isNetworkError, isMetaMaskInstalled, isMetaMask, account]);
 
   const onButtonClick = useCallback(() => {
     if (isNetworkError) {
       switchNetwork();
       return;
     }
-    if (isMetaMaskInstalled) {
-      connectWithMetaMask(activate);
-    } else {
+    if (!isMetaMaskInstalled) {
       // @ts-ignore
       const url = extensionInstallUrls[browserName] ?? '';
       url && window.open(url, '_blank', 'noopener,noreferrer');
+      return;
     }
-  }, [isNetworkError, isMetaMaskInstalled]);
+    if (!isMetaMask) {
+      connectWithMetaMask(activate);
+    }
+  }, [isMetaMask, isNetworkError, isMetaMaskInstalled]);
 
-  const renderMetaMaskItem = () => (
-    <MetaMaskContainer>
-      <div>
-        <ContentContainer>
-          <Icon size={50} src={MetaMaskIcon} />
-          <Label ml={20} size={25}>
-            MetaMask
-          </Label>
-        </ContentContainer>
-        <Text mt={10}>{data.buttonTitle}</Text>
-      </div>
-      <Icon size={30} src={ArrowIcon} />
-    </MetaMaskContainer>
+  const metaMaskItem = useMemo(
+    () => (
+      <MetaMaskContainer>
+        <div>
+          <ContentContainer>
+            <Icon size={50} src={MetaMaskIcon} />
+            <Label ml={20} size={25}>
+              MetaMask
+            </Label>
+          </ContentContainer>
+          <Text mt={10}>{data.buttonTitle}</Text>
+        </div>
+        <Icon size={30} src={ArrowIcon} />
+      </MetaMaskContainer>
+    ),
+    [data]
   );
 
-  return !isUndefined(isMetaMask) && !isMetaMask ? (
+  return (
     <Container>
-      <Label size={35} fw="400">
+      <Label alignCenter size={35} fw="400">
         {data.title}
       </Label>
       <Text alignCenter mt={15}>
         {data.desc}
       </Text>
-      <Button
-        mt={50}
-        type="secondary"
-        title=""
-        onClick={() => onButtonClick()}
-        leftItem={renderMetaMaskItem()}
-      />
+      <Button mt={50} type="secondary" title="" onClick={onButtonClick} leftItem={metaMaskItem} />
     </Container>
-  ) : null;
+  );
 };
 
 export default MetaMaskView;

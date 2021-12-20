@@ -48,6 +48,7 @@ export const Text = styled.div<TextProps>`
 
 export const Label = styled.label<TextProps>`
   color: ${({ color }) => color ?? '#1A202C'};
+  text-align: ${({ alignCenter }) => (alignCenter ? 'center' : 'left')};
   font-size: ${({ size }) => size ?? 15}px;
   font-weight: ${({ fw }) => fw ?? 500};
   margin-left: ${({ ml }) => ml ?? 0}px;

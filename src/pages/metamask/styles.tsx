@@ -7,9 +7,9 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 45%;
+  max-width: 950px;
   min-width: 650px;
-  margin-top: -50px;
+  margin-top: -100px;
 `;
 
 export const MetaMaskContainer = styled.div`

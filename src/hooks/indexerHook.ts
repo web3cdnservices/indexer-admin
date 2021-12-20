@@ -10,7 +10,7 @@ import { HookDependency } from 'types/types';
 import { emptyControllerAccount } from 'utils/indexerActions';
 import { cidToBytes32 } from 'utils/ipfs';
 
-type Account = string | null | undefined;
+export type Account = string | null | undefined;
 
 export const useIsIndexer = (address?: Account): boolean | undefined => {
   const { account: currentAccount } = useWeb3();
@@ -19,7 +19,12 @@ export const useIsIndexer = (address?: Account): boolean | undefined => {
   const sdk = useContractSDK();
 
   useEffect(() => {
-    sdk?.indexerRegistry
+    if (!sdk) {
+      setIsIndexer(false);
+      return;
+    }
+
+    sdk.indexerRegistry
       .isIndexer(account ?? '')
       .then((isIndexer) => setIsIndexer(isIndexer))
       .catch(() => setIsIndexer(false));

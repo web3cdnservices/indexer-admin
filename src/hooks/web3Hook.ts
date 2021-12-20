@@ -8,7 +8,7 @@ import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
 import { providers } from 'ethers';
 
 export function useIsMetaMaskInstalled(): boolean {
-  return useMemo(() => window.ethereum?.isMetaMask, []);
+  return useMemo(() => window.ethereum?.isMetaMask, [window.ethereum]);
 }
 
 export const useWeb3 = (): Web3ReactContextInterface<providers.Web3Provider> => useWeb3React();

@@ -20,7 +20,6 @@ import { REMOVE_ACCOUNTS, UPDAET_CONTROLLER } from 'utils/queries';
 import { ActionType, handleTransaction } from 'utils/transactions';
 import { validatePrivateKey } from 'utils/validateService';
 
-import MetaMaskView from '../metamask/metamaskView';
 import { createControllerSteps, createUnregisterSteps, modalTitles } from './config';
 import prompts from './prompts';
 import { Container } from './styles';
@@ -156,7 +155,6 @@ const Registry = () => {
           onClick={onModalShow}
         />
       )}
-      <MetaMaskView />
       {actionType && (
         <ModalView
           visible={visible}
