@@ -57,8 +57,9 @@ const Projects = () => {
     }
   });
 
-  const renderProjects = () =>
-    !isUndefined(projectDetailList) && !isEmpty(projectDetailList) ? (
+  const renderProjects = () => {
+    if (isUndefined(projectDetailList)) return null;
+    return !isEmpty(projectDetailList) ? (
       <ContentContainer>
         <HeaderContainer>
           <Text size={45}>Projects</Text>
@@ -72,6 +73,7 @@ const Projects = () => {
     ) : (
       <EmptyView onClick={() => setVisible(true)} />
     );
+  };
 
   return (
     <Container>

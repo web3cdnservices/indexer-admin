@@ -3,7 +3,7 @@
 
 import { FC, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Progress } from 'antd';
+import { ProgressBar } from '@subql/react-ui';
 import styled from 'styled-components';
 
 import Avatar from 'components/avatar';
@@ -30,6 +30,11 @@ const Container = styled.div`
   }
 `;
 
+const Progress = styled(ProgressBar)`
+  max-width: 60%;
+  min-width: 300;
+`;
+
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -37,15 +42,7 @@ const ProfileContainer = styled.div`
   margin-left: 20px;
 `;
 
-const ProgressBar = styled(Progress)`
-  width: 50%;
-  min-width: 300;
-  margin-right: 20px;
-`;
-
 type Props = ProjectDetails;
-
-const strokeColor = { '0%': '#4388dd', '100%': '#ff4581' };
 
 const ProjectItem: FC<Props> = (props) => {
   const history = useHistory();
@@ -71,7 +68,7 @@ const ProjectItem: FC<Props> = (props) => {
         </ProfileContainer>
       </ItemContainer>
       <ItemContainer flex={6}>
-        <ProgressBar percent={progress} strokeColor={strokeColor} />
+        <Progress progress={progress / 100} />
       </ItemContainer>
       <ItemContainer flex={1}>
         <StatusLabel text={statusText[status]} color={statusColor[status]} />

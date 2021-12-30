@@ -81,7 +81,7 @@ const Header = () => {
       <Dropdown
         items={accountDetails}
         onSelected={onSelected}
-        dropdownStyle={{ ...buttonStyles.secondary, ...dropdownStyle }}
+        dropdownClass={{ ...buttonStyles.secondary, ...dropdownStyle }}
       >
         <Address address={account} size="large" />
       </Dropdown>

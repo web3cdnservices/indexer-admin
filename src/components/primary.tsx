@@ -2,9 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC, useMemo } from 'react';
-import { LoadingOutlined } from '@ant-design/icons';
-import { Button as SubButton } from '@subql/react-ui';
-import { Spin } from 'antd';
+import { Button as SubButton, Spinner } from '@subql/react-ui';
 import { Form } from 'formik';
 import styled from 'styled-components';
 
@@ -83,21 +81,9 @@ type ButtonProps = {
   onClick?: () => void;
 };
 
-type SpinProps = {
-  loading: boolean;
-  type?: 'primary' | 'secondary';
-};
-
-const AntIcon: FC<SpinProps> = ({ loading, type }) => (
-  <LoadingOutlined
-    style={{
-      fontSize: 20,
-      marginRight: 30,
-      color: `${type === 'primary' ? '#fff' : '#4388dd'}`,
-    }}
-    spin={loading}
-  />
-);
+const Spin = styled(Spinner)`
+  margin-right: 15px;
+`;
 
 export const Button: FC<ButtonProps & StyledButtonProps> = ({
   title,
@@ -111,7 +97,9 @@ export const Button: FC<ButtonProps & StyledButtonProps> = ({
       <StyledButton
         label={title}
         type={type ?? 'secondary'}
-        leftItem={loading && <Spin indicator={<AntIcon type={type} loading />} />}
+        leftItem={
+          loading && <Spin size={23} color={`${type === 'primary' ? '#fff' : '#4388dd'}`} />
+        }
         disabled={disabled || loading}
         {...props}
       />

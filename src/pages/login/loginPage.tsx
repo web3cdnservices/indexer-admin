@@ -26,8 +26,6 @@ const LoginPage = () => {
     setPageLoading(loading || isUndefined(isIndexer));
   }, [loading, isIndexer]);
 
-  console.log('>>isIndexer:', isIndexer);
-
   const isCorrectAccount = () => account?.toLowerCase() === coordinatorIndexer?.toLocaleLowerCase();
 
   const renderContent = () => (

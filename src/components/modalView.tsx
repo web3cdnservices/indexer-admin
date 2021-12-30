@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC } from 'react';
+import Modal from 'react-modal';
 import { Steps } from 'antd';
 import { Form, Formik, FormikHelpers, FormikValues } from 'formik';
 import styled from 'styled-components';
@@ -9,41 +10,54 @@ import { ObjectSchema } from 'yup';
 
 import { RegistrySteps } from 'pages/register/styles';
 import { getStepStatus } from 'pages/register/utils';
+import cross from 'resources/cross.svg';
 import { ActionType } from 'utils/transactions';
 
-import ActionModal, { ModalProps } from './actionModal';
 import { FieldItem } from './formItem';
+import Icon from './Icon';
 import { Button, ButtonContainer, Text } from './primary';
 
-export const Container = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding-top: 10px;
-  padding-bottom: 25px;
+  padding: 32px;
+  padding-bottom: 52px;
 `;
 
-export const ModalSteps = styled(Steps)`
+const HeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  padding: 16px 32px;
+  border-bottom: 1px solid var(--sq-gray300);
+`;
+
+const IconContainer = styled.div`
+  margin-top: 5px;
+`;
+
+const ModalSteps = styled(Steps)`
   width: 100%;
   min-width: 350px;
   margin-bottom: 40px;
 `;
 
-export const InputForm = styled(Form)`
+const InputForm = styled(Form)`
   display: flex;
   flex: 1;
   flex-direction: column;
   justify-content: space-between;
 `;
 
-export const ContentContainer = styled.div`
+const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
 `;
 
-export const DescContainer = styled.div`
+const DescContainer = styled.div`
   display: flex;
   width: 80%;
   flex-direction: column;
@@ -76,12 +90,35 @@ export type StepItem = {
   form?: FormConfig;
 };
 
+const modalStyles = {
+  content: {
+    backgroundColor: 'white',
+    borderRadius: 15,
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    maxWidth: 900,
+    minWidth: 700,
+    padding: 0,
+  },
+  overlay: {
+    zIndex: 50,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+  },
+};
+
 type Props = {
   steps: StepItem[] | undefined;
   currentStep: number;
   loading?: boolean;
   type?: ActionType;
-} & ModalProps;
+  visible: boolean;
+  title: string;
+  onClose: () => void;
+};
 
 const ModalView: FC<Props> = ({
   visible,
@@ -153,6 +190,17 @@ const ModalView: FC<Props> = ({
     </ContentContainer>
   );
 
+  const renderHeader = () => (
+    <HeaderContainer onClick={onClose}>
+      <Text fw="500" size={20}>
+        {title}
+      </Text>
+      <IconContainer>
+        <Icon size={18} src={cross} />
+      </IconContainer>
+    </HeaderContainer>
+  );
+
   const renderSteps = () =>
     steps?.length > 1 && (
       <ModalSteps size="small" current={currentStep}>
@@ -167,12 +215,13 @@ const ModalView: FC<Props> = ({
     );
 
   return (
-    <ActionModal title={title} visible={visible} onClose={onClose}>
+    <Modal isOpen={visible} style={modalStyles} closeTimeoutMS={200}>
+      {renderHeader()}
       <Container>
         {renderSteps()}
         {stepItem.form ? renderFormContent(stepItem) : renderContent(stepItem)}
       </Container>
-    </ActionModal>
+    </Modal>
   );
 };
 
