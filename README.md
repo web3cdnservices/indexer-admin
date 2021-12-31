@@ -1,11 +1,16 @@
 # Indexer Admin App
 
+## Development
+
+1. Config the specific env in `public/evn.js`.
+2. Start [indexer-coordinator](https://github.com/subquery/indexer-coordinator) service.
+3. Run `yarn start` to start the web server.
+
 ## Testing with testnet
 
-Start `indexer-coordinator` service locally.
+Start [indexer-coordinator](https://github.com/subquery/indexer-coordinator) service locally.
 
-Run `yarn start` to start the app locally.
-
+Open `localhost:8000` to play with the app.
 
 ## Tools
 
