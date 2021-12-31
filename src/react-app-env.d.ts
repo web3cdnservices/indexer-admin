@@ -3,7 +3,6 @@
 
 console.log('react-app-evn');
 
-
 interface Window {
   ethereum?: any;
   env: Record<string, string>;

@@ -8,7 +8,6 @@ import { useContractSDK } from 'containers/contractSdk';
 import { useWeb3 } from 'hooks/web3Hook';
 import { HookDependency } from 'types/types';
 import { emptyControllerAccount } from 'utils/indexerActions';
-import { cidToBytes32 } from 'utils/ipfs';
 
 export type Account = string | null | undefined;
 
@@ -47,54 +46,6 @@ export const useIsController = (account: Account) => {
   return isController;
 };
 
-const useCheckStateChanged = (caller?: () => Promise<boolean | string | number> | undefined) => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error>();
-
-  const request = useCallback(
-    (targetValue: boolean | string | number, callBack: () => void): Promise<void> =>
-      new Promise((_, reject) => {
-        if (!caller) {
-          reject(new Error('Contract SDK not init'));
-          return;
-        }
-
-        setLoading(true);
-        const id = setInterval(() => {
-          caller()
-            ?.then((value) => {
-              if (value === targetValue) {
-                setError(undefined);
-                setLoading(false);
-                callBack();
-                clearInterval(id);
-              }
-            })
-            .catch((e) => setError(e));
-        }, 2000);
-        setTimeout(() => {
-          if (!loading) return;
-          setLoading(false);
-          clearInterval(id);
-          reject(new Error('Check state request time out'));
-        }, 100000);
-      }),
-    [caller]
-  );
-
-  return { request, loading, error };
-};
-
-export const useIsIndexingStatusChanged = (id: string) => {
-  const { account } = useWeb3();
-  const sdk = useContractSDK();
-  return useCheckStateChanged(() =>
-    sdk?.queryRegistry
-      .deploymentStatusByIndexer(cidToBytes32(id), account ?? '')
-      .then((item) => item.status)
-  );
-};
-
 export const useController = (refresh?: number) => {
   const [controller, setController] = useState<string>();
   const { account } = useWeb3();
@@ -124,39 +75,6 @@ export const useControllerToIndexer = (account: Account) => {
   }, [account, sdk]);
 
   return indexer;
-};
-
-export const useAccountType = (account: Account) => {
-  const [accountType, setAccountType] = useState<string>('');
-  const isIndexer = useIsIndexer(account);
-  const isController = useIsController(account);
-
-  useEffect(() => {
-    // eslint-disable-next-line no-nested-ternary
-    setAccountType(isIndexer ? 'Indexer' : isController ? 'Controller' : '');
-  }, [account, isIndexer, isController]);
-
-  return accountType;
-};
-
-// events hook
-export const useIndexerEvent = () => {
-  const [event, setEvent] = useState<string>('');
-  const sdk = useContractSDK();
-
-  useEffect(() => {
-    sdk?.queryRegistry.on('StartIndexing', (deploymentId) =>
-      setEvent(`Indexer starts indexing the project ${deploymentId}`)
-    );
-    sdk?.queryRegistry.on('StopIndexing', (deploymentId) =>
-      setEvent(`Indexer stop indexing the project ${deploymentId}`)
-    );
-    sdk?.queryRegistry.on('CreateQuery', (a, b, deploymentId) =>
-      setEvent(`New Query project created: ${deploymentId}`)
-    );
-  }, [sdk]);
-
-  return event;
 };
 
 export const useTokenBalance = (account: Account, deps?: HookDependency) => {

@@ -7,11 +7,11 @@ import { ApolloProvider } from '@apollo/client';
 
 import Loading from 'components/loading';
 import Toast from 'components/toast';
-import { Web3Provider } from 'containers';
 import { ContractSDKProvider } from 'containers/contractSdk';
 import { CoordinatorIndexerProvider } from 'containers/coordinatorIndexer';
 import { LoadingProvider } from 'containers/loadingContext';
 import { ToastProvider } from 'containers/toastContext';
+import { Web3Provider } from 'containers/web3';
 import { createApolloClient, defaultServiceUrl } from 'utils/apolloClient';
 
 import * as Pages from './pages';

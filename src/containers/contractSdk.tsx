@@ -8,9 +8,9 @@ import localnetDeployment from 'contract/localnet.json';
 import testnetDeployment from 'contract/testnet.json';
 import { useIsMetaMask, useWeb3 } from 'hooks/web3Hook';
 import Logger from 'utils/logger';
+import { ChainID, isSupportNetwork } from 'utils/web3';
 
 import { createContainer } from './unstated';
-import { ChainID, isSupportNetwork } from './web3';
 
 const deployments = {
   local: localnetDeployment,

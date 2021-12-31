@@ -19,12 +19,11 @@ const Container = styled.div`
 
 const Toast: FC = () => {
   const { toast } = useToast();
-  if (!toast) return null;
-  return (
+  return toast ? (
     <Container>
       <SubToast state={toast.type} text={toast.text} />
     </Container>
-  );
+  ) : null;
 };
 
 export default Toast;

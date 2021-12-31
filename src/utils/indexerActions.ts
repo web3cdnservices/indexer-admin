@@ -16,7 +16,6 @@ const ErrorMessages = {
   controllerError: 'Controller can not be empty',
 };
 
-// TODO: refactor: remove sdk and signer parameters
 export async function indexerRequestApprove(sdk: SDK, signer: Signer, amount: string | undefined) {
   if (!sdk || !signer) {
     throw new Error(ErrorMessages.sdkOrSignerError);

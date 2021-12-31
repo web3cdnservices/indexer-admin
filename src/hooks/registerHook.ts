@@ -1,7 +1,7 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { isUndefined } from 'lodash';
 
 import { useContractSDK } from 'containers/contractSdk';
@@ -26,8 +26,10 @@ export const useIsApproved = () => {
 
 export const useInitialStep = (): RegisterStep | undefined => {
   const isApproved = useIsApproved();
-  if (isUndefined(isApproved)) return undefined;
 
-  if (isApproved) return RegisterStep.register;
-  return RegisterStep.onboarding;
+  return useMemo(() => {
+    if (isUndefined(isApproved)) return undefined;
+    if (isApproved) return RegisterStep.register;
+    return RegisterStep.onboarding;
+  }, [isApproved]);
 };

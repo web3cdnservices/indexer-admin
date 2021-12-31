@@ -60,7 +60,6 @@ const Registry = () => {
 
   const controllerStepsConfig = createControllerSteps(
     async (values, formHelper) => {
-      // FIXME: refactor this part
       formHelper.setStatus({ loading: true });
       const privateKey = values[ControllerFormKey.privateKey];
       const error = validatePrivateKey(privateKey);

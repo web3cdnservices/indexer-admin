@@ -5,7 +5,8 @@
 // @ts-nocheck
 
 import { intToHex } from 'ethereumjs-util';
-import { connect, NetworkToChainID, chainNames, RPC_URLS } from 'containers/web3';
+import { NetworkToChainID, chainNames, RPC_URLS } from 'utils/web3';
+import { connect } from 'containers/web3';
 
 export const NetworkError = {
   unSupportedNetworkError: 'UnsupportedChainIdError',

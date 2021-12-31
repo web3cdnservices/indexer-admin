@@ -118,7 +118,6 @@ export const useProjectDetails = (data: ProjectDetails): ProjectDetails | undefi
   const [project, setProject] = useState<ProjectDetails | undefined>(data);
   const { toast } = useToast();
   const deploymentId = data.id;
-  // TODO: add query metadata and status in the request
 
   const fetchMeta = useCallback(async () => {
     try {

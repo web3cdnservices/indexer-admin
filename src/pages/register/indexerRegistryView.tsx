@@ -22,7 +22,6 @@ type Props = {
   onSubmit: (values: TRegisterValues, helper: FormikHelpers<TRegisterValues>) => void;
 };
 
-// FIXME: fix the forms
 const IndexerRegistryView: FC<Props> = ({ onSubmit, loading }) => {
   const { title, buttonTitle } = prompts[RegisterStep.register];
   return (

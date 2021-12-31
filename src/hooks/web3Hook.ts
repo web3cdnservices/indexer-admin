@@ -1,7 +1,7 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
@@ -21,18 +21,11 @@ export function useWeb3Provider(): providers.Web3Provider | undefined {
 export type Signer = JsonRpcSigner | undefined;
 
 export function useSigner(): Signer {
-  const [signer, setSigner] = useState<JsonRpcSigner>();
   const { active, account, library } = useWeb3();
-
-  useEffect(() => {
-    setSigner(library?.getSigner());
-  }, [active, account]);
-
-  return signer;
+  return useMemo(() => library?.getSigner(), [active, account]);
 }
 
 export function useIsMetaMask(): boolean | undefined {
   const { active, library } = useWeb3();
-
   return useMemo(() => !!library?.provider?.isMetaMask, [active, library?.provider.isMetaMask]);
 }
