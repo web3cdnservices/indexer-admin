@@ -29,7 +29,8 @@ jobs:
         with:
           node-version: 16
 
-      - run: yarn
+      - name: Yarn
+        run: yarn install --network-timeout=30000
 
       - name: Bump & build
         run: echo "Changes found" && npm version prerelease --no-git-tag-version && yarn build
