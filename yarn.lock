@@ -2124,6 +2124,11 @@
   resolved "https://registry.yarnpkg.com/@oclif/screen/-/screen-1.0.4.tgz#b740f68609dfae8aa71c3a6cab15d816407ba493"
   integrity sha512-60CHpq+eqnTxLZQ4PGHYNwUX572hgpMHGPtTWMjdTMsAvlm69lZV/4ly6O3sAYkomo4NggGcomrDpBe34rxUqw==
 
+"@openzeppelin/contracts-upgradeable@^4.3.3":
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.4.2.tgz#748a5986a02548ef541cabc2ce8c67a890044c40"
+  integrity sha512-bavxs18L47EmcdnL9I6DzsVSUJO+0/zD6zH7/6qG7QRBugvR3VNVZR+nMvuZlCNwuTTnCa3apR00PYzYr/efAw==
+
 "@pmmmwh/react-refresh-webpack-plugin@0.4.3":
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.4.3.tgz#1eec460596d200c0236bf195b078a5d1df89b766"
@@ -2238,17 +2243,19 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@subql/contract-sdk@0.1.1-3":
-  version "0.1.1-3"
-  resolved "https://registry.yarnpkg.com/@subql/contract-sdk/-/contract-sdk-0.1.1-3.tgz#28ca6d9c08849a49bc78a5b00f00b6135b773a66"
-  integrity sha512-gn6BMWzOb0tJETrpBYrOKtXkzmD5mkdytTnQToLIrabt5NAcCqjDwlU8VOVFWkVNud0kXXXtrqumOQw9jm6Cxg==
+"@subql/contract-sdk@^0.1.1-28":
+  version "0.1.1-28"
+  resolved "https://registry.yarnpkg.com/@subql/contract-sdk/-/contract-sdk-0.1.1-28.tgz#2e251c12a230b292d2fa1c3c9285d18cd1e4ec95"
+  integrity sha512-Ux6Tx7TXmGpwmuwio2Kj5AEW7JyQWsIed3w8jxT0ILyv8aftmwH2n9naH6feAHFerQd5zIxcnkrTJdQNxOc1MA==
   dependencies:
+    "@openzeppelin/contracts-upgradeable" "^4.3.3"
     dotenv "^10.0.0"
     fs "^0.0.1-security"
 
-"@subql/react-ui@git+https://github.com/subquery/react-ui.git":
-  version "1.0.1-20"
-  resolved "git+https://github.com/subquery/react-ui.git#86554521296962ae877dfb6694d6f36eefe59d13"
+"@subql/react-ui@^1.0.1-19":
+  version "1.0.1-19"
+  resolved "https://registry.yarnpkg.com/@subql/react-ui/-/react-ui-1.0.1-19.tgz#823f92689da83ccd76714df5ca875ec937c3f2f0"
+  integrity sha512-uvKYQ978I66rj4y3dAt4LNcNIQNq1ArTcYFfdif3Re6YRg7johCGMfBp6S1kKO4LdhliXJVAanAte4TYj50YRA==
   dependencies:
     clsx "^1.1.1"
     eslint-plugin-react "^7.27.1"

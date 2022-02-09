@@ -95,7 +95,7 @@ const RegisterPage = () => {
   ) => {
     try {
       setLoading(true);
-      const { name, proxyEndpoint, amount } = values;
+      const { name, proxyEndpoint, amount, rate } = values;
       if (Number(tokenBalance) < amount) {
         setLoading(false);
         helper.setErrors({
@@ -108,7 +108,7 @@ const RegisterPage = () => {
       // TODO: 1. validate `proxy endpoint`, default request `/discovery`;
       // helper.setErrors({ [RegisterFormKey.proxyEndpoint]: 'Invalid proxy endpoint' });
 
-      const tx = await indexerRegistry(sdk, signer, amount.toString(), indexerMetadata);
+      const tx = await indexerRegistry(sdk, signer, amount.toString(), indexerMetadata, rate * 10);
       const receipt = await tx.wait(1);
       if (!receipt.status) {
         throw new Error('Send indexer registry transaction failed');

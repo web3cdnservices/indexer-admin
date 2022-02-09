@@ -24,7 +24,7 @@ export async function indexerRequestApprove(sdk: SDK, signer: Signer, amount: st
     throw new Error(ErrorMessages.amountError);
   }
 
-  const tx = await sdk.sqToken.connect(signer).approve(sdk.staking.address, amount);
+  const tx = await sdk.sqToken.connect(signer).increaseAllowance(sdk.staking.address, amount);
   return tx;
 }
 
@@ -32,7 +32,8 @@ export async function indexerRegistry(
   sdk: SDK,
   signer: Signer,
   amount: string | undefined,
-  metadata: string
+  metadata: string,
+  commissionRate: number
 ) {
   if (!sdk || !signer) {
     throw new Error(ErrorMessages.sdkOrSignerError);
@@ -41,7 +42,9 @@ export async function indexerRegistry(
     throw new Error(ErrorMessages.amountError);
   }
 
-  const tx = await sdk.indexerRegistry.connect(signer).registerIndexer(amount, metadata);
+  const tx = await sdk.indexerRegistry
+    .connect(signer)
+    .registerIndexer(amount, metadata, commissionRate);
   return tx;
 }
 
@@ -93,7 +96,7 @@ export async function readyIndexing(sdk: SDK, signer: Signer, deploymentId: stri
 
   const tx = await sdk.queryRegistry
     .connect(signer)
-    .updateIndexingStatusToReady(cidToBytes32(deploymentId), Date.now());
+    .updateIndexingStatusToReady(cidToBytes32(deploymentId));
   return tx;
 }
 

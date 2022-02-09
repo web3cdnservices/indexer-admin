@@ -35,6 +35,7 @@ export enum RegisterFormKey {
   name = 'name',
   proxyEndpoint = 'proxyEndpoint',
   amount = 'amount',
+  rate = 'rate',
 }
 
 export const RegisterFormSchema = yup.object({
@@ -44,12 +45,18 @@ export const RegisterFormSchema = yup.object({
     .number()
     .min(1000, 'Staking token should large than 1000 SQT')
     .defined(),
+  [RegisterFormKey.rate]: yup
+    .number()
+    .min(0, `Rate should be between 0 and 100`)
+    .max(100, `Rate should be between 0 and 100`)
+    .defined(),
 });
 
 export const initialRegisterValues = {
   [RegisterFormKey.name]: '',
   [RegisterFormKey.proxyEndpoint]: '',
   [RegisterFormKey.amount]: 0,
+  [RegisterFormKey.rate]: 0,
 };
 
 export type TRegisterValues = yup.Asserts<typeof RegisterFormSchema>;

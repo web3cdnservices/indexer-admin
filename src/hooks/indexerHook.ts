@@ -86,7 +86,7 @@ export const useTokenBalance = (account: Account, deps?: HookDependency) => {
       sdk?.sqToken.balanceOf(account).then((value) => {
         setBalance(Number(formatUnits(value, 18)).toFixed(2));
       });
-  }, [account, deps]);
+  }, [account, sdk, deps]);
 
   return balance;
 };
