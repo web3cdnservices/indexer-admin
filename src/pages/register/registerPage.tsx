@@ -47,10 +47,12 @@ const RegisterPage = () => {
   }, [initialStep, isIndexer]);
 
   useEffect(() => {
-    if (isIndexer && account === coordinatorIndexer) {
+    if (!account) {
+      history.replace('/');
+    } else if (isIndexer && account === coordinatorIndexer) {
       history.replace('/account');
     }
-  }, [isIndexer]);
+  }, [isIndexer, account]);
 
   const item = useMemo(() => currentStep && prompts[currentStep], [currentStep]);
 

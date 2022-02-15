@@ -31,7 +31,7 @@ const LoginPage = () => {
   const renderContent = () => (
     <div>
       {!account && <MetaMaskView />}
-      {!isIndexer && !coordinatorIndexer && <Redirect to="/register" />}
+      {account && !isIndexer && !coordinatorIndexer && <Redirect to="/register" />}
       {account &&
         !!coordinatorIndexer &&
         (isCorrectAccount() ? <Redirect to="/account" /> : <MetaMaskView />)}
