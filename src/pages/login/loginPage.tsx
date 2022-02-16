@@ -28,7 +28,7 @@ const LoginPage = () => {
 
   const isCorrectAccount = () => account?.toLowerCase() === coordinatorIndexer?.toLocaleLowerCase();
 
-  const renderContent = () => (
+  return <Container>
     <div>
       {!account && <MetaMaskView />}
       {account && !isIndexer && !coordinatorIndexer && <Redirect to="/register" />}
@@ -36,9 +36,7 @@ const LoginPage = () => {
         !!coordinatorIndexer &&
         (isCorrectAccount() ? <Redirect to="/account" /> : <MetaMaskView />)}
     </div>
-  );
-
-  return <Container>{!isUndefined(coordinatorIndexer) && renderContent()}</Container>;
+  </Container>;
 };
 
 export default LoginPage;
