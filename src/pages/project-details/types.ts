@@ -30,7 +30,7 @@ export type TQueryMetadata = {
   chain: number;
   specName: string;
   genesisHash: string;
-  indexerHealthy: false;
+  indexerHealthy: boolean;
   indexerNodeVersion: string;
   queryNodeVersion: string;
 };

@@ -1,7 +1,7 @@
 // Copyright 2020-2021 OnFinality Limited authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { FC, useMemo } from 'react';
+import { FC } from 'react';
 import { Button as SubButton, Spinner } from '@subql/react-ui';
 import { Form } from 'formik';
 import styled from 'styled-components';
@@ -91,21 +91,15 @@ export const Button: FC<ButtonProps & StyledButtonProps> = ({
   disabled,
   type,
   ...props
-}) =>
-  useMemo(
-    () => (
-      <StyledButton
-        label={title}
-        type={type ?? 'secondary'}
-        leftItem={
-          loading && <Spin size={23} color={`${type === 'primary' ? '#fff' : '#4388dd'}`} />
-        }
-        disabled={disabled || loading}
-        {...props}
-      />
-    ),
-    [title, loading, disabled]
-  );
+}) => (
+  <StyledButton
+    label={title}
+    type={type ?? 'secondary'}
+    leftItem={loading && <Spin size={23} color={`${type === 'primary' ? '#fff' : '#4388dd'}`} />}
+    disabled={disabled || loading}
+    {...props}
+  />
+);
 
 type Align = 'left' | 'right' | 'centre';
 

@@ -19,6 +19,38 @@ import {
   QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS,
 } from 'utils/queries';
 
+const queryMetadataInitValue = {
+  lastProcessedHeight: 0,
+  lastProcessedTimestamp: 0,
+  targetHeight: 0,
+  chain: 0,
+  specName: '',
+  genesisHash: '',
+  indexerHealthy: false,
+  indexerNodeVersion: '',
+  queryNodeVersion: '',
+};
+
+const projectInitVlaue = {
+  name: '',
+  owner: '',
+  image: '',
+  description: '',
+  websiteUrl: '',
+  codeUrl: '',
+  version: '',
+  currentDeployment: '',
+  currentVersion: '',
+  versionDescription: '',
+  createdTimestamp: '',
+  updatedTimestamp: '',
+  queryMetadata: undefined,
+  id: '',
+  queryEndpoint: '',
+  indexerEndpoint: '',
+  status: 0,
+};
+
 export const useProjectService = (deploymentId: string) => {
   const { toast } = useToast();
   const [projectService, setService] = useState<TServiceMetadata>();
@@ -95,7 +127,8 @@ export const getProjectDetails = async (deploymentId: string): Promise<ProjectDe
   const res = await getProjectInfo(deploymentId);
   const projectInfo = res.data.projectDeployments.nodes[0]?.project;
   if (!projectInfo) {
-    throw new Error('Unable to get metadata for project');
+    console.error('Unable to get metadata for project');
+    return projectInitVlaue;
   }
 
   const metadataCid = projectInfo.metadata;
@@ -106,7 +139,8 @@ export const getProjectDetails = async (deploymentId: string): Promise<ProjectDe
     raw = raw ? concatU8A(raw, result) : result;
   }
   if (!raw) {
-    throw new Error('Unable to fetch metadata from ipfs');
+    console.error('Unable to fetch metadata from ipfs');
+    return projectInitVlaue;
   }
 
   const metadata = JSON.parse(Buffer.from(raw).toString('utf8'));
@@ -136,6 +170,21 @@ export const useProjectDetails = (data: ProjectDetails): ProjectDetails | undefi
   return project;
 };
 
+export async function getQueryMetadata(url: string): Promise<TQueryMetadata> {
+  // FIXME: need to fix the endpoint name issue on coordinator service
+  const queryUrl = `http://localhost:${url.split(':')[2]}`;
+
+  try {
+    const data = await createApolloClient(`${queryUrl}/graphql`).query({
+      query: GET_QUERY_METADATA,
+    });
+    const metadata = get(data, 'data._metadata', null) as TQueryMetadata;
+    return metadata;
+  } catch {
+    return queryMetadataInitValue;
+  }
+}
+
 export function useProjectDetailList(data: any) {
   const projects = data?.getProjects as TServiceMetadata[];
   const [projectDetailList, setProjecList] = useState<ProjectDetails[]>();
@@ -144,11 +193,9 @@ export function useProjectDetailList(data: any) {
   const { account } = useWeb3();
   const sdk = useContractSDK();
 
-  const getQueryServiceData = useCallback(async (url) => {
+  const getQueryServiceData = useCallback(async (url: string) => {
     if (!url) return undefined;
-
-    const data = await createApolloClient(`${url}/graphql`).query({ query: GET_QUERY_METADATA });
-    const metadata = get(data, 'data._metadata', null) as TQueryMetadata;
+    const metadata = await getQueryMetadata(url);
     return metadata;
   }, []);
 
@@ -183,7 +230,9 @@ export function useProjectDetailList(data: any) {
         )
       );
       setProjecList(
-        result.map(([detail, queryMetadata, status]) => ({ ...detail, status, queryMetadata }))
+        result
+          .map(([detail, queryMetadata, status]) => ({ ...detail, status, queryMetadata }))
+          .filter(({ id }) => !!id)
       );
       setPageLoading(false);
     } catch (e) {

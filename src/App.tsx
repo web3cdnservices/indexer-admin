@@ -16,6 +16,7 @@ import { createApolloClient, defaultServiceUrl } from 'utils/apolloClient';
 
 import * as Pages from './pages';
 
+// FIXME: remove antd relate files
 import 'antd/dist/antd.css';
 import './App.css';
 

@@ -2243,7 +2243,7 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@subql/contract-sdk@^0.1.1-31":
+"@subql/contract-sdk@0.1.1-31":
   version "0.1.1-31"
   resolved "https://registry.yarnpkg.com/@subql/contract-sdk/-/contract-sdk-0.1.1-31.tgz#d03c05876c92c212d3d92c72ad1630502c7984cf"
   integrity sha512-wRi3HTu15oOBYIJVRojf0SMWyEsbq0ChCMWiQjEM9LQngi3Ex2z88PTA9BF1IppNHnMhp6HF0WZbaDlNCBSiAQ==
@@ -2252,10 +2252,10 @@
     dotenv "^10.0.0"
     fs "^0.0.1-security"
 
-"@subql/react-ui@^1.0.1-19":
-  version "1.0.1-19"
-  resolved "https://registry.yarnpkg.com/@subql/react-ui/-/react-ui-1.0.1-19.tgz#823f92689da83ccd76714df5ca875ec937c3f2f0"
-  integrity sha512-uvKYQ978I66rj4y3dAt4LNcNIQNq1ArTcYFfdif3Re6YRg7johCGMfBp6S1kKO4LdhliXJVAanAte4TYj50YRA==
+"@subql/react-ui@^1.0.1-21":
+  version "1.0.1-21"
+  resolved "https://registry.yarnpkg.com/@subql/react-ui/-/react-ui-1.0.1-21.tgz#0612ab608250b3f2a12075ebe54dfc6417c0080a"
+  integrity sha512-xp43nDQLUV1T2BLMEqZ4LMchxMmOeLtzeXLXV6hveg8/nr36HPaPFoE2N+pwvyQb5umvp2m61yWE/2JqcWY2hg==
   dependencies:
     clsx "^1.1.1"
     eslint-plugin-react "^7.27.1"

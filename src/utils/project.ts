@@ -7,8 +7,9 @@ enum HealthStatus {
 }
 
 export function calculateProgress(targetHeight: number, latestHeight: number): number {
+  if (targetHeight === 0) return 0;
   if (latestHeight >= targetHeight) return 100;
-  return Math.round((latestHeight * 100) / targetHeight);
+  return Math.round((latestHeight * 100 * 100) / targetHeight) / 100;
 }
 
 export function healthStatus(status: boolean): HealthStatus {

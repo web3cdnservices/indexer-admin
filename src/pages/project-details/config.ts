@@ -27,15 +27,15 @@ const createButtonItem = (title: string, action: () => void, color?: string): TB
   color,
 });
 
-export const createServiceItem = (url: string, version: string, status: string) => ({
+export const createServiceItem = (type: string, url: string, version: string, status: string) => ({
   url,
-  imageVersion: `onfinality/subql-node:${version}`,
+  imageVersion: `onfinality/subql-${type}:${version}`,
   status,
 });
 
 export const createButtonItems = (onButtonClick: (type: ActionType) => void) => ({
   [IndexingStatus.NOTSTART]: [
-    createButtonItem('Config Services', () => onButtonClick(ActionType.configServices)),
+    // createButtonItem('Config Services', () => onButtonClick(ActionType.configServices)),
     createButtonItem('Start Indexing', () => onButtonClick(ActionType.startIndexing)),
     // createButtonItem('Remove Project', () => onButtonClick(ActionType.removeProject)),
   ],
@@ -47,7 +47,7 @@ export const createButtonItems = (onButtonClick: (type: ActionType) => void) => 
     createButtonItem('Stop Indexing', () => onButtonClick(ActionType.stopIndexing)),
   ],
   [IndexingStatus.TERMINATED]: [
-    createButtonItem('Config Services', () => onButtonClick(ActionType.configServices)),
+    // createButtonItem('Config Services', () => onButtonClick(ActionType.configServices)),
     createButtonItem('Start Indexing', () => onButtonClick(ActionType.startIndexing)),
   ],
 });
@@ -92,11 +92,21 @@ export const createConfigServicesSteps = (onSyncIndexerEndpoint: FormSubmit) => 
   ],
 });
 
-export const createStartIndexingSteps = (onSendTransaction: ClickAction) => ({
+export const createStartIndexingSteps = (
+  onStartProject: ClickAction,
+  onSendTransaction: ClickAction
+) => ({
   [ActionType.startIndexing]: [
     {
-      index: 1,
+      index: 0,
       title: 'Start Indexing Project',
+      desc: 'Start indexing project will start the subquery node service indexing the project and start a query service at the same time. It takes around 1 mins to start the services, you can see the progress and related information after everything is ready.',
+      buttonTitle: 'Indexing Project',
+      onClick: onStartProject,
+    },
+    {
+      index: 1,
+      title: 'Update Status on Subquery Network',
       desc: 'Send transaction to start indexing the project on contract, the controller account on coordinator service will start to update the status of indexing service on the contract once the transaction completed. The transaction processing time may take around 10s, it depends on the network and gas fee. You will see the processing status on the top of the page once you confim the transaction on the MetaMask.',
       buttonTitle: 'Send Transction',
       onClick: onSendTransaction,
@@ -107,7 +117,7 @@ export const createStartIndexingSteps = (onSendTransaction: ClickAction) => ({
 export const createReadyIndexingSteps = (onSendTransaction: ClickAction) => ({
   [ActionType.readyIndexing]: [
     {
-      index: 1,
+      index: 0,
       title: 'Update Indexing To Ready',
       desc: 'Send transaction to change indexing status to ready on contract, the explorer will display you query endpoint once the transaction completed. The transaction processing time may take around 10s, it depends on the network and gas fee. You will see the processing status on the top of the page once you confim the transaction on the MetaMask.',
       buttonTitle: 'Send Transction',
@@ -116,13 +126,23 @@ export const createReadyIndexingSteps = (onSendTransaction: ClickAction) => ({
   ],
 });
 
-export const createStopIndexingSteps = (onSendTransaction: ClickAction) => ({
+export const createStopIndexingSteps = (
+  onStartProject: ClickAction,
+  onSendTransaction: ClickAction
+) => ({
   [ActionType.stopIndexing]: [
     {
       index: 0,
       title: 'Stop Indexing Project',
+      desc: 'Stop indexing project will stop the subquery node service and query service, you can restart indexing the project at any time. It takes around 1 mins to start the services.',
+      buttonTitle: 'Stop Project',
+      onClick: onStartProject,
+    },
+    {
+      index: 1,
+      title: 'Update Status on Subquery Network',
       desc: 'Sorry to see this project will be terminated from the Subquery Network, please note that the service endpoint for this project will also be removed once the transaction processed. The transaction processing time may take around 10s, it depends on the network and gas fee. You will see the processing status on the top of the page once you confim the transaction on the MetaMask.',
-      buttonTitle: 'Stop Indexing',
+      buttonTitle: 'Send Transction',
       onClick: onSendTransaction,
     },
   ],

@@ -1,17 +1,10 @@
-// This file will not end up inside the main application JavaScript bundle.
-// Instead, it will simply be copied inside the build folder.
-// The generated "index.html" will require it just before this main bundle.
-// You can thus use it to define some environment variables that will
-// be made available synchronously in all your JS modules under "src".
-//
-// Warning: this file will not be transpiled by Babel and cannot contain
-// any syntax that is not yet supported by your targeted browsers.
-
+// Copyright 2020-2021 OnFinality Limited authors & contributors
+// SPDX-License-Identifier: Apache-2.0
 
 window.env = {
   // This option can be retrieved in "src/index.js" with "window.env.API_URL".
   NETWORK: 'testnet', // local | mainnet | testnet
   COORDINATOR_GRAPHQL: 'http://localhost:8000/graphql',
   IPFS_GATEWAY: 'https://ipfs.thechainhub.com/api/v0',
-  REGISTRY_PROJECT: 'https://api.subquery.network/sq/subquery/subquery-network-query-registry'
+  REGISTRY_PROJECT: 'https://api.subquery.network/sq/subquery/subquery-network-query-registry',
 };

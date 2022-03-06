@@ -2,17 +2,17 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
-import { ContractSDK, SdkOptions, SubqueryNetwork } from '@subql/contract-sdk';
+import { ContractDeployment, ContractSDK, SdkOptions, SubqueryNetwork } from '@subql/contract-sdk';
 
 import localnetDeployment from 'contract/localnet.json';
 import testnetDeployment from 'contract/testnet.json';
 import { useIsMetaMask, useWeb3 } from 'hooks/web3Hook';
 import Logger from 'utils/logger';
-import { ChainID, isSupportNetwork } from 'utils/web3';
+import { ChainID, isSupportNetwork, Networks } from 'utils/web3';
 
 import { createContainer } from './unstated';
 
-const deployments = {
+const deployments: Record<SubqueryNetwork, ContractDeployment> = {
   local: localnetDeployment,
   testnet: testnetDeployment,
   mainnet: testnetDeployment,
@@ -20,15 +20,15 @@ const deployments = {
 
 function createContractOptions(network: SubqueryNetwork): SdkOptions {
   return {
-    deploymentDetails: deployments[network],
+    deploymentDetails: deployments[network] as ContractDeployment,
     network,
   };
 }
 
 const options = {
-  [ChainID.local]: createContractOptions('local'),
-  [ChainID.testnet]: createContractOptions('testnet'),
-  [ChainID.mainnet]: createContractOptions('mainnet'),
+  [ChainID.local]: createContractOptions(Networks.local),
+  [ChainID.testnet]: createContractOptions(Networks.testnet),
+  [ChainID.mainnet]: createContractOptions(Networks.mainnet),
 };
 
 export type SDK = ContractSDK | undefined;

@@ -25,6 +25,39 @@ export const ADD_INDEXER = gql`
   }
 `;
 
+export const START_PROJECT = gql`
+  mutation StartProject($id: String!) {
+    createAndStartProject(id: $id) {
+      id
+      status
+      indexerEndpoint
+      queryEndpoint
+    }
+  }
+`;
+
+export const RESTART_PROJECT = gql`
+  mutation RestartProject($id: String!) {
+    restartProject(id: $id) {
+      id
+      status
+      indexerEndpoint
+      queryEndpoint
+    }
+  }
+`;
+
+export const STOP_PROJECT = gql`
+  mutation RestartProject($id: String!) {
+    stopProject(id: $id) {
+      id
+      status
+      indexerEndpoint
+      queryEndpoint
+    }
+  }
+`;
+
 export const UPDAET_CONTROLLER = gql`
   mutation UpdateController($controller: String!) {
     updateController(controller: $controller) {

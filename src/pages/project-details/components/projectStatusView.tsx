@@ -26,7 +26,7 @@ type Props = {
 const ProjectStatusView: FC<Props> = ({ status, metadata }) => (
   <Container mb={20}>
     <StatusLabel text={statusText[status]} color={statusColor[status]} />
-    {metadata && (
+    {!!metadata?.targetHeight && (
       <Container>
         <TagItem versionType="Current Block" prefix="#" value={metadata.targetHeight} />
         <TagItem versionType="Latest Block" prefix="#" value={metadata.lastProcessedHeight} />

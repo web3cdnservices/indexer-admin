@@ -10,7 +10,6 @@ import ModalView from 'components/modalView';
 import { useContractSDK } from 'containers/contractSdk';
 import { useToast } from 'containers/toastContext';
 import { useBalance, useController, useIsController, useIsIndexer } from 'hooks/indexerHook';
-import { useRouter } from 'hooks/routerHook';
 import { useIsMetaMask, useSigner, useWeb3 } from 'hooks/web3Hook';
 import { ControllerFormKey } from 'types/schemas';
 import { configController, unRegister } from 'utils/indexerActions';
@@ -41,7 +40,6 @@ const Registry = () => {
   const toastContext = useToast();
   const [updateController] = useMutation(UPDAET_CONTROLLER);
   const [removeAccounts] = useMutation(REMOVE_ACCOUNTS);
-  useRouter();
 
   prompts.controller.desc = `Balance ${controllerBalance} DEV`;
   const controllerItem = !controller ? prompts.emptyController : prompts.controller;

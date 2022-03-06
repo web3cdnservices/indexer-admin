@@ -13,16 +13,13 @@ import { useToast } from 'containers/toastContext';
 import { ProjectDetails } from 'hooks/projectHook';
 import { useSigner } from 'hooks/web3Hook';
 import { IndexingStatus } from 'pages/projects/constant';
-import { ProjectFormKey } from 'types/schemas';
 import { readyIndexing, startIndexing, stopIndexing } from 'utils/indexerActions';
 import { cidToBytes32 } from 'utils/ipfs';
-import { CONFIG_SERVICES } from 'utils/queries';
+import { RESTART_PROJECT, START_PROJECT, STOP_PROJECT } from 'utils/queries';
 import { ActionType, handleTransaction } from 'utils/transactions';
-import { verifyQueryService } from 'utils/validateService';
 
 import {
   createButtonItems,
-  createConfigServicesSteps,
   createReadyIndexingSteps,
   createStartIndexingSteps,
   createStopIndexingSteps,
@@ -95,11 +92,11 @@ type Props = {
   status: IndexingStatus;
   project: ProjectDetails;
   serviceConfiged: boolean;
+  updateState: () => void;
 };
 
-const ProjectDetailsHeader: FC<Props> = ({ id, status, project, serviceConfiged }) => {
+const ProjectDetailsHeader: FC<Props> = ({ id, status, project, serviceConfiged, updateState }) => {
   // TODO: 1. only progress reach `100%` can display `publish to ready` button
-  // TODO: get `status` from contract
 
   const [visible, setVisible] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
@@ -108,7 +105,9 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, serviceConfiged 
   const signer = useSigner();
   const sdk = useContractSDK();
   const toastContext = useToast();
-  const [updateServices, { loading }] = useMutation(CONFIG_SERVICES);
+  const [startProject, { loading: startProjectLoading }] = useMutation(START_PROJECT);
+  const [restartProject, { loading: restartProjectLoading }] = useMutation(RESTART_PROJECT);
+  const [stopProject, { loading: stopProjectLoading }] = useMutation(STOP_PROJECT);
 
   const onModalClose = (e?: unknown) => {
     console.error('Transaction error:', e);
@@ -116,10 +115,20 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, serviceConfiged 
     setCurrentStep(0);
   };
 
+  const loading = useMemo(
+    () => startProjectLoading || restartProjectLoading || stopProjectLoading,
+    [startProjectLoading, restartProjectLoading, stopProjectLoading]
+  );
+
   const actionItems = useMemo(() => {
     const buttonItems = createButtonItems((type: ActionType) => {
       setActionType(type);
       setVisible(true);
+
+      // TODO: resolve this logic in other place
+      if (status === IndexingStatus.NOTSTART && serviceConfiged) {
+        setCurrentStep(1);
+      }
     });
 
     if ([IndexingStatus.NOTSTART, IndexingStatus.TERMINATED].includes(status) && !serviceConfiged) {
@@ -129,17 +138,17 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, serviceConfiged 
     return buttonItems[status];
   }, [status, serviceConfiged]);
 
-  const configServicesSteps = createConfigServicesSteps(async (values, formHelper) => {
-    try {
-      const indexerEndpoint = values[ProjectFormKey.indexerEndpoint];
-      const queryEndpoint = values[ProjectFormKey.queryEndpoint];
-      await verifyQueryService(queryEndpoint);
-      await updateServices({ variables: { queryEndpoint, indexerEndpoint, id } });
-      onModalClose();
-    } catch (e) {
-      formHelper.setErrors({ [ProjectFormKey.queryEndpoint]: 'Invalid query endpoint' });
-    }
-  });
+  // const configServicesSteps = createConfigServicesSteps(async (values, formHelper) => {
+  //   try {
+  //     const indexerEndpoint = values[ProjectFormKey.indexerEndpoint];
+  //     const queryEndpoint = values[ProjectFormKey.queryEndpoint];
+  //     await verifyQueryService(queryEndpoint);
+  //     await updateServices({ variables: { queryEndpoint, indexerEndpoint, id } });
+  //     onModalClose();
+  //   } catch (e) {
+  //     formHelper.setErrors({ [ProjectFormKey.queryEndpoint]: 'Invalid query endpoint' });
+  //   }
+  // });
 
   const indexingTransactions = useMemo(
     () => ({
@@ -163,22 +172,37 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, serviceConfiged 
     }
   };
 
-  const startIndexingSteps = createStartIndexingSteps(() =>
-    indexingAction(ActionType.startIndexing)
+  const startIndexingSteps = createStartIndexingSteps(
+    async () => {
+      if (status === IndexingStatus.NOTSTART) {
+        await startProject({ variables: { id } });
+      } else {
+        await restartProject({ variables: { id } });
+      }
+      updateState();
+      setCurrentStep(1);
+    },
+    () => indexingAction(ActionType.startIndexing)
   );
 
   const readyIndexingSteps = createReadyIndexingSteps(() =>
     indexingAction(ActionType.readyIndexing)
   );
 
-  const stopIndexingSteps = createStopIndexingSteps(() =>
-    indexingAction(ActionType.stopIndexing, () =>
-      updateServices({ variables: { queryEndpoint: '', indexerEndpoint: '', id } })
-    )
+  const stopIndexingSteps = createStopIndexingSteps(
+    async () => {
+      try {
+        await stopProject({ variables: { id } });
+        updateState();
+        setCurrentStep(1);
+      } catch (e) {
+        console.log('fail to stop project', e);
+      }
+    },
+    () => indexingAction(ActionType.stopIndexing)
   );
 
   const steps = {
-    ...configServicesSteps,
     ...startIndexingSteps,
     ...readyIndexingSteps,
     ...stopIndexingSteps,

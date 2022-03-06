@@ -10,6 +10,7 @@ import IntroductionView from 'components/introductionView';
 import { useContractSDK } from 'containers/contractSdk';
 import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useLoading } from 'containers/loadingContext';
+import { useToast } from 'containers/toastContext';
 import { useIsIndexer, useTokenBalance } from 'hooks/indexerHook';
 import { useInitialStep } from 'hooks/registerHook';
 import { useSigner, useWeb3 } from 'hooks/web3Hook';
@@ -34,6 +35,7 @@ const RegisterPage = () => {
   const initialStep = useInitialStep();
   const { indexer: coordinatorIndexer, updateIndexer } = useCoordinatorIndexer();
   const { setPageLoading } = useLoading();
+  const { dispatchToast } = useToast();
 
   const [currentStep, setStep] = useState<RegisterStep>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -70,11 +72,21 @@ const RegisterPage = () => {
   const onSyncIndexer = async () => {
     setLoading(true);
     if (!account) {
-      throw new Error('Account not found');
+      return dispatchToast({
+        type: 'error',
+        text: 'Can not find account, make sure MetaMask is connected',
+      });
     }
+    if (!isIndexer) {
+      return dispatchToast({
+        type: 'error',
+        text: 'Account is not an indexer, switch to indexer account',
+      });
+    }
+
     await updateIndexer(account);
     setLoading(false);
-    history.replace('/account');
+    return history.replace('/account');
   };
 
   const onApprove = async () => {
