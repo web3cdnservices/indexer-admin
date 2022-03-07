@@ -6,7 +6,7 @@ name: Prerelease
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -38,15 +38,15 @@ jobs:
       - uses: JS-DevTools/npm-publish@v1
         name: Publish
         with:
-            token: ${{ secrets.NPM_TOKEN }}
-            tag: dev
-            access: public
-            package: package.json
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: dev
+          access: public
+          package: package.json
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v5
         with:
-          add: 'package.json'
-          message: '[SKIP CI] Prerelease'
+          add: "package.json"
+          message: "[SKIP CI] Prerelease"
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
