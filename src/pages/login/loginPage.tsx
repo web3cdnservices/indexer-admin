@@ -1,4 +1,4 @@
-// Copyright 2020-2021 OnFinality Limited authors & contributors
+// Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 /* eslint-disable */
@@ -28,15 +28,17 @@ const LoginPage = () => {
 
   const isCorrectAccount = () => account?.toLowerCase() === coordinatorIndexer?.toLocaleLowerCase();
 
-  return <Container>
-    <div>
-      {!account && <MetaMaskView />}
-      {account && !isIndexer && !coordinatorIndexer && <Redirect to="/register" />}
-      {account &&
-        !!coordinatorIndexer &&
-        (isCorrectAccount() ? <Redirect to="/account" /> : <MetaMaskView />)}
-    </div>
-  </Container>;
+  return (
+    <Container>
+      <div>
+        {!account && <MetaMaskView />}
+        {account && !isIndexer && !coordinatorIndexer && <Redirect to="/register" />}
+        {account &&
+          !!coordinatorIndexer &&
+          (isCorrectAccount() ? <Redirect to="/account" /> : <MetaMaskView />)}
+      </div>
+    </Container>
+  );
 };
 
 export default LoginPage;
