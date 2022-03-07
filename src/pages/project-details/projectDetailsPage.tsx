@@ -70,9 +70,8 @@ const ProjectDetailsPage = () => {
   };
 
   const getMetadata = () => {
-    const endpoint = projectService?.queryEndpoint;
-    if (endpoint) {
-      getQueryMetadata(endpoint).then(updateServicesInfo);
+    if (projectService?.id) {
+      getQueryMetadata(projectService.id).then(updateServicesInfo);
     }
   };
 

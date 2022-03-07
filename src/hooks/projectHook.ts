@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { ApolloClient, InMemoryCache, useLazyQuery } from '@apollo/client';
+import axios from 'axios';
 import { get, isEmpty, isUndefined } from 'lodash';
 
 import { useContractSDK } from 'containers/contractSdk';
@@ -11,13 +12,8 @@ import { useToast } from 'containers/toastContext';
 import { useWeb3 } from 'hooks/web3Hook';
 import { TQueryMetadata, TServiceMetadata } from 'pages/project-details/types';
 import { IndexingStatus } from 'pages/projects/constant';
-import { createApolloClient } from 'utils/apolloClient';
 import { cidToBytes32, concatU8A, IPFS } from 'utils/ipfs';
-import {
-  GET_PROJECT,
-  GET_QUERY_METADATA,
-  QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS,
-} from 'utils/queries';
+import { GET_PROJECT, QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS } from 'utils/queries';
 
 const queryMetadataInitValue = {
   lastProcessedHeight: 0,
@@ -170,15 +166,17 @@ export const useProjectDetails = (data: ProjectDetails): ProjectDetails | undefi
   return project;
 };
 
-export async function getQueryMetadata(url: string): Promise<TQueryMetadata> {
-  // FIXME: need to fix the endpoint name issue on coordinator service
-  const queryUrl = `http://localhost:${url.split(':')[2]}`;
+export async function getQueryMetadata(deploymentID: string): Promise<TQueryMetadata> {
+  const proxyServerURL = `${window.env.COORDINATOR_HOST}/query/${deploymentID}`;
+  const body = {
+    query: {
+      query: 'query { _metadata { indexerHealthy chain} }',
+    },
+  };
 
   try {
-    const data = await createApolloClient(`${queryUrl}/graphql`).query({
-      query: GET_QUERY_METADATA,
-    });
-    const metadata = get(data, 'data._metadata', null) as TQueryMetadata;
+    const result = await axios.post(proxyServerURL, body);
+    const metadata = get(result, 'data._metadata', null) as TQueryMetadata;
     return metadata;
   } catch {
     return queryMetadataInitValue;
@@ -193,9 +191,9 @@ export function useProjectDetailList(data: any) {
   const { account } = useWeb3();
   const sdk = useContractSDK();
 
-  const getQueryServiceData = useCallback(async (url: string) => {
-    if (!url) return undefined;
-    const metadata = await getQueryMetadata(url);
+  const getQueryServiceData = useCallback(async (id: string) => {
+    if (!id) return undefined;
+    const metadata = await getQueryMetadata(id);
     return metadata;
   }, []);
 
@@ -221,12 +219,8 @@ export function useProjectDetailList(data: any) {
 
     try {
       const result = await Promise.all(
-        projects.map(({ id, queryEndpoint }) =>
-          Promise.all([
-            getProjectDetails(id),
-            getQueryServiceData(queryEndpoint),
-            getProjectStatus(id),
-          ])
+        projects.map(({ id }) =>
+          Promise.all([getProjectDetails(id), getQueryServiceData(id), getProjectStatus(id)])
         )
       );
       setProjecList(
