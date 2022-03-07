@@ -168,15 +168,26 @@ export const useProjectDetails = (data: ProjectDetails): ProjectDetails | undefi
 
 export async function getQueryMetadata(deploymentID: string): Promise<TQueryMetadata> {
   const proxyServerURL = `${window.env.COORDINATOR_HOST}/query/${deploymentID}`;
+  const fields = [
+    'lastProcessedHeight',
+    'lastProcessedTimestamp',
+    'targetHeight',
+    'chain',
+    'specName',
+    'genesisHash',
+    'indexerHealthy',
+    'indexerNodeVersion',
+    'queryNodeVersion',
+  ];
   const body = {
     query: {
-      query: 'query { _metadata { indexerHealthy chain} }',
+      query: `query { _metadata { ${fields.join(' ')} } }`,
     },
   };
 
   try {
     const result = await axios.post(proxyServerURL, body);
-    const metadata = get(result, 'data._metadata', null) as TQueryMetadata;
+    const metadata = get(result, 'data.data._metadata', null) as TQueryMetadata;
     return metadata;
   } catch {
     return queryMetadataInitValue;
