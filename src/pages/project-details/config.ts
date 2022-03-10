@@ -2,7 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { ClickAction, FormSubmit } from 'components/modalView';
-import { ConfigServicesSchema, initialServiceValues, ProjectFormKey } from 'types/schemas';
+import {
+  ConfigServicesSchema,
+  initialIndexingValues,
+  initialServiceValues,
+  ProjectFormKey,
+  StartIndexingSchema,
+} from 'types/schemas';
 import { ActionType } from 'utils/transactions';
 
 import { IndexingStatus } from '../projects/constant';
@@ -34,7 +40,7 @@ export const createServiceItem = (type: string, url: string, version: string, st
 });
 
 export const createButtonItems = (onButtonClick: (type: ActionType) => void) => ({
-  [IndexingStatus.NOTSTART]: [
+  [IndexingStatus.NOTINDEXING]: [
     // createButtonItem('Config Services', () => onButtonClick(ActionType.configServices)),
     createButtonItem('Start Indexing', () => onButtonClick(ActionType.startIndexing)),
     // createButtonItem('Remove Project', () => onButtonClick(ActionType.removeProject)),
@@ -45,10 +51,6 @@ export const createButtonItems = (onButtonClick: (type: ActionType) => void) => 
   ],
   [IndexingStatus.READY]: [
     createButtonItem('Stop Indexing', () => onButtonClick(ActionType.stopIndexing)),
-  ],
-  [IndexingStatus.TERMINATED]: [
-    // createButtonItem('Config Services', () => onButtonClick(ActionType.configServices)),
-    createButtonItem('Start Indexing', () => onButtonClick(ActionType.startIndexing)),
   ],
 });
 
@@ -64,7 +66,7 @@ export const createRemoveProjectSteps = (onRemoveProject: ClickAction) => ({
   ],
 });
 
-export const createConfigServicesSteps = (onSyncIndexerEndpoint: FormSubmit) => ({
+export const createConfigServicesSteps = (onSyncnodeEndpoint: FormSubmit) => ({
   [ActionType.configServices]: [
     {
       index: 0,
@@ -74,10 +76,10 @@ export const createConfigServicesSteps = (onSyncIndexerEndpoint: FormSubmit) => 
       form: {
         formValues: initialServiceValues,
         schema: ConfigServicesSchema,
-        onFormSubmit: onSyncIndexerEndpoint,
+        onFormSubmit: onSyncnodeEndpoint,
         items: [
           {
-            formKey: ProjectFormKey.indexerEndpoint,
+            formKey: ProjectFormKey.nodeEndpoint,
             title: 'Indexer Service Endpiont',
             placeholder: 'https://api.subquery.network/example',
           },
@@ -93,7 +95,7 @@ export const createConfigServicesSteps = (onSyncIndexerEndpoint: FormSubmit) => 
 });
 
 export const createStartIndexingSteps = (
-  onStartProject: ClickAction,
+  onStartProject: FormSubmit,
   onSendTransaction: ClickAction
 ) => ({
   [ActionType.startIndexing]: [
@@ -102,6 +104,18 @@ export const createStartIndexingSteps = (
       title: 'Start Indexing Project',
       desc: 'Start indexing project will start the subquery node service indexing the project and start a query service at the same time. It takes around 1 mins to start the services, you can see the progress and related information after everything is ready.',
       buttonTitle: 'Indexing Project',
+      form: {
+        formValues: initialIndexingValues,
+        schema: StartIndexingSchema,
+        onFormSubmit: onStartProject,
+        items: [
+          {
+            formKey: ProjectFormKey.networkEndpoint,
+            title: 'Indexing Network Endpiont',
+            placeholder: 'wss://polkadot.api.onfinality.io/public-ws',
+          },
+        ],
+      },
       onClick: onStartProject,
     },
     {

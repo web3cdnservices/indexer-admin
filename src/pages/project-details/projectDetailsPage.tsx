@@ -61,7 +61,7 @@ const ProjectDetailsPage = () => {
       setIndexerService(
         createServiceItem(
           'node',
-          projectService?.indexerEndpoint,
+          projectService?.nodeEndpoint,
           indexerNodeVersion,
           healthStatus(indexerHealthy)
         )
@@ -89,12 +89,11 @@ const ProjectDetailsPage = () => {
             id={id}
             status={status}
             project={projectInfo}
-            serviceConfiged={!!querySerive}
             updateState={() => getMetadata()}
           />
           <ProjectStatusView status={status} metadata={queryMetadata} />
           <ProgressInfoView percent={progress} />
-          <ProjectServiceCard indexerService={indexerSerive} queryService={querySerive} />
+          <ProjectServiceCard id={id} indexerService={indexerSerive} queryService={querySerive} />
           <ProjectDetailsView id={id} project={projectInfo} />
         </ContentContainer>
       )}

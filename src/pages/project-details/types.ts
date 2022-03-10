@@ -3,17 +3,11 @@
 
 import { IndexingStatus } from '../projects/constant';
 
-export type TProject = {
-  id: string;
-  indexerEndpoint: string;
-  queryEndpoint: string;
-  status: IndexingStatus;
-};
-
-export type TServiceMetadata = {
+export type ProjectServiceMetadata = {
   id: string;
   status: IndexingStatus;
-  indexerEndpoint: string;
+  networkEndpoint: string;
+  nodeEndpoint: string;
   queryEndpoint: string;
 };
 

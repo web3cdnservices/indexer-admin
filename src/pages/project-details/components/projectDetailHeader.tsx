@@ -13,9 +13,10 @@ import { useToast } from 'containers/toastContext';
 import { ProjectDetails } from 'hooks/projectHook';
 import { useSigner } from 'hooks/web3Hook';
 import { IndexingStatus } from 'pages/projects/constant';
+import { ProjectFormKey } from 'types/schemas';
 import { readyIndexing, startIndexing, stopIndexing } from 'utils/indexerActions';
 import { cidToBytes32 } from 'utils/ipfs';
-import { RESTART_PROJECT, START_PROJECT, STOP_PROJECT } from 'utils/queries';
+import { START_PROJECT, STOP_PROJECT } from 'utils/queries';
 import { ActionType, handleTransaction } from 'utils/transactions';
 
 import {
@@ -91,11 +92,10 @@ type Props = {
   id: string;
   status: IndexingStatus;
   project: ProjectDetails;
-  serviceConfiged: boolean;
   updateState: () => void;
 };
 
-const ProjectDetailsHeader: FC<Props> = ({ id, status, project, serviceConfiged, updateState }) => {
+const ProjectDetailsHeader: FC<Props> = ({ id, status, project, updateState }) => {
   // TODO: 1. only progress reach `100%` can display `publish to ready` button
 
   const [visible, setVisible] = useState(false);
@@ -106,7 +106,6 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, serviceConfiged,
   const sdk = useContractSDK();
   const toastContext = useToast();
   const [startProject, { loading: startProjectLoading }] = useMutation(START_PROJECT);
-  const [restartProject, { loading: restartProjectLoading }] = useMutation(RESTART_PROJECT);
   const [stopProject, { loading: stopProjectLoading }] = useMutation(STOP_PROJECT);
 
   const onModalClose = (e?: unknown) => {
@@ -116,39 +115,27 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, serviceConfiged,
   };
 
   const loading = useMemo(
-    () => startProjectLoading || restartProjectLoading || stopProjectLoading,
-    [startProjectLoading, restartProjectLoading, stopProjectLoading]
+    () => startProjectLoading || stopProjectLoading,
+    [startProjectLoading, stopProjectLoading]
   );
 
   const actionItems = useMemo(() => {
     const buttonItems = createButtonItems((type: ActionType) => {
       setActionType(type);
       setVisible(true);
-
-      // TODO: resolve this logic in other place
-      if (status === IndexingStatus.NOTSTART && serviceConfiged) {
-        setCurrentStep(1);
-      }
     });
 
-    if ([IndexingStatus.NOTSTART, IndexingStatus.TERMINATED].includes(status) && !serviceConfiged) {
+    // TODO: resolve this logic in other place
+    if (status === IndexingStatus.NOTINDEXING && project.queryEndpoint) {
+      setCurrentStep(1);
+    }
+
+    if (status === IndexingStatus.NOTINDEXING && !project.queryEndpoint) {
       return [buttonItems[status][0]];
     }
 
     return buttonItems[status];
-  }, [status, serviceConfiged]);
-
-  // const configServicesSteps = createConfigServicesSteps(async (values, formHelper) => {
-  //   try {
-  //     const indexerEndpoint = values[ProjectFormKey.indexerEndpoint];
-  //     const queryEndpoint = values[ProjectFormKey.queryEndpoint];
-  //     await verifyQueryService(queryEndpoint);
-  //     await updateServices({ variables: { queryEndpoint, indexerEndpoint, id } });
-  //     onModalClose();
-  //   } catch (e) {
-  //     formHelper.setErrors({ [ProjectFormKey.queryEndpoint]: 'Invalid query endpoint' });
-  //   }
-  // });
+  }, [status, project.queryEndpoint]);
 
   const indexingTransactions = useMemo(
     () => ({
@@ -173,14 +160,16 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, serviceConfiged,
   };
 
   const startIndexingSteps = createStartIndexingSteps(
-    async () => {
-      if (status === IndexingStatus.NOTSTART) {
-        await startProject({ variables: { id } });
-      } else {
-        await restartProject({ variables: { id } });
+    async (values, formHelper) => {
+      const networkEndpoint = values[ProjectFormKey.networkEndpoint];
+      try {
+        // TODO: verify `networkEndpoint`
+        await startProject({ variables: { networkEndpoint, id } });
+        updateState();
+        setCurrentStep(1);
+      } catch (e) {
+        formHelper.setErrors({ [ProjectFormKey.networkEndpoint]: 'Invalid service endpoint' });
       }
-      updateState();
-      setCurrentStep(1);
     },
     () => indexingAction(ActionType.startIndexing)
   );

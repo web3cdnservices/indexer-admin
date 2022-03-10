@@ -26,22 +26,12 @@ export const ADD_INDEXER = gql`
 `;
 
 export const START_PROJECT = gql`
-  mutation StartProject($id: String!) {
-    createAndStartProject(id: $id) {
+  mutation StartProject($networkEndpoint: String!, $id: String!) {
+    startProject(networkEndpoint: $networkEndpoint, id: $id) {
       id
       status
-      indexerEndpoint
-      queryEndpoint
-    }
-  }
-`;
-
-export const RESTART_PROJECT = gql`
-  mutation RestartProject($id: String!) {
-    restartProject(id: $id) {
-      id
-      status
-      indexerEndpoint
+      networkEndpoint
+      nodeEndpoint
       queryEndpoint
     }
   }
@@ -52,7 +42,8 @@ export const STOP_PROJECT = gql`
     stopProject(id: $id) {
       id
       status
-      indexerEndpoint
+      networkEndpoint
+      nodeEndpoint
       queryEndpoint
     }
   }
@@ -93,24 +84,11 @@ export const REMOVE_PROJECT = gql`
 `;
 
 export const CONFIG_SERVICES = gql`
-  mutation UpdateServices($queryEndpoint: String!, $indexerEndpoint: String!, $id: String!) {
-    updateProjectServices(
-      queryEndpoint: $queryEndpoint
-      indexerEndpoint: $indexerEndpoint
-      id: $id
-    ) {
+  mutation UpdateServices($queryEndpoint: String!, $nodeEndpoint: String!, $id: String!) {
+    updateProjectServices(queryEndpoint: $queryEndpoint, nodeEndpoint: $nodeEndpoint, id: $id) {
       status
-      indexerEndpoint
+      nodeEndpoint
       queryEndpoint
-    }
-  }
-`;
-
-export const UPDATE_PROJECT_STATUS = gql`
-  mutation UpdateProjectStatus($status: float!, $id: String!) {
-    updateProjectStatus(status: $status, id: $id) {
-      id
-      status
     }
   }
 `;
@@ -120,7 +98,7 @@ export const GET_PROJECT = gql`
     project(id: $id) {
       id
       status
-      indexerEndpoint
+      nodeEndpoint
       queryEndpoint
     }
   }
@@ -131,7 +109,7 @@ export const GET_PROJECTS = gql`
     getProjects {
       id
       status
-      indexerEndpoint
+      nodeEndpoint
       queryEndpoint
     }
   }

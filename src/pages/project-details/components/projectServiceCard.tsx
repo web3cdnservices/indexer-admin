@@ -5,26 +5,26 @@ import { FC } from 'react';
 import { Tag } from '@subql/react-ui';
 import styled from 'styled-components';
 
-import { Separator, Text } from 'components/primary';
+import { Text } from 'components/primary';
+import { getProxyServiceUrl, HealthStatus } from 'utils/project';
 
 import { TService } from '../types';
 
 const Container = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: white;
-  border-radius: 15px;
-  padding: 10px 50px;
   margin-top: 30px;
-  min-height: 150px;
 `;
 
 const CardContaineer = styled.div`
   display: flex;
-  flex: 1;
   flex-direction: column;
-  min-width: 450px;
+  justify-content: center;
+  background-color: white;
+  border-radius: 15px;
+  padding: 0px 30px;
+  margin-right: 30px;
+  min-height: 130px;
+  min-width: 200px;
 `;
 
 const HeaderContainer = styled.div`
@@ -33,37 +33,53 @@ const HeaderContainer = styled.div`
 `;
 
 type CardProps = {
-  name: string;
-} & TService;
+  title: string;
+  subTitle: string;
+  status?: string;
+};
 
-const ServiceCard: FC<CardProps> = ({ name, status, url, imageVersion }) => (
+const ServiceCard: FC<CardProps> = ({ title, subTitle, status }) => (
   <CardContaineer>
     <HeaderContainer>
       <Text mr={20} fw="500">
-        {name}
+        {title}
       </Text>
-      <Tag text={status} state={status === 'Healthy' ? 'success' : 'error'} />
+      {!!status && (
+        <Tag text={status} state={status === HealthStatus.healthy ? 'success' : 'error'} />
+      )}
     </HeaderContainer>
-    <Text size={15} color="gray" mt={10}>{`Endpoint: ${url}`}</Text>
-    <Text size={15} color="gray" mt={10}>{`Image Version: ${imageVersion}`}</Text>
+    <Text size={15} color="gray" mt={10}>
+      {subTitle}
+    </Text>
   </CardContaineer>
 );
 
 type Props = {
+  id: string;
   indexerService?: TService;
   queryService?: TService;
 };
 
-const ProjectServiceCard: FC<Props> = ({ indexerService, queryService }) => {
-  if (!indexerService && !queryService) {
-    return null;
-  }
+const ProjectServiceCard: FC<Props> = ({ id, indexerService, queryService }) => {
+  if (!queryService?.url) return null;
 
   return (
     <Container>
-      {!!indexerService && <ServiceCard name="Indexer Service" {...indexerService} />}
-      {!!indexerService && !!queryService && <Separator mr={80} height={100} />}
-      {!!queryService && <ServiceCard name="Query Service" {...queryService} />}
+      <ServiceCard
+        title="Indexer Service"
+        subTitle={`Image Version: ${indexerService?.imageVersion}`}
+        status={indexerService?.status}
+      />
+      <ServiceCard
+        title="Query Service"
+        subTitle={`Image Version: ${queryService.imageVersion}`}
+        status={queryService.status}
+      />
+      <ServiceCard
+        title="Proxy Service"
+        subTitle={`Url: ${getProxyServiceUrl(id)}`}
+        status={queryService.status}
+      />
     </Container>
   );
 };

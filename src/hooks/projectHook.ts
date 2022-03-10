@@ -10,9 +10,10 @@ import { useContractSDK } from 'containers/contractSdk';
 import { useLoading } from 'containers/loadingContext';
 import { useToast } from 'containers/toastContext';
 import { useWeb3 } from 'hooks/web3Hook';
-import { TQueryMetadata, TServiceMetadata } from 'pages/project-details/types';
+import { ProjectServiceMetadata, TQueryMetadata } from 'pages/project-details/types';
 import { IndexingStatus } from 'pages/projects/constant';
 import { cidToBytes32, concatU8A, IPFS } from 'utils/ipfs';
+import { getProxyServiceUrl } from 'utils/project';
 import { GET_PROJECT, QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS } from 'utils/queries';
 
 const queryMetadataInitValue = {
@@ -27,7 +28,7 @@ const queryMetadataInitValue = {
   queryNodeVersion: '',
 };
 
-const projectInitVlaue = {
+const projectInitValue = {
   name: '',
   owner: '',
   image: '',
@@ -42,14 +43,15 @@ const projectInitVlaue = {
   updatedTimestamp: '',
   queryMetadata: undefined,
   id: '',
+  networkEndpoint: '',
   queryEndpoint: '',
-  indexerEndpoint: '',
+  nodeEndpoint: '',
   status: 0,
 };
 
 export const useProjectService = (deploymentId: string) => {
   const { toast } = useToast();
-  const [projectService, setService] = useState<TServiceMetadata>();
+  const [projectService, setService] = useState<ProjectServiceMetadata>();
   const [getProjectService, { data }] = useLazyQuery(GET_PROJECT, {
     fetchPolicy: 'network-only',
   });
@@ -62,7 +64,7 @@ export const useProjectService = (deploymentId: string) => {
 };
 
 export const useIndexingStatus = (deploymentId: string) => {
-  const [status, setStatus] = useState(IndexingStatus.NOTSTART);
+  const [status, setStatus] = useState(IndexingStatus.NOTINDEXING);
   const { account } = useWeb3();
   const toastContext = useToast();
   const sdk = useContractSDK();
@@ -95,7 +97,7 @@ export type ProjectDetails = {
   createdTimestamp: string;
   updatedTimestamp: string;
   queryMetadata: TQueryMetadata | undefined;
-} & TServiceMetadata;
+} & ProjectServiceMetadata;
 
 type Result = {
   id: string;
@@ -124,7 +126,7 @@ export const getProjectDetails = async (deploymentId: string): Promise<ProjectDe
   const projectInfo = res.data.projectDeployments.nodes[0]?.project;
   if (!projectInfo) {
     console.error('Unable to get metadata for project');
-    return projectInitVlaue;
+    return projectInitValue;
   }
 
   const metadataCid = projectInfo.metadata;
@@ -136,7 +138,7 @@ export const getProjectDetails = async (deploymentId: string): Promise<ProjectDe
   }
   if (!raw) {
     console.error('Unable to fetch metadata from ipfs');
-    return projectInitVlaue;
+    return projectInitValue;
   }
 
   const metadata = JSON.parse(Buffer.from(raw).toString('utf8'));
@@ -167,26 +169,24 @@ export const useProjectDetails = (data: ProjectDetails): ProjectDetails | undefi
 };
 
 export async function getQueryMetadata(deploymentID: string): Promise<TQueryMetadata> {
-  const proxyServerURL = `${window.env.COORDINATOR_HOST}/query/${deploymentID}`;
-  const fields = [
-    'lastProcessedHeight',
-    'lastProcessedTimestamp',
-    'targetHeight',
-    'chain',
-    'specName',
-    'genesisHash',
-    'indexerHealthy',
-    'indexerNodeVersion',
-    'queryNodeVersion',
-  ];
   const body = {
     query: {
-      query: `query { _metadata { ${fields.join(' ')} } }`,
+      query: `query { _metadata { ${[
+        'lastProcessedHeight',
+        'lastProcessedTimestamp',
+        'targetHeight',
+        'chain',
+        'specName',
+        'genesisHash',
+        'indexerHealthy',
+        'indexerNodeVersion',
+        'queryNodeVersion',
+      ].join(' ')} } }`,
     },
   };
 
   try {
-    const result = await axios.post(proxyServerURL, body);
+    const result = await axios.post(getProxyServiceUrl(deploymentID), body);
     const metadata = get(result, 'data.data._metadata', null) as TQueryMetadata;
     return metadata;
   } catch {
@@ -195,7 +195,7 @@ export async function getQueryMetadata(deploymentID: string): Promise<TQueryMeta
 }
 
 export function useProjectDetailList(data: any) {
-  const projects = data?.getProjects as TServiceMetadata[];
+  const projects = data?.getProjects as ProjectServiceMetadata[];
   const [projectDetailList, setProjecList] = useState<ProjectDetails[]>();
 
   const { setPageLoading } = useLoading();
@@ -210,7 +210,7 @@ export function useProjectDetailList(data: any) {
 
   const getProjectStatus = useCallback(
     async (deploymentId: string) => {
-      if (!sdk || !account || !deploymentId) return IndexingStatus.NOTSTART;
+      if (!sdk || !account || !deploymentId) return IndexingStatus.NOTINDEXING;
       const { status } = await sdk.queryRegistry.deploymentStatusByIndexer(
         cidToBytes32(deploymentId),
         account

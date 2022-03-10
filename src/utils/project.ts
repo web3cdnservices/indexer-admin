@@ -1,9 +1,9 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-enum HealthStatus {
-  healthy = 'Healthy',
-  unhealthy = 'UnHealthy',
+export enum HealthStatus {
+  healthy = 'HEALTHY',
+  unhealthy = 'UNHEALTHY',
 }
 
 export function calculateProgress(targetHeight: number, latestHeight: number): number {
@@ -14,4 +14,8 @@ export function calculateProgress(targetHeight: number, latestHeight: number): n
 
 export function healthStatus(status: boolean): HealthStatus {
   return status ? HealthStatus.healthy : HealthStatus.unhealthy;
+}
+
+export function getProxyServiceUrl(id: string): string {
+  return `${window.env.COORDINATOR_HOST}/query/${id}`;
 }

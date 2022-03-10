@@ -1,8 +1,8 @@
 {
   "name": "@subql/indexer-admin",
-  "version": "0.0.1-8",
+  "version": "0.0.1-9",
   "scripts": {
-    "start": "PORT=8001 craco start -- --rest-cache",
+    "start": "PORT=8008 craco start -- --rest-cache",
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject",
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.4.17",
-    "@subql/contract-sdk": "0.1.1-31",
+    "@subql/contract-sdk": "0.1.1-41",
     "@subql/react-ui": "^1.0.1-21",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",

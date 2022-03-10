@@ -3,9 +3,9 @@
 
 import React from 'react';
 import { ContractDeployment, ContractSDK, SdkOptions, SubqueryNetwork } from '@subql/contract-sdk';
+import testnetDeployment from '@subql/contract-sdk/publish/testnet.json';
 
 import localnetDeployment from 'contract/localnet.json';
-import testnetDeployment from 'contract/testnet.json';
 import { useIsMetaMask, useWeb3 } from 'hooks/web3Hook';
 import Logger from 'utils/logger';
 import { ChainID, isSupportNetwork, Networks } from 'utils/web3';

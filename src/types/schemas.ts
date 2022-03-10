@@ -77,7 +77,8 @@ export const initialControllerValues = {
 // add project
 export enum ProjectFormKey {
   deploymentId = 'deploymentId',
-  indexerEndpoint = 'indexerEndpoint',
+  networkEndpoint = 'networkEndpoint',
+  nodeEndpoint = 'nodeEndpoint',
   queryEndpoint = 'queryEndpoint',
 }
 
@@ -93,13 +94,23 @@ export const initialProjectValues = {
   [ProjectFormKey.deploymentId]: '',
 };
 
+// start indexing project
+// TODO: valid the url format
+export const StartIndexingSchema = yup.object({
+  [ProjectFormKey.networkEndpoint]: yup.string().defined(),
+});
+
+export const initialIndexingValues = {
+  [ProjectFormKey.networkEndpoint]: '',
+};
+
 // config services
 export const ConfigServicesSchema = yup.object({
-  [ProjectFormKey.indexerEndpoint]: yup.string().defined(),
+  [ProjectFormKey.nodeEndpoint]: yup.string().defined(),
   [ProjectFormKey.queryEndpoint]: yup.string().defined(),
 });
 
 export const initialServiceValues = {
-  [ProjectFormKey.indexerEndpoint]: '',
+  [ProjectFormKey.nodeEndpoint]: '',
   [ProjectFormKey.queryEndpoint]: '',
 };
