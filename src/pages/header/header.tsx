@@ -58,20 +58,21 @@ const Header = () => {
     ],
     [tokenBalance]
   );
-  // TODO: get this back while fix the status style
-  // const network = useMemo(() => chainNames[chainId] ?? 'Unsupport Network', [chainId]);
 
-  const renderTabbars = () => (
-    <div>
-      <TabBar to="/account" activeStyle={activeStyle}>
-        {TabbarItem.account}
-      </TabBar>
-      {controller && (
-        <TabBar to="/projects" activeStyle={activeStyle}>
-          {TabbarItem.projects}
+  const renderTabbars = useCallback(
+    () => (
+      <div>
+        <TabBar to="/account" activeStyle={activeStyle}>
+          {TabbarItem.account}
         </TabBar>
-      )}
-    </div>
+        {controller && (
+          <TabBar to="/projects" activeStyle={activeStyle}>
+            {TabbarItem.projects}
+          </TabBar>
+        )}
+      </div>
+    ),
+    [controller]
   );
 
   const renderAddress = () =>

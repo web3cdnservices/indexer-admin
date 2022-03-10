@@ -17,6 +17,7 @@ export const modalTitles = {
   [ActionType.removeProject]: 'Remove Project',
   [ActionType.configServices]: 'Config Project Services',
   [ActionType.startIndexing]: 'Start Indexing Project',
+  [ActionType.restartIndexing]: 'Restart Indexing Project',
   [ActionType.readyIndexing]: 'Publish Indexing to Ready',
   [ActionType.stopIndexing]: 'Stop Indexing Project',
 };
@@ -41,15 +42,15 @@ export const createServiceItem = (type: string, url: string, version: string, st
 
 export const createButtonItems = (onButtonClick: (type: ActionType) => void) => ({
   [IndexingStatus.NOTINDEXING]: [
-    // createButtonItem('Config Services', () => onButtonClick(ActionType.configServices)),
     createButtonItem('Start Indexing', () => onButtonClick(ActionType.startIndexing)),
-    // createButtonItem('Remove Project', () => onButtonClick(ActionType.removeProject)),
   ],
   [IndexingStatus.INDEXING]: [
+    createButtonItem('Retart Indexing', () => onButtonClick(ActionType.restartIndexing)),
     createButtonItem('Publish to Ready', () => onButtonClick(ActionType.readyIndexing)),
     createButtonItem('Stop Indexing', () => onButtonClick(ActionType.stopIndexing)),
   ],
   [IndexingStatus.READY]: [
+    createButtonItem('Retart Indexing', () => onButtonClick(ActionType.restartIndexing)),
     createButtonItem('Stop Indexing', () => onButtonClick(ActionType.stopIndexing)),
   ],
 });
@@ -101,7 +102,7 @@ export const createStartIndexingSteps = (
   [ActionType.startIndexing]: [
     {
       index: 0,
-      title: 'Start Indexing Project',
+      title: 'Indexing Project',
       desc: 'Start indexing project will start the subquery node service indexing the project and start a query service at the same time. It takes around 1 mins to start the services, you can see the progress and related information after everything is ready.',
       buttonTitle: 'Indexing Project',
       form: {

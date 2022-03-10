@@ -130,6 +130,7 @@ const ModalView: FC<Props> = ({
   loading,
 }) => {
   if (!steps || currentStep > steps.length - 1) return null;
+  console.log('step:', steps, currentStep);
   const stepItem = steps[currentStep];
   const renderFormContent = (item: StepItem) =>
     item.form ? (

@@ -12,6 +12,7 @@ export enum ActionType {
   removeProject = 'removeProject',
   configServices = 'configServices',
   startIndexing = 'startIndexing',
+  restartIndexing = 'restartIndexing',
   readyIndexing = 'readyIndexing',
   stopIndexing = 'stropIndexing',
 }

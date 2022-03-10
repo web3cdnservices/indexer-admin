@@ -125,13 +125,14 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, updateState }) =
       setVisible(true);
     });
 
-    // TODO: resolve this logic in other place
+    // project started but not update status on network
     if (status === IndexingStatus.NOTINDEXING && project.queryEndpoint) {
       setCurrentStep(1);
     }
 
-    if (status === IndexingStatus.NOTINDEXING && !project.queryEndpoint) {
-      return [buttonItems[status][0]];
+    // project status on network is INDEXING but the service is down
+    if (status !== IndexingStatus.NOTINDEXING && !project.queryEndpoint) {
+      return [buttonItems[IndexingStatus.INDEXING][0]];
     }
 
     return buttonItems[status];
@@ -174,6 +175,10 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, updateState }) =
     () => indexingAction(ActionType.startIndexing)
   );
 
+  const restartIndexingSteps = {
+    [ActionType.restartIndexing]: [startIndexingSteps[ActionType.startIndexing][0]],
+  };
+
   const readyIndexingSteps = createReadyIndexingSteps(() =>
     indexingAction(ActionType.readyIndexing)
   );
@@ -193,6 +198,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, updateState }) =
 
   const steps = {
     ...startIndexingSteps,
+    ...restartIndexingSteps,
     ...readyIndexingSteps,
     ...stopIndexingSteps,
   };
