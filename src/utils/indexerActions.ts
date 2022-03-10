@@ -57,7 +57,7 @@ export async function unRegister(sdk: SDK, signer: Signer) {
     throw new Error(ErrorMessages.sdkOrSignerError);
   }
 
-  const tx = sdk.indexerRegistry.connect(signer).unregisterIndexer();
+  const tx = sdk.indexerRegistry.connect(signer).unregisterIndexer({ gasLimit: '1000000' });
   return tx;
 }
 

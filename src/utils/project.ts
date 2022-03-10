@@ -17,5 +17,5 @@ export function healthStatus(status: boolean): HealthStatus {
 }
 
 export function getProxyServiceUrl(id: string): string {
-  return `${window.env.COORDINATOR_HOST}/query/${id}`;
+  return `${window.env.PROXY_SERVICE_URL}/query/${id}`;
 }
