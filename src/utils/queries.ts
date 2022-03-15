@@ -132,13 +132,12 @@ export const GET_QUERY_METADATA = gql`
 `;
 
 // query project registry
-export const QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS = gql`
-  query GetDeploymentProjects($deploymentId: String!) {
-    projectDeployments(filter: { deploymentId: { equalTo: $deploymentId } }) {
+export const GET_PROJECT_DETAILS = gql`
+  query GetProjectDetails($deploymentId: String!) {
+    deployments(filter: { id: { equalTo: $deploymentId } }) {
       nodes {
         id
         projectId
-        deploymentId
         project {
           owner
           currentVersion

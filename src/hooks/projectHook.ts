@@ -14,7 +14,7 @@ import { ProjectServiceMetadata, TQueryMetadata } from 'pages/project-details/ty
 import { IndexingStatus } from 'pages/projects/constant';
 import { cidToBytes32, concatU8A, IPFS } from 'utils/ipfs';
 import { getProxyServiceUrl } from 'utils/project';
-import { GET_PROJECT, QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS } from 'utils/queries';
+import { GET_PROJECT, GET_PROJECT_DETAILS } from 'utils/queries';
 
 const queryMetadataInitValue = {
   lastProcessedHeight: 0,
@@ -102,8 +102,12 @@ export type ProjectDetails = {
 type Result = {
   id: string;
   projectId: string;
-  deploymentId: string;
   project: {
+    currentDeployment: string;
+    currentVersion: string;
+    versionDescription: string;
+    createdTimestamp: string;
+    updatedTimestamp: string;
     metadata: string;
   };
 };
@@ -114,16 +118,16 @@ const queryRegistryClient = new ApolloClient({
 });
 
 export const getProjectInfo = async (deploymentId: string) => {
-  const result = await queryRegistryClient.query<{ projectDeployments: { nodes: Result[] } }>({
-    query: QUERY_REGISTRY_GET_DEPLOYMENT_PROJECTS,
+  const result = await queryRegistryClient.query<{ deployments: { nodes: Result[] } }>({
+    query: GET_PROJECT_DETAILS,
     variables: { deploymentId },
   });
   return result;
 };
 
 export const getProjectDetails = async (deploymentId: string): Promise<ProjectDetails> => {
-  const res = await getProjectInfo(deploymentId);
-  const projectInfo = res.data.projectDeployments.nodes[0]?.project;
+  const res = await getProjectInfo('QmaPNri6zia4iNHFSr72QcEWieCtss2KqCBVMXytf3m8yV');
+  const projectInfo = res.data.deployments.nodes[0]?.project;
   if (!projectInfo) {
     console.error('Unable to get metadata for project');
     return projectInitValue;

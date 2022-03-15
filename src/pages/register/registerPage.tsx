@@ -69,7 +69,7 @@ const RegisterPage = () => {
     setLoading(false);
   };
 
-  const onSyncIndexer = async () => {
+  const onSyncIndexer = useCallback(async () => {
     setLoading(true);
     if (!account) {
       return dispatchToast({
@@ -87,7 +87,7 @@ const RegisterPage = () => {
     await updateIndexer(account);
     setLoading(false);
     return history.replace('/account');
-  };
+  }, [isIndexer]);
 
   const onApprove = async () => {
     setLoading(true);

@@ -89,7 +89,8 @@ const ProjectDetailsPage = () => {
             id={id}
             status={status}
             project={projectInfo}
-            updateState={() => getMetadata()}
+            service={querySerive}
+            stateChanged={() => getMetadata()}
           />
           <ProjectStatusView status={status} metadata={queryMetadata} />
           <ProgressInfoView percent={progress} />

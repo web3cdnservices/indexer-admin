@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // @ts-nocheck
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Address, Dropdown } from '@subql/react-ui';
 import buttonStyles from '@subql/react-ui/dist/components/Button/Button.module.css';

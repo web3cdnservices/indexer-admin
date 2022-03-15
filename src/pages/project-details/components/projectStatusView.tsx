@@ -5,10 +5,10 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import StatusLabel from 'components/statusLabel';
+import { TagItem } from 'components/tagItem';
 import { IndexingStatus, statusColor, statusText } from 'pages/projects/constant';
 
 import { TQueryMetadata } from '../types';
-import { TagItem } from './projectDetailHeader';
 
 const Container = styled.div<{ mb?: number }>`
   display: flex;

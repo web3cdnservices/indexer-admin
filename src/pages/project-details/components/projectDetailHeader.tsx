@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import Avatar from 'components/avatar';
 import ModalView from 'components/modalView';
 import { Button, Separator, Text } from 'components/primary';
+import { TagItem } from 'components/tagItem';
 import { useContractSDK } from 'containers/contractSdk';
 import { useToast } from 'containers/toastContext';
 import { ProjectDetails } from 'hooks/projectHook';
@@ -26,6 +27,7 @@ import {
   createStopIndexingSteps,
   modalTitles,
 } from '../config';
+import { TService } from '../types';
 
 const Container = styled.div`
   display: flex;
@@ -55,12 +57,6 @@ const VersionContainer = styled.div`
   width: 300px;
 `;
 
-const VersionItemContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-`;
-
 const ActionContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -68,34 +64,15 @@ const ActionContainer = styled.div`
   justify-content: center;
 `;
 
-type VersionProps = {
-  versionType: string;
-  value?: string | number;
-  prefix?: string;
-};
-
-export const TagItem: FC<VersionProps> = ({ versionType, value = '', prefix = '' }) => {
-  const color = prefix ? '#4388dd' : 'gray';
-  return (
-    <VersionItemContainer>
-      <Text size={15} fw="500">
-        {versionType}
-      </Text>
-      <Text mt={5} color={color} fw="500" size={13}>
-        {`${prefix}${value}`}
-      </Text>
-    </VersionItemContainer>
-  );
-};
-
 type Props = {
   id: string;
   status: IndexingStatus;
   project: ProjectDetails;
-  updateState: () => void;
+  service?: TService;
+  stateChanged: () => void;
 };
 
-const ProjectDetailsHeader: FC<Props> = ({ id, status, project, updateState }) => {
+const ProjectDetailsHeader: FC<Props> = ({ id, status, project, service, stateChanged }) => {
   // TODO: 1. only progress reach `100%` can display `publish to ready` button
 
   const [visible, setVisible] = useState(false);
@@ -126,17 +103,17 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, updateState }) =
     });
 
     // project started but not update status on network
-    if (status === IndexingStatus.NOTINDEXING && project.queryEndpoint) {
+    if (status === IndexingStatus.NOTINDEXING && service?.url) {
       setCurrentStep(1);
     }
 
     // project status on network is INDEXING but the service is down
-    if (status !== IndexingStatus.NOTINDEXING && !project.queryEndpoint) {
+    if (status !== IndexingStatus.NOTINDEXING && !service?.url) {
       return [buttonItems[IndexingStatus.INDEXING][0]];
     }
 
     return buttonItems[status];
-  }, [status, project.queryEndpoint]);
+  }, [status, service?.url]);
 
   const indexingTransactions = useMemo(
     () => ({
@@ -160,13 +137,19 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, updateState }) =
     }
   };
 
+  const updateState = (deplay = 1500) => {
+    setTimeout(() => {
+      stateChanged();
+    }, deplay);
+  };
+
   const startIndexingSteps = createStartIndexingSteps(
     async (values, formHelper) => {
       const networkEndpoint = values[ProjectFormKey.networkEndpoint];
       try {
         // TODO: verify `networkEndpoint`
         await startProject({ variables: { networkEndpoint, id } });
-        updateState();
+        updateState(3000);
         setCurrentStep(1);
       } catch (e) {
         formHelper.setErrors({ [ProjectFormKey.networkEndpoint]: 'Invalid service endpoint' });
