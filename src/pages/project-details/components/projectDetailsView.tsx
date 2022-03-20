@@ -7,23 +7,63 @@ import styled from 'styled-components';
 import { Text } from 'components/primary';
 import { ProjectDetails } from 'hooks/projectHook';
 
+type InfoProps = {
+  title: string;
+  desc: string;
+  ml?: number;
+  mt?: number;
+};
+
+const InfoView: FC<InfoProps> = ({ title, desc, ml, mt }) => (
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  <InfoContainer ml={ml} mt={mt}>
+    <Text size={18}>{title}</Text>
+    <Text mt={15} size={16} color="gray">
+      {desc}
+    </Text>
+  </InfoContainer>
+);
+
+type Props = {
+  id: string;
+  project: ProjectDetails;
+};
+
+const formatDate = (date: string) => new Date(date).toLocaleDateString();
+
+const ProjectDetailsView: FC<Props> = ({ project }) => {
+  const {
+    description,
+    websiteUrl,
+    codeUrl,
+    currentDeployment,
+    createdTimestamp,
+    updatedTimestamp,
+  } = project;
+  return (
+    <Container>
+      <LeftContainer>
+        <InfoView title="Description" desc={description} />
+        <BottomContainer>
+          <InfoView title="Created" desc={formatDate(createdTimestamp)} />
+          <InfoView ml={150} title="Last Updated" desc={formatDate(updatedTimestamp)} />
+        </BottomContainer>
+      </LeftContainer>
+      <RightContainer>
+        <InfoView title="Deployment ID" desc={currentDeployment} />
+        <InfoView mt={30} title="Website URL" desc={websiteUrl} />
+        <InfoView mt={30} title="Source Code URL" desc={codeUrl} />
+      </RightContainer>
+    </Container>
+  );
+};
+
+export default ProjectDetailsView;
+
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
   min-height: 350px;
-  margin-top: 50px;
-`;
-
-const Separator = styled.div`
-  display: flex;
-  width: 100%;
-  height: 1px;
-  background-color: black;
-`;
-
-const ContentContainer = styled.div`
-  display: flex;
-  margin-top: 40px;
+  margin-top: 20px;
 `;
 
 const LeftContainer = styled.div`
@@ -53,61 +93,3 @@ const InfoContainer = styled.div<{ mt?: number; ml?: number }>`
   margin-left: ${({ ml }) => ml ?? 0}px;
   margin-top: ${({ mt }) => mt ?? 0}px;
 `;
-
-type InfoProps = {
-  title: string;
-  desc: string;
-  ml?: number;
-  mt?: number;
-};
-
-const InfoView: FC<InfoProps> = ({ title, desc, ml, mt }) => (
-  <InfoContainer ml={ml} mt={mt}>
-    <Text size={18}>{title}</Text>
-    <Text mt={15} size={16} color="gray">
-      {desc}
-    </Text>
-  </InfoContainer>
-);
-
-type Props = {
-  id: string;
-  project: ProjectDetails;
-};
-
-const formatDate = (date: string) => new Date(date).toLocaleDateString();
-
-const ProjectDetailsView: FC<Props> = ({ project }) => {
-  const {
-    description,
-    websiteUrl,
-    codeUrl,
-    currentDeployment,
-    createdTimestamp,
-    updatedTimestamp,
-  } = project;
-  return (
-    <Container>
-      <Text fw="600" mb={10} size={20}>
-        Project Details
-      </Text>
-      <Separator />
-      <ContentContainer>
-        <LeftContainer>
-          <InfoView title="Description" desc={description} />
-          <BottomContainer>
-            <InfoView title="Created" desc={formatDate(createdTimestamp)} />
-            <InfoView ml={150} title="Last Updated" desc={formatDate(updatedTimestamp)} />
-          </BottomContainer>
-        </LeftContainer>
-        <RightContainer>
-          <InfoView title="Deployment ID" desc={currentDeployment} />
-          <InfoView mt={30} title="Website URL" desc={websiteUrl} />
-          <InfoView mt={30} title="Source Code URL" desc={codeUrl} />
-        </RightContainer>
-      </ContentContainer>
-    </Container>
-  );
-};
-
-export default ProjectDetailsView;

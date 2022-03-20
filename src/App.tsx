@@ -12,6 +12,8 @@ import { CoordinatorIndexerProvider } from 'containers/coordinatorIndexer';
 import { LoadingProvider } from 'containers/loadingContext';
 import { ToastProvider } from 'containers/toastContext';
 import { Web3Provider } from 'containers/web3';
+import { useShowMetaMask } from 'hooks/web3Hook';
+import MetaMaskView from 'pages/metamask/metamaskView';
 import { createApolloClient, defaultServiceUrl } from 'utils/apolloClient';
 
 import * as Pages from './pages';
@@ -20,23 +22,31 @@ import * as Pages from './pages';
 import 'antd/dist/antd.css';
 import './App.css';
 
-const AppContents = () => (
-  <Router>
-    <Pages.Header />
-    <div className="Main">
-      <Switch>
-        <Route component={Pages.Projects} path="/projects" />
-        <Route exact component={Pages.ProjectDetail} path="/project/:id" />
-        <Route component={Pages.Account} path="/account" />
-        <Route component={Pages.Register} path="/register" />
-        <Route component={Pages.Login} path="/" />
-      </Switch>
-      <Loading />
-      <Toast />
-    </div>
-    <Pages.Footer />
-  </Router>
-);
+const AppContents = () => {
+  const showMetaMask = useShowMetaMask();
+
+  return (
+    <Router>
+      <Pages.Header />
+      <div className="Main">
+        {!showMetaMask ? (
+          <Switch>
+            <Route component={Pages.Projects} path="/projects" />
+            <Route exact component={Pages.ProjectDetail} path="/project/:id" />
+            <Route component={Pages.Account} path="/account" />
+            <Route component={Pages.Register} path="/register" />
+            <Route component={Pages.Login} path="/" />
+          </Switch>
+        ) : (
+          <MetaMaskView />
+        )}
+        <Loading />
+        <Toast />
+      </div>
+      <Pages.Footer />
+    </Router>
+  );
+};
 
 const App: FC = () => {
   const client = createApolloClient(window.env.COORDINATOR_GRAPHQL ?? defaultServiceUrl);

@@ -115,6 +115,14 @@ export const GET_PROJECTS = gql`
   }
 `;
 
+export const GET_LOG = gql`
+  query GetLog($container: String!) {
+    getLog(container: $container) {
+      log
+    }
+  }
+`;
+
 export const GET_QUERY_METADATA = gql`
   query {
     _metadata {

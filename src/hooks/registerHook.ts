@@ -1,7 +1,7 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { isUndefined } from 'lodash';
 
 import { useContractSDK } from 'containers/contractSdk';
@@ -13,13 +13,21 @@ export const useIsApproved = () => {
   const { account } = useWeb3();
   const sdk = useContractSDK();
 
-  useEffect(() => {
-    if (!account) return;
-    sdk?.sqToken
-      .allowance(account, sdk?.staking.address)
-      .then((amount) => setIsApprove(!amount.eq(0)))
-      .catch(() => setIsApprove(false));
+  const checkAllowance = useCallback(async () => {
+    if (!account || !sdk) return;
+    try {
+      const mimAmount = (await sdk.indexerRegistry.minimumStakingAmont()) ?? 0;
+      const amount = await sdk.sqToken.allowance(account, sdk.staking.address);
+      setIsApprove(!!amount?.gte(mimAmount));
+      // setIsApprove(false);
+    } catch {
+      setIsApprove(false);
+    }
   }, [sdk, account]);
+
+  useEffect(() => {
+    checkAllowance();
+  }, [checkAllowance]);
 
   return isApprove;
 };

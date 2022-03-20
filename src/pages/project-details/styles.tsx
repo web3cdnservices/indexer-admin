@@ -10,6 +10,7 @@ export const Container = styled.div`
   min-width: 1270px;
   padding: 0px 50px;
   padding-bottom: 50px;
+  overflow: auto;
 `;
 
 export const ContentContainer = styled.div`

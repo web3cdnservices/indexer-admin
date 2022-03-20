@@ -6,11 +6,14 @@ import { formatUnits } from '@ethersproject/units';
 
 import { useContractSDK } from 'containers/contractSdk';
 import { useWeb3 } from 'hooks/web3Hook';
+import { Account, IndexerMetadata } from 'pages/account/types';
 import { HookDependency } from 'types/types';
 import { emptyControllerAccount } from 'utils/indexerActions';
+import { bytes32ToCid, getMetadata } from 'utils/ipfs';
 
-export type Account = string | null | undefined;
-
+// TODO: refactor these hooks
+// 1. using `useMemo` | `useCallback` to replace custome useState
+// 2. using try catch | async await other than promise
 export const useIsIndexer = (address?: Account): boolean | undefined => {
   const { account: currentAccount } = useWeb3();
   const account = address ?? currentAccount;
@@ -46,19 +49,25 @@ export const useIsController = (account: Account) => {
   return isController;
 };
 
-export const useController = (refresh?: number) => {
+export const useController = () => {
   const [controller, setController] = useState<string>();
   const { account } = useWeb3();
   const sdk = useContractSDK();
 
-  useEffect(() => {
-    sdk?.indexerRegistry
-      .indexerToController(account ?? '')
-      .then((controller) => setController(controller === emptyControllerAccount ? '' : controller))
-      .catch(() => setController(undefined));
-  }, [account, sdk, refresh]);
+  const getController = useCallback(async () => {
+    try {
+      const controller = await sdk?.indexerRegistry.indexerToController(account ?? '');
+      setController(controller === emptyControllerAccount ? '' : controller);
+    } catch {
+      setController(undefined);
+    }
+  }, [account, sdk]);
 
-  return controller;
+  useEffect(() => {
+    getController();
+  }, [getController]);
+
+  return { controller, getController };
 };
 
 export const useControllerToIndexer = (account: Account) => {
@@ -111,4 +120,29 @@ export const useBalance = (account: Account) => {
   }, [getBalance]);
 
   return balance;
+};
+
+export const useIndexerMetadata = () => {
+  const { account } = useWeb3();
+  const sdk = useContractSDK();
+  const [metadata, setMetadata] = useState<IndexerMetadata>();
+
+  const fetchMetadata = useCallback(async () => {
+    if (!account) return;
+    try {
+      const metadataHash = await sdk?.indexerRegistry.metadataByIndexer(account);
+      if (!metadataHash) return;
+
+      const metadata = await getMetadata(bytes32ToCid(metadataHash));
+      setMetadata(metadata);
+    } catch {
+      console.error('Failed to get indexer metadata');
+    }
+  }, [sdk, account]);
+
+  useEffect(() => {
+    fetchMetadata();
+  }, [fetchMetadata]);
+
+  return { metadata, fetchMetadata };
 };

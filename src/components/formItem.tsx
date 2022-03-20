@@ -51,6 +51,7 @@ export const FieldItem: VFC<Props> = ({
     {!!options && (
       <FormField
         as="select"
+        key={title}
         name={fieldKey}
         placeholder={placeholder}
         onChange={onChange}

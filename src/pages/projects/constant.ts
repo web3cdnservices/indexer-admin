@@ -1,9 +1,8 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { FormSubmit } from 'components/modalView';
 import { initialProjectValues, ProjectFormKey, ProjectFormSchema } from 'types/schemas';
-import { ActionType } from 'utils/transactions';
+import { FormSubmit, ProjectsAction } from 'utils/transactions';
 
 export enum IndexingStatus {
   NOTINDEXING,
@@ -23,8 +22,9 @@ export const statusText = {
   [IndexingStatus.READY]: 'READY',
 };
 
+// TODO: remove the old logic
 export const createAddProjectSteps = (onAddProject: FormSubmit) => ({
-  [ActionType.addProject]: [
+  [ProjectsAction.addProject]: [
     {
       index: 0,
       title: 'Add new project',

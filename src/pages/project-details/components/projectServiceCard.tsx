@@ -6,7 +6,7 @@ import { Tag } from '@subql/react-ui';
 import styled from 'styled-components';
 
 import { Text } from 'components/primary';
-import { getProxyServiceUrl, HealthStatus } from 'utils/project';
+import { getProxyServiceUrl, ServiceStatus } from 'utils/project';
 
 import { TService } from '../types';
 
@@ -45,7 +45,7 @@ const ServiceCard: FC<CardProps> = ({ title, subTitle, status }) => (
         {title}
       </Text>
       {!!status && (
-        <Tag text={status} state={status === HealthStatus.healthy ? 'success' : 'error'} />
+        <Tag text={status} state={status === ServiceStatus.healthy ? 'success' : 'error'} />
       )}
     </HeaderContainer>
     <Text size={15} color="gray" mt={10}>

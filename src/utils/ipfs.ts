@@ -31,3 +31,19 @@ export async function createIndexerMetadata(name: string, url: string): Promise<
   const cid = result.cid.toV0().toString();
   return cidToBytes32(cid);
 }
+
+export async function getMetadata(metadataCID: string) {
+  const results = IPFS.cat(metadataCID);
+  let raw: Uint8Array | undefined;
+
+  // eslint-disable-next-line no-restricted-syntax
+  for await (const result of results) {
+    raw = raw ? concatU8A(raw, result) : result;
+  }
+  if (!raw) {
+    console.error('Unable to fetch metadata from ipfs');
+    return raw;
+  }
+
+  return JSON.parse(Buffer.from(raw).toString('utf8'));
+}

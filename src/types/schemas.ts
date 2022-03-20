@@ -61,6 +61,24 @@ export const initialRegisterValues = {
 
 export type TRegisterValues = yup.Asserts<typeof RegisterFormSchema>;
 
+// update metadata
+export enum MetadataFormKey {
+  name = 'name',
+  proxyEndpoint = 'proxyEndpoint',
+}
+
+export const MetadataFormSchema = yup.object({
+  [RegisterFormKey.name]: yup.string().defined(),
+  [RegisterFormKey.proxyEndpoint]: yup.string().defined(),
+});
+
+export const initialMetadataValues = {
+  [RegisterFormKey.name]: '',
+  [RegisterFormKey.proxyEndpoint]: '',
+};
+
+export type TMetadataValues = yup.Asserts<typeof MetadataFormSchema>;
+
 // config controllerItem
 export enum ControllerFormKey {
   privateKey = 'privateKey',
@@ -95,22 +113,10 @@ export const initialProjectValues = {
 };
 
 // start indexing project
-// TODO: valid the url format
 export const StartIndexingSchema = yup.object({
   [ProjectFormKey.networkEndpoint]: yup.string().defined(),
 });
 
 export const initialIndexingValues = {
   [ProjectFormKey.networkEndpoint]: '',
-};
-
-// config services
-export const ConfigServicesSchema = yup.object({
-  [ProjectFormKey.nodeEndpoint]: yup.string().defined(),
-  [ProjectFormKey.queryEndpoint]: yup.string().defined(),
-});
-
-export const initialServiceValues = {
-  [ProjectFormKey.nodeEndpoint]: '',
-  [ProjectFormKey.queryEndpoint]: '',
 };

@@ -12,7 +12,7 @@ import { useController, useIsIndexer } from './indexerHook';
 
 export const useRouter = (refresh = true) => {
   const isIndexer = useIsIndexer();
-  const controller = useController();
+  const { controller } = useController();
   const history = useHistory();
   const { pageLoading, setPageLoading } = useLoading();
 

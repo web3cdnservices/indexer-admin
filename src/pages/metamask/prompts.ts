@@ -1,7 +1,7 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Account } from 'hooks/indexerHook';
+import { Account } from 'pages/account/types';
 
 const prompts = (account: Account) => ({
   install: {

@@ -12,18 +12,20 @@ import { useToast } from 'containers/toastContext';
 import { useWeb3 } from 'hooks/web3Hook';
 import { ProjectServiceMetadata, TQueryMetadata } from 'pages/project-details/types';
 import { IndexingStatus } from 'pages/projects/constant';
-import { cidToBytes32, concatU8A, IPFS } from 'utils/ipfs';
+import { cidToBytes32, getMetadata } from 'utils/ipfs';
 import { getProxyServiceUrl } from 'utils/project';
 import { GET_PROJECT, GET_PROJECT_DETAILS } from 'utils/queries';
 
-const queryMetadataInitValue = {
+// TODO: review whether need default value or other ways to provide default value
+// TODO: refactor get project details
+const metadataInitValue = {
   lastProcessedHeight: 0,
   lastProcessedTimestamp: 0,
   targetHeight: 0,
-  chain: 0,
+  chain: '',
   specName: '',
   genesisHash: '',
-  indexerHealthy: false,
+  indexerHealthy: undefined,
   indexerNodeVersion: '',
   queryNodeVersion: '',
 };
@@ -41,7 +43,7 @@ const projectInitValue = {
   versionDescription: '',
   createdTimestamp: '',
   updatedTimestamp: '',
-  queryMetadata: undefined,
+  metadata: undefined,
   id: '',
   networkEndpoint: '',
   queryEndpoint: '',
@@ -96,7 +98,7 @@ export type ProjectDetails = {
   versionDescription: string;
   createdTimestamp: string;
   updatedTimestamp: string;
-  queryMetadata: TQueryMetadata | undefined;
+  metadata: TQueryMetadata | undefined;
 } & ProjectServiceMetadata;
 
 type Result = {
@@ -117,43 +119,33 @@ const queryRegistryClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-export const getProjectInfo = async (deploymentId: string) => {
-  const result = await queryRegistryClient.query<{ deployments: { nodes: Result[] } }>({
+export const getProjectDetails = async (deploymentId: string): Promise<ProjectDetails> => {
+  const res = await queryRegistryClient.query<{ deployments: { nodes: Result[] } }>({
     query: GET_PROJECT_DETAILS,
     variables: { deploymentId },
   });
-  return result;
-};
 
-export const getProjectDetails = async (deploymentId: string): Promise<ProjectDetails> => {
-  const res = await getProjectInfo('QmaPNri6zia4iNHFSr72QcEWieCtss2KqCBVMXytf3m8yV');
   const projectInfo = res.data.deployments.nodes[0]?.project;
   if (!projectInfo) {
     console.error('Unable to get metadata for project');
     return projectInitValue;
   }
 
-  const metadataCid = projectInfo.metadata;
-  const results = IPFS.cat(metadataCid);
-  let raw: Uint8Array | undefined;
-  // eslint-disable-next-line no-restricted-syntax
-  for await (const result of results) {
-    raw = raw ? concatU8A(raw, result) : result;
-  }
-  if (!raw) {
-    console.error('Unable to fetch metadata from ipfs');
-    return projectInitValue;
-  }
+  const projectMetadata = await getMetadata(projectInfo.metadata);
+  const queryMetadata = await getQueryMetadata(deploymentId);
+  const projectDetails = {
+    ...projectInfo,
+    ...projectMetadata,
+    metadata: queryMetadata,
+    id: deploymentId,
+  };
 
-  const metadata = JSON.parse(Buffer.from(raw).toString('utf8'));
-  const projectDetails: ProjectDetails = { ...projectInfo, ...metadata, id: deploymentId };
   return projectDetails;
 };
 
-export const useProjectDetails = (data: ProjectDetails): ProjectDetails | undefined => {
-  const [project, setProject] = useState<ProjectDetails | undefined>(data);
+export const useProjectDetails = (deploymentId: string): ProjectDetails | undefined => {
+  const [project, setProject] = useState<ProjectDetails | undefined>();
   const { toast } = useToast();
-  const deploymentId = data.id;
 
   const fetchMeta = useCallback(async () => {
     try {
@@ -194,7 +186,7 @@ export async function getQueryMetadata(deploymentID: string): Promise<TQueryMeta
     const metadata = get(result, 'data.data._metadata', null) as TQueryMetadata;
     return metadata;
   } catch {
-    return queryMetadataInitValue;
+    return metadataInitValue;
   }
 }
 
@@ -240,7 +232,7 @@ export function useProjectDetailList(data: any) {
       );
       setProjecList(
         result
-          .map(([detail, queryMetadata, status]) => ({ ...detail, status, queryMetadata }))
+          .map(([detail, metadata, status]) => ({ ...detail, status, metadata }))
           .filter(({ id }) => !!id)
       );
       setPageLoading(false);

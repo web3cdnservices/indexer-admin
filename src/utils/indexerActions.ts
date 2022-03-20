@@ -18,6 +18,7 @@ const ErrorMessages = {
   controllerError: 'Controller can not be empty',
 };
 
+// TODO: refactor
 export async function indexerRequestApprove(sdk: SDK, signer: Signer, amount: string | undefined) {
   if (!sdk || !signer) {
     throw new Error(ErrorMessages.sdkOrSignerError);
@@ -49,6 +50,15 @@ export async function indexerRegistry(
   const tx = await sdk.indexerRegistry
     .connect(signer)
     .registerIndexer(utils.parseEther(amount), metadata, commissionRate);
+  return tx;
+}
+
+export async function updateMetadata(sdk: SDK, signer: Signer, metadata: string) {
+  if (!sdk || !signer) {
+    throw new Error(ErrorMessages.sdkOrSignerError);
+  }
+
+  const tx = await sdk.indexerRegistry.connect(signer).updateMetadata(metadata);
   return tx;
 }
 

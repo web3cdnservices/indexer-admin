@@ -33,7 +33,7 @@ const MetaMaskView = () => {
     if (isNetworkError) return invalidNetwork;
     if (!isMetaMask) return connect;
     return invalidAccount;
-  }, [isNetworkError, isMetaMaskInstalled, isMetaMask, account]);
+  }, [isNetworkError, isMetaMaskInstalled, isMetaMask, account, indexer]);
 
   const onButtonClick = useCallback(() => {
     if (isNetworkError) {

@@ -9,11 +9,11 @@ import ModalView from 'components/modalView';
 import { Button, Text } from 'components/primary';
 import { useLoading } from 'containers/loadingContext';
 import { useIsIndexer } from 'hooks/indexerHook';
-import { getProjectInfo, ProjectDetails, useProjectDetailList } from 'hooks/projectHook';
+import { ProjectDetails, useProjectDetailList } from 'hooks/projectHook';
 import { useRouter } from 'hooks/routerHook';
 import { ProjectFormKey } from 'types/schemas';
 import { ADD_PROJECT, GET_PROJECTS } from 'utils/queries';
-import { ActionType } from 'utils/transactions';
+import { ProjectsAction } from 'utils/transactions';
 
 import ProjecItemsHeader from './components/projecItemsHeader';
 import ProjectItem from './components/projectItem';
@@ -47,7 +47,6 @@ const Projects = () => {
   const step = createAddProjectSteps(async (values, helper) => {
     try {
       const id = values[ProjectFormKey.deploymentId];
-      await getProjectInfo(id);
       await addProject({ variables: { id } });
 
       setVisible(false);
@@ -86,7 +85,7 @@ const Projects = () => {
         // @ts-ignore
         steps={step.addProject}
         currentStep={0}
-        type={ActionType.addProject}
+        type={ProjectsAction.addProject}
         loading={loading}
       />
     </Container>

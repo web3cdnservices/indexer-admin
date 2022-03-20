@@ -1,15 +1,76 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { Tag } from '@subql/react-ui';
+import { isEmpty } from 'lodash';
 import styled from 'styled-components';
 
-import { ActionType } from 'utils/transactions';
+import { AccountButtonItem } from 'pages/account/types';
 
 import Avatar from './avatar';
 import { Button, ButtonContainer, Text } from './primary';
 
+type Props = {
+  title: string;
+  desc: string;
+  buttons: AccountButtonItem[];
+  name?: string;
+  account?: string;
+  status?: string;
+};
+
+const AccountCard: FC<Props> = ({ title, desc, buttons, name, account, status }) => {
+  const renderButtons = useMemo(
+    () =>
+      buttons.map(({ title, type, loading, disabled, onClick }) => (
+        <Button
+          key={type}
+          width={200}
+          title={title}
+          loading={loading}
+          disabled={disabled}
+          onClick={() => onClick(type)}
+        />
+      )),
+    [buttons]
+  );
+
+  return (
+    <Container>
+      <HeaderContainer>
+        <MainTitleContainer>
+          <Text size={30} fw="bold" mr={20}>
+            {title}
+          </Text>
+          {!!status && <Tag text={status} state="success" />}
+        </MainTitleContainer>
+        {!!account && !isEmpty(buttons) && renderButtons}
+      </HeaderContainer>
+      {account ? (
+        <ContentContainer>
+          <Avatar address={account ?? ''} size={100} />
+          <DescContainer ml={20}>
+            <Text>{name}</Text>
+            <Text mt={10}>{account}</Text>
+            <Text mt={10}>{desc}</Text>
+          </DescContainer>
+        </ContentContainer>
+      ) : (
+        <DescContainer>
+          <Text color="gray" size={15} mb={30}>
+            {desc}
+          </Text>
+          {!isEmpty(buttons) && <ButtonContainer align="left">renderButtons</ButtonContainer>}
+        </DescContainer>
+      )}
+    </Container>
+  );
+};
+
+export default AccountCard;
+
+// styles
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -50,78 +111,3 @@ const DescContainer = styled.div<{ ml?: number }>`
   flex-direction: column;
   margin-left: ${({ ml }) => ml ?? 0}px;
 `;
-
-type Props = {
-  title: string;
-  desc: string;
-  buttonTitle: string;
-  type: ActionType;
-  onClick: (type: ActionType) => void;
-  disabled?: boolean;
-  loading?: boolean;
-  name?: string;
-  account?: string;
-  status?: string;
-};
-
-const AccountCard: FC<Props> = ({
-  title,
-  desc,
-  buttonTitle,
-  name,
-  type,
-  onClick,
-  disabled,
-  loading,
-  account,
-  status,
-}) => (
-  <Container>
-    <HeaderContainer>
-      <MainTitleContainer>
-        <Text size={30} fw="bold" mr={20}>
-          {title}
-        </Text>
-        {!!status && <Tag text={status} state="success" />}
-      </MainTitleContainer>
-      {!!account && !!buttonTitle && (
-        <Button
-          width={250}
-          title={buttonTitle}
-          loading={loading}
-          disabled={disabled}
-          onClick={() => onClick(type)}
-        />
-      )}
-    </HeaderContainer>
-    {account ? (
-      <ContentContainer>
-        <Avatar address={account ?? ''} size={100} />
-        <DescContainer ml={20}>
-          <Text>{name}</Text>
-          <Text mt={10}>{account}</Text>
-          <Text mt={10}>{desc}</Text>
-        </DescContainer>
-      </ContentContainer>
-    ) : (
-      <DescContainer>
-        <Text color="gray" size={15} mb={30}>
-          {desc}
-        </Text>
-        {!!buttonTitle && (
-          <ButtonContainer align="left">
-            <Button
-              width={200}
-              title={buttonTitle}
-              loading={loading}
-              disabled={disabled}
-              onClick={() => onClick(type)}
-            />
-          </ButtonContainer>
-        )}
-      </DescContainer>
-    )}
-  </Container>
-);
-
-export default AccountCard;

@@ -6,11 +6,10 @@ import { useEffect } from 'react';
 import { Redirect } from 'react-router';
 import { useIsIndexer } from 'hooks/indexerHook';
 import { useWeb3 } from 'hooks/web3Hook';
-import MetaMaskView from 'pages/metamask/metamaskView';
 import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useLoading } from 'containers/loadingContext';
-import { Container } from './styles';
 import { isUndefined } from 'lodash';
+import { Container } from './styles';
 
 const LoginPage = () => {
   const { account } = useWeb3();
@@ -26,16 +25,11 @@ const LoginPage = () => {
     setPageLoading(loading || isUndefined(isIndexer));
   }, [loading, isIndexer]);
 
-  const isCorrectAccount = () => account?.toLowerCase() === coordinatorIndexer?.toLocaleLowerCase();
-
   return (
     <Container>
       <div>
-        {!account && <MetaMaskView />}
         {account && !isIndexer && !coordinatorIndexer && <Redirect to="/register" />}
-        {account &&
-          !!coordinatorIndexer &&
-          (isCorrectAccount() ? <Redirect to="/account" /> : <MetaMaskView />)}
+        {account && !!coordinatorIndexer && <Redirect to="/account" />}
       </div>
     </Container>
   );

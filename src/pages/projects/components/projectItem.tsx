@@ -46,13 +46,13 @@ type Props = ProjectDetails;
 
 const ProjectItem: FC<Props> = (props) => {
   const history = useHistory();
-  const { id, name, status, queryMetadata } = props;
+  const { id, name, status, metadata } = props;
 
   const progress = useMemo(() => {
-    if (!queryMetadata) return 0;
-    const { targetHeight, lastProcessedHeight } = queryMetadata;
+    if (!metadata) return 0;
+    const { targetHeight, lastProcessedHeight } = metadata;
     return calculateProgress(targetHeight, lastProcessedHeight);
-  }, [queryMetadata]);
+  }, [metadata]);
 
   return (
     <Container onClick={() => history.push(`/project/${id}`, { data: props })}>

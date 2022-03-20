@@ -4,68 +4,18 @@
 import { FC } from 'react';
 import Modal from 'react-modal';
 import { Steps } from 'antd';
-import { Form, Formik, FormikHelpers, FormikValues } from 'formik';
+import { Form, Formik, FormikValues } from 'formik';
 import styled from 'styled-components';
 import { ObjectSchema } from 'yup';
 
 import { RegistrySteps } from 'pages/register/styles';
 import { getStepStatus } from 'pages/register/utils';
 import cross from 'resources/cross.svg';
-import { ActionType } from 'utils/transactions';
+import { ClickAction, FormSubmit, ModalAction } from 'utils/transactions';
 
 import { FieldItem } from './formItem';
 import Icon from './Icon';
 import { Button, ButtonContainer, Text } from './primary';
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: 32px;
-  padding-bottom: 52px;
-`;
-
-const HeaderContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-content: center;
-  padding: 16px 32px;
-  border-bottom: 1px solid var(--sq-gray300);
-`;
-
-const IconContainer = styled.div`
-  margin-top: 5px;
-`;
-
-const ModalSteps = styled(Steps)`
-  width: 100%;
-  min-width: 350px;
-  margin-bottom: 40px;
-`;
-
-const InputForm = styled(Form)`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-const ContentContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const DescContainer = styled.div`
-  display: flex;
-  width: 80%;
-  flex-direction: column;
-  align-items: center;
-`;
-
-export type ClickAction = (type?: ActionType) => void;
-export type FormSubmit = (values: FormikValues, helper: FormikHelpers<FormikValues>) => void;
 
 export type TFieldItem = {
   title: string;
@@ -114,7 +64,7 @@ type Props = {
   steps: StepItem[] | undefined;
   currentStep: number;
   loading?: boolean;
-  type?: ActionType;
+  type?: ModalAction;
   visible: boolean;
   title: string;
   onClose: () => void;
@@ -143,6 +93,7 @@ const ModalView: FC<Props> = ({
             <div>
               {item.form?.items.map(({ title, formKey, placeholder }) => (
                 <FieldItem
+                  key={title}
                   title={title}
                   fieldKey={formKey ?? ''}
                   placeholder={placeholder ?? ''}
@@ -215,7 +166,7 @@ const ModalView: FC<Props> = ({
     );
 
   return (
-    <Modal isOpen={visible} style={modalStyles} closeTimeoutMS={200}>
+    <Modal isOpen={visible} style={modalStyles} closeTimeoutMS={200} ariaHideApp={false}>
       {renderHeader()}
       <Container>
         {renderSteps()}
@@ -226,3 +177,50 @@ const ModalView: FC<Props> = ({
 };
 
 export default ModalView;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 32px;
+  padding-bottom: 52px;
+`;
+
+const HeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  padding: 16px 32px;
+  border-bottom: 1px solid var(--sq-gray300);
+`;
+
+const IconContainer = styled.div`
+  margin-top: 5px;
+`;
+
+const ModalSteps = styled(Steps)`
+  width: 100%;
+  min-width: 350px;
+  margin-bottom: 40px;
+`;
+
+const InputForm = styled(Form)`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const ContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const DescContainer = styled.div`
+  display: flex;
+  width: 80%;
+  flex-direction: column;
+  align-items: center;
+`;

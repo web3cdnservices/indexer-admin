@@ -1,13 +1,37 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { ClickAction, FormSubmit } from 'components/modalView';
-import { ControllerFormKey, ControllerFormSchema, initialControllerValues } from 'types/schemas';
-import { ActionType } from 'utils/transactions';
+import {
+  ControllerFormKey,
+  ControllerFormSchema,
+  initialControllerValues,
+  initialMetadataValues,
+  MetadataFormKey,
+  MetadataFormSchema,
+} from 'types/schemas';
+import { AccountAction, ClickAction, FormSubmit } from 'utils/transactions';
+
+const buttonTitles = {
+  [AccountAction.unregister]: 'Unregister',
+  [AccountAction.configCntroller]: 'Config Controller',
+  [AccountAction.updateMetaData]: 'Update Metadata',
+};
+
+export const createButonItem = (
+  actionType: AccountAction,
+  onClick: (type: AccountAction) => void
+) => {
+  return {
+    title: buttonTitles[actionType],
+    type: actionType,
+    onClick,
+  };
+};
 
 export const modalTitles = {
-  [ActionType.configCntroller]: 'Config Controller Account',
-  [ActionType.unregister]: 'Unregister Indexer Account',
+  [AccountAction.configCntroller]: 'Config Controller Account',
+  [AccountAction.updateMetaData]: 'Update Indexer Metadata',
+  [AccountAction.unregister]: 'Unregister Indexer Account',
 };
 
 export const createControllerSteps = (
@@ -15,7 +39,7 @@ export const createControllerSteps = (
   onSendTxConfigController: ClickAction
 ) => ({
   // FIXME: move descriptions to `prompts`
-  [ActionType.configCntroller]: [
+  [AccountAction.configCntroller]: [
     {
       index: 0,
       title: 'Controller Private Key',
@@ -44,13 +68,39 @@ export const createControllerSteps = (
 });
 
 export const createUnregisterSteps = (onUnregister: ClickAction) => ({
-  [ActionType.unregister]: [
+  [AccountAction.unregister]: [
     {
-      index: 1,
+      index: 0,
       title: 'Unregister from network',
       desc: `Sorry to see the indexer unregister from the Subquery Network, please note that all the data in your coordinator service will be removed, and the staking token will deposit to your current account once transction processed`,
       buttonTitle: 'Unregister',
       onClick: onUnregister,
+    },
+  ],
+});
+
+export const createUpdateMetadataSteps = (onUpdate: FormSubmit) => ({
+  [AccountAction.updateMetaData]: [
+    {
+      index: 0,
+      title: 'Update Indexer Metadata',
+      desc: `Input vaid indexer name and proxy server endpoint to update the metadata, make sure the proxy endpoint is valid`,
+      buttonTitle: 'Update Metadata',
+      form: {
+        formValues: initialMetadataValues,
+        schema: MetadataFormSchema,
+        onFormSubmit: onUpdate,
+        items: [
+          {
+            formKey: MetadataFormKey.name,
+            title: 'Indexer Name',
+          },
+          {
+            formKey: MetadataFormKey.proxyEndpoint,
+            title: 'Proxy Server Endpoint',
+          },
+        ],
+      },
     },
   ],
 });
