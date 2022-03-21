@@ -31,7 +31,7 @@ export function useSigner(): Signer {
 
 export function useIsMetaMask(): boolean | undefined {
   const { active, library } = useWeb3();
-  return useMemo(() => !!library?.provider?.isMetaMask, [active, library?.provider.isMetaMask]);
+  return useMemo(() => library?.provider?.isMetaMask, [active, library?.provider.isMetaMask]);
 }
 
 export function useShowMetaMask(): boolean | undefined {

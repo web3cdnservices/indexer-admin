@@ -4,10 +4,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { bufferToHex, privateToAddress, toBuffer } from 'ethereumjs-util';
+import { isUndefined } from 'lodash';
 
 import AccountCard from 'components/accountCard';
 import ModalView from 'components/modalView';
 import { useContractSDK } from 'containers/contractSdk';
+import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useLoading } from 'containers/loadingContext';
 import {
   useBalance,
@@ -42,10 +44,11 @@ const Registry = () => {
 
   const { account } = useWeb3();
   const sdk = useContractSDK();
+  const isIndexer = useIsIndexer();
+  const { indexer } = useCoordinatorIndexer();
   const { metadata, fetchMetadata } = useIndexerMetadata();
   const accountAction = useAccountAction();
   const isMetaMask = useIsMetaMask();
-  const isIndexer = useIsIndexer();
   const isController = useIsController(account);
   const { controller, getController } = useController();
   const controllerBalance = useBalance(controller);
@@ -59,8 +62,8 @@ const Registry = () => {
   const indexerItem = prompts.indexer;
 
   useEffect(() => {
-    account && setPageLoading(false);
-  }, [account]);
+    setPageLoading(isUndefined(account) && isUndefined(indexer));
+  }, [account, indexer]);
 
   const onButtonPress = (type: AccountAction) => {
     setActionType(type);

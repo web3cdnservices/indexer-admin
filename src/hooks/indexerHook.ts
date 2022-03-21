@@ -1,20 +1,28 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { formatUnits } from '@ethersproject/units';
 
 import { useContractSDK } from 'containers/contractSdk';
+import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useWeb3 } from 'hooks/web3Hook';
 import { Account, IndexerMetadata } from 'pages/account/types';
 import { HookDependency } from 'types/types';
 import { emptyControllerAccount } from 'utils/indexerActions';
 import { bytes32ToCid, getMetadata } from 'utils/ipfs';
 
+export const useIsIndexer = () => {
+  const { indexer } = useCoordinatorIndexer();
+  const { account } = useWeb3();
+
+  return useMemo(() => !!account && !!indexer && account === indexer, [account, indexer]);
+};
+
 // TODO: refactor these hooks
 // 1. using `useMemo` | `useCallback` to replace custome useState
 // 2. using try catch | async await other than promise
-export const useIsIndexer = (address?: Account): boolean | undefined => {
+export const useIsAccountIndexer = (address?: Account): boolean | undefined => {
   const { account: currentAccount } = useWeb3();
   const account = address ?? currentAccount;
   const [isIndexer, setIsIndexer] = useState<boolean>();
