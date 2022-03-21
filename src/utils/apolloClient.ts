@@ -3,7 +3,11 @@
 
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 
-export const coordinatorServiceUrl = `${window.location.protocol}//${window.location.hostname}:${window.env.COORDINATOR_SERVICE_PORT}/graphql`;
+const defaultCoordinatorUrl = `${window.location.protocol}//${window.location.hostname}:${window.env.COORDINATOR_SERVICE_PORT}/graphql`;
+
+export const coordinatorServiceUrl = __DEV__
+  ? window.env.COORDINATOR_SERVICE_URL
+  : defaultCoordinatorUrl;
 
 export const proxyServiceUrl = `${window.location.protocol}//${window.location.hostname}`;
 

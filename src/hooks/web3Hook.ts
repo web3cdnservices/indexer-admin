@@ -11,6 +11,9 @@ import { isEmpty } from 'lodash';
 import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useLoading } from 'containers/loadingContext';
 
+// eslint-disable-next-line import/no-cycle
+import { useIsIndexer } from './indexerHook';
+
 export function useIsMetaMaskInstalled(): boolean {
   return useMemo(() => window.ethereum?.isMetaMask, [window.ethereum]);
 }
@@ -38,8 +41,9 @@ export function useShowMetaMask(): boolean | undefined {
   const { account } = useWeb3();
   const { pageLoading } = useLoading();
   const { indexer, load } = useCoordinatorIndexer();
+  const isIndexer = useIsIndexer();
+
   const [showMetaMask, setShowMetaMask] = useState<boolean>();
-  const isCorrectAccount = () => account?.toLowerCase() === indexer?.toLocaleLowerCase();
 
   useEffect(() => {
     load();
@@ -47,9 +51,9 @@ export function useShowMetaMask(): boolean | undefined {
 
   useEffect(() => {
     // FIXME: how to identify `isFetching account`
-    const enable = !pageLoading && (!account || !isCorrectAccount()) && !isEmpty(indexer);
+    const enable = !pageLoading && (!account || !isIndexer) && !isEmpty(indexer);
     setShowMetaMask(enable);
-  }, [account, indexer, pageLoading]);
+  }, [account, indexer, isIndexer, pageLoading]);
 
   return showMetaMask;
 }
