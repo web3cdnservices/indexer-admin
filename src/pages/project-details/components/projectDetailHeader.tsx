@@ -7,6 +7,7 @@ import { FormikHelpers, FormikValues } from 'formik';
 import { isUndefined } from 'lodash';
 import styled from 'styled-components';
 
+import AlertView from 'components/alertView';
 import Avatar from 'components/avatar';
 import ModalView from 'components/modalView';
 import { Button, Separator, Text } from 'components/primary';
@@ -21,6 +22,7 @@ import { START_PROJECT, STOP_PROJECT } from 'utils/queries';
 import { ProjectAction } from 'utils/transactions';
 
 import {
+  aletMessages,
   createAnnounceIndexingSteps,
   createButtonItems,
   createNotIndexingSteps,
@@ -81,6 +83,14 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, service, stateCh
         return ProjectStatus.NotIndexing;
     }
   }, [status, service]);
+
+  const alertInfo = useMemo(
+    () =>
+      projectStatus === ProjectStatus.Terminated
+        ? { visible: true, ...aletMessages[projectStatus] }
+        : { visible: false },
+    [projectStatus]
+  );
 
   const buttonItems = createButtonItems((type: ProjectAction) => {
     setActionType(type);
@@ -188,6 +198,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, service, stateCh
         type={actionType}
         loading={loading}
       />
+      <AlertView {...alertInfo} />
     </Container>
   );
 };

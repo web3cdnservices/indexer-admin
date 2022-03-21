@@ -183,3 +183,17 @@ export const createStopIndexingSteps = (
     },
   ],
 });
+
+// inconsistent status config
+export const aletMessages = {
+  [ProjectStatus.Started]: {
+    title: 'Ready to indexing the project on Suquery Network',
+    description:
+      'The current project has been alreay started, check the progress and logs make sure indexing is alright. Try press the Announce Indexing button to annouce indexing this project on Subquery Network. You can also try to restart indexing if something wrong happens.',
+  },
+  [ProjectStatus.Terminated]: {
+    title: 'Status Inconsistent',
+    description:
+      'The current indexing service for this project is terminated but the indexing service status on Subquery Network is still INDEXING, we encourage you to press the Announce NotIndexing button to change the online status to NOTINDEXING as well',
+  },
+};
