@@ -11,5 +11,10 @@ export function createApolloClient(uri: string) {
   return new ApolloClient({
     uri,
     cache: new InMemoryCache(),
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: 'network-only',
+      },
+    },
   });
 }
