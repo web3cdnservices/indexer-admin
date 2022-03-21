@@ -26,7 +26,8 @@ const AccountCard: FC<Props> = ({ title, desc, buttons, name, account, status })
       buttons.map(({ title, type, loading, disabled, onClick }) => (
         <Button
           key={type}
-          width={200}
+          width={230}
+          mb={20}
           title={title}
           loading={loading}
           disabled={disabled}
@@ -38,31 +39,35 @@ const AccountCard: FC<Props> = ({ title, desc, buttons, name, account, status })
 
   return (
     <Container>
-      <HeaderContainer>
-        <MainTitleContainer>
-          <Text size={30} fw="bold" mr={20}>
-            {title}
-          </Text>
-          {!!status && <Tag text={status} state="success" />}
-        </MainTitleContainer>
-        {!!account && !isEmpty(buttons) && renderButtons}
-      </HeaderContainer>
-      {account ? (
-        <ContentContainer>
-          <Avatar address={account ?? ''} size={100} />
-          <DescContainer ml={20}>
-            <Text>{name}</Text>
-            <Text mt={10}>{account}</Text>
-            <Text mt={10}>{desc}</Text>
+      <div>
+        <HeaderContainer>
+          <ContentContainer>
+            <Text size={30} fw="bold" mr={20}>
+              {title}
+            </Text>
+            {!!status && <Tag text={status} state="success" />}
+          </ContentContainer>
+        </HeaderContainer>
+        {account ? (
+          <ContentContainer>
+            <Avatar address={account ?? ''} size={100} />
+            <DescContainer ml={20}>
+              <Text>{name}</Text>
+              <Text mt={10}>{account}</Text>
+              <Text mt={10}>{desc}</Text>
+            </DescContainer>
+          </ContentContainer>
+        ) : (
+          <DescContainer>
+            <Text color="gray" size={15} mb={30}>
+              {desc}
+            </Text>
+            {!isEmpty(buttons) && <ButtonContainer align="left">{renderButtons}</ButtonContainer>}
           </DescContainer>
-        </ContentContainer>
-      ) : (
-        <DescContainer>
-          <Text color="gray" size={15} mb={30}>
-            {desc}
-          </Text>
-          {!isEmpty(buttons) && <ButtonContainer align="left">renderButtons</ButtonContainer>}
-        </DescContainer>
+        )}
+      </div>
+      {!!account && !isEmpty(buttons) && (
+        <GroupButtonContainer>{renderButtons}</GroupButtonContainer>
       )}
     </Container>
   );
@@ -73,8 +78,7 @@ export default AccountCard;
 // styles
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   min-width: 1000px;
   min-height: 250px;
   width: 70%;
@@ -95,11 +99,6 @@ const HeaderContainer = styled.div`
   margin-bottom: 30px;
 `;
 
-const MainTitleContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
 const ContentContainer = styled.div`
   display: flex;
   align-items: center;
@@ -110,4 +109,9 @@ const DescContainer = styled.div<{ ml?: number }>`
   width: 80%;
   flex-direction: column;
   margin-left: ${({ ml }) => ml ?? 0}px;
+`;
+
+const GroupButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
 `;

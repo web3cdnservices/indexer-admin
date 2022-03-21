@@ -18,6 +18,7 @@ export const useIsApproved = () => {
     try {
       const mimAmount = (await sdk.indexerRegistry.minimumStakingAmont()) ?? 0;
       const amount = await sdk.sqToken.allowance(account, sdk.staking.address);
+      // FIXME: approve
       setIsApprove(!!amount?.gte(mimAmount));
       // setIsApprove(false);
     } catch {

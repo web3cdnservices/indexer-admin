@@ -96,8 +96,7 @@ export const initialControllerValues = {
 export enum ProjectFormKey {
   deploymentId = 'deploymentId',
   networkEndpoint = 'networkEndpoint',
-  nodeEndpoint = 'nodeEndpoint',
-  queryEndpoint = 'queryEndpoint',
+  networkDictionary = 'networkDictionary',
 }
 
 export const CIDv0 = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}/i);
@@ -115,8 +114,10 @@ export const initialProjectValues = {
 // start indexing project
 export const StartIndexingSchema = yup.object({
   [ProjectFormKey.networkEndpoint]: yup.string().defined(),
+  [ProjectFormKey.networkDictionary]: yup.string().optional(),
 });
 
 export const initialIndexingValues = {
   [ProjectFormKey.networkEndpoint]: '',
+  [ProjectFormKey.networkDictionary]: '',
 };

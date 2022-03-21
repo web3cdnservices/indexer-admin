@@ -4,8 +4,9 @@
 window.env = {
   // This option can be retrieved in "src/index.js" with "window.env.API_URL".
   NETWORK: 'testnet', // local | mainnet | testnet
-  // COORDINATOR_HOST: 'http://ec2-13-211-22-211.ap-southeast-2.compute.amazonaws.com',
-  // COORDINATOR_GRAPHQL: 'http://13.211.22.211:8000/graphql',
+  // COORDINATOR_HOST: 'http://ec2-3-25-83-26.ap-southeast-2.compute.amazonaws.com',
+  // COORDINATOR_GRAPHQL: 'http://ec2-3-25-83-26.ap-southeast-2.compute.amazonaws.com:8000/graphql',
+  // PROXY_SERVICE_URL: 'http://ec2-3-25-83-26.ap-southeast-2.compute.amazonaws.com',
   COORDINATOR_HOST: 'http://localhost',
   PROXY_SERVICE_URL: 'http://localhost:8001',
   COORDINATOR_GRAPHQL: 'http://localhost:8000/graphql',

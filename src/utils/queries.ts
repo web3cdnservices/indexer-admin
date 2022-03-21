@@ -26,8 +26,12 @@ export const ADD_INDEXER = gql`
 `;
 
 export const START_PROJECT = gql`
-  mutation StartProject($networkEndpoint: String!, $id: String!) {
-    startProject(networkEndpoint: $networkEndpoint, id: $id) {
+  mutation StartProject($networkEndpoint: String!, $networkDictionary: String!, $id: String!) {
+    startProject(
+      networkEndpoint: $networkEndpoint
+      networkDictionary: $networkDictionary
+      id: $id
+    ) {
       id
       status
       networkEndpoint

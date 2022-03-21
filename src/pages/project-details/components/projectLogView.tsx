@@ -34,10 +34,11 @@ const ProjectLogView: FC<{ container: string }> = ({ container }) => {
     </Toolbar>
   );
 
+  // TODO: resolve the dark theme issue
   return (
     <div style={{ marginTop: 20 }}>
       {!!log && (
-        <LogViewer hasLineNumbers height={300} data={log} theme="dark" toolbar={renderToolBar()} />
+        <LogViewer hasLineNumbers height={400} data={log} theme="dark" toolbar={renderToolBar()} />
       )}
     </div>
   );

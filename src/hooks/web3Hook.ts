@@ -6,6 +6,7 @@ import { JsonRpcSigner } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
 import { providers } from 'ethers';
+import { isEmpty } from 'lodash';
 
 import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useLoading } from 'containers/loadingContext';
@@ -46,7 +47,7 @@ export function useShowMetaMask(): boolean | undefined {
 
   useEffect(() => {
     // FIXME: how to identify `isFetching account`
-    const enable = !pageLoading && (!account || !isCorrectAccount());
+    const enable = !pageLoading && (!account || !isCorrectAccount()) && !isEmpty(indexer);
     setShowMetaMask(enable);
   }, [account, indexer, pageLoading]);
 

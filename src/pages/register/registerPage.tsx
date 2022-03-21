@@ -86,7 +86,7 @@ const RegisterPage = () => {
   const onApprove = async () => {
     setLoading(true);
     try {
-      const tx = await indexerRequestApprove(sdk, signer, '1000000000');
+      const tx = await indexerRequestApprove(sdk, signer, '100000000000');
       const receipt = await tx.wait(1);
       if (!receipt.status) {
         throw new Error('Send approve transaction failed');

@@ -7,11 +7,11 @@ import { ClickAction, FormSubmit, ProjectAction } from 'utils/transactions';
 import prompts from './prompts';
 
 export enum ProjectStatus {
-  NotIndexing,
-  Started,
-  Indexing,
-  Ready,
-  Terminated,
+  NotIndexing = 'NOT INDEXING',
+  Started = 'STARTED',
+  Indexing = 'INDEXING',
+  Ready = 'READY',
+  Terminated = 'TERMINATED',
 }
 
 export type TransactionType =
@@ -56,9 +56,7 @@ export const createButtonItems = (onButtonClick: (type: ProjectAction) => void) 
   ],
   [ProjectStatus.Terminated]: [
     createButtonItem('Restart Indexing', () => onButtonClick(ProjectAction.RestartProject)),
-    createButtonItem('Announce Not Indexing', () =>
-      onButtonClick(ProjectAction.AnnounceNotIndexing)
-    ),
+    createButtonItem('Publish NotIndexing', () => onButtonClick(ProjectAction.AnnounceNotIndexing)),
   ],
 });
 
@@ -72,7 +70,23 @@ export const modalTitles = {
   [ProjectAction.StopIndexing]: 'Stop Indexing',
 };
 
-// type ActionStep = Record<ProjectAction, StepItem[]>;
+const startProjectForms = (onFormSubmit: FormSubmit) => ({
+  formValues: initialIndexingValues,
+  schema: StartIndexingSchema,
+  onFormSubmit,
+  items: [
+    {
+      formKey: ProjectFormKey.networkEndpoint,
+      title: 'Indexing Network Endpiont',
+      placeholder: 'wss://polkadot.api.onfinality.io/public-ws',
+    },
+    {
+      formKey: ProjectFormKey.networkDictionary,
+      title: 'Network Dictionary Endpiont',
+      placeholder: 'https://api.subquery.network/sq/subquery/dictionary-polkadot',
+    },
+  ],
+});
 
 export const createStartIndexingSteps = (onStartProject: FormSubmit) => ({
   [ProjectAction.StartIndexing]: [
@@ -81,18 +95,7 @@ export const createStartIndexingSteps = (onStartProject: FormSubmit) => ({
       title: prompts.startProject.title,
       desc: prompts.startProject.desc,
       buttonTitle: 'Indexing Project',
-      form: {
-        formValues: initialIndexingValues,
-        schema: StartIndexingSchema,
-        onFormSubmit: onStartProject,
-        items: [
-          {
-            formKey: ProjectFormKey.networkEndpoint,
-            title: 'Indexing Network Endpiont',
-            placeholder: 'wss://polkadot.api.onfinality.io/public-ws',
-          },
-        ],
-      },
+      form: startProjectForms(onStartProject),
       onClick: onStartProject,
     },
   ],
@@ -105,19 +108,7 @@ export const createRestartProjectSteps = (onStartProject: FormSubmit) => ({
       title: prompts.restartProject.title,
       desc: prompts.restartProject.desc,
       buttonTitle: 'Restart Project',
-      form: {
-        formValues: initialIndexingValues,
-        schema: StartIndexingSchema,
-        onFormSubmit: onStartProject,
-        items: [
-          {
-            formKey: ProjectFormKey.networkEndpoint,
-            title: 'Indexing Network Endpiont',
-            placeholder: 'wss://polkadot.api.onfinality.io/public-ws',
-          },
-        ],
-      },
-      onClick: onStartProject,
+      form: startProjectForms(onStartProject),
     },
   ],
 });

@@ -100,8 +100,9 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, service, stateCh
 
   const startProject = async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
     const networkEndpoint = values[ProjectFormKey.networkEndpoint];
+    const networkDictionary = values[ProjectFormKey.networkDictionary];
     try {
-      await startProjectRequest({ variables: { networkEndpoint, id } });
+      await startProjectRequest({ variables: { networkEndpoint, networkDictionary, id } });
       updateState();
       setCurrentStep(1);
     } catch (e) {
@@ -165,13 +166,15 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, service, stateCh
             <TagItem versionType="INDEXED NETWORK" value={project.metadata?.chain} />
             <Separator height={50} />
             <TagItem versionType="VERSION" value={`V${project.version}`} />
+            <Separator height={50} />
+            <TagItem versionType="PROJECT STATUS" value={projectStatus} />
           </VersionContainer>
         </ContentContainer>
       </LeftContainer>
       {!!actionItems && (
         <ActionContainer>
           {actionItems.map(({ title, action }) => (
-            <Button mt={10} key={title} width={230} title={title} onClick={action} />
+            <Button mt={10} key={title} width={250} title={title} onClick={action} />
           ))}
         </ActionContainer>
       )}
@@ -216,7 +219,7 @@ const VersionContainer = styled.div`
   justify-content: space-between;
   margin-top: 25px;
   height: 50px;
-  width: 300px;
+  width: 500px;
 `;
 
 const ActionContainer = styled.div`
