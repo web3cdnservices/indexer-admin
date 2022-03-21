@@ -31,8 +31,7 @@ const createButtonItem = (title: string, action: () => void, color?: string): Bu
   color,
 });
 
-export const createServiceItem = (type: string, url: string, version: string, status: string) => ({
-  url,
+export const createServiceItem = (type: string, version: string, status: string) => ({
   imageVersion: `onfinality/subql-${type}:${version}`,
   status,
 });

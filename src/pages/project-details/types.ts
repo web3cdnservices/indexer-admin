@@ -13,7 +13,6 @@ export type ProjectServiceMetadata = {
 
 export type TService = {
   status: string;
-  url: string;
   imageVersion: string;
 };
 

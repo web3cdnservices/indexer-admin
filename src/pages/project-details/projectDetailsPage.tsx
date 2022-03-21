@@ -1,7 +1,7 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import { isUndefined } from 'lodash';
@@ -29,7 +29,7 @@ import { TQueryMetadata, TService } from './types';
 const ProjectDetailsPage = () => {
   const { id } = useParams() as { id: string };
   const { data: projectDetails } = useLocation().state as { data: ProjectDetails };
-  const [queryMetadata] = useLazyQuery(GET_QUERY_METADATA);
+  const [getQueryMetadata, { data: queryMetadata }] = useLazyQuery(GET_QUERY_METADATA);
   const status = useIndexingStatus(id);
   const projectInfo = useProjectDetails(id);
   const projectService = useProjectService(id);
@@ -41,7 +41,15 @@ const ProjectDetailsPage = () => {
   const [progress, setProgress] = useState(0);
   const [metadata, setMetadata] = useState<TQueryMetadata>();
 
-  const updateServicesInfo = (queryMetadata: TQueryMetadata) => {
+  useEffect(() => {
+    setPageLoading(isUndefined(projectInfo));
+  }, [projectInfo]);
+
+  useEffect(() => {
+    getQueryMetadata({ variables: { id } });
+  }, [projectService?.queryEndpoint, status]);
+
+  useEffect(() => {
     if (queryMetadata && projectService) {
       const {
         queryNodeVersion,
@@ -49,44 +57,15 @@ const ProjectDetailsPage = () => {
         lastProcessedHeight,
         targetHeight,
         indexerHealthy,
-      } = queryMetadata;
+      } = queryMetadata.queryMetadata;
       setMetadata(queryMetadata);
       setProgress(calculateProgress(targetHeight, lastProcessedHeight));
-      setQueryService(
-        createServiceItem(
-          'query',
-          projectService.queryEndpoint,
-          queryNodeVersion,
-          serviceStatus(indexerHealthy)
-        )
-      );
+      setQueryService(createServiceItem('query', queryNodeVersion, serviceStatus(indexerHealthy)));
       setIndexerService(
-        createServiceItem(
-          'node',
-          projectService?.nodeEndpoint,
-          indexerNodeVersion,
-          serviceStatus(indexerHealthy)
-        )
+        createServiceItem('node', indexerNodeVersion, serviceStatus(indexerHealthy))
       );
     }
-  };
-
-  const getMetadata = useCallback(async () => {
-    () => {
-      if (!projectService?.id) return;
-      const result = queryMetadata({ variables: { id: projectService.id } });
-      // @ts-ignore
-      updateServicesInfo(result.queryMetadata);
-    };
-  }, [projectService?.id]);
-
-  useEffect(() => {
-    setPageLoading(isUndefined(projectInfo));
-  }, [projectInfo]);
-
-  useEffect(() => {
-    getMetadata();
-  }, [projectService?.queryEndpoint, status]);
+  }, [queryMetadata, projectService]);
 
   return (
     <Container>
@@ -97,7 +76,7 @@ const ProjectDetailsPage = () => {
             status={status}
             project={projectInfo}
             service={querySerive}
-            stateChanged={() => getMetadata()}
+            stateChanged={() => getQueryMetadata({ variables: { id } })}
           />
           <ProjectStatusView status={status} metadata={metadata} />
           <ProgressInfoView percent={progress} />

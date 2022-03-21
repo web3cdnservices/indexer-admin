@@ -62,8 +62,7 @@ type Props = {
 };
 
 const ProjectServiceCard: FC<Props> = ({ id, indexerService, queryService }) => {
-  if (!queryService?.url) return null;
-
+  if (!queryService || !indexerService) return null;
   return (
     <Container>
       <ServiceCard

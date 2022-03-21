@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useCallback, useEffect, useState } from 'react';
-import { ApolloClient, InMemoryCache, useLazyQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import { isEmpty, isUndefined } from 'lodash';
 
 import { useContractSDK } from 'containers/contractSdk';
@@ -11,6 +11,7 @@ import { useToast } from 'containers/toastContext';
 import { useWeb3 } from 'hooks/web3Hook';
 import { ProjectServiceMetadata, TQueryMetadata } from 'pages/project-details/types';
 import { IndexingStatus } from 'pages/projects/constant';
+import { coordinatorServiceUrl, createApolloClient } from 'utils/apolloClient';
 import { cidToBytes32, getMetadata } from 'utils/ipfs';
 import { GET_PROJECT, GET_PROJECT_DETAILS, GET_QUERY_METADATA } from 'utils/queries';
 
@@ -112,10 +113,20 @@ type Result = {
   };
 };
 
-const queryRegistryClient = new ApolloClient({
-  uri: window.env.REGISTRY_PROJECT,
-  cache: new InMemoryCache(),
-});
+const queryRegistryClient = createApolloClient(window.env.REGISTRY_PROJECT);
+const coordinatorClient = createApolloClient(coordinatorServiceUrl);
+
+export const getQueryMetadata = async (id: string): Promise<TQueryMetadata> => {
+  try {
+    const result = await coordinatorClient.query<{ queryMetadata: TQueryMetadata }>({
+      query: GET_QUERY_METADATA,
+      variables: { id },
+    });
+    return result.data.queryMetadata;
+  } catch {
+    return metadataInitValue;
+  }
+};
 
 export const getProjectDetails = async (deploymentId: string): Promise<ProjectDetails> => {
   const res = await queryRegistryClient.query<{ deployments: { nodes: Result[] } }>({
@@ -130,7 +141,7 @@ export const getProjectDetails = async (deploymentId: string): Promise<ProjectDe
   }
 
   const projectMetadata = await getMetadata(projectInfo.metadata);
-  const queryMetadata = metadataInitValue; // await getQueryMetadata(deploymentId);
+  const queryMetadata = await getQueryMetadata(deploymentId);
   const projectDetails = {
     ...projectInfo,
     ...projectMetadata,
@@ -162,24 +173,14 @@ export const useProjectDetails = (deploymentId: string): ProjectDetails | undefi
   return project;
 };
 
+// TODO: need to refactor
 export function useProjectDetailList(data: any) {
   const projects = data?.getProjects as ProjectServiceMetadata[];
   const [projectDetailList, setProjecList] = useState<ProjectDetails[]>();
-  const [queryMetadata] = useLazyQuery(GET_QUERY_METADATA);
 
   const { setPageLoading } = useLoading();
   const { account } = useWeb3();
   const sdk = useContractSDK();
-
-  const getQueryMetadata = useCallback(
-    async (id: string) => {
-      const result = await queryMetadata({ variables: { id } });
-      console.log('>>>result.queryMetadata', result);
-      // @ts-ignore
-      return result.queryMetadata as TQueryMetadata;
-    },
-    [queryMetadata]
-  );
 
   const getProjectStatus = useCallback(
     async (deploymentId: string) => {
