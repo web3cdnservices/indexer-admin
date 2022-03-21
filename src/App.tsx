@@ -14,7 +14,7 @@ import { ToastProvider } from 'containers/toastContext';
 import { Web3Provider } from 'containers/web3';
 import { useShowMetaMask } from 'hooks/web3Hook';
 import MetaMaskView from 'pages/metamask/metamaskView';
-import { createApolloClient, defaultServiceUrl } from 'utils/apolloClient';
+import { coordinatorServiceUrl, createApolloClient } from 'utils/apolloClient';
 
 import * as Pages from './pages';
 
@@ -48,25 +48,22 @@ const AppContents = () => {
   );
 };
 
-const App: FC = () => {
-  const client = createApolloClient(window.env.COORDINATOR_GRAPHQL ?? defaultServiceUrl);
-  return (
-    <ApolloProvider client={client}>
-      <Web3Provider>
-        <ContractSDKProvider>
-          <CoordinatorIndexerProvider>
-            <LoadingProvider>
-              <ToastProvider>
-                <div className="App">
-                  <AppContents />
-                </div>
-              </ToastProvider>
-            </LoadingProvider>
-          </CoordinatorIndexerProvider>
-        </ContractSDKProvider>
-      </Web3Provider>
-    </ApolloProvider>
-  );
-};
+const App: FC = () => (
+  <ApolloProvider client={createApolloClient(coordinatorServiceUrl)}>
+    <Web3Provider>
+      <ContractSDKProvider>
+        <CoordinatorIndexerProvider>
+          <LoadingProvider>
+            <ToastProvider>
+              <div className="App">
+                <AppContents />
+              </div>
+            </ToastProvider>
+          </LoadingProvider>
+        </CoordinatorIndexerProvider>
+      </ContractSDKProvider>
+    </Web3Provider>
+  </ApolloProvider>
+);
 
 export default App;

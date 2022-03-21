@@ -128,8 +128,8 @@ export const GET_LOG = gql`
 `;
 
 export const GET_QUERY_METADATA = gql`
-  query {
-    _metadata {
+  query QueryMetadata($id: String!) {
+    queryMetadata(id: $id) {
       lastProcessedHeight
       lastProcessedTimestamp
       targetHeight

@@ -20,10 +20,6 @@ export function serviceStatus(status: boolean | undefined): ServiceStatus {
   return status ? ServiceStatus.healthy : ServiceStatus.unhealthy;
 }
 
-export function getProxyServiceUrl(id: string): string {
-  return `${window.env.PROXY_SERVICE_URL}/query/${id}`;
-}
-
 export function projectId(cid: string): string {
   return cid.substring(0, 15).toLowerCase();
 }

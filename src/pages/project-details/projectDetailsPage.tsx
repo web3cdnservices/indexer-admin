@@ -1,13 +1,13 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
+import { useLazyQuery } from '@apollo/client';
 import { isUndefined } from 'lodash';
 
 import { useLoading } from 'containers/loadingContext';
 import {
-  getQueryMetadata,
   ProjectDetails,
   useIndexingStatus,
   useProjectDetails,
@@ -15,6 +15,7 @@ import {
 } from 'hooks/projectHook';
 import { useRouter } from 'hooks/routerHook';
 import { calculateProgress, serviceStatus } from 'utils/project';
+import { GET_QUERY_METADATA } from 'utils/queries';
 
 import ProgressInfoView from './components/progressInfoView';
 import ProjectDetailsHeader from './components/projectDetailHeader';
@@ -28,6 +29,7 @@ import { TQueryMetadata, TService } from './types';
 const ProjectDetailsPage = () => {
   const { id } = useParams() as { id: string };
   const { data: projectDetails } = useLocation().state as { data: ProjectDetails };
+  const [queryMetadata] = useLazyQuery(GET_QUERY_METADATA);
   const status = useIndexingStatus(id);
   const projectInfo = useProjectDetails(id);
   const projectService = useProjectService(id);
@@ -69,17 +71,22 @@ const ProjectDetailsPage = () => {
     }
   };
 
-  const getMetadata = () => {
-    if (projectService?.id) {
-      getQueryMetadata(projectService.id).then(updateServicesInfo);
-    }
-  };
+  const getMetadata = useCallback(async () => {
+    () => {
+      if (!projectService?.id) return;
+      const result = queryMetadata({ variables: { id: projectService.id } });
+      // @ts-ignore
+      updateServicesInfo(result.queryMetadata);
+    };
+  }, [projectService?.id]);
 
   useEffect(() => {
     setPageLoading(isUndefined(projectInfo));
   }, [projectInfo]);
 
-  useEffect(getMetadata, [projectService?.queryEndpoint, status]);
+  useEffect(() => {
+    getMetadata();
+  }, [projectService?.queryEndpoint, status]);
 
   return (
     <Container>

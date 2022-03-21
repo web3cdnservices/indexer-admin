@@ -6,7 +6,8 @@ import { Tag } from '@subql/react-ui';
 import styled from 'styled-components';
 
 import { Text } from 'components/primary';
-import { getProxyServiceUrl, ServiceStatus } from 'utils/project';
+import { proxyServiceUrl } from 'utils/apolloClient';
+import { ServiceStatus } from 'utils/project';
 
 import { TService } from '../types';
 
@@ -77,7 +78,7 @@ const ProjectServiceCard: FC<Props> = ({ id, indexerService, queryService }) => 
       />
       <ServiceCard
         title="Proxy Service"
-        subTitle={`Url: ${getProxyServiceUrl(id)}`}
+        subTitle={`Url: ${proxyServiceUrl}/query/${id}`}
         status={queryService.status}
       />
     </Container>

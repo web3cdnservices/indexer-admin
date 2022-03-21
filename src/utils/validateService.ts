@@ -8,12 +8,12 @@ import { createApolloClient } from './apolloClient';
 import { GET_QUERY_METADATA } from './queries';
 
 // verify query service endpoint
-export async function verifyQueryService(url: string) {
-  const data = await createApolloClient(`${url}`).query({ query: GET_QUERY_METADATA });
-  // @ts-ignore
-  // eslint-disable-next-line dot-notation
-  return data['_metadata'];
-}
+// export async function verifyQueryService(url: string) {
+//   const data = await createApolloClient(`${url}`).query({ query: GET_QUERY_METADATA });
+//   // @ts-ignore
+//   // eslint-disable-next-line dot-notation
+//   return data['_metadata'];
+// }
 
 export function isMetaMaskRejectError(e: Error): boolean {
   return e.message.includes('metamask');

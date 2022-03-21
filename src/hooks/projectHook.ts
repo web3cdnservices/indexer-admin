@@ -3,8 +3,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { ApolloClient, InMemoryCache, useLazyQuery } from '@apollo/client';
-import axios from 'axios';
-import { get, isEmpty, isUndefined } from 'lodash';
+import { isEmpty, isUndefined } from 'lodash';
 
 import { useContractSDK } from 'containers/contractSdk';
 import { useLoading } from 'containers/loadingContext';
@@ -13,8 +12,7 @@ import { useWeb3 } from 'hooks/web3Hook';
 import { ProjectServiceMetadata, TQueryMetadata } from 'pages/project-details/types';
 import { IndexingStatus } from 'pages/projects/constant';
 import { cidToBytes32, getMetadata } from 'utils/ipfs';
-import { getProxyServiceUrl } from 'utils/project';
-import { GET_PROJECT, GET_PROJECT_DETAILS } from 'utils/queries';
+import { GET_PROJECT, GET_PROJECT_DETAILS, GET_QUERY_METADATA } from 'utils/queries';
 
 // TODO: review whether need default value or other ways to provide default value
 // TODO: refactor get project details
@@ -132,7 +130,7 @@ export const getProjectDetails = async (deploymentId: string): Promise<ProjectDe
   }
 
   const projectMetadata = await getMetadata(projectInfo.metadata);
-  const queryMetadata = await getQueryMetadata(deploymentId);
+  const queryMetadata = metadataInitValue; // await getQueryMetadata(deploymentId);
   const projectDetails = {
     ...projectInfo,
     ...projectMetadata,
@@ -164,45 +162,24 @@ export const useProjectDetails = (deploymentId: string): ProjectDetails | undefi
   return project;
 };
 
-export async function getQueryMetadata(deploymentID: string): Promise<TQueryMetadata> {
-  const body = {
-    query: {
-      query: `query { _metadata { ${[
-        'lastProcessedHeight',
-        'lastProcessedTimestamp',
-        'targetHeight',
-        'chain',
-        'specName',
-        'genesisHash',
-        'indexerHealthy',
-        'indexerNodeVersion',
-        'queryNodeVersion',
-      ].join(' ')} } }`,
-    },
-  };
-
-  try {
-    const result = await axios.post(getProxyServiceUrl(deploymentID), body);
-    const metadata = get(result, 'data.data._metadata', null) as TQueryMetadata;
-    return metadata;
-  } catch {
-    return metadataInitValue;
-  }
-}
-
 export function useProjectDetailList(data: any) {
   const projects = data?.getProjects as ProjectServiceMetadata[];
   const [projectDetailList, setProjecList] = useState<ProjectDetails[]>();
+  const [queryMetadata] = useLazyQuery(GET_QUERY_METADATA);
 
   const { setPageLoading } = useLoading();
   const { account } = useWeb3();
   const sdk = useContractSDK();
 
-  const getQueryServiceData = useCallback(async (id: string) => {
-    if (!id) return undefined;
-    const metadata = await getQueryMetadata(id);
-    return metadata;
-  }, []);
+  const getQueryMetadata = useCallback(
+    async (id: string) => {
+      const result = await queryMetadata({ variables: { id } });
+      console.log('>>>result.queryMetadata', result);
+      // @ts-ignore
+      return result.queryMetadata as TQueryMetadata;
+    },
+    [queryMetadata]
+  );
 
   const getProjectStatus = useCallback(
     async (deploymentId: string) => {
@@ -227,7 +204,7 @@ export function useProjectDetailList(data: any) {
     try {
       const result = await Promise.all(
         projects.map(({ id }) =>
-          Promise.all([getProjectDetails(id), getQueryServiceData(id), getProjectStatus(id)])
+          Promise.all([getProjectDetails(id), getQueryMetadata(id), getProjectStatus(id)])
         )
       );
       setProjecList(

@@ -3,7 +3,9 @@
 
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 
-export const defaultServiceUrl = `${window.location.protocol}//${window.location.host}/graphql`;
+export const coordinatorServiceUrl = `${window.location.protocol}//${window.location.hostname}:${window.env.COORDINATOR_SERVICE_PORT}/graphql`;
+
+export const proxyServiceUrl = `${window.location.protocol}//${window.location.hostname}`;
 
 export function createApolloClient(uri: string) {
   return new ApolloClient({
