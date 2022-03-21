@@ -174,7 +174,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, service, stateCh
       {!!actionItems && (
         <ActionContainer>
           {actionItems.map(({ title, action }) => (
-            <Button mt={10} key={title} width={250} title={title} onClick={action} />
+            <Button mt={10} key={title} width={265} title={title} onClick={action} />
           ))}
         </ActionContainer>
       )}

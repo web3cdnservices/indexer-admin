@@ -46,7 +46,7 @@ export const createButtonItems = (onButtonClick: (type: ProjectAction) => void) 
   ],
   [ProjectStatus.Indexing]: [
     createButtonItem('Restart Indexing', () => onButtonClick(ProjectAction.RestartProject)),
-    createButtonItem('Publish to Ready', () => onButtonClick(ProjectAction.AnnounceReady)),
+    createButtonItem('Announce Ready', () => onButtonClick(ProjectAction.AnnounceReady)),
     createButtonItem('Stop Indexing', () => onButtonClick(ProjectAction.StopIndexing)),
   ],
   [ProjectStatus.Ready]: [
@@ -55,7 +55,9 @@ export const createButtonItems = (onButtonClick: (type: ProjectAction) => void) 
   ],
   [ProjectStatus.Terminated]: [
     createButtonItem('Restart Indexing', () => onButtonClick(ProjectAction.RestartProject)),
-    createButtonItem('Publish NotIndexing', () => onButtonClick(ProjectAction.AnnounceNotIndexing)),
+    createButtonItem('Announce NotIndexing', () =>
+      onButtonClick(ProjectAction.AnnounceNotIndexing)
+    ),
   ],
 });
 
