@@ -1,7 +1,7 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { isUndefined } from 'lodash';
 
@@ -38,7 +38,7 @@ const ProjectDetailsPage = () => {
   const [progress, setProgress] = useState(0);
   const [metadata, setMetadata] = useState<TQueryMetadata>();
 
-  const fetchQueryMetadata = useCallback(async () => {
+  const fetchQueryMetadata = async () => {
     const data = await getQueryMetadata(id);
     if (data) {
       setMetadata(data);
@@ -50,7 +50,7 @@ const ProjectDetailsPage = () => {
         createServiceItem('node', data.indexerNodeVersion, serviceStatus(data.indexerHealthy))
       );
     }
-  }, []);
+  };
 
   useEffect(() => {
     setPageLoading(isUndefined(projectInfo));
