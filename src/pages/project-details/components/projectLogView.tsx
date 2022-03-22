@@ -5,6 +5,8 @@ import { FC, useEffect, useMemo } from 'react';
 import { useLazyQuery } from '@apollo/client';
 import { Button, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import { LogViewer } from '@patternfly/react-log-viewer';
+import { Spinner } from '@subql/react-ui';
+import styled from 'styled-components';
 
 import { GET_LOG } from 'utils/queries';
 
@@ -36,12 +38,27 @@ const ProjectLogView: FC<{ container: string }> = ({ container }) => {
 
   // TODO: resolve the dark theme issue
   return (
-    <div style={{ marginTop: 20 }}>
+    <Container>
       {!!log && (
-        <LogViewer hasLineNumbers height={400} data={log} theme="dark" toolbar={renderToolBar()} />
+        <LogViewer
+          hasLineNumbers
+          height={600}
+          data={log}
+          isTextWrapped
+          theme="dark"
+          toolbar={renderToolBar()}
+        />
       )}
-    </div>
+      {loading && <Spinner />}
+    </Container>
   );
 };
 
 export default ProjectLogView;
+
+const Container = styled.div`
+  height: 600px;
+  padding: 20px;
+  margin-top: 10px;
+  background-color: black;
+`;

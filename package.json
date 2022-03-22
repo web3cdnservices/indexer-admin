@@ -19,7 +19,7 @@
     "@emotion/styled": "^11.8.1",
     "@mui/material": "^5.5.1",
     "@patternfly/react-log-viewer": "^4.43.19",
-    "@subql/contract-sdk": "0.1.1-47",
+    "@subql/contract-sdk": "0.3.1",
     "@subql/react-ui": "^1.0.1-21",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
