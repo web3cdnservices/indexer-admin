@@ -65,13 +65,14 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
   );
 
   const projectStatus = useMemo(() => {
+    const healthy = !!metadata?.targetHeight;
     switch (status) {
       case IndexingStatus.NOTINDEXING:
-        return metadata ? ProjectStatus.Started : ProjectStatus.NotIndexing;
+        return healthy ? ProjectStatus.Started : ProjectStatus.NotIndexing;
       case IndexingStatus.INDEXING:
-        return metadata ? ProjectStatus.Indexing : ProjectStatus.Terminated;
+        return healthy ? ProjectStatus.Indexing : ProjectStatus.Terminated;
       case IndexingStatus.READY:
-        return metadata ? ProjectStatus.Ready : ProjectStatus.Terminated;
+        return healthy ? ProjectStatus.Ready : ProjectStatus.Terminated;
       default:
         return ProjectStatus.NotIndexing;
     }

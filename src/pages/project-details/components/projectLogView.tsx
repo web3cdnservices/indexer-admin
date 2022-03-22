@@ -3,9 +3,8 @@
 
 import { FC, useEffect, useMemo } from 'react';
 import { useLazyQuery } from '@apollo/client';
-import { Button, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import { LogViewer } from '@patternfly/react-log-viewer';
-import { Spinner } from '@subql/react-ui';
+import { Button, Spinner } from '@subql/react-ui';
 import styled from 'styled-components';
 
 import { GET_LOG } from 'utils/queries';
@@ -24,31 +23,16 @@ const ProjectLogView: FC<{ container: string }> = ({ container }) => {
     return data?.getLog.log;
   }, [data, loading]);
 
-  const renderToolBar = () => (
-    <Toolbar>
-      <ToolbarContent>
-        <ToolbarItem>
-          <Button onClick={() => getLog({ variables: { container } })} variant="control">
-            Refresh
-          </Button>
-        </ToolbarItem>
-      </ToolbarContent>
-    </Toolbar>
-  );
-
   // TODO: resolve the dark theme issue
   return (
     <Container>
-      {!!log && (
-        <LogViewer
-          hasLineNumbers
-          height={600}
-          data={log}
-          isTextWrapped
-          theme="dark"
-          toolbar={renderToolBar()}
-        />
-      )}
+      <StyledButton
+        size="small"
+        type="secondary"
+        label="Refresh"
+        onClick={() => getLog({ variables: { container } })}
+      />
+      {!!log && <LogViewer hasLineNumbers height={600} data={log} isTextWrapped theme="dark" />}
       {loading && <Spinner />}
     </Container>
   );
@@ -60,5 +44,11 @@ const Container = styled.div`
   height: 600px;
   padding: 20px;
   margin-top: 10px;
-  background-color: black;
+  background-color: #121212;
+`;
+
+const StyledButton = styled(Button)`
+  margin-bottom: 10px;
+  height: 30px;
+  width: 100px;
 `;

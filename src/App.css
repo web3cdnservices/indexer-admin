@@ -31,3 +31,10 @@
   border-radius: 20px;
 }
 
+.pf-c-log-viewer__text {
+  color: white;
+}
+
+.pf-c-log-viewer__index {
+  color: white;
+}

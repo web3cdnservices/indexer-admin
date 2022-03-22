@@ -25,11 +25,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-.pf-c-log-viewer__text {
-  color: white;
-}
-
-.pf-c-log-viewer__index {
-  color: #121212;
-}
