@@ -123,7 +123,7 @@ const Registry = () => {
       }
       formHelper.setStatus({ loading: false });
     },
-    () => accountAction(AccountAction.unregister, inputController, onModalClose, getController)
+    () => accountAction(AccountAction.configCntroller, inputController, onModalClose, getController)
   );
 
   const updateMetadataStep = createUpdateMetadataSteps(async (values, formHelper) => {

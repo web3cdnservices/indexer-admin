@@ -25,6 +25,7 @@ import { RegistrySteps } from './styles';
 import { RegisterStep } from './types';
 import { getStepIndex, getStepStatus, registerSteps } from './utils';
 
+// TODO: refactor
 const RegisterPage = () => {
   const signer = useSigner();
   const { account } = useWeb3();

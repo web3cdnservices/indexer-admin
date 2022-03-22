@@ -17,7 +17,6 @@ import { useIndexingAction } from 'hooks/transactionHook';
 import { IndexingStatus } from 'pages/projects/constant';
 import { ProjectFormKey } from 'types/schemas';
 import { cidToBytes32 } from 'utils/ipfs';
-import { ServiceStatus } from 'utils/project';
 import { START_PROJECT, STOP_PROJECT } from 'utils/queries';
 import { ProjectAction } from 'utils/transactions';
 
@@ -34,17 +33,17 @@ import {
   modalTitles,
   ProjectStatus,
 } from '../config';
-import { TService } from '../types';
+import { TQueryMetadata } from '../types';
 
 type Props = {
   id: string;
   status: IndexingStatus;
   project: ProjectDetails;
-  service?: TService;
+  metadata?: TQueryMetadata;
   stateChanged: () => void;
 };
 
-const ProjectDetailsHeader: FC<Props> = ({ id, status, project, service, stateChanged }) => {
+const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateChanged }) => {
   // TODO: 1. only progress reach `100%` can display `publish to ready` button
 
   const [visible, setVisible] = useState(false);
@@ -68,21 +67,15 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, service, stateCh
   const projectStatus = useMemo(() => {
     switch (status) {
       case IndexingStatus.NOTINDEXING:
-        return service?.status === ServiceStatus.healthy
-          ? ProjectStatus.Started
-          : ProjectStatus.NotIndexing;
+        return metadata ? ProjectStatus.Started : ProjectStatus.NotIndexing;
       case IndexingStatus.INDEXING:
-        return service?.status === ServiceStatus.healthy
-          ? ProjectStatus.Indexing
-          : ProjectStatus.Terminated;
+        return metadata ? ProjectStatus.Indexing : ProjectStatus.Terminated;
       case IndexingStatus.READY:
-        return service?.status === ServiceStatus.healthy
-          ? ProjectStatus.Ready
-          : ProjectStatus.Terminated;
+        return metadata ? ProjectStatus.Ready : ProjectStatus.Terminated;
       default:
         return ProjectStatus.NotIndexing;
     }
-  }, [status, service]);
+  }, [status, metadata]);
 
   const alertInfo = useMemo(
     () =>

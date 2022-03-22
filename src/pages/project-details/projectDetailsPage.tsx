@@ -11,7 +11,6 @@ import {
   ProjectDetails,
   useIndexingStatus,
   useProjectDetails,
-  useProjectService,
 } from 'hooks/projectHook';
 import { useRouter } from 'hooks/routerHook';
 import { calculateProgress, serviceStatus } from 'utils/project';
@@ -31,7 +30,6 @@ const ProjectDetailsPage = () => {
 
   const status = useIndexingStatus(id);
   const projectInfo = useProjectDetails(id);
-  const projectService = useProjectService(id);
   const { setPageLoading } = useLoading();
   useRouter(!projectDetails);
 
@@ -42,7 +40,7 @@ const ProjectDetailsPage = () => {
 
   const fetchQueryMetadata = useCallback(async () => {
     const data = await getQueryMetadata(id);
-    if (data && projectService) {
+    if (data) {
       setMetadata(data);
       setProgress(calculateProgress(data.targetHeight, data.lastProcessedHeight));
       setQueryService(
@@ -52,7 +50,7 @@ const ProjectDetailsPage = () => {
         createServiceItem('node', data.indexerNodeVersion, serviceStatus(data.indexerHealthy))
       );
     }
-  }, [projectService]);
+  }, []);
 
   useEffect(() => {
     setPageLoading(isUndefined(projectInfo));
@@ -70,7 +68,7 @@ const ProjectDetailsPage = () => {
             id={id}
             status={status}
             project={projectInfo}
-            service={querySerive}
+            metadata={metadata}
             stateChanged={fetchQueryMetadata}
           />
           <ProjectStatusView status={status} metadata={metadata} />
