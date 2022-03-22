@@ -11,9 +11,6 @@ import { isEmpty } from 'lodash';
 import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useLoading } from 'containers/loadingContext';
 
-// eslint-disable-next-line import/no-cycle
-import { useIsIndexer } from './indexerHook';
-
 export function useIsMetaMaskInstalled(): boolean {
   return useMemo(() => window.ethereum?.isMetaMask, [window.ethereum]);
 }
@@ -41,7 +38,11 @@ export function useShowMetaMask(): boolean | undefined {
   const { account } = useWeb3();
   const { pageLoading } = useLoading();
   const { indexer, load } = useCoordinatorIndexer();
-  const isIndexer = useIsIndexer();
+
+  const isIndexer = useMemo(
+    () => !!account && account?.toLowerCase() === indexer?.toLowerCase(),
+    [account, indexer]
+  );
 
   const [showMetaMask, setShowMetaMask] = useState<boolean>();
 
