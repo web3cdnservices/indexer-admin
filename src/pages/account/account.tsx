@@ -62,7 +62,8 @@ const Registry = () => {
   const indexerItem = prompts.indexer;
 
   useEffect(() => {
-    setPageLoading(isUndefined(account) && isUndefined(indexer));
+    setPageLoading(isUndefined(account) || isUndefined(indexer));
+    console.log(account, indexer);
   }, [account, indexer]);
 
   const onButtonPress = (type: AccountAction) => {

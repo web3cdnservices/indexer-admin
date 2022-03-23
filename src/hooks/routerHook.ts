@@ -22,10 +22,8 @@ export const useRouter = (refresh = true) => {
 
     if (isFalse(isIndexer)) {
       history.replace('/');
-      console.log('fff');
     } else if (isFalse(controller)) {
       history.replace('/account');
-      console.log('dddd');
     }
   }, [isIndexer, controller]);
 };

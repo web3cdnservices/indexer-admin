@@ -11,7 +11,7 @@ import { useContractSDK } from 'containers/contractSdk';
 import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useLoading } from 'containers/loadingContext';
 import { useToast } from 'containers/toastContext';
-import { useIsRegisterIndexer, useTokenBalance } from 'hooks/indexerHook';
+import { useIsIndexer, useIsRegistedIndexer, useTokenBalance } from 'hooks/indexerHook';
 import { useInitialStep } from 'hooks/registerHook';
 import { useSigner, useWeb3 } from 'hooks/web3Hook';
 import { RegisterFormKey, TRegisterValues } from 'types/schemas';
@@ -29,12 +29,13 @@ import { getStepIndex, getStepStatus, registerSteps } from './utils';
 const RegisterPage = () => {
   const signer = useSigner();
   const { account } = useWeb3();
-  const isIndexer = useIsRegisterIndexer();
+  const isRegistedIndexer = useIsRegistedIndexer();
+  const isIndexer = useIsIndexer();
   const sdk = useContractSDK();
   const tokenBalance = useTokenBalance(account);
   const history = useHistory();
   const initialStep = useInitialStep();
-  const { indexer: coordinatorIndexer, updateIndexer } = useCoordinatorIndexer();
+  const { updateIndexer } = useCoordinatorIndexer();
   const { setPageLoading } = useLoading();
   const { dispatchToast } = useToast();
 
@@ -44,15 +45,15 @@ const RegisterPage = () => {
   const isRegisterStep = useCallback(() => currentStep === RegisterStep.register, [currentStep]);
 
   useEffect(() => {
-    setPageLoading(isUndefined(initialStep) || isUndefined(isIndexer));
+    setPageLoading(isUndefined(initialStep) || isUndefined(isRegistedIndexer));
     if (initialStep) setStep(initialStep);
-    if (isIndexer) setStep(RegisterStep.sync);
-  }, [initialStep, isIndexer]);
+    if (isRegistedIndexer) setStep(RegisterStep.sync);
+  }, [initialStep, isRegistedIndexer]);
 
   useEffect(() => {
     if (!account) {
       history.replace('/');
-    } else if (isIndexer && account === coordinatorIndexer) {
+    } else if (isIndexer) {
       history.replace('/account');
     }
   }, [isIndexer, account]);

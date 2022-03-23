@@ -20,7 +20,7 @@ export const useIsCoordinatorIndexer = (): boolean => {
   return useMemo(() => !!account && !!indexer && account === indexer, [account, indexer]);
 };
 
-export const useIsRegisterIndexer = (): boolean | undefined => {
+export const useIsRegistedIndexer = (): boolean | undefined => {
   const { account } = useWeb3();
   const [isIndexer, setIsIndexer] = useState<boolean>();
   const sdk = useContractSDK();
@@ -42,12 +42,12 @@ export const useIsRegisterIndexer = (): boolean | undefined => {
   return isIndexer;
 };
 
-export const useIsIndexer = (): boolean => {
+export const useIsIndexer = (): boolean | undefined => {
   const isCoordinatorIndexer = useIsCoordinatorIndexer();
-  const isRegisteredIndexer = useIsRegisterIndexer();
+  const isRegisteredIndexer = useIsRegistedIndexer();
 
   return useMemo(
-    () => isCoordinatorIndexer && !!isRegisteredIndexer,
+    () => isCoordinatorIndexer && isRegisteredIndexer,
     [isCoordinatorIndexer, isRegisteredIndexer]
   );
 };
