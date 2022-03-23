@@ -12,37 +12,49 @@ import { HookDependency } from 'types/types';
 import { emptyControllerAccount } from 'utils/indexerActions';
 import { bytes32ToCid, getMetadata } from 'utils/ipfs';
 
-export const useIsIndexer = () => {
+// indexer save inside coordinator service
+export const useIsCoordinatorIndexer = (): boolean => {
   const { indexer } = useCoordinatorIndexer();
   const { account } = useWeb3();
 
   return useMemo(() => !!account && !!indexer && account === indexer, [account, indexer]);
 };
 
-// TODO: refactor these hooks
-// 1. using `useMemo` | `useCallback` to replace custome useState
-// 2. using try catch | async await other than promise
-export const useIsAccountIndexer = (address?: Account): boolean | undefined => {
-  const { account: currentAccount } = useWeb3();
-  const account = address ?? currentAccount;
+export const useIsRegisterIndexer = (): boolean | undefined => {
+  const { account } = useWeb3();
   const [isIndexer, setIsIndexer] = useState<boolean>();
   const sdk = useContractSDK();
 
-  useEffect(() => {
-    if (!sdk) {
+  const getIsIndexer = useCallback(async () => {
+    if (!account || !sdk) return;
+    try {
+      const status = await sdk?.indexerRegistry.isIndexer(account);
+      setIsIndexer(status);
+    } catch {
       setIsIndexer(false);
-      return;
     }
-
-    sdk.indexerRegistry
-      .isIndexer(account ?? '')
-      .then((isIndexer) => setIsIndexer(isIndexer))
-      .catch(() => setIsIndexer(false));
   }, [account, sdk]);
+
+  useEffect(() => {
+    getIsIndexer();
+  }, [getIsIndexer]);
 
   return isIndexer;
 };
 
+export const useIsIndexer = (): boolean => {
+  const isCoordinatorIndexer = useIsCoordinatorIndexer();
+  const isRegisteredIndexer = useIsRegisterIndexer();
+
+  return useMemo(
+    () => isCoordinatorIndexer && !!isRegisteredIndexer,
+    [isCoordinatorIndexer, isRegisteredIndexer]
+  );
+};
+
+// TODO: refactor these hooks
+// 1. using `useMemo` | `useCallback` to replace custome useState
+// 2. using try catch | async await other than promise
 export const useIsController = (account: Account) => {
   const [isController, setIsController] = useState(false);
   const sdk = useContractSDK();

@@ -15,7 +15,7 @@ const LoginPage = () => {
   const { account } = useWeb3();
   const isIndexer = useIsIndexer();
   const { setPageLoading } = useLoading();
-  const { indexer: coordinatorIndexer, loading, load } = useCoordinatorIndexer();
+  const { loading, load } = useCoordinatorIndexer();
 
   useEffect(() => {
     load();
@@ -28,8 +28,8 @@ const LoginPage = () => {
   return (
     <Container>
       <div>
-        {account && !isIndexer && !coordinatorIndexer && <Redirect to="/register" />}
-        {account && !!coordinatorIndexer && <Redirect to="/account" />}
+        {account && !isIndexer && <Redirect to="/register" />}
+        {account && isIndexer && <Redirect to="/account" />}
       </div>
     </Container>
   );

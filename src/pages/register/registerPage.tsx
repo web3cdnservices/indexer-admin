@@ -11,7 +11,7 @@ import { useContractSDK } from 'containers/contractSdk';
 import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useLoading } from 'containers/loadingContext';
 import { useToast } from 'containers/toastContext';
-import { useIsAccountIndexer, useTokenBalance } from 'hooks/indexerHook';
+import { useIsRegisterIndexer, useTokenBalance } from 'hooks/indexerHook';
 import { useInitialStep } from 'hooks/registerHook';
 import { useSigner, useWeb3 } from 'hooks/web3Hook';
 import { RegisterFormKey, TRegisterValues } from 'types/schemas';
@@ -29,7 +29,7 @@ import { getStepIndex, getStepStatus, registerSteps } from './utils';
 const RegisterPage = () => {
   const signer = useSigner();
   const { account } = useWeb3();
-  const isIndexer = useIsAccountIndexer();
+  const isIndexer = useIsRegisterIndexer();
   const sdk = useContractSDK();
   const tokenBalance = useTokenBalance(account);
   const history = useHistory();
