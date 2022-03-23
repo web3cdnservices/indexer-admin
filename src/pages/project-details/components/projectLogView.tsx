@@ -32,7 +32,7 @@ const ProjectLogView: FC<{ container: string }> = ({ container }) => {
         label="Refresh"
         onClick={() => getLog({ variables: { container } })}
       />
-      {!!log && <LogViewer hasLineNumbers height={600} data={log} isTextWrapped theme="dark" />}
+      {!!log && <LogViewer hasLineNumbers height={550} data={log} isTextWrapped theme="dark" />}
       {loading && <Spinner />}
     </Container>
   );
@@ -41,8 +41,8 @@ const ProjectLogView: FC<{ container: string }> = ({ container }) => {
 export default ProjectLogView;
 
 const Container = styled.div`
-  height: 600px;
-  padding: 20px;
+  height: 650px;
+  padding: 30px;
   margin-top: 10px;
   background-color: #121212;
 `;

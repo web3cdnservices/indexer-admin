@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC } from 'react';
+import { isUndefined } from 'lodash';
 import styled from 'styled-components';
 
 import { Text } from 'components/primary';
@@ -25,18 +26,20 @@ const LabelContainer = styled.div`
 `;
 
 type Props = {
-  status: IndexingStatus;
+  status?: IndexingStatus;
   metadata?: TQueryMetadata;
 };
 
 const ProjectStatusView: FC<Props> = ({ status, metadata }) => (
   <Container mb={20}>
-    <LabelContainer>
-      <Text size={15} fw="500" mb={10}>
-        Indexing Status
-      </Text>
-      <StatusLabel text={statusText[status]} color={statusColor[status]} />
-    </LabelContainer>
+    {!isUndefined(status) && (
+      <LabelContainer>
+        <Text size={15} fw="500" mb={10}>
+          Indexing Status
+        </Text>
+        <StatusLabel text={statusText[status]} color={statusColor[status]} />
+      </LabelContainer>
+    )}
     {!!metadata?.targetHeight && (
       <Container>
         <TagItem versionType="Latest Block" prefix="#" value={metadata.targetHeight} />

@@ -37,8 +37,8 @@ import { TQueryMetadata } from '../types';
 
 type Props = {
   id: string;
-  status: IndexingStatus;
   project: ProjectDetails;
+  status?: IndexingStatus;
   metadata?: TQueryMetadata;
   stateChanged: () => void;
 };

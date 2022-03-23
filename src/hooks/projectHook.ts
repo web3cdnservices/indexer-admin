@@ -64,8 +64,8 @@ export const useProjectService = (deploymentId: string) => {
   return projectService;
 };
 
-export const useIndexingStatus = (deploymentId: string) => {
-  const [status, setStatus] = useState(IndexingStatus.NOTINDEXING);
+export const useIndexingStatus = (deploymentId: string): IndexingStatus | undefined => {
+  const [status, setStatus] = useState<IndexingStatus>();
   const { account } = useWeb3();
   const toastContext = useToast();
   const sdk = useContractSDK();

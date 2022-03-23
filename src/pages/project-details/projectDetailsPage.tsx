@@ -58,7 +58,7 @@ const ProjectDetailsPage = () => {
 
   useEffect(() => {
     fetchQueryMetadata();
-  }, [fetchQueryMetadata, status]);
+  }, [status]);
 
   return (
     <Container>
