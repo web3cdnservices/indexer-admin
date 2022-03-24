@@ -7,9 +7,9 @@ import styled from 'styled-components';
 
 import { Text } from 'components/primary';
 import { proxyServiceUrl } from 'utils/apolloClient';
-import { ServiceStatus } from 'utils/project';
+import { indexerServiceStatus, queryServiceStatus, ServiceStatus } from 'utils/project';
 
-import { TService } from '../types';
+import { TQueryMetadata } from '../types';
 
 const Container = styled.div`
   display: flex;
@@ -57,28 +57,30 @@ const ServiceCard: FC<CardProps> = ({ title, subTitle, status }) => (
 
 type Props = {
   id: string;
-  indexerService?: TService;
-  queryService?: TService;
+  data?: TQueryMetadata;
 };
 
-const ProjectServiceCard: FC<Props> = ({ id, indexerService, queryService }) => {
-  if (!queryService || !indexerService) return null;
+const ProjectServiceCard: FC<Props> = ({ id, data }) => {
+  if (!data) return null;
+
+  const imageVersion = (type: string, version: string) => `onfinality/subql-${type}:${version}`;
+
   return (
     <Container>
       <ServiceCard
         title="Indexer Service"
-        subTitle={`Image Version: ${indexerService?.imageVersion}`}
-        status={indexerService?.status}
+        subTitle={`Image Version: ${imageVersion('indexer', data.indexerNodeVersion)}`}
+        status={indexerServiceStatus(data.indexerHealthy)}
       />
       <ServiceCard
         title="Query Service"
-        subTitle={`Image Version: ${queryService.imageVersion}`}
-        status={queryService.status}
+        subTitle={`Image Version: ${imageVersion('indexer', data.queryNodeVersion)}`}
+        status={queryServiceStatus(data.indexerHealthy)}
       />
       <ServiceCard
         title="Proxy Service"
         subTitle={`Url: ${proxyServiceUrl}/query/${id}`}
-        status={queryService.status}
+        status={queryServiceStatus(data.indexerHealthy)}
       />
     </Container>
   );

@@ -15,9 +15,14 @@ export function calculateProgress(targetHeight: number, latestHeight: number): n
   return Math.round((latestHeight * 100 * 100) / targetHeight) / 100;
 }
 
-export function serviceStatus(status: boolean | undefined): ServiceStatus {
+export function indexerServiceStatus(status: boolean | undefined): ServiceStatus {
   if (isUndefined(status)) return ServiceStatus.terminated;
   return status ? ServiceStatus.healthy : ServiceStatus.unhealthy;
+}
+
+export function queryServiceStatus(status: boolean | undefined): ServiceStatus {
+  if (isUndefined(status)) return ServiceStatus.terminated;
+  return ServiceStatus.healthy;
 }
 
 export function projectId(cid: string): string {

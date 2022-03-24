@@ -13,16 +13,15 @@ import {
   useProjectDetails,
 } from 'hooks/projectHook';
 import { useRouter } from 'hooks/routerHook';
-import { calculateProgress, serviceStatus } from 'utils/project';
+import { calculateProgress } from 'utils/project';
 
 import ProgressInfoView from './components/progressInfoView';
 import ProjectDetailsHeader from './components/projectDetailHeader';
 import ProjectServiceCard from './components/projectServiceCard';
 import ProjectStatusView from './components/projectStatusView';
 import ProjectTabbarView from './components/projectTabBarView';
-import { createServiceItem } from './config';
 import { Container, ContentContainer } from './styles';
-import { TQueryMetadata, TService } from './types';
+import { TQueryMetadata } from './types';
 
 const ProjectDetailsPage = () => {
   const { id } = useParams() as { id: string };
@@ -33,23 +32,13 @@ const ProjectDetailsPage = () => {
   const { setPageLoading } = useLoading();
   useRouter(!projectDetails);
 
-  const [indexerSerive, setIndexerService] = useState<TService>();
-  const [querySerive, setQueryService] = useState<TService>();
   const [progress, setProgress] = useState(0);
   const [metadata, setMetadata] = useState<TQueryMetadata>();
 
   const fetchQueryMetadata = async () => {
     const data = await getQueryMetadata(id);
-    if (data) {
-      setMetadata(data);
-      setProgress(calculateProgress(data.targetHeight, data.lastProcessedHeight));
-      setQueryService(
-        createServiceItem('query', data.queryNodeVersion, serviceStatus(data.indexerHealthy))
-      );
-      setIndexerService(
-        createServiceItem('node', data.indexerNodeVersion, serviceStatus(data.indexerHealthy))
-      );
-    }
+    setProgress(calculateProgress(data.targetHeight, data.lastProcessedHeight));
+    setMetadata(data);
   };
 
   useEffect(() => {
@@ -73,7 +62,7 @@ const ProjectDetailsPage = () => {
           />
           <ProjectStatusView status={status} metadata={metadata} />
           <ProgressInfoView percent={progress} />
-          <ProjectServiceCard id={id} indexerService={indexerSerive} queryService={querySerive} />
+          <ProjectServiceCard id={id} data={metadata} />
           <ProjectTabbarView id={id} project={projectInfo} />
         </ContentContainer>
       )}

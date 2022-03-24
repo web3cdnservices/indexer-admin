@@ -63,7 +63,6 @@ const Registry = () => {
 
   useEffect(() => {
     setPageLoading(isUndefined(account) || isUndefined(indexer));
-    console.log(account, indexer);
   }, [account, indexer]);
 
   const onButtonPress = (type: AccountAction) => {

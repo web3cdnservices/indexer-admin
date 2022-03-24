@@ -11,11 +11,6 @@ export type ProjectServiceMetadata = {
   queryEndpoint: string;
 };
 
-export type TService = {
-  status: string;
-  imageVersion: string;
-};
-
 export type TQueryMetadata = {
   lastProcessedHeight: number;
   lastProcessedTimestamp: number;
