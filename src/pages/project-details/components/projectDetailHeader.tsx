@@ -96,18 +96,12 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
     return buttonItems[projectStatus];
   }, [projectStatus]);
 
-  const updateState = (deplay = 3000) => {
-    setTimeout(() => {
-      stateChanged();
-    }, deplay);
-  };
-
   const startProject = async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
     const networkEndpoint = values[ProjectFormKey.networkEndpoint];
     const networkDictionary = values[ProjectFormKey.networkDictionary];
     try {
       await startProjectRequest({ variables: { networkEndpoint, networkDictionary, id } });
-      updateState();
+      stateChanged();
       setCurrentStep(1);
     } catch (e) {
       formHelper.setErrors({ [ProjectFormKey.networkEndpoint]: 'Invalid service endpoint' });
@@ -117,7 +111,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
   const stopProject = async () => {
     try {
       await stopProjectRequest({ variables: { id } });
-      updateState();
+      stateChanged();
       setCurrentStep(1);
     } catch (e) {
       console.log('fail to stop project', e);
@@ -175,7 +169,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
           </VersionContainer>
         </ContentContainer>
       </LeftContainer>
-      {!!actionItems && (
+      {!isUndefined(status) && !!actionItems && (
         <ActionContainer>
           {actionItems.map(({ title, action }) => (
             <Button mt={10} key={title} width={265} title={title} onClick={action} />

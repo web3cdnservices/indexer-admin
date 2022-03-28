@@ -123,6 +123,7 @@ export const getQueryMetadata = async (id: string): Promise<TQueryMetadata> => {
     const result = await coordinatorClient.query<{ queryMetadata: TQueryMetadata }>({
       query: GET_QUERY_METADATA,
       variables: { id },
+      fetchPolicy: 'network-only',
     });
     return result.data.queryMetadata;
   } catch {

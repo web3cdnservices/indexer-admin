@@ -140,6 +140,7 @@ export const GET_QUERY_METADATA = gql`
       indexerNodeVersion
       queryNodeVersion
       indexerStatus
+      queryStatus
     }
   }
 `;
