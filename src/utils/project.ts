@@ -1,8 +1,6 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { isUndefined } from 'lodash';
-
 export enum ServiceStatus {
   healthy = 'HEALTHY',
   unhealthy = 'UNHEALTHY',
@@ -15,14 +13,9 @@ export function calculateProgress(targetHeight: number, latestHeight: number): n
   return Math.round((latestHeight * 100 * 100) / targetHeight) / 100;
 }
 
-export function indexerServiceStatus(status: boolean | undefined): ServiceStatus {
-  if (isUndefined(status)) return ServiceStatus.terminated;
-  return status ? ServiceStatus.healthy : ServiceStatus.unhealthy;
-}
-
-export function queryServiceStatus(status: boolean | undefined): ServiceStatus {
-  if (isUndefined(status)) return ServiceStatus.terminated;
-  return ServiceStatus.healthy;
+export function statusCode(status: string): 'success' | 'error' {
+  if (status === 'HEALTHY' || status === 'STARTING') return 'success';
+  return 'error';
 }
 
 export function projectId(cid: string): string {

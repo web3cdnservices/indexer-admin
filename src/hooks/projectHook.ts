@@ -27,6 +27,8 @@ const metadataInitValue = {
   indexerHealthy: undefined,
   indexerNodeVersion: '',
   queryNodeVersion: '',
+  indexerStatus: '',
+  queryStatus: '',
 };
 
 const projectInitValue = {

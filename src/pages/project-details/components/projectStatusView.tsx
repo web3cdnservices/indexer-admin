@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC } from 'react';
+import { Spinner } from '@subql/react-ui';
 import { isUndefined } from 'lodash';
 import styled from 'styled-components';
 
@@ -32,14 +33,16 @@ type Props = {
 
 const ProjectStatusView: FC<Props> = ({ status, metadata }) => (
   <Container mb={20}>
-    {!isUndefined(status) && (
-      <LabelContainer>
-        <Text size={15} fw="500" mb={10}>
-          Indexing Status
-        </Text>
+    <LabelContainer>
+      <Text size={15} fw="500" mb={10}>
+        Indexing Status
+      </Text>
+      {!isUndefined(status) ? (
         <StatusLabel text={statusText[status]} color={statusColor[status]} />
-      </LabelContainer>
-    )}
+      ) : (
+        <Spinner />
+      )}
+    </LabelContainer>
     {!!metadata?.targetHeight && (
       <Container>
         <TagItem versionType="Latest Block" prefix="#" value={metadata.targetHeight} />

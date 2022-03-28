@@ -41,6 +41,11 @@ const ProjectDetailsPage = () => {
     setMetadata(data);
   };
 
+  const updateServiceStatus = () => {
+    const intervalId = setInterval(() => fetchQueryMetadata(), 1000);
+    setTimeout(() => clearInterval(intervalId), 10000);
+  };
+
   useEffect(() => {
     setPageLoading(isUndefined(projectInfo));
   }, [projectInfo]);
@@ -58,7 +63,7 @@ const ProjectDetailsPage = () => {
             status={status}
             project={projectInfo}
             metadata={metadata}
-            stateChanged={fetchQueryMetadata}
+            stateChanged={updateServiceStatus}
           />
           <ProjectStatusView status={status} metadata={metadata} />
           <ProgressInfoView percent={progress} />

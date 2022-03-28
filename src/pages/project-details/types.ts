@@ -21,4 +21,6 @@ export type TQueryMetadata = {
   indexerHealthy?: boolean;
   indexerNodeVersion: string;
   queryNodeVersion: string;
+  indexerStatus: string;
+  queryStatus: string;
 };

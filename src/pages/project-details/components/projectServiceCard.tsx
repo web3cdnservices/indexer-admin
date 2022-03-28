@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 import { Text } from 'components/primary';
 import { proxyServiceUrl } from 'utils/apolloClient';
-import { indexerServiceStatus, queryServiceStatus, ServiceStatus } from 'utils/project';
+import { statusCode } from 'utils/project';
 
 import { TQueryMetadata } from '../types';
 
@@ -45,9 +45,7 @@ const ServiceCard: FC<CardProps> = ({ title, subTitle, status }) => (
       <Text mr={20} fw="500">
         {title}
       </Text>
-      {!!status && (
-        <Tag text={status} state={status === ServiceStatus.healthy ? 'success' : 'error'} />
-      )}
+      {!!status && <Tag text={status} state={statusCode(status)} />}
     </HeaderContainer>
     <Text size={15} color="gray" mt={10}>
       {subTitle}
@@ -70,17 +68,17 @@ const ProjectServiceCard: FC<Props> = ({ id, data }) => {
       <ServiceCard
         title="Indexer Service"
         subTitle={`Image Version: ${imageVersion('indexer', data.indexerNodeVersion)}`}
-        status={indexerServiceStatus(data.indexerHealthy)}
+        status={data.indexerStatus}
       />
       <ServiceCard
         title="Query Service"
         subTitle={`Image Version: ${imageVersion('indexer', data.queryNodeVersion)}`}
-        status={queryServiceStatus(data.indexerHealthy)}
+        status={data.queryStatus}
       />
       <ServiceCard
         title="Proxy Service"
         subTitle={`Url: ${proxyServiceUrl}/query/${id}`}
-        status={queryServiceStatus(data.indexerHealthy)}
+        status={data.queryStatus}
       />
     </Container>
   );
