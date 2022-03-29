@@ -24,6 +24,7 @@ const Container = styled.div<{ mb?: number }>`
 const LabelContainer = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
 `;
 
 type Props = {

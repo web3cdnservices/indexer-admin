@@ -61,6 +61,9 @@ const Registry = () => {
   const controllerItem = !controller ? prompts.emptyController : prompts.controller;
   const indexerItem = prompts.indexer;
 
+  // FIXME:
+  // const { dispatchNotification } = useNotification();
+
   useEffect(() => {
     setPageLoading(isUndefined(account) || isUndefined(indexer));
   }, [account, indexer]);

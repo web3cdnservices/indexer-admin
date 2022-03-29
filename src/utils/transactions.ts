@@ -4,7 +4,9 @@
 import { ContractTransaction } from 'ethers';
 import { FormikHelpers, FormikValues } from 'formik';
 
-import { ToastContext, ToastProps } from 'containers/toastContext';
+import { Notification, notificationContext } from 'containers/notificationContext';
+
+import { dismiss } from './notification';
 
 // TODO:  move types in type folder
 export enum AccountAction {
@@ -32,40 +34,55 @@ export type ModalAction = AccountAction | ProjectsAction | ProjectAction;
 export type ClickAction = (type?: ModalAction) => void;
 export type FormSubmit = (values: FormikValues, helper: FormikHelpers<FormikValues>) => void;
 
-export function txLoadingToast(txHash: string): ToastProps {
-  return { type: 'loading', text: `Processing transaction: ${txHash}` };
+export function txLoadingNotification(txHash: string): Notification {
+  return {
+    type: 'info',
+    title: 'Processing Transaction',
+    message: `${txHash}`,
+    dismiss: dismiss(60000, true),
+  };
 }
 
-export function txSuccessToast(txHash: string): ToastProps {
-  return { type: 'success', text: `Transaction completed: ${txHash}` };
+export function txSuccessNotification(): Notification {
+  return {
+    type: 'success',
+    title: 'Transaction Succeed',
+    message: 'Transaction processed',
+    dismiss: dismiss(),
+  };
 }
 
-export function txErrorToast(message: string): ToastProps {
-  return { type: 'error', text: `Transaction failed: ${message}` };
+export function txErrorNotification(message: string): Notification {
+  return {
+    type: 'danger',
+    title: 'Transaction Failed',
+    message: `${message}`,
+    dismiss: dismiss(),
+  };
 }
 
 export async function handleTransaction(
   tx: ContractTransaction,
-  toastContext: ToastContext,
+  notificationContext: notificationContext,
   onSuccess?: () => void,
   onError?: () => void
 ) {
-  const { dispatchToast, closeToast } = toastContext;
-  dispatchToast(txLoadingToast(tx.hash));
+  const { dispatchNotification, removeNotification } = notificationContext;
+  const loadingId = dispatchNotification(txLoadingNotification(tx.hash));
 
   try {
     const receipt = await tx.wait(1);
     if (!receipt.status) {
       onError && onError();
-      dispatchToast(txErrorToast(tx.hash));
+      dispatchNotification(txErrorNotification(tx.hash));
     } else {
       onSuccess && onSuccess();
-      dispatchToast(txSuccessToast(tx.hash));
+      dispatchNotification(txSuccessNotification());
     }
+    removeNotification(loadingId);
   } catch (e) {
     console.error('Transaction Failed:', e);
-    dispatchToast(txErrorToast(tx.hash));
+    // @ts-ignore
+    dispatchNotification(txErrorNotification(e.message));
   }
-
-  setTimeout(() => closeToast(), 2000);
 }

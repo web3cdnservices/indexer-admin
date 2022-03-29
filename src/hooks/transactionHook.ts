@@ -4,7 +4,7 @@
 import { useCallback, useMemo } from 'react';
 
 import { useContractSDK } from 'containers/contractSdk';
-import { useToast } from 'containers/toastContext';
+import { useNotification } from 'containers/notificationContext';
 import { TransactionType } from 'pages/project-details/config';
 import {
   configController,
@@ -23,7 +23,7 @@ type Callback = () => any | Promise<any> | undefined;
 export const useAccountAction = () => {
   const signer = useSigner();
   const sdk = useContractSDK();
-  const toastContext = useToast();
+  const notificationContext = useNotification();
 
   const accountTransactions = useCallback(
     (param: string) => ({
@@ -40,7 +40,7 @@ export const useAccountAction = () => {
         const sendTx = accountTransactions(param)[type];
         const tx = await sendTx();
         onProcess();
-        await handleTransaction(tx, toastContext, onSuccess);
+        await handleTransaction(tx, notificationContext, onSuccess);
       } catch {
         onProcess();
       }
@@ -52,7 +52,7 @@ export const useAccountAction = () => {
 export const useIndexingAction = (id: string) => {
   const signer = useSigner();
   const sdk = useContractSDK();
-  const toastContext = useToast();
+  const notificationContext = useNotification();
 
   const indexingTransactions = useMemo(
     () => ({
@@ -69,7 +69,7 @@ export const useIndexingAction = (id: string) => {
         const sendTx = indexingTransactions[type];
         const tx = await sendTx();
         onProcess();
-        await handleTransaction(tx, toastContext, onSuccess);
+        await handleTransaction(tx, notificationContext, onSuccess);
       } catch {
         onProcess();
       }

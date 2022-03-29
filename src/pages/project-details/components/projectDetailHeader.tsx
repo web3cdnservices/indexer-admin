@@ -65,7 +65,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
   );
 
   const projectStatus = useMemo(() => {
-    const healthy = !!metadata?.targetHeight;
+    const healthy = metadata?.indexerStatus === 'HEALTHY';
     switch (status) {
       case IndexingStatus.NOTINDEXING:
         return healthy ? ProjectStatus.Started : ProjectStatus.NotIndexing;

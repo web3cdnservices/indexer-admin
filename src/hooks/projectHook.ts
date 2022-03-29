@@ -7,7 +7,7 @@ import { isEmpty, isUndefined } from 'lodash';
 
 import { useContractSDK } from 'containers/contractSdk';
 import { useLoading } from 'containers/loadingContext';
-import { useToast } from 'containers/toastContext';
+import { useNotification } from 'containers/notificationContext';
 import { useWeb3 } from 'hooks/web3Hook';
 import { ProjectServiceMetadata, TQueryMetadata } from 'pages/project-details/types';
 import { IndexingStatus } from 'pages/projects/constant';
@@ -53,7 +53,7 @@ const projectInitValue = {
 };
 
 export const useProjectService = (deploymentId: string) => {
-  const { toast } = useToast();
+  const { notification } = useNotification();
   const [projectService, setService] = useState<ProjectServiceMetadata>();
   const [getProjectService, { data }] = useLazyQuery(GET_PROJECT, {
     fetchPolicy: 'network-only',
@@ -61,7 +61,7 @@ export const useProjectService = (deploymentId: string) => {
 
   useEffect(() => {
     data ? setService(data.project) : getProjectService({ variables: { id: deploymentId } });
-  }, [deploymentId, data, toast?.type]);
+  }, [deploymentId, data, notification?.type]);
 
   return projectService;
 };
@@ -69,7 +69,7 @@ export const useProjectService = (deploymentId: string) => {
 export const useIndexingStatus = (deploymentId: string): IndexingStatus | undefined => {
   const [status, setStatus] = useState<IndexingStatus>();
   const { account } = useWeb3();
-  const toastContext = useToast();
+  const notificationContext = useNotification();
   const sdk = useContractSDK();
 
   useEffect(() => {
@@ -81,7 +81,7 @@ export const useIndexingStatus = (deploymentId: string): IndexingStatus | undefi
         })
         .catch((error) => console.error(error));
     }
-  }, [sdk, account, deploymentId, toastContext.toast?.type]);
+  }, [sdk, account, deploymentId, notificationContext.notification?.type]);
 
   return status;
 };
@@ -157,7 +157,7 @@ export const getProjectDetails = async (deploymentId: string): Promise<ProjectDe
 
 export const useProjectDetails = (deploymentId: string): ProjectDetails | undefined => {
   const [project, setProject] = useState<ProjectDetails | undefined>();
-  const { toast } = useToast();
+  const { notification } = useNotification();
 
   const fetchMeta = useCallback(async () => {
     try {
@@ -171,7 +171,7 @@ export const useProjectDetails = (deploymentId: string): ProjectDetails | undefi
 
   useEffect(() => {
     fetchMeta();
-  }, [fetchMeta, toast?.type]);
+  }, [fetchMeta, notification?.type]);
 
   return project;
 };

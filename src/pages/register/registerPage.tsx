@@ -10,7 +10,7 @@ import IntroductionView from 'components/introductionView';
 import { useContractSDK } from 'containers/contractSdk';
 import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useLoading } from 'containers/loadingContext';
-import { useToast } from 'containers/toastContext';
+import { useNotification } from 'containers/notificationContext';
 import { useIsIndexer, useIsRegistedIndexer, useTokenBalance } from 'hooks/indexerHook';
 import { useInitialStep } from 'hooks/registerHook';
 import { useSigner, useWeb3 } from 'hooks/web3Hook';
@@ -37,7 +37,7 @@ const RegisterPage = () => {
   const initialStep = useInitialStep();
   const { updateIndexer } = useCoordinatorIndexer();
   const { setPageLoading } = useLoading();
-  const { dispatchToast } = useToast();
+  const { dispatchNotification } = useNotification();
 
   const [currentStep, setStep] = useState<RegisterStep>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -74,9 +74,10 @@ const RegisterPage = () => {
   const onSyncIndexer = useCallback(async () => {
     setLoading(true);
     if (!account) {
-      return dispatchToast({
-        type: 'error',
-        text: 'Can not find account, make sure MetaMask is connected',
+      return dispatchNotification({
+        type: 'danger',
+        title: 'Fail to sync the indexer',
+        message: 'Can not find account, make sure MetaMask is connected',
       });
     }
 
