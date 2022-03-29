@@ -42,8 +42,8 @@ const ProjectDetailsPage = () => {
   };
 
   const updateServiceStatus = () => {
-    const intervalId = setInterval(() => fetchQueryMetadata(), 1000);
-    setTimeout(() => clearInterval(intervalId), 5000);
+    const intervalId = setInterval(() => fetchQueryMetadata(), 2000);
+    setTimeout(() => clearInterval(intervalId), 10000);
   };
 
   useEffect(() => {

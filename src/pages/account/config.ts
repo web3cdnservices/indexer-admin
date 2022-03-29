@@ -11,6 +11,8 @@ import {
 } from 'types/schemas';
 import { AccountAction, ClickAction, FormSubmit } from 'utils/transactions';
 
+import { IndexerMetadata } from './types';
+
 const buttonTitles = {
   [AccountAction.unregister]: 'Unregister',
   [AccountAction.configCntroller]: 'Config Controller',
@@ -53,6 +55,7 @@ export const createControllerSteps = (
           {
             formKey: ControllerFormKey.privateKey,
             title: 'Controller Private Key',
+            placeholder: '0x5fb92d6e98884f76de468fa3f6278f8807c48bebc13595d45af5bdc4da702133',
           },
         ],
       },
@@ -79,7 +82,7 @@ export const createUnregisterSteps = (onUnregister: ClickAction) => ({
   ],
 });
 
-export const createUpdateMetadataSteps = (onUpdate: FormSubmit) => ({
+export const createUpdateMetadataSteps = (onUpdate: FormSubmit, metadata?: IndexerMetadata) => ({
   [AccountAction.updateMetaData]: [
     {
       index: 0,
@@ -94,10 +97,12 @@ export const createUpdateMetadataSteps = (onUpdate: FormSubmit) => ({
           {
             formKey: MetadataFormKey.name,
             title: 'Indexer Name',
+            placeholder: metadata?.name,
           },
           {
             formKey: MetadataFormKey.proxyEndpoint,
             title: 'Proxy Server Endpoint',
+            placeholder: metadata?.url,
           },
         ],
       },

@@ -225,7 +225,7 @@ export function useProjectDetailList(data: any) {
 
   useEffect(() => {
     getProjectDetailList();
-  }, [getProjectDetailList]);
+  }, [getProjectDetailList, data]);
 
-  return projectDetailList;
+  return { projectDetailList, getProjectDetailList };
 }

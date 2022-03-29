@@ -34,12 +34,17 @@ export type ModalAction = AccountAction | ProjectsAction | ProjectAction;
 export type ClickAction = (type?: ModalAction) => void;
 export type FormSubmit = (values: FormikValues, helper: FormikHelpers<FormikValues>) => void;
 
+const formatHash = (hash: string) => {
+  const len = hash.length;
+  return `${hash.substring(0, 15)}...${hash.substring(len - 16, len - 1)}`;
+};
+
 export function txLoadingNotification(txHash: string): Notification {
   return {
     type: 'info',
     title: 'Processing Transaction',
-    message: `${txHash}`,
-    dismiss: dismiss(60000, true),
+    message: `May take around 20s to be processed: ${formatHash(txHash)}`,
+    dismiss: dismiss(50000, true),
   };
 }
 

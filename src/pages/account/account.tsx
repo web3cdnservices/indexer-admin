@@ -129,19 +129,26 @@ const Registry = () => {
     () => accountAction(AccountAction.configCntroller, inputController, onModalClose, getController)
   );
 
-  const updateMetadataStep = createUpdateMetadataSteps(async (values, formHelper) => {
-    formHelper.setStatus({ loading: true });
-    const name = values[MetadataFormKey.name];
-    const proxyEndpoint = values[MetadataFormKey.proxyEndpoint];
-    const metadata = await createIndexerMetadata(name, proxyEndpoint);
-    await accountAction(AccountAction.updateMetaData, metadata, onModalClose, fetchMetadata);
-  });
+  const updateMetadataStep = useMemo(
+    () =>
+      createUpdateMetadataSteps(async (values, formHelper) => {
+        formHelper.setStatus({ loading: true });
+        const name = values[MetadataFormKey.name];
+        const proxyEndpoint = values[MetadataFormKey.proxyEndpoint];
+        const metadata = await createIndexerMetadata(name, proxyEndpoint);
+        await accountAction(AccountAction.updateMetaData, metadata, onModalClose, fetchMetadata);
+      }, metadata),
+    [metadata]
+  );
 
   const unregisterStep = createUnregisterSteps(() =>
     accountAction(AccountAction.unregister, '', onModalClose, removeAccounts)
   );
 
-  const steps = { ...controllerSteps, ...unregisterStep, ...updateMetadataStep };
+  const steps = useMemo(
+    () => ({ ...controllerSteps, ...unregisterStep, ...updateMetadataStep }),
+    [metadata]
+  );
 
   return (
     <Container>

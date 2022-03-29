@@ -26,7 +26,7 @@ const Projects = () => {
   const { setPageLoading } = useLoading();
   const [addProject, { loading }] = useMutation(ADD_PROJECT);
   const [getProjectList, { data }] = useLazyQuery(GET_PROJECTS, { fetchPolicy: 'network-only' });
-  const projectDetailList = useProjectDetailList(data);
+  const { projectDetailList } = useProjectDetailList(data);
   useRouter();
 
   const [visible, setVisible] = useState(false);

@@ -15,5 +15,5 @@ export type AccountButtonItem = {
 
 export type IndexerMetadata = {
   name: string;
-  proxyEndpoint: string;
+  url: string;
 };
