@@ -12,11 +12,13 @@ import Avatar from 'components/avatar';
 import ModalView from 'components/modalView';
 import { Button, Separator, Text } from 'components/primary';
 import { TagItem } from 'components/tagItem';
+import { useNotification } from 'containers/notificationContext';
 import { ProjectDetails } from 'hooks/projectHook';
 import { useIndexingAction } from 'hooks/transactionHook';
 import { IndexingStatus } from 'pages/projects/constant';
 import { ProjectFormKey } from 'types/schemas';
 import { cidToBytes32 } from 'utils/ipfs';
+import { ProjectNotification } from 'utils/notification';
 import { START_PROJECT, STOP_PROJECT } from 'utils/queries';
 import { ProjectAction } from 'utils/transactions';
 
@@ -31,6 +33,7 @@ import {
   createStopIndexingSteps,
   createStopProjectSteps,
   modalTitles,
+  notifications,
   ProjectStatus,
 } from '../config';
 import { TQueryMetadata } from '../types';
@@ -51,6 +54,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
   const [actionType, setActionType] = useState<ProjectAction>();
 
   const indexingAction = useIndexingAction(id);
+  const { dispatchNotification } = useNotification();
   const [startProjectRequest, { loading: startProjectLoading }] = useMutation(START_PROJECT);
   const [stopProjectRequest, { loading: stopProjectLoading }] = useMutation(STOP_PROJECT);
 
@@ -96,13 +100,21 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
     return buttonItems[projectStatus];
   }, [projectStatus]);
 
+  const projectStateChange = (
+    type: ProjectNotification.Started | ProjectNotification.Terminated
+  ) => {
+    stateChanged();
+    const notification = notifications[type];
+    dispatchNotification(notification);
+  };
+
   const startProject = async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
     const networkEndpoint = values[ProjectFormKey.networkEndpoint];
     const networkDictionary = values[ProjectFormKey.networkDictionary];
     try {
       await startProjectRequest({ variables: { networkEndpoint, networkDictionary, id } });
-      stateChanged();
-      setCurrentStep(1);
+      onModalClose();
+      projectStateChange(ProjectNotification.Started);
     } catch (e) {
       formHelper.setErrors({ [ProjectFormKey.networkEndpoint]: 'Invalid service endpoint' });
     }
@@ -111,7 +123,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
   const stopProject = async () => {
     try {
       await stopProjectRequest({ variables: { id } });
-      stateChanged();
+      projectStateChange(ProjectNotification.Terminated);
       setCurrentStep(1);
     } catch (e) {
       console.log('fail to stop project', e);

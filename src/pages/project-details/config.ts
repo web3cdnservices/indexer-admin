@@ -1,7 +1,9 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import { Notification } from 'containers/notificationContext';
 import { initialIndexingValues, ProjectFormKey, StartIndexingSchema } from 'types/schemas';
+import { dismiss, ProjectNotification } from 'utils/notification';
 import { ClickAction, FormSubmit, ProjectAction } from 'utils/transactions';
 
 import prompts from './prompts';
@@ -190,5 +192,21 @@ export const aletMessages = {
     title: 'Status Inconsistent',
     description:
       'The current indexing service for this project is terminated but the indexing service status on Subquery Network is still INDEXING, we encourage you to press the Announce NotIndexing button to change the online status to NOTINDEXING as well',
+  },
+};
+
+// notification config
+export const notifications: Record<string, Notification> = {
+  [ProjectNotification.Started]: {
+    type: 'success',
+    title: 'Project is starting',
+    message: `Starting project may take around 5 senconds`,
+    dismiss: dismiss(),
+  },
+  [ProjectNotification.Terminated]: {
+    type: 'success',
+    title: 'Project Terminated',
+    message: `The project has been stopped, you can restart or update the status on network to not indexing`,
+    dismiss: dismiss(),
   },
 };
