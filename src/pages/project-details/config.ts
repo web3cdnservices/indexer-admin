@@ -2,7 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Notification } from 'containers/notificationContext';
-import { initialIndexingValues, ProjectFormKey, StartIndexingSchema } from 'types/schemas';
+import {
+  IndexingEndpoint,
+  initialIndexingValues,
+  ProjectFormKey,
+  StartIndexingSchema,
+} from 'types/schemas';
 import { dismiss, ProjectNotification } from 'utils/notification';
 import { ClickAction, FormSubmit, ProjectAction } from 'utils/transactions';
 
@@ -68,8 +73,8 @@ export const modalTitles = {
   [ProjectAction.StopIndexing]: 'Stop Indexing',
 };
 
-const startProjectForms = (onFormSubmit: FormSubmit) => ({
-  formValues: initialIndexingValues,
+const startProjectForms = (endpoint: IndexingEndpoint, onFormSubmit: FormSubmit) => ({
+  formValues: initialIndexingValues(endpoint),
   schema: StartIndexingSchema,
   onFormSubmit,
   items: [
@@ -86,27 +91,33 @@ const startProjectForms = (onFormSubmit: FormSubmit) => ({
   ],
 });
 
-export const createStartIndexingSteps = (onStartProject: FormSubmit) => ({
+export const createStartIndexingSteps = (
+  endpoint: IndexingEndpoint,
+  onStartProject: FormSubmit
+) => ({
   [ProjectAction.StartIndexing]: [
     {
       index: 0,
       title: prompts.startProject.title,
       desc: prompts.startProject.desc,
       buttonTitle: 'Indexing Project',
-      form: startProjectForms(onStartProject),
+      form: startProjectForms(endpoint, onStartProject),
       onClick: onStartProject,
     },
   ],
 });
 
-export const createRestartProjectSteps = (onStartProject: FormSubmit) => ({
+export const createRestartProjectSteps = (
+  endpoint: IndexingEndpoint,
+  onStartProject: FormSubmit
+) => ({
   [ProjectAction.RestartProject]: [
     {
       index: 0,
       title: prompts.restartProject.title,
       desc: prompts.restartProject.desc,
       buttonTitle: 'Restart Project',
-      form: startProjectForms(onStartProject),
+      form: startProjectForms(endpoint, onStartProject),
     },
   ],
 });

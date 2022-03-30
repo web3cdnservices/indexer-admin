@@ -47,6 +47,7 @@ const projectInitValue = {
   metadata: undefined,
   id: '',
   networkEndpoint: '',
+  networkDictionary: '',
   queryEndpoint: '',
   nodeEndpoint: '',
   status: 0,

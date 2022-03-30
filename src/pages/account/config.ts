@@ -90,19 +90,17 @@ export const createUpdateMetadataSteps = (onUpdate: FormSubmit, metadata?: Index
       desc: `Input vaid indexer name and proxy server endpoint to update the metadata, make sure the proxy endpoint is valid`,
       buttonTitle: 'Update Metadata',
       form: {
-        formValues: initialMetadataValues,
+        formValues: initialMetadataValues(metadata),
         schema: MetadataFormSchema,
         onFormSubmit: onUpdate,
         items: [
           {
             formKey: MetadataFormKey.name,
             title: 'Indexer Name',
-            placeholder: metadata?.name,
           },
           {
             formKey: MetadataFormKey.proxyEndpoint,
             title: 'Proxy Server Endpoint',
-            placeholder: metadata?.url,
           },
         ],
       },

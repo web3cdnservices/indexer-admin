@@ -104,6 +104,8 @@ export const GET_PROJECT = gql`
       status
       nodeEndpoint
       queryEndpoint
+      networkEndpoint
+      networkDictionary
     }
   }
 `;
@@ -115,6 +117,8 @@ export const GET_PROJECTS = gql`
       status
       nodeEndpoint
       queryEndpoint
+      networkEndpoint
+      networkDictionary
     }
   }
 `;

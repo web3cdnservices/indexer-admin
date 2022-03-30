@@ -3,32 +3,7 @@
 
 import * as yup from 'yup';
 
-// login config
-export enum LoginFormKey {
-  endpoint = 'endpoint',
-  networkType = 'networkType',
-}
-
-export const networkOptions = ['mainnet', 'testnet', 'local'];
-
-export const loginFormSchema = yup.object({
-  [LoginFormKey.endpoint]: yup.string().defined(),
-  [LoginFormKey.networkType]: yup
-    .string()
-    .test(
-      'Select a network',
-      'Must select a network',
-      (network) => !!(network && networkOptions.includes(network))
-    )
-    .defined(),
-});
-
-export const initialLoginValues = {
-  [LoginFormKey.endpoint]: '',
-  [LoginFormKey.networkType]: 'Mainnet',
-};
-
-export type TLoginValues = yup.Asserts<typeof loginFormSchema>;
+import { IndexerMetadata } from 'pages/account/types';
 
 // indexer register
 export enum RegisterFormKey {
@@ -72,10 +47,10 @@ export const MetadataFormSchema = yup.object({
   [RegisterFormKey.proxyEndpoint]: yup.string().defined(),
 });
 
-export const initialMetadataValues = {
-  [RegisterFormKey.name]: '',
-  [RegisterFormKey.proxyEndpoint]: '',
-};
+export const initialMetadataValues = (metadata?: IndexerMetadata) => ({
+  [RegisterFormKey.name]: metadata?.name,
+  [RegisterFormKey.proxyEndpoint]: metadata?.url,
+});
 
 export type TMetadataValues = yup.Asserts<typeof MetadataFormSchema>;
 
@@ -112,12 +87,14 @@ export const initialProjectValues = {
 };
 
 // start indexing project
+export const initialIndexingValues = (endpoint: IndexingEndpoint) => ({
+  [ProjectFormKey.networkEndpoint]: endpoint.networkEndpoint,
+  [ProjectFormKey.networkDictionary]: endpoint.networkDictionary ?? '',
+});
+
 export const StartIndexingSchema = yup.object({
   [ProjectFormKey.networkEndpoint]: yup.string().defined(),
   [ProjectFormKey.networkDictionary]: yup.string().optional(),
 });
 
-export const initialIndexingValues = {
-  [ProjectFormKey.networkEndpoint]: '',
-  [ProjectFormKey.networkDictionary]: '',
-};
+export type IndexingEndpoint = yup.Asserts<typeof StartIndexingSchema>;

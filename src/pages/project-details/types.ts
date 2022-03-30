@@ -7,6 +7,7 @@ export type ProjectServiceMetadata = {
   id: string;
   status: IndexingStatus;
   networkEndpoint: string;
+  networkDictionary: string;
   nodeEndpoint: string;
   queryEndpoint: string;
 };

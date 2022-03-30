@@ -13,7 +13,7 @@ import ModalView from 'components/modalView';
 import { Button, Separator, Text } from 'components/primary';
 import { TagItem } from 'components/tagItem';
 import { useNotification } from 'containers/notificationContext';
-import { ProjectDetails } from 'hooks/projectHook';
+import { ProjectDetails, useProjectService } from 'hooks/projectHook';
 import { useIndexingAction } from 'hooks/transactionHook';
 import { IndexingStatus } from 'pages/projects/constant';
 import { ProjectFormKey } from 'types/schemas';
@@ -54,6 +54,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
   const [actionType, setActionType] = useState<ProjectAction>();
 
   const indexingAction = useIndexingAction(id);
+  const projectConfig = useProjectService(id);
   const { dispatchNotification } = useNotification();
   const [startProjectRequest, { loading: startProjectLoading }] = useMutation(START_PROJECT);
   const [stopProjectRequest, { loading: stopProjectLoading }] = useMutation(STOP_PROJECT);
@@ -100,6 +101,14 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
     return buttonItems[projectStatus];
   }, [projectStatus]);
 
+  const indexingEnpoint = useMemo(
+    () => ({
+      networkEndpoint: projectConfig?.networkEndpoint ?? '',
+      networkDictionary: projectConfig?.networkDictionary,
+    }),
+    [projectConfig]
+  );
+
   const projectStateChange = (
     type: ProjectNotification.Started | ProjectNotification.Terminated
   ) => {
@@ -130,11 +139,11 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
     }
   };
 
-  const startIndexingSteps = createStartIndexingSteps(startProject);
+  const startIndexingSteps = createStartIndexingSteps(indexingEnpoint, startProject);
   const stopIndexingSteps = createStopIndexingSteps(stopProject, () =>
     indexingAction(ProjectAction.AnnounceNotIndexing, onModalClose)
   );
-  const restartProjectSteps = createRestartProjectSteps(startProject);
+  const restartProjectSteps = createRestartProjectSteps(indexingEnpoint, startProject);
   const stopProjectSteps = createStopProjectSteps(stopProject);
   const announceIndexingSteps = createAnnounceIndexingSteps(() =>
     indexingAction(ProjectAction.AnnounceIndexing, onModalClose)

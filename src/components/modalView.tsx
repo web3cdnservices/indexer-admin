@@ -20,6 +20,7 @@ import { Button, ButtonContainer, Text } from './primary';
 export type TFieldItem = {
   title: string;
   formKey: string;
+  value?: string | number;
   placeholder?: string;
 };
 
@@ -91,12 +92,13 @@ const ModalView: FC<Props> = ({
         {({ status, errors, submitForm }) => (
           <InputForm>
             <div>
-              {item.form?.items.map(({ title, formKey, placeholder }) => (
+              {item.form?.items.map(({ title, formKey = '', value = '', placeholder = '' }) => (
                 <FieldItem
                   key={title}
                   title={title}
-                  fieldKey={formKey ?? ''}
-                  placeholder={placeholder ?? ''}
+                  fieldKey={formKey}
+                  value={value}
+                  placeholder={placeholder}
                   errors={errors}
                 />
               ))}
