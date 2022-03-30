@@ -38,6 +38,8 @@ export function useShowMetaMask(): boolean | undefined {
   const { account } = useWeb3();
   const { pageLoading } = useLoading();
   const { indexer, load } = useCoordinatorIndexer();
+  const isMetaMaskInstalled = useIsMetaMaskInstalled();
+  const isMetaMask = useIsMetaMask();
 
   const isIndexer = useMemo(
     () => !!account && account?.toLowerCase() === indexer?.toLowerCase(),
@@ -51,8 +53,8 @@ export function useShowMetaMask(): boolean | undefined {
   }, [load]);
 
   useEffect(() => {
-    // FIXME: how to identify `isFetching account`
-    const enable = !pageLoading && (!account || !isIndexer) && !isEmpty(indexer);
+    const metamaskAvailable = isMetaMaskInstalled && isMetaMask;
+    const enable = (!pageLoading && !isIndexer && !isEmpty(indexer)) || !metamaskAvailable;
     setShowMetaMask(enable);
   }, [account, indexer, isIndexer, pageLoading]);
 
