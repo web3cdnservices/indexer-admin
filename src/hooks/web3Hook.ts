@@ -36,7 +36,7 @@ export function useIsMetaMask(): boolean | undefined {
 
 export function useShowMetaMask(): boolean | undefined {
   const { account } = useWeb3();
-  const { pageLoading } = useLoading();
+  const { pageLoading, setPageLoading } = useLoading();
   const { indexer, load } = useCoordinatorIndexer();
   const isMetaMaskInstalled = useIsMetaMaskInstalled();
   const isMetaMask = useIsMetaMask();
@@ -54,6 +54,10 @@ export function useShowMetaMask(): boolean | undefined {
 
   useEffect(() => {
     const metamaskAvailable = isMetaMaskInstalled && isMetaMask;
+    if (!metamaskAvailable) {
+      setPageLoading(false);
+    }
+
     const enable = (!pageLoading && !isIndexer && !isEmpty(indexer)) || !metamaskAvailable;
     setShowMetaMask(enable);
   }, [account, indexer, isIndexer, pageLoading]);
