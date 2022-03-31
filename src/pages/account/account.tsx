@@ -100,19 +100,20 @@ const Registry = () => {
       }
 
       const controllerAddress = bufferToHex(privateToAddress(toBuffer(privateKey)));
-      const isExist = await sdk?.indexerRegistry.isController(controllerAddress);
-      if (isExist) {
-        formHelper.setStatus({ loading: false });
-        formHelper.setErrors({
-          [ControllerFormKey.privateKey]: 'Controller already been used',
-        });
-        return;
-      }
-
       if (controllerAddress === account) {
         formHelper.setStatus({ loading: false });
         formHelper.setErrors({
           [ControllerFormKey.privateKey]: 'Can not use indexer account as controller account',
+        });
+        return;
+      }
+
+      const indexerController = await sdk?.indexerRegistry.indexerToController(account ?? '');
+      const isExist = await sdk?.indexerRegistry.isController(controllerAddress);
+      if (isExist && indexerController !== controllerAddress) {
+        formHelper.setStatus({ loading: false });
+        formHelper.setErrors({
+          [ControllerFormKey.privateKey]: 'Controller already been used',
         });
         return;
       }
