@@ -18,7 +18,7 @@ import { AccountAction, handleTransaction, ProjectAction } from 'utils/transacti
 
 import { useSigner } from './web3Hook';
 
-type Callback = () => any | Promise<any> | undefined;
+type Callback = (e?: any) => any | Promise<any> | undefined;
 
 export const useAccountAction = () => {
   const signer = useSigner();
@@ -41,8 +41,8 @@ export const useAccountAction = () => {
         const tx = await sendTx();
         onProcess();
         await handleTransaction(tx, notificationContext, onSuccess);
-      } catch {
-        onProcess();
+      } catch (e) {
+        onProcess(e);
       }
     },
     [accountTransactions]
@@ -70,8 +70,8 @@ export const useIndexingAction = (id: string) => {
         const tx = await sendTx();
         onProcess();
         await handleTransaction(tx, notificationContext, onSuccess);
-      } catch {
-        onProcess();
+      } catch (e) {
+        onProcess(e);
       }
     },
     [indexingTransactions]
