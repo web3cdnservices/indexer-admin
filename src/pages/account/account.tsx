@@ -119,6 +119,7 @@ const Registry = () => {
       }
 
       setController(controllerAddress);
+
       try {
         await updateController({ variables: { controller: privateKey } });
         setCurrentStep(1);
@@ -148,7 +149,7 @@ const Registry = () => {
 
   const steps = useMemo(
     () => ({ ...controllerSteps, ...unregisterStep, ...updateMetadataStep }),
-    [metadata]
+    [metadata, inputController]
   );
 
   return (

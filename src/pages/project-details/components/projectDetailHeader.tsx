@@ -20,7 +20,7 @@ import { ProjectFormKey } from 'types/schemas';
 import { cidToBytes32 } from 'utils/ipfs';
 import { ProjectNotification } from 'utils/notification';
 import { START_PROJECT, STOP_PROJECT } from 'utils/queries';
-import { ProjectAction } from 'utils/transactions';
+import { ProjectAction, txErrorNotification } from 'utils/transactions';
 
 import {
   aletMessages,
@@ -59,9 +59,11 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
   const [startProjectRequest, { loading: startProjectLoading }] = useMutation(START_PROJECT);
   const [stopProjectRequest, { loading: stopProjectLoading }] = useMutation(STOP_PROJECT);
 
-  const onModalClose = () => {
+  const onModalClose = (e?: any) => {
     setVisible(false);
     setCurrentStep(0);
+
+    e && dispatchNotification(txErrorNotification(e.data.message));
   };
 
   const loading = useMemo(
