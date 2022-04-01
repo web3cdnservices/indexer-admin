@@ -3,7 +3,6 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { bufferToHex, privateToAddress, toBuffer } from 'ethereumjs-util';
 import { isUndefined } from 'lodash';
 
 import AccountCard from 'components/accountCard';
@@ -11,6 +10,7 @@ import ModalView from 'components/modalView';
 import { useContractSDK } from 'containers/contractSdk';
 import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useLoading } from 'containers/loadingContext';
+import { useNotification } from 'containers/notificationContext';
 import {
   useBalance,
   useController,
@@ -24,9 +24,10 @@ import { ControllerFormKey, MetadataFormKey } from 'types/schemas';
 import { createIndexerMetadata } from 'utils/ipfs';
 import { REMOVE_ACCOUNTS, UPDAET_CONTROLLER } from 'utils/queries';
 import { AccountAction } from 'utils/transactions';
-import { validatePrivateKey } from 'utils/validateService';
+import { privateToAddress, validateController } from 'utils/validateService';
 
 import {
+  configControllerSucceed,
   createButonItem,
   createControllerSteps,
   createUnregisterSteps,
@@ -53,6 +54,7 @@ const Registry = () => {
   const { controller, getController } = useController();
   const controllerBalance = useBalance(controller);
   const indexerBalance = useBalance(account);
+  const { dispatchNotification } = useNotification();
   const [updateController] = useMutation(UPDAET_CONTROLLER);
   const [removeAccounts] = useMutation(REMOVE_ACCOUNTS);
   const { setPageLoading } = useLoading();
@@ -60,9 +62,6 @@ const Registry = () => {
   prompts.controller.desc = `Balance ${controllerBalance} DEV`;
   const controllerItem = !controller ? prompts.emptyController : prompts.controller;
   const indexerItem = prompts.indexer;
-
-  // FIXME:
-  // const { dispatchNotification } = useNotification();
 
   useEffect(() => {
     setPageLoading(isUndefined(account) || isUndefined(indexer));
@@ -89,32 +88,16 @@ const Registry = () => {
 
   const controllerSteps = createControllerSteps(
     async (values, formHelper) => {
-      // TODO: move this logic to helper functions
       formHelper.setStatus({ loading: true });
       const privateKey = values[ControllerFormKey.privateKey];
-      const error = validatePrivateKey(privateKey);
+      const controllerAddress = privateToAddress(privateKey);
+      const indexerController = await sdk?.indexerRegistry.indexerToController(account ?? '');
+      const isExist = await sdk?.indexerRegistry.isController(controllerAddress);
+
+      const error = validateController(privateKey, isExist, account ?? '', indexerController);
       if (error) {
         formHelper.setStatus({ loading: false });
         formHelper.setErrors({ [ControllerFormKey.privateKey]: error });
-        return;
-      }
-
-      const controllerAddress = bufferToHex(privateToAddress(toBuffer(privateKey)));
-      if (controllerAddress === account?.toLowerCase()) {
-        formHelper.setStatus({ loading: false });
-        formHelper.setErrors({
-          [ControllerFormKey.privateKey]: 'Can not use indexer account as controller account',
-        });
-        return;
-      }
-
-      const indexerController = await sdk?.indexerRegistry.indexerToController(account ?? '');
-      const isExist = await sdk?.indexerRegistry.isController(controllerAddress);
-      if (isExist && indexerController?.toLowerCase() !== controllerAddress) {
-        formHelper.setStatus({ loading: false });
-        formHelper.setErrors({
-          [ControllerFormKey.privateKey]: 'Controller already been used',
-        });
         return;
       }
 
@@ -122,6 +105,7 @@ const Registry = () => {
 
       try {
         await updateController({ variables: { controller: privateKey } });
+        dispatchNotification(configControllerSucceed(controllerAddress));
         setCurrentStep(1);
       } catch {
         onModalClose();
