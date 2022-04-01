@@ -29,7 +29,7 @@ export function isFalse(value: boolean | string | undefined) {
 }
 
 export function privateToAddress(key: string) {
-  if (!validatePrivateKey(key)) return '';
+  if (validatePrivateKey(key)) return '';
   return bufferToHex(privateToAddressBuffer(toBuffer(key)));
 }
 

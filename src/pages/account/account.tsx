@@ -74,7 +74,7 @@ const Registry = () => {
 
   const onModalClose = () => {
     setVisible(false);
-    setCurrentStep(0);
+    setTimeout(() => setCurrentStep(0), 1000);
   };
 
   const indexerName = useMemo(() => metadata?.name ?? ' ', [metadata]);
@@ -92,7 +92,8 @@ const Registry = () => {
       const privateKey = values[ControllerFormKey.privateKey];
       const controllerAddress = privateToAddress(privateKey);
       const indexerController = await sdk?.indexerRegistry.indexerToController(account ?? '');
-      const isExist = await sdk?.indexerRegistry.isController(controllerAddress);
+      const isExist =
+        !!controllerAddress && (await sdk?.indexerRegistry.isController(controllerAddress));
 
       const error = validateController(privateKey, isExist, account ?? '', indexerController);
       if (error) {
@@ -102,6 +103,8 @@ const Registry = () => {
       }
 
       setController(controllerAddress);
+
+      console.log('controllerAddress:', controllerAddress);
 
       try {
         await updateController({ variables: { controller: privateKey } });
