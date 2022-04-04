@@ -27,12 +27,12 @@ import { AccountAction } from 'utils/transactions';
 import { privateToAddress, validateController } from 'utils/validateService';
 
 import {
+  AccountActionName,
   configControllerSucceed,
   createButonItem,
   createControllerSteps,
   createUnregisterSteps,
   createUpdateMetadataSteps,
-  modalTitles,
 } from './config';
 import prompts from './prompts';
 import { Container } from './styles';
@@ -163,7 +163,7 @@ const Registry = () => {
       {actionType && (
         <ModalView
           visible={visible}
-          title={modalTitles[actionType]}
+          title={AccountActionName[actionType]}
           onClose={onModalClose}
           steps={steps[actionType]}
           currentStep={currentStep}

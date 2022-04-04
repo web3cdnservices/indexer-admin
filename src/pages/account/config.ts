@@ -32,7 +32,7 @@ export const createButonItem = (
   };
 };
 
-export const modalTitles = {
+export const AccountActionName = {
   [AccountAction.configCntroller]: 'Config Controller Account',
   [AccountAction.updateMetaData]: 'Update Indexer Metadata',
   [AccountAction.unregister]: 'Unregister Indexer Account',

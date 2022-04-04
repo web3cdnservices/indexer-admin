@@ -44,11 +44,13 @@ const Container = styled.div`
   height: 650px;
   padding: 30px;
   margin-top: 10px;
-  background-color: #121212;
+  background-color: var(--sq-gray900);
+  align-items: center;
 `;
 
 const StyledButton = styled(Button)`
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   height: 30px;
   width: 100px;
+  margin-right: 20px;
 `;

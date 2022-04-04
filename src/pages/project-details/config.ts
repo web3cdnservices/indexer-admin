@@ -63,7 +63,7 @@ export const createButtonItems = (onButtonClick: (type: ProjectAction) => void) 
   ],
 });
 
-export const modalTitles = {
+export const ProjectActionName = {
   [ProjectAction.StartIndexing]: 'Start Indexing Project',
   [ProjectAction.RestartProject]: 'Restart Indexing Project',
   [ProjectAction.AnnounceIndexing]: 'Announce Indexing Project',

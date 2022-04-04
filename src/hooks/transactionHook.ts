@@ -5,7 +5,8 @@ import { useCallback, useMemo } from 'react';
 
 import { useContractSDK } from 'containers/contractSdk';
 import { useNotification } from 'containers/notificationContext';
-import { TransactionType } from 'pages/project-details/config';
+import { AccountActionName } from 'pages/account/config';
+import { ProjectActionName, TransactionType } from 'pages/project-details/config';
 import {
   configController,
   readyIndexing,
@@ -38,9 +39,10 @@ export const useAccountAction = () => {
     async (type: AccountAction, param: string, onProcess: Callback, onSuccess?: Callback) => {
       try {
         const sendTx = accountTransactions(param)[type];
+        const actionName = AccountActionName[type];
         const tx = await sendTx();
         onProcess();
-        await handleTransaction(tx, notificationContext, onSuccess);
+        await handleTransaction(actionName, tx, notificationContext, onSuccess);
       } catch (e) {
         onProcess(e);
       }
@@ -67,9 +69,10 @@ export const useIndexingAction = (id: string) => {
     async (type: TransactionType, onProcess: Callback, onSuccess?: Callback) => {
       try {
         const sendTx = indexingTransactions[type];
+        const actionName = ProjectActionName[type];
         const tx = await sendTx();
         onProcess();
-        await handleTransaction(tx, notificationContext, onSuccess);
+        await handleTransaction(actionName, tx, notificationContext, onSuccess);
       } catch (e) {
         onProcess(e);
       }

@@ -32,8 +32,8 @@ import {
   createStartIndexingSteps,
   createStopIndexingSteps,
   createStopProjectSteps,
-  modalTitles,
   notifications,
+  ProjectActionName,
   ProjectStatus,
 } from '../config';
 import { TQueryMetadata } from '../types';
@@ -169,7 +169,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
 
   const [modalTitle, modalSteps] = useMemo(() => {
     if (!actionType) return ['', []];
-    return [modalTitles[actionType], steps[actionType]];
+    return [ProjectActionName[actionType], steps[actionType]];
   }, [actionType]);
 
   return (
