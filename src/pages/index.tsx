@@ -5,8 +5,9 @@ import Account from './account/account';
 import Footer from './footer/footer';
 import Header from './header/header';
 import Login from './login/loginPage';
+import Network from './network/networkPage';
 import ProjectDetail from './project-details/projectDetailsPage';
 import Projects from './projects/projectsPage';
 import Register from './register/registerPage';
 
-export { Header, Footer, Login, Projects, Account, ProjectDetail, Register };
+export { Header, Footer, Login, Projects, Account, ProjectDetail, Register, Network };

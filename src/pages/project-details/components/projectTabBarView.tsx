@@ -8,8 +8,8 @@ import Tabs from '@mui/material/Tabs';
 import { ProjectDetails } from 'hooks/projectHook';
 import { projectId } from 'utils/project';
 
+import ProjectLogView from '../../../components/logView';
 import ProjectDetailsView from './projectDetailsView';
-import ProjectLogView from './projectLogView';
 
 enum TabbarItem {
   ProjectDetails,
@@ -31,7 +31,7 @@ const ProjectTabbarView: VFC<Props> = ({ id, project }) => {
   const renderContent = useCallback(() => {
     switch (value) {
       case TabbarItem.NodeLog:
-        return <ProjectLogView container={`node_${projectId(id)}`} />;
+        return <ProjectLogView container={`node_${projectId(id)}`} height={650} />;
       default:
         return <ProjectDetailsView id={id} project={project} />;
     }

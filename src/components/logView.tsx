@@ -1,7 +1,7 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { FC, useEffect, useMemo } from 'react';
+import { useEffect, useMemo, VFC } from 'react';
 import { useLazyQuery } from '@apollo/client';
 import { LogViewer } from '@patternfly/react-log-viewer';
 import { Button, Spinner } from '@subql/react-ui';
@@ -9,7 +9,12 @@ import styled from 'styled-components';
 
 import { GET_LOG } from 'utils/queries';
 
-const ProjectLogView: FC<{ container: string }> = ({ container }) => {
+type Props = {
+  container: string;
+  height: number;
+};
+
+const LogView: VFC<Props> = ({ container, height = 650 }) => {
   const [getLog, { loading, data, error }] = useLazyQuery(GET_LOG, {
     fetchPolicy: 'network-only',
   });
@@ -23,25 +28,26 @@ const ProjectLogView: FC<{ container: string }> = ({ container }) => {
     return data?.getLog.log;
   }, [data, loading]);
 
-  // TODO: resolve the dark theme issue
   return (
-    <Container>
+    <Container height={height}>
       <StyledButton
         size="small"
         type="secondary"
         label="Refresh"
         onClick={() => getLog({ variables: { container } })}
       />
-      {!!log && <LogViewer hasLineNumbers height={550} data={log} isTextWrapped theme="dark" />}
+      {!!log && (
+        <LogViewer hasLineNumbers height={height - 100} data={log} isTextWrapped theme="dark" />
+      )}
       {loading && <Spinner />}
     </Container>
   );
 };
 
-export default ProjectLogView;
+export default LogView;
 
-const Container = styled.div`
-  height: 650px;
+const Container = styled.div<{ height: number }>`
+  height: ${({ height }) => height}px;
   padding: 30px;
   margin-top: 10px;
   background-color: var(--sq-gray900);
