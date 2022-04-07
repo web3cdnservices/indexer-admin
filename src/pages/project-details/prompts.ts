@@ -12,7 +12,7 @@ const prompts = {
   },
   restartProject: {
     title: 'Restart Project',
-    desc: 'Restart indexing project will start the previous subquery node service indexing the project and start a query service at the same time, you can see the progress and related information after everything is ready.',
+    desc: 'Restart indexing project will start the previous subquery node service to index the project, and start a query service at the same time. You can see the progress and related information after everything is ready.',
   },
   announceIndexing: {
     title: 'Update Status on Subquery Network',
