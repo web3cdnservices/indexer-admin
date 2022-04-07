@@ -2,18 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /* eslint-disable */
-import { isValidPrivate, toBuffer } from 'ethereumjs-util';
+import { isValidPrivate, bufferToHex, privateToAddress as privateToAddressBuffer, toBuffer } from 'ethereumjs-util';
 import { isUndefined } from 'lodash';
-import { createApolloClient } from './apolloClient';
-import { GET_QUERY_METADATA } from './queries';
-
-// verify query service endpoint
-// export async function verifyQueryService(url: string) {
-//   const data = await createApolloClient(`${url}`).query({ query: GET_QUERY_METADATA });
-//   // @ts-ignore
-//   // eslint-disable-next-line dot-notation
-//   return data['_metadata'];
-// }
 
 export function isMetaMaskRejectError(e: Error): boolean {
   return e.message.includes('metamask');
@@ -36,4 +26,27 @@ export function validatePrivateKey(privateKey: string): string {
 
 export function isFalse(value: boolean | string | undefined) {
   return !isUndefined(value) && !value;
+}
+
+export function privateToAddress(key: string) {
+  if (validatePrivateKey(key)) return '';
+  return bufferToHex(privateToAddressBuffer(toBuffer(key)));
+}
+
+export function validateController(key: string, isExist?: boolean, account?: string, indexerController?: string,) {
+  const error = validatePrivateKey(key);
+  if (error) {
+    return error;
+  }
+
+  const controllerAddress = privateToAddress(key);
+  if (controllerAddress === account?.toLowerCase()) {
+    return 'Can not use indexer account as controller account';
+  }
+
+  if (isExist && indexerController?.toLowerCase() !== controllerAddress) {
+    return 'Controller already been used';
+  }
+
+  return '';
 }

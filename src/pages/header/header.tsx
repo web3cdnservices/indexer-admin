@@ -17,6 +17,7 @@ import { Container, LeftContainer, RightContainer } from './styles';
 
 enum TabbarItem {
   account = 'Account',
+  network = 'Network',
   projects = 'Projects',
 }
 
@@ -39,6 +40,7 @@ const Header = () => {
   const isIndexer = useIsIndexer();
   const controller = useController(account);
   const tokenBalance = useTokenBalance(account, pathname);
+
   const activeStyle = { fontWeight: 500, color: '#4388dd' };
   const dropdownStyle = { border: 'unset !important', padding: 15, width: 100 };
 
@@ -64,6 +66,9 @@ const Header = () => {
       <div>
         <TabBar to="/account" activeStyle={activeStyle}>
           {TabbarItem.account}
+        </TabBar>
+        <TabBar to="/network" activeStyle={activeStyle}>
+          {TabbarItem.network}
         </TabBar>
         {controller && (
           <TabBar to="/projects" activeStyle={activeStyle}>
@@ -96,13 +101,6 @@ const Header = () => {
       </LeftContainer>
       {isMetaMask && (
         <RightContainer>
-          {/* <Button
-            type="secondary"
-            label={network}
-            size="small"
-            disabled
-            leftItem={<i className="bi-link-45deg" role="img" aria-label="link" />}
-          /> */}
           <Separator width={30} color="#f6f9fc" />
           {account && renderAddress()}
         </RightContainer>

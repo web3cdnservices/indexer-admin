@@ -10,7 +10,6 @@ import { Button, Text } from 'components/primary';
 import { useLoading } from 'containers/loadingContext';
 import { useIsIndexer } from 'hooks/indexerHook';
 import { ProjectDetails, useProjectDetailList } from 'hooks/projectHook';
-import { useRouter } from 'hooks/routerHook';
 import { ProjectFormKey } from 'types/schemas';
 import { ADD_PROJECT, GET_PROJECTS } from 'utils/queries';
 import { ProjectsAction } from 'utils/transactions';
@@ -27,7 +26,6 @@ const Projects = () => {
   const [addProject, { loading }] = useMutation(ADD_PROJECT);
   const [getProjectList, { data }] = useLazyQuery(GET_PROJECTS, { fetchPolicy: 'network-only' });
   const { projectDetailList } = useProjectDetailList(data);
-  useRouter();
 
   const [visible, setVisible] = useState(false);
 

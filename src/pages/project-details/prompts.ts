@@ -8,7 +8,7 @@ const prompts = {
   },
   stopProject: {
     title: 'Stop Indexing the Project',
-    desc: 'Stop indexing the project will terminate the ndoe and query services, you can restart indexing the project at any time',
+    desc: 'Stop indexing the project will terminate the ndoe and query services, once the services stopped, the service status will change to terminated. You can restart indexing the project at any time.',
   },
   restartProject: {
     title: 'Restart Project',

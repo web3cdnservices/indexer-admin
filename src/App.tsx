@@ -33,6 +33,7 @@ const AppContents = () => {
             <Route component={Pages.Projects} path="/projects" />
             <Route exact component={Pages.ProjectDetail} path="/project/:id" />
             <Route component={Pages.Account} path="/account" />
+            <Route component={Pages.Network} path="/network" />
             <Route component={Pages.Register} path="/register" />
             <Route component={Pages.Login} path="/" />
           </Switch>

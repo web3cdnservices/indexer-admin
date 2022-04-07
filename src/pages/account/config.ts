@@ -1,6 +1,7 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import { Notification } from 'containers/notificationContext';
 import {
   ControllerFormKey,
   ControllerFormSchema,
@@ -9,6 +10,7 @@ import {
   MetadataFormKey,
   MetadataFormSchema,
 } from 'types/schemas';
+import { dismiss } from 'utils/notification';
 import { AccountAction, ClickAction, FormSubmit } from 'utils/transactions';
 
 import { IndexerMetadata } from './types';
@@ -30,7 +32,7 @@ export const createButonItem = (
   };
 };
 
-export const modalTitles = {
+export const AccountActionName = {
   [AccountAction.configCntroller]: 'Config Controller Account',
   [AccountAction.updateMetaData]: 'Update Indexer Metadata',
   [AccountAction.unregister]: 'Unregister Indexer Account',
@@ -106,4 +108,13 @@ export const createUpdateMetadataSteps = (onUpdate: FormSubmit, metadata?: Index
       },
     },
   ],
+});
+
+// notifications
+
+export const configControllerSucceed = (controller: string): Notification => ({
+  type: 'success',
+  title: 'Sync Controller Succeed',
+  message: `Config controller: ${controller} in coordinator service successfully`,
+  dismiss: dismiss(),
 });

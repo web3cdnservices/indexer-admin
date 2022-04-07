@@ -39,20 +39,20 @@ const formatHash = (hash: string) => {
   return `${hash.substring(0, 15)}...${hash.substring(len - 16, len - 1)}`;
 };
 
-export function txLoadingNotification(txHash: string): Notification {
+export function txLoadingNotification(title: string, txHash: string): Notification {
   return {
-    type: 'info',
-    title: 'Processing Transaction',
-    message: `May take around 20s to be processed: ${formatHash(txHash)}`,
+    type: 'default',
+    title,
+    message: `Processing transaction may take around 20s to be processed: ${formatHash(txHash)}`,
     dismiss: dismiss(50000, true),
   };
 }
 
-export function txSuccessNotification(): Notification {
+export function txSuccessNotification(name: string): Notification {
   return {
     type: 'success',
     title: 'Transaction Succeed',
-    message: 'Transaction processed',
+    message: `${name.toLowerCase()} completed`,
     dismiss: dismiss(),
   };
 }
@@ -67,13 +67,14 @@ export function txErrorNotification(message: string): Notification {
 }
 
 export async function handleTransaction(
+  name: string,
   tx: ContractTransaction,
   notificationContext: notificationContext,
   onSuccess?: () => void,
   onError?: () => void
 ) {
   const { dispatchNotification, removeNotification } = notificationContext;
-  const loadingId = dispatchNotification(txLoadingNotification(tx.hash));
+  const loadingId = dispatchNotification(txLoadingNotification(name, tx.hash));
 
   try {
     const receipt = await tx.wait(1);
@@ -82,7 +83,7 @@ export async function handleTransaction(
       dispatchNotification(txErrorNotification(tx.hash));
     } else {
       onSuccess && onSuccess();
-      dispatchNotification(txSuccessNotification());
+      dispatchNotification(txSuccessNotification(name));
     }
     removeNotification(loadingId);
   } catch (e) {

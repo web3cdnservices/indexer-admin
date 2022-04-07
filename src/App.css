@@ -33,8 +33,40 @@
 
 .pf-c-log-viewer__text {
   color: white;
+  font-size: var(--sq-font-body);
 }
 
 .pf-c-log-viewer__index {
   color: white;
+  font-size: var(--sq-font-body);
+}
+
+.rnc__notification-title {
+  color: var(--sq-gray900);
+  font-size: var(--sq-font-body);
+}
+
+.rnc__notification-message {
+  color: var(--sq-gray600);
+  font-size: var(--sq-font-medium);
+}
+
+.rnc__notification-item--success {
+  background-color: var(--sq-gray100);
+  border-left: 8px solid var(--sq-success);
+}
+
+.rnc__notification-item--default {
+  background-color: var(--sq-gray100);
+  border-left: 8px solid var(--sq-info);
+}
+
+.rnc__notification-item--warning {
+  background-color: var(--sq-gray100);
+  border-left: 8px solid var(--sq-warning);
+}
+
+.rnc__notification-item--danger {
+  background-color: var(--sq-gray100);;
+  border-left: 8px solid var(--sq-error);;
 }

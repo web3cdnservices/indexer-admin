@@ -217,7 +217,6 @@ export function useProjectDetailList(data: any) {
           .map(([detail, metadata, status]) => ({ ...detail, status, metadata }))
           .filter(({ id }) => !!id)
       );
-      setPageLoading(false);
     } catch (e) {
       console.error('Get project details failed:', e);
       setPageLoading(false);
