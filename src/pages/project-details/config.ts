@@ -4,10 +4,9 @@
 import { Notification } from 'containers/notificationContext';
 import { initialIndexingValues, ProjectFormKey, StartIndexingSchema } from 'types/schemas';
 import { dismiss, ProjectNotification } from 'utils/notification';
-import { ClickAction, FormSubmit, ProjectAction } from 'utils/transactions';
 
 import prompts from './prompts';
-import { ProjectConfig, ProjectStatus } from './types';
+import { ClickAction, FormSubmit, ProjectAction, ProjectConfig, ProjectStatus } from './types';
 
 type ButtonItem = {
   title: string;

@@ -1,9 +1,8 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { IndexingStatus } from 'pages/project-details/types';
+import { FormSubmit, IndexingStatus, ProjectsAction } from 'pages/project-details/types';
 import { initialProjectValues, ProjectFormKey, ProjectFormSchema } from 'types/schemas';
-import { FormSubmit, ProjectsAction } from 'utils/transactions';
 
 export const statusColor = {
   [IndexingStatus.NOTINDEXING]: 'rgba(214, 48, 48, 0.3)',

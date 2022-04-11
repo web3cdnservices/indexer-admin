@@ -7,7 +7,7 @@ import { useContractSDK } from 'containers/contractSdk';
 import { useNotification } from 'containers/notificationContext';
 import { AccountActionName } from 'pages/account/config';
 import { ProjectActionName } from 'pages/project-details/config';
-import { TransactionType } from 'pages/project-details/types';
+import { AccountAction, ProjectAction, TransactionType } from 'pages/project-details/types';
 import {
   configController,
   readyIndexing,
@@ -16,7 +16,7 @@ import {
   unRegister,
   updateMetadata,
 } from 'utils/indexerActions';
-import { AccountAction, handleTransaction, ProjectAction } from 'utils/transactions';
+import { handleTransaction } from 'utils/transactions';
 
 import { useSigner } from './web3Hook';
 

@@ -26,15 +26,29 @@ export const ADD_INDEXER = gql`
 `;
 
 export const START_PROJECT = gql`
-  mutation StartProject($networkEndpoint: String!, $networkDictionary: String!, $id: String!) {
+  mutation StartProject(
+    $poiEnabled: Boolean!
+    $queryVersion: String!
+    $nodeVersion: String!
+    $networkDictionary: String!
+    $networkEndpoint: String!
+    $id: String!
+  ) {
     startProject(
-      networkEndpoint: $networkEndpoint
+      poiEnabled: $poiEnabled
+      queryVersion: $queryVersion
+      nodeVersion: $nodeVersion
       networkDictionary: $networkDictionary
+      networkEndpoint: $networkEndpoint
       id: $id
     ) {
       id
       status
       networkEndpoint
+      networkDictionary
+      nodeVersion
+      queryVersion
+      poiEnabled
       nodeEndpoint
       queryEndpoint
     }

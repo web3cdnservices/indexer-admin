@@ -8,10 +8,10 @@ import { Form, Formik, FormikValues } from 'formik';
 import styled from 'styled-components';
 import { ObjectSchema } from 'yup';
 
+import { ClickAction, FormSubmit, ModalAction } from 'pages/project-details/types';
 import { RegistrySteps } from 'pages/register/styles';
 import { getStepStatus } from 'pages/register/utils';
 import cross from 'resources/cross.svg';
-import { ClickAction, FormSubmit, ModalAction } from 'utils/transactions';
 
 import { FieldItem } from './formItem';
 import Icon from './Icon';

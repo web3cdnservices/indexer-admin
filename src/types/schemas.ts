@@ -23,8 +23,8 @@ export const RegisterFormSchema = yup.object({
     .defined(),
   [RegisterFormKey.rate]: yup
     .number()
-    .min(0, `Rate should be between 0 and 100`)
-    .max(100, `Rate should be between 0 and 100`)
+    .min(0, 'Rate should be between 0 and 100')
+    .max(100, 'Rate should be between 0 and 100')
     .defined(),
 });
 
