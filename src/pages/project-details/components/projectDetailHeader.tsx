@@ -15,7 +15,6 @@ import { TagItem } from 'components/tagItem';
 import { useNotification } from 'containers/notificationContext';
 import { ProjectDetails, useProjectService } from 'hooks/projectHook';
 import { useIndexingAction } from 'hooks/transactionHook';
-import { IndexingStatus } from 'pages/projects/constant';
 import { ProjectFormKey } from 'types/schemas';
 import { cidToBytes32 } from 'utils/ipfs';
 import { ProjectNotification } from 'utils/notification';
@@ -34,9 +33,8 @@ import {
   createStopProjectSteps,
   notifications,
   ProjectActionName,
-  ProjectStatus,
 } from '../config';
-import { TQueryMetadata } from '../types';
+import { IndexingStatus, ProjectStatus, TQueryMetadata } from '../types';
 
 type Props = {
   id: string;
@@ -47,8 +45,6 @@ type Props = {
 };
 
 const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateChanged }) => {
-  // TODO: 1. only progress reach `100%` can display `publish to ready` button
-
   const [visible, setVisible] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [actionType, setActionType] = useState<ProjectAction>();
@@ -59,11 +55,13 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
   const [startProjectRequest, { loading: startProjectLoading }] = useMutation(START_PROJECT);
   const [stopProjectRequest, { loading: stopProjectLoading }] = useMutation(STOP_PROJECT);
 
-  const onModalClose = (e?: any) => {
+  const onModalClose = (error?: any) => {
     setVisible(false);
     setCurrentStep(0);
 
-    e && dispatchNotification(txErrorNotification(e.data.message));
+    if (error) {
+      dispatchNotification(txErrorNotification(error.data.message));
+    }
   };
 
   const loading = useMemo(

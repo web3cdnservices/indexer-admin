@@ -106,6 +106,9 @@ export const GET_PROJECT = gql`
       queryEndpoint
       networkEndpoint
       networkDictionary
+      nodeVersion
+      queryVersion
+      poiEnabled
     }
   }
 `;
@@ -119,6 +122,9 @@ export const GET_PROJECTS = gql`
       queryEndpoint
       networkEndpoint
       networkDictionary
+      nodeVersion
+      queryVersion
+      poiEnabled
     }
   }
 `;

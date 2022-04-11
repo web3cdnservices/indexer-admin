@@ -9,9 +9,9 @@ import styled from 'styled-components';
 import { Text } from 'components/primary';
 import StatusLabel from 'components/statusLabel';
 import { TagItem } from 'components/tagItem';
-import { IndexingStatus, statusColor, statusText } from 'pages/projects/constant';
+import { statusColor, statusText } from 'pages/projects/constant';
 
-import { TQueryMetadata } from '../types';
+import { IndexingStatus, TQueryMetadata } from '../types';
 
 const Container = styled.div<{ mb?: number }>`
   display: flex;

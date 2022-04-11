@@ -2,29 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Notification } from 'containers/notificationContext';
-import {
-  IndexingEndpoint,
-  initialIndexingValues,
-  ProjectFormKey,
-  StartIndexingSchema,
-} from 'types/schemas';
+import { initialIndexingValues, ProjectFormKey, StartIndexingSchema } from 'types/schemas';
 import { dismiss, ProjectNotification } from 'utils/notification';
 import { ClickAction, FormSubmit, ProjectAction } from 'utils/transactions';
 
 import prompts from './prompts';
-
-export enum ProjectStatus {
-  NotIndexing = 'NOT INDEXING',
-  Started = 'STARTED',
-  Indexing = 'INDEXING',
-  Ready = 'READY',
-  Terminated = 'TERMINATED',
-}
-
-export type TransactionType =
-  | ProjectAction.AnnounceIndexing
-  | ProjectAction.AnnounceReady
-  | ProjectAction.AnnounceNotIndexing;
+import { ProjectConfig, ProjectStatus } from './types';
 
 type ButtonItem = {
   title: string;
@@ -73,8 +56,8 @@ export const ProjectActionName = {
   [ProjectAction.StopIndexing]: 'Stop Indexing',
 };
 
-const startProjectForms = (endpoint: IndexingEndpoint, onFormSubmit: FormSubmit) => ({
-  formValues: initialIndexingValues(endpoint),
+const startProjectForms = (config: ProjectConfig, onFormSubmit: FormSubmit) => ({
+  formValues: initialIndexingValues(config),
   schema: StartIndexingSchema,
   onFormSubmit,
   items: [
@@ -88,36 +71,45 @@ const startProjectForms = (endpoint: IndexingEndpoint, onFormSubmit: FormSubmit)
       title: 'Network Dictionary Endpiont',
       placeholder: 'https://api.subquery.network/sq/subquery/dictionary-polkadot',
     },
+    {
+      formKey: ProjectFormKey.nodeVersion,
+      title: 'Node Image Version',
+      placeholder: 'v0.31.1',
+    },
+    {
+      formKey: ProjectFormKey.queryVersion,
+      title: 'Query Image Version',
+      placeholder: 'v0.13.0',
+    },
+    {
+      formKey: ProjectFormKey.poiEnabled,
+      title: 'Enable POI',
+      placeholder: false,
+    },
   ],
 });
 
-export const createStartIndexingSteps = (
-  endpoint: IndexingEndpoint,
-  onStartProject: FormSubmit
-) => ({
+export const createStartIndexingSteps = (config: ProjectConfig, onStartProject: FormSubmit) => ({
   [ProjectAction.StartIndexing]: [
     {
       index: 0,
       title: prompts.startProject.title,
       desc: prompts.startProject.desc,
       buttonTitle: 'Indexing Project',
-      form: startProjectForms(endpoint, onStartProject),
+      form: startProjectForms(config, onStartProject),
       onClick: onStartProject,
     },
   ],
 });
 
-export const createRestartProjectSteps = (
-  endpoint: IndexingEndpoint,
-  onStartProject: FormSubmit
-) => ({
+export const createRestartProjectSteps = (config: ProjectConfig, onStartProject: FormSubmit) => ({
   [ProjectAction.RestartProject]: [
     {
       index: 0,
       title: prompts.restartProject.title,
       desc: prompts.restartProject.desc,
       buttonTitle: 'Restart Project',
-      form: startProjectForms(endpoint, onStartProject),
+      form: startProjectForms(config, onStartProject),
     },
   ],
 });

@@ -9,8 +9,11 @@ import { useContractSDK } from 'containers/contractSdk';
 import { useLoading } from 'containers/loadingContext';
 import { useNotification } from 'containers/notificationContext';
 import { useWeb3 } from 'hooks/web3Hook';
-import { ProjectServiceMetadata, TQueryMetadata } from 'pages/project-details/types';
-import { IndexingStatus } from 'pages/projects/constant';
+import {
+  IndexingStatus,
+  ProjectServiceMetadata,
+  TQueryMetadata,
+} from 'pages/project-details/types';
 import { coordinatorServiceUrl, createApolloClient } from 'utils/apolloClient';
 import { cidToBytes32, getMetadata } from 'utils/ipfs';
 import { GET_PROJECT, GET_PROJECT_DETAILS, GET_QUERY_METADATA } from 'utils/queries';
