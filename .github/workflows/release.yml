@@ -17,6 +17,8 @@ jobs:
     if: "!startsWith(github.event.head_commit.message, '[SKIP CI]') && startsWith(github.event.head_commit.message, '[release]')"
 
     # Steps represent a sequence of tasks that will be executed as part of the job
+    env:
+      SENTRY_DSN: ${{ secrets.PROD_SENTRY_DSN }}
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
