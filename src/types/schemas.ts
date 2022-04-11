@@ -104,7 +104,7 @@ export const StartIndexingSchema = yup.object({
   [ProjectFormKey.networkDictionary]: yup.string().optional(),
   [ProjectFormKey.nodeVersion]: yup.string().defined(),
   [ProjectFormKey.queryVersion]: yup.string().defined(),
-  [ProjectFormKey.poiEnabled]: yup.bool().required(),
+  [ProjectFormKey.poiEnabled]: yup.boolean().required(),
 });
 
 export type IndexingEndpoint = yup.Asserts<typeof StartIndexingSchema>;

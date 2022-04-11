@@ -59,7 +59,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
     setVisible(false);
     setCurrentStep(0);
 
-    if (error) {
+    if (error?.data?.message) {
       dispatchNotification(txErrorNotification(error.data.message));
     }
   };

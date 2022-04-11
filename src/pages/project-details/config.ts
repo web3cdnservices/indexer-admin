@@ -83,7 +83,7 @@ const startProjectForms = (config: ProjectConfig, onFormSubmit: FormSubmit) => (
     {
       formKey: ProjectFormKey.poiEnabled,
       title: 'Enable POI',
-      placeholder: false,
+      options: ['true', 'false'],
     },
   ],
 });

@@ -22,6 +22,7 @@ export type TFieldItem = {
   formKey: string;
   value?: string | number;
   placeholder?: string;
+  options?: string[];
 };
 
 export type FormConfig = {
@@ -92,16 +93,19 @@ const ModalView: FC<Props> = ({
         {({ status, errors, submitForm }) => (
           <InputForm>
             <div>
-              {item.form?.items.map(({ title, formKey = '', value = '', placeholder = '' }) => (
-                <FieldItem
-                  key={title}
-                  title={title}
-                  fieldKey={formKey}
-                  value={value}
-                  placeholder={placeholder}
-                  errors={errors}
-                />
-              ))}
+              {item.form?.items.map(
+                ({ title, formKey = '', value = '', placeholder = '', options }) => (
+                  <FieldItem
+                    key={title}
+                    title={title}
+                    fieldKey={formKey}
+                    value={value}
+                    placeholder={placeholder}
+                    options={options}
+                    errors={errors}
+                  />
+                )
+              )}
               {item.desc && (
                 <Text mt={20} size={13} color="gray">
                   {item.desc}
