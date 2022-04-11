@@ -23,6 +23,7 @@ const createButtonItem = (title: string, action: () => void, color?: string): Bu
 export const createButtonItems = (onButtonClick: (type: ProjectAction) => void) => ({
   [ProjectStatus.NotIndexing]: [
     createButtonItem('Start Indexing', () => onButtonClick(ProjectAction.StartIndexing)),
+    createButtonItem('Remove Project', () => onButtonClick(ProjectAction.RemoveProject)),
   ],
   [ProjectStatus.Started]: [
     createButtonItem('Announce Indexing', () => onButtonClick(ProjectAction.AnnounceIndexing)),
@@ -51,6 +52,7 @@ export const ProjectActionName = {
   [ProjectAction.AnnounceIndexing]: 'Announce Indexing Project',
   [ProjectAction.AnnounceReady]: 'Publish Indexing to Ready',
   [ProjectAction.StopProject]: 'Stop Project',
+  [ProjectAction.RemoveProject]: 'Remove Project',
   [ProjectAction.AnnounceNotIndexing]: 'Announce Not Indexing Project',
   [ProjectAction.StopIndexing]: 'Stop Indexing',
 };
@@ -96,7 +98,7 @@ export const createStartIndexingSteps = (config: ProjectConfig, onStartProject: 
       index: 0,
       title: prompts.startProject.title,
       desc: prompts.startProject.desc,
-      buttonTitle: 'Indexing Project',
+      buttonTitle: 'Confirm',
       form: startProjectForms(config, onStartProject),
       onClick: onStartProject,
     },
@@ -109,8 +111,20 @@ export const createRestartProjectSteps = (config: ProjectConfig, onStartProject:
       index: 0,
       title: prompts.restartProject.title,
       desc: prompts.restartProject.desc,
-      buttonTitle: 'Restart Project',
+      buttonTitle: 'Confirm',
       form: startProjectForms(config, onStartProject),
+    },
+  ],
+});
+
+export const createRemoveProjectSteps = (onRemoveProject: ClickAction) => ({
+  [ProjectAction.RemoveProject]: [
+    {
+      index: 0,
+      title: prompts.removeProject.title,
+      desc: prompts.removeProject.desc,
+      buttonTitle: 'Confirm',
+      onClick: onRemoveProject,
     },
   ],
 });
@@ -157,7 +171,7 @@ export const createStopProjectSteps = (onStopProject: ClickAction) => ({
       index: 0,
       title: prompts.stopProject.title,
       desc: prompts.stopProject.desc,
-      buttonTitle: 'Stop Project',
+      buttonTitle: 'Confirm',
       onClick: onStopProject,
     },
   ],
@@ -172,7 +186,7 @@ export const createStopIndexingSteps = (
       index: 0,
       title: prompts.stopProject.title,
       desc: prompts.stopProject.desc,
-      buttonTitle: 'Stop Indexing',
+      buttonTitle: 'Confirm',
       onClick: onStopProject,
     },
     {

@@ -16,7 +16,7 @@ export function txLoadingNotification(title: string, txHash: string): Notificati
   return {
     type: 'default',
     title,
-    message: `Processing transaction may take around 20s to be processed: ${formatHash(txHash)}`,
+    message: `Processing transaction may take around 20s: ${formatHash(txHash)}`,
     dismiss: dismiss(50000, true),
   };
 }

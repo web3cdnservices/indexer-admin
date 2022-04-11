@@ -40,6 +40,7 @@ export enum ProjectAction {
   StopProject = 'StopProject',
   AnnounceNotIndexing = 'AnnounceNotIndexing',
   StopIndexing = 'StopIndexing',
+  RemoveProject = 'Remove Project',
 }
 
 export type ModalAction = AccountAction | ProjectsAction | ProjectAction;
