@@ -4,6 +4,7 @@
 import * as yup from 'yup';
 
 import { IndexerMetadata } from 'pages/account/types';
+import { ProjectConfig } from 'pages/project-details/types';
 
 // indexer register
 export enum RegisterFormKey {
@@ -22,8 +23,8 @@ export const RegisterFormSchema = yup.object({
     .defined(),
   [RegisterFormKey.rate]: yup
     .number()
-    .min(0, `Rate should be between 0 and 100`)
-    .max(100, `Rate should be between 0 and 100`)
+    .min(0, 'Rate should be between 0 and 100')
+    .max(100, 'Rate should be between 0 and 100')
     .defined(),
 });
 
@@ -72,6 +73,9 @@ export enum ProjectFormKey {
   deploymentId = 'deploymentId',
   networkEndpoint = 'networkEndpoint',
   networkDictionary = 'networkDictionary',
+  nodeVersion = 'nodeVersion',
+  queryVersion = 'queryVersion',
+  poiEnabled = 'poiEnabled',
 }
 
 export const CIDv0 = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}/i);
@@ -87,14 +91,20 @@ export const initialProjectValues = {
 };
 
 // start indexing project
-export const initialIndexingValues = (endpoint: IndexingEndpoint) => ({
-  [ProjectFormKey.networkEndpoint]: endpoint.networkEndpoint,
-  [ProjectFormKey.networkDictionary]: endpoint.networkDictionary ?? '',
+export const initialIndexingValues = (config: ProjectConfig) => ({
+  [ProjectFormKey.networkEndpoint]: config.networkEndpoint,
+  [ProjectFormKey.networkDictionary]: config.networkDictionary ?? '',
+  [ProjectFormKey.nodeVersion]: config.nodeVersion,
+  [ProjectFormKey.queryVersion]: config.queryVersion,
+  [ProjectFormKey.poiEnabled]: config.poiEnabled,
 });
 
 export const StartIndexingSchema = yup.object({
   [ProjectFormKey.networkEndpoint]: yup.string().defined(),
   [ProjectFormKey.networkDictionary]: yup.string().optional(),
+  [ProjectFormKey.nodeVersion]: yup.string().defined(),
+  [ProjectFormKey.queryVersion]: yup.string().defined(),
+  [ProjectFormKey.poiEnabled]: yup.boolean().required(),
 });
 
 export type IndexingEndpoint = yup.Asserts<typeof StartIndexingSchema>;

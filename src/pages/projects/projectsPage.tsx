@@ -10,9 +10,9 @@ import { Button, Text } from 'components/primary';
 import { useLoading } from 'containers/loadingContext';
 import { useIsIndexer } from 'hooks/indexerHook';
 import { ProjectDetails, useProjectDetailList } from 'hooks/projectHook';
+import { ProjectsAction } from 'pages/project-details/types';
 import { ProjectFormKey } from 'types/schemas';
 import { ADD_PROJECT, GET_PROJECTS } from 'utils/queries';
-import { ProjectsAction } from 'utils/transactions';
 
 import ProjecItemsHeader from './components/projecItemsHeader';
 import ProjectItem from './components/projectItem';

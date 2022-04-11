@@ -15,12 +15,11 @@ import { TagItem } from 'components/tagItem';
 import { useNotification } from 'containers/notificationContext';
 import { ProjectDetails, useProjectService } from 'hooks/projectHook';
 import { useIndexingAction } from 'hooks/transactionHook';
-import { IndexingStatus } from 'pages/projects/constant';
 import { ProjectFormKey } from 'types/schemas';
 import { cidToBytes32 } from 'utils/ipfs';
 import { ProjectNotification } from 'utils/notification';
 import { START_PROJECT, STOP_PROJECT } from 'utils/queries';
-import { ProjectAction, txErrorNotification } from 'utils/transactions';
+import { txErrorNotification } from 'utils/transactions';
 
 import {
   aletMessages,
@@ -34,9 +33,8 @@ import {
   createStopProjectSteps,
   notifications,
   ProjectActionName,
-  ProjectStatus,
 } from '../config';
-import { TQueryMetadata } from '../types';
+import { IndexingStatus, ProjectAction, ProjectStatus, TQueryMetadata } from '../types';
 
 type Props = {
   id: string;
@@ -47,23 +45,23 @@ type Props = {
 };
 
 const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateChanged }) => {
-  // TODO: 1. only progress reach `100%` can display `publish to ready` button
-
   const [visible, setVisible] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [actionType, setActionType] = useState<ProjectAction>();
 
   const indexingAction = useIndexingAction(id);
-  const projectConfig = useProjectService(id);
+  const projectService = useProjectService(id);
   const { dispatchNotification } = useNotification();
   const [startProjectRequest, { loading: startProjectLoading }] = useMutation(START_PROJECT);
   const [stopProjectRequest, { loading: stopProjectLoading }] = useMutation(STOP_PROJECT);
 
-  const onModalClose = (e?: any) => {
+  const onModalClose = (error?: any) => {
     setVisible(false);
     setCurrentStep(0);
 
-    e && dispatchNotification(txErrorNotification(e.data.message));
+    if (error?.data?.message) {
+      dispatchNotification(txErrorNotification(error.data.message));
+    }
   };
 
   const loading = useMemo(
@@ -103,12 +101,15 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
     return buttonItems[projectStatus];
   }, [projectStatus]);
 
-  const indexingEnpoint = useMemo(
+  const projectConfig = useMemo(
     () => ({
-      networkEndpoint: projectConfig?.networkEndpoint ?? '',
-      networkDictionary: projectConfig?.networkDictionary,
+      networkEndpoint: projectService?.networkEndpoint ?? '',
+      networkDictionary: projectService?.networkDictionary ?? '',
+      nodeVersion: projectService?.nodeVersion ?? '',
+      queryVersion: projectService?.queryVersion ?? '',
+      poiEnabled: projectService?.poiEnabled ?? false,
     }),
-    [projectConfig]
+    [projectService]
   );
 
   const projectStateChange = (
@@ -120,10 +121,10 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
   };
 
   const startProject = async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
-    const networkEndpoint = values[ProjectFormKey.networkEndpoint];
-    const networkDictionary = values[ProjectFormKey.networkDictionary];
     try {
-      await startProjectRequest({ variables: { networkEndpoint, networkDictionary, id } });
+      console.log('values:', values);
+      const poiEnabled = values.poiEnabled === 'true';
+      await startProjectRequest({ variables: { ...values, poiEnabled, id } });
       onModalClose();
       projectStateChange(ProjectNotification.Started);
     } catch (e) {
@@ -141,11 +142,11 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
     }
   };
 
-  const startIndexingSteps = createStartIndexingSteps(indexingEnpoint, startProject);
+  const startIndexingSteps = createStartIndexingSteps(projectConfig, startProject);
   const stopIndexingSteps = createStopIndexingSteps(stopProject, () =>
     indexingAction(ProjectAction.AnnounceNotIndexing, onModalClose)
   );
-  const restartProjectSteps = createRestartProjectSteps(indexingEnpoint, startProject);
+  const restartProjectSteps = createRestartProjectSteps(projectConfig, startProject);
   const stopProjectSteps = createStopProjectSteps(stopProject);
   const announceIndexingSteps = createAnnounceIndexingSteps(() =>
     indexingAction(ProjectAction.AnnounceIndexing, onModalClose)

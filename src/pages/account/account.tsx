@@ -20,10 +20,10 @@ import {
 } from 'hooks/indexerHook';
 import { useAccountAction } from 'hooks/transactionHook';
 import { useIsMetaMask, useWeb3 } from 'hooks/web3Hook';
+import { AccountAction } from 'pages/project-details/types';
 import { ControllerFormKey, MetadataFormKey } from 'types/schemas';
 import { createIndexerMetadata } from 'utils/ipfs';
 import { REMOVE_ACCOUNTS, UPDAET_CONTROLLER } from 'utils/queries';
-import { AccountAction } from 'utils/transactions';
 import { privateToAddress, validateController } from 'utils/validateService';
 
 import {

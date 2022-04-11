@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Notification } from 'containers/notificationContext';
+import { AccountAction, ClickAction, FormSubmit } from 'pages/project-details/types';
 import {
   ControllerFormKey,
   ControllerFormSchema,
@@ -11,7 +12,6 @@ import {
   MetadataFormSchema,
 } from 'types/schemas';
 import { dismiss } from 'utils/notification';
-import { AccountAction, ClickAction, FormSubmit } from 'utils/transactions';
 
 import { IndexerMetadata } from './types';
 

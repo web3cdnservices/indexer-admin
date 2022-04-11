@@ -72,7 +72,7 @@ const ProjectServiceCard: FC<Props> = ({ id, data }) => {
       />
       <ServiceCard
         title="Query Service"
-        subTitle={`Image Version: ${imageVersion('indexer', data.queryNodeVersion)}`}
+        subTitle={`Image Version: ${imageVersion('query', data.queryNodeVersion)}`}
         status={data.queryStatus}
       />
       <ServiceCard

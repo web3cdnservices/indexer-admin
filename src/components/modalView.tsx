@@ -8,10 +8,10 @@ import { Form, Formik, FormikValues } from 'formik';
 import styled from 'styled-components';
 import { ObjectSchema } from 'yup';
 
+import { ClickAction, FormSubmit, ModalAction } from 'pages/project-details/types';
 import { RegistrySteps } from 'pages/register/styles';
 import { getStepStatus } from 'pages/register/utils';
 import cross from 'resources/cross.svg';
-import { ClickAction, FormSubmit, ModalAction } from 'utils/transactions';
 
 import { FieldItem } from './formItem';
 import Icon from './Icon';
@@ -22,6 +22,7 @@ export type TFieldItem = {
   formKey: string;
   value?: string | number;
   placeholder?: string;
+  options?: string[];
 };
 
 export type FormConfig = {
@@ -89,16 +90,18 @@ const ModalView: FC<Props> = ({
         validationSchema={item.form.schema}
         onSubmit={item.form.onFormSubmit}
       >
-        {({ status, errors, submitForm }) => (
+        {({ status, errors, submitForm, setFieldValue, initialValues }) => (
           <InputForm>
             <div>
-              {item.form?.items.map(({ title, formKey = '', value = '', placeholder = '' }) => (
+              {item.form?.items.map(({ title, formKey = '', placeholder = '', options }) => (
                 <FieldItem
                   key={title}
                   title={title}
                   fieldKey={formKey}
-                  value={value}
+                  initialValue={initialValues[formKey]}
                   placeholder={placeholder}
+                  setFieldValue={setFieldValue}
+                  options={options}
                   errors={errors}
                 />
               ))}
