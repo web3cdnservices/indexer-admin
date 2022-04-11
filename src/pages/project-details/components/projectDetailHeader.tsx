@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC, useMemo, useState } from 'react';
+import { useHistory } from 'react-router';
 import { useMutation } from '@apollo/client';
 import { FormikHelpers, FormikValues } from 'formik';
 import { isUndefined } from 'lodash';
@@ -18,7 +19,7 @@ import { useIndexingAction } from 'hooks/transactionHook';
 import { ProjectFormKey } from 'types/schemas';
 import { cidToBytes32 } from 'utils/ipfs';
 import { ProjectNotification } from 'utils/notification';
-import { START_PROJECT, STOP_PROJECT } from 'utils/queries';
+import { REMOVE_PROJECT, START_PROJECT, STOP_PROJECT } from 'utils/queries';
 import { txErrorNotification } from 'utils/transactions';
 
 import {
@@ -27,6 +28,7 @@ import {
   createButtonItems,
   createNotIndexingSteps,
   createReadyIndexingSteps,
+  createRemoveProjectSteps,
   createRestartProjectSteps,
   createStartIndexingSteps,
   createStopIndexingSteps,
@@ -54,6 +56,8 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
   const { dispatchNotification } = useNotification();
   const [startProjectRequest, { loading: startProjectLoading }] = useMutation(START_PROJECT);
   const [stopProjectRequest, { loading: stopProjectLoading }] = useMutation(STOP_PROJECT);
+  const [removeProjectRequest, { loading: removeProjectLoading }] = useMutation(REMOVE_PROJECT);
+  const history = useHistory();
 
   const onModalClose = (error?: any) => {
     setVisible(false);
@@ -65,8 +69,8 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
   };
 
   const loading = useMemo(
-    () => startProjectLoading || stopProjectLoading,
-    [startProjectLoading, stopProjectLoading]
+    () => startProjectLoading || stopProjectLoading || removeProjectLoading,
+    [startProjectLoading, stopProjectLoading, removeProjectLoading]
   );
 
   const projectStatus = useMemo(() => {
@@ -142,12 +146,22 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
     }
   };
 
+  const removeProject = async () => {
+    try {
+      await removeProjectRequest({ variables: { id } });
+      history.replace('/projects');
+    } catch (e) {
+      console.log('fail to remove project', e);
+    }
+  };
+
   const startIndexingSteps = createStartIndexingSteps(projectConfig, startProject);
   const stopIndexingSteps = createStopIndexingSteps(stopProject, () =>
     indexingAction(ProjectAction.AnnounceNotIndexing, onModalClose)
   );
   const restartProjectSteps = createRestartProjectSteps(projectConfig, startProject);
   const stopProjectSteps = createStopProjectSteps(stopProject);
+  const removeProjectSteps = createRemoveProjectSteps(removeProject);
   const announceIndexingSteps = createAnnounceIndexingSteps(() =>
     indexingAction(ProjectAction.AnnounceIndexing, onModalClose)
   );
@@ -163,6 +177,7 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
     ...restartProjectSteps,
     ...stopIndexingSteps,
     ...stopProjectSteps,
+    ...removeProjectSteps,
     ...announceIndexingSteps,
     ...announceReadySteps,
     ...announceNotIndexingSteps,
