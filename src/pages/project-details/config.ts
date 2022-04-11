@@ -73,12 +73,14 @@ const startProjectForms = (config: ProjectConfig, onFormSubmit: FormSubmit) => (
     {
       formKey: ProjectFormKey.nodeVersion,
       title: 'Node Image Version',
-      placeholder: 'v0.31.1',
+      // FIXME: the options should get from project manifest
+      options: ['v0.31.1', 'v0.32.0', 'v0.32.1-1', 'v0.33.0'],
     },
     {
       formKey: ProjectFormKey.queryVersion,
       title: 'Query Image Version',
-      placeholder: 'v0.13.0',
+      // FIXME: the options should get from project manifest
+      options: ['v0.12.0', 'v0.13.0', 'v0.14.0', 'v0.14.1'],
     },
     {
       formKey: ProjectFormKey.poiEnabled,

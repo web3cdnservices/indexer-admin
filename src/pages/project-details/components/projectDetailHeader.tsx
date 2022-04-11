@@ -123,7 +123,8 @@ const ProjectDetailsHeader: FC<Props> = ({ id, status, project, metadata, stateC
   const startProject = async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
     try {
       console.log('values:', values);
-      await startProjectRequest({ variables: { ...values, id } });
+      const poiEnabled = values.poiEnabled === 'true';
+      await startProjectRequest({ variables: { ...values, poiEnabled, id } });
       onModalClose();
       projectStateChange(ProjectNotification.Started);
     } catch (e) {

@@ -30,31 +30,36 @@ type Props = {
   title: string;
   fieldKey: string;
   placeholder?: string;
-  value?: string | number;
+  initialValue?: string | number;
   options?: string[];
+  setFieldValue?: (field: string, value: string | number) => void;
   onChange?: FormikHandlers['handleChange'];
   errors?: FormikErrors<FormikValues>;
 };
 
-export const FieldItem: VFC<Props> = ({ title, value, placeholder, fieldKey, options, errors }) => {
-  const [changedValue, setValue] = useState(value);
+export const FieldItem: VFC<Props> = ({
+  title,
+  initialValue,
+  placeholder,
+  fieldKey,
+  setFieldValue,
+  options,
+  errors,
+}) => {
+  const [value, setValue] = useState(initialValue);
+
   const onFormChange = (event: any) => {
-    console.log('event:', event.target.value);
-    setValue(event.target.value);
+    const currentValue = event.target.value;
+    setFieldValue && setFieldValue(fieldKey, currentValue);
+    setValue(currentValue);
   };
+
   return (
     <Container>
       <Label htmlFor={fieldKey}>{title}</Label>
       {!options && <FormField placeholder={placeholder} name={fieldKey} />}
       {!!options && (
-        <FormField
-          as="select"
-          key={title}
-          name={fieldKey}
-          placeholder={placeholder}
-          onChange={onFormChange}
-          value={changedValue}
-        >
+        <FormField as="select" key={fieldKey} name={fieldKey} onChange={onFormChange} value={value}>
           {options.map((val) => (
             <Option key={val} value={val}>
               {val}

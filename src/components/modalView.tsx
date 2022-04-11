@@ -90,22 +90,21 @@ const ModalView: FC<Props> = ({
         validationSchema={item.form.schema}
         onSubmit={item.form.onFormSubmit}
       >
-        {({ status, errors, submitForm }) => (
+        {({ status, errors, submitForm, setFieldValue, initialValues }) => (
           <InputForm>
             <div>
-              {item.form?.items.map(
-                ({ title, formKey = '', value = '', placeholder = '', options }) => (
-                  <FieldItem
-                    key={title}
-                    title={title}
-                    fieldKey={formKey}
-                    value={value}
-                    placeholder={placeholder}
-                    options={options}
-                    errors={errors}
-                  />
-                )
-              )}
+              {item.form?.items.map(({ title, formKey = '', placeholder = '', options }) => (
+                <FieldItem
+                  key={title}
+                  title={title}
+                  fieldKey={formKey}
+                  initialValue={initialValues[formKey]}
+                  placeholder={placeholder}
+                  setFieldValue={setFieldValue}
+                  options={options}
+                  errors={errors}
+                />
+              ))}
               {item.desc && (
                 <Text mt={20} size={13} color="gray">
                   {item.desc}
