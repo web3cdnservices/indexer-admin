@@ -8,7 +8,7 @@ import { dismiss, ProjectNotification } from 'utils/notification';
 import prompts from './prompts';
 import { ClickAction, FormSubmit, ProjectAction, ProjectConfig, ProjectStatus } from './types';
 
-type ButtonItem = {
+export type ButtonItem = {
   title: string;
   action: () => void;
   color?: string;
@@ -20,18 +20,36 @@ const createButtonItem = (title: string, action: () => void, color?: string): Bu
   color,
 });
 
-export const createButtonItems = (onButtonClick: (type: ProjectAction) => void) => ({
+export const createNetworkButtonItems = (onButtonClick: (type: ProjectAction) => void) => ({
+  [ProjectStatus.NotIndexing]: [],
+  [ProjectStatus.Started]: [
+    createButtonItem('Announce Indexing', () => onButtonClick(ProjectAction.AnnounceIndexing)),
+  ],
+  [ProjectStatus.Indexing]: [
+    createButtonItem('Announce Ready', () => onButtonClick(ProjectAction.AnnounceReady)),
+  ],
+  [ProjectStatus.Ready]: [
+    createButtonItem('Announce NotIndexing', () =>
+      onButtonClick(ProjectAction.AnnounceNotIndexing)
+    ),
+  ],
+  [ProjectStatus.Terminated]: [
+    createButtonItem('Announce NotIndexing', () =>
+      onButtonClick(ProjectAction.AnnounceNotIndexing)
+    ),
+  ],
+});
+
+export const createServiceButtonItems = (onButtonClick: (type: ProjectAction) => void) => ({
   [ProjectStatus.NotIndexing]: [
     createButtonItem('Start Indexing', () => onButtonClick(ProjectAction.StartIndexing)),
     createButtonItem('Remove Project', () => onButtonClick(ProjectAction.RemoveProject)),
   ],
   [ProjectStatus.Started]: [
-    createButtonItem('Announce Indexing', () => onButtonClick(ProjectAction.AnnounceIndexing)),
     createButtonItem('Stop Project', () => onButtonClick(ProjectAction.StopProject)),
   ],
   [ProjectStatus.Indexing]: [
     createButtonItem('Restart Indexing', () => onButtonClick(ProjectAction.RestartProject)),
-    createButtonItem('Announce Ready', () => onButtonClick(ProjectAction.AnnounceReady)),
     createButtonItem('Stop Indexing', () => onButtonClick(ProjectAction.StopIndexing)),
   ],
   [ProjectStatus.Ready]: [
@@ -40,9 +58,7 @@ export const createButtonItems = (onButtonClick: (type: ProjectAction) => void) 
   ],
   [ProjectStatus.Terminated]: [
     createButtonItem('Restart Indexing', () => onButtonClick(ProjectAction.RestartProject)),
-    createButtonItem('Announce NotIndexing', () =>
-      onButtonClick(ProjectAction.AnnounceNotIndexing)
-    ),
+    createButtonItem('Remove Project', () => onButtonClick(ProjectAction.RemoveProject)),
   ],
 });
 

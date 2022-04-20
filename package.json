@@ -21,7 +21,7 @@
     "@patternfly/react-log-viewer": "^4.43.19",
     "@sentry/react": "^6.19.6",
     "@sentry/tracing": "^6.19.6",
-    "@subql/contract-sdk": "0.4.1",
+    "@subql/contract-sdk": "0.5.0",
     "@subql/react-ui": "^1.0.1-21",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -54,6 +54,7 @@
   },
   "devDependencies": {
     "@craco/craco": "^6.4.3",
+    "@sentry/types": "^6.19.6",
     "@types/antd": "^1.0.0",
     "@types/jest": "^26.0.15",
     "@types/lodash": "^4.14.177",

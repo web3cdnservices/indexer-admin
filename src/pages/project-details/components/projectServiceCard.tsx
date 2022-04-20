@@ -5,27 +5,26 @@ import { FC } from 'react';
 import { Tag } from '@subql/react-ui';
 import styled from 'styled-components';
 
-import { Text } from 'components/primary';
+import { Button, Text } from 'components/primary';
 import { proxyServiceUrl } from 'utils/apolloClient';
 import { statusCode } from 'utils/project';
 
+import { ButtonItem } from '../config';
+import { ActionContainer, CardContainer } from '../styles';
 import { TQueryMetadata } from '../types';
 
-const Container = styled.div`
+const ContentContainer = styled.div`
   display: flex;
-  margin-top: 30px;
+  background-color: white;
+  border-radius: 8px;
 `;
 
-const CardContaineer = styled.div`
+const ServiceContaineer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: white;
-  border-radius: 15px;
-  padding: 0px 30px;
-  margin-right: 30px;
-  min-height: 130px;
   min-width: 200px;
+  margin-right: 30px;
 `;
 
 const HeaderContainer = styled.div`
@@ -39,8 +38,8 @@ type CardProps = {
   status?: string;
 };
 
-const ServiceCard: FC<CardProps> = ({ title, subTitle, status }) => (
-  <CardContaineer>
+const ServiceView: FC<CardProps> = ({ title, subTitle, status }) => (
+  <ServiceContaineer>
     <HeaderContainer>
       <Text mr={20} fw="500">
         {title}
@@ -50,37 +49,45 @@ const ServiceCard: FC<CardProps> = ({ title, subTitle, status }) => (
     <Text size={15} color="gray" mt={10}>
       {subTitle}
     </Text>
-  </CardContaineer>
+  </ServiceContaineer>
 );
 
 type Props = {
   id: string;
+  actionItems: ButtonItem[];
   data?: TQueryMetadata;
 };
 
-const ProjectServiceCard: FC<Props> = ({ id, data }) => {
+const ProjectServiceCard: FC<Props> = ({ id, actionItems, data }) => {
   if (!data) return null;
 
   const imageVersion = (type: string, version: string) => `onfinality/subql-${type}:${version}`;
 
   return (
-    <Container>
-      <ServiceCard
-        title="Indexer Service"
-        subTitle={`Image Version: ${imageVersion('indexer', data.indexerNodeVersion)}`}
-        status={data.indexerStatus}
-      />
-      <ServiceCard
-        title="Query Service"
-        subTitle={`Image Version: ${imageVersion('query', data.queryNodeVersion)}`}
-        status={data.queryStatus}
-      />
-      <ServiceCard
-        title="Proxy Service"
-        subTitle={`Url: ${proxyServiceUrl}/query/${id}`}
-        status={data.queryStatus}
-      />
-    </Container>
+    <CardContainer>
+      <ContentContainer>
+        <ServiceView
+          title="Indexer Service"
+          subTitle={`Image Version: ${imageVersion('indexer', data.indexerNodeVersion)}`}
+          status={data.indexerStatus}
+        />
+        <ServiceView
+          title="Query Service"
+          subTitle={`Image Version: ${imageVersion('query', data.queryNodeVersion)}`}
+          status={data.queryStatus}
+        />
+        <ServiceView
+          title="Proxy Service"
+          subTitle={`Url: ${proxyServiceUrl}/query/${id}`}
+          status={data.queryStatus}
+        />
+      </ContentContainer>
+      <ActionContainer>
+        {actionItems.map(({ title, action }) => (
+          <Button mt={10} key={title} width={265} title={title} onClick={action} />
+        ))}
+      </ActionContainer>
+    </CardContainer>
   );
 };
 

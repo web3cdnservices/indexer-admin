@@ -1,6 +1,8 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import { IndexingStatus } from 'pages/project-details/types';
+
 export enum ServiceStatus {
   healthy = 'HEALTHY',
   unhealthy = 'UNHEALTHY',
@@ -16,6 +18,19 @@ export function calculateProgress(targetHeight: number, latestHeight: number): n
 export function statusCode(status: string): 'success' | 'error' {
   if (status === 'HEALTHY' || status === 'STARTING') return 'success';
   return 'error';
+}
+
+export function indexingStatusCode(status: IndexingStatus) {
+  switch (status) {
+    case IndexingStatus.NOTINDEXING:
+      return 'error';
+    case IndexingStatus.INDEXING:
+      return 'info';
+    case IndexingStatus.READY:
+      return 'success';
+    default:
+      return 'error';
+  }
 }
 
 export function projectId(cid: string): string {

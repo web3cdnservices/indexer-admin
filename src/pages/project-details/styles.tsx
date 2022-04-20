@@ -25,3 +25,19 @@ export const ContentContainer = styled.div`
     display: none; /* for Chrome, Safari, and Opera */
   }
 `;
+
+export const CardContainer = styled.div`
+  display: flex;
+  background-color: white;
+  justify-content: space-between;
+  border-radius: 8px;
+  margin-top: 20px;
+  padding: 32px;
+`;
+
+export const ActionContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
