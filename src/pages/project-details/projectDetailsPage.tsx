@@ -83,7 +83,7 @@ const ProjectDetailsPage = () => {
 
   const updateServiceStatus = () => {
     const intervalId = setInterval(() => fetchQueryMetadata(), 2000);
-    setTimeout(() => clearInterval(intervalId), 10000);
+    setTimeout(() => clearInterval(intervalId), 15000);
   };
 
   useEffect(() => {
@@ -154,8 +154,8 @@ const ProjectDetailsPage = () => {
     () => ({
       networkEndpoint: projectService?.networkEndpoint ?? '',
       networkDictionary: projectService?.networkDictionary ?? '',
-      nodeVersion: projectService?.nodeVersion ?? nodeVersions[1],
-      queryVersion: projectService?.queryVersion ?? queryVersions[1],
+      nodeVersion: projectService?.nodeVersion ? projectService.nodeVersion : nodeVersions[0],
+      queryVersion: projectService?.queryVersion ? projectService.queryVersion : queryVersions[0],
       poiEnabled: projectService?.poiEnabled ?? false,
     }),
     [projectService, nodeVersions, queryVersions]
@@ -205,14 +205,8 @@ const ProjectDetailsPage = () => {
     }
   };
 
-  const startIndexingSteps = useMemo(
-    () => createStartIndexingSteps(projectConfig, imageVersions, startProject),
-    [projectConfig]
-  );
-  const restartProjectSteps = useMemo(
-    () => createRestartProjectSteps(projectConfig, imageVersions, startProject),
-    [projectConfig]
-  );
+  const startIndexingSteps = createStartIndexingSteps(projectConfig, imageVersions, startProject);
+  const restartProjectSteps = createRestartProjectSteps(projectConfig, imageVersions, startProject);
   const stopIndexingSteps = createStopIndexingSteps(stopProject, () =>
     indexingAction(ProjectAction.AnnounceNotIndexing, onModalClose)
   );
@@ -229,24 +223,21 @@ const ProjectDetailsPage = () => {
     indexingAction(ProjectAction.AnnounceNotIndexing, onModalClose)
   );
 
-  const steps = useMemo(
-    () => ({
-      ...startIndexingSteps,
-      ...restartProjectSteps,
-      ...stopIndexingSteps,
-      ...stopProjectSteps,
-      ...removeProjectSteps,
-      ...announceIndexingSteps,
-      ...announceReadySteps,
-      ...announceNotIndexingSteps,
-    }),
-    [projectConfig]
-  );
+  const steps = {
+    ...startIndexingSteps,
+    ...restartProjectSteps,
+    ...stopIndexingSteps,
+    ...stopProjectSteps,
+    ...removeProjectSteps,
+    ...announceIndexingSteps,
+    ...announceReadySteps,
+    ...announceNotIndexingSteps,
+  };
 
   const [modalTitle, modalSteps] = useMemo(() => {
     if (!actionType) return ['', []];
     return [ProjectActionName[actionType], steps[actionType]];
-  }, [actionType, projectConfig]);
+  }, [actionType, steps]);
 
   return (
     <Container>

@@ -251,15 +251,15 @@ export const getManifest = async (cid: string) => {
 };
 
 // get image versions
-const defaultNodeVersions = ['v0.33.0', 'v0.32.0', 'v0.31.1'];
-const defaultQueryVersions = ['v0.14.1', 'v0.14.0', 'v0.13.0', 'v0.12.0'];
+const defaultNodeVersions = ['v0.34.0', 'v0.33.0', 'v0.33.0'];
+const defaultQueryVersions = ['v0.15.0', 'v0.14.0', 'v0.13.0'];
 
 export const useNodeVersions = (cid: string) => {
   const [getNodeVersions, { data }] = useLazyQuery(GET_REGISTRY_VERSIONS);
 
   const fetchNodeVersions = useCallback(async () => {
     const manifest = await getManifest(cid);
-    const range = manifest.runner?.node?.version ?? '>=0.30.0';
+    const range = manifest.runner?.node?.version ?? '>=0.32.0';
     getNodeVersions({ variables: { range, registry: DockerRegistry.node } });
   }, [cid]);
 
@@ -276,7 +276,7 @@ export const useQueryVersions = (cid: string) => {
 
   const fetchQueryVersions = useCallback(async () => {
     const manifest = await getManifest(cid);
-    const range = manifest.runner?.query?.version ?? '>=0.10.0';
+    const range = manifest.runner?.query?.version ?? '>=0.13.0';
     getQueryVersions({ variables: { range, registry: DockerRegistry.query } });
   }, [cid]);
 
