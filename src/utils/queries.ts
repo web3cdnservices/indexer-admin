@@ -188,3 +188,10 @@ export const GET_PROJECT_DETAILS = gql`
     }
   }
 `;
+
+// query docker image versions
+export const GET_REGISTRY_VERSIONS = gql`
+  query GetRegistryVersions($range: String!, $registry: String!) {
+    getRegistryVersions(range: $range, registry: $registry)
+  }
+`;

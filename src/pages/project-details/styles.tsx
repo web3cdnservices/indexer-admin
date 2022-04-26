@@ -30,6 +30,7 @@ export const CardContainer = styled.div`
   display: flex;
   background-color: white;
   justify-content: space-between;
+  min-width: 1355px;
   border-radius: 8px;
   margin-top: 20px;
   padding: 32px;

@@ -15,8 +15,10 @@ import {
   getQueryMetadata,
   ProjectDetails,
   useIndexingStatus,
+  useNodeVersions,
   useProjectDetails,
   useProjectService,
+  useQueryVersions,
 } from 'hooks/projectHook';
 import { useRouter } from 'hooks/routerHook';
 import { useIndexingAction } from 'hooks/transactionHook';
@@ -55,6 +57,7 @@ const ProjectDetailsPage = () => {
   const status = useIndexingStatus(id);
   const projectInfo = useProjectDetails(id);
   const { setPageLoading } = useLoading();
+  const history = useHistory();
   useRouter(!projectDetails);
 
   const indexingAction = useIndexingAction(id);
@@ -63,7 +66,8 @@ const ProjectDetailsPage = () => {
   const [startProjectRequest, { loading: startProjectLoading }] = useMutation(START_PROJECT);
   const [stopProjectRequest, { loading: stopProjectLoading }] = useMutation(STOP_PROJECT);
   const [removeProjectRequest, { loading: removeProjectLoading }] = useMutation(REMOVE_PROJECT);
-  const history = useHistory();
+  const queryVersions = useQueryVersions(id);
+  const nodeVersions = useNodeVersions(id);
 
   const [progress, setProgress] = useState(0);
   const [metadata, setMetadata] = useState<TQueryMetadata>();
@@ -117,7 +121,6 @@ const ProjectDetailsPage = () => {
     [projectStatus]
   );
 
-  // TODO: create button items for each one
   const networkBtnItems = createNetworkButtonItems((type: ProjectAction) => {
     setActionType(type);
     setVisible(true);
@@ -151,11 +154,16 @@ const ProjectDetailsPage = () => {
     () => ({
       networkEndpoint: projectService?.networkEndpoint ?? '',
       networkDictionary: projectService?.networkDictionary ?? '',
-      nodeVersion: projectService?.nodeVersion ?? '',
-      queryVersion: projectService?.queryVersion ?? '',
+      nodeVersion: projectService?.nodeVersion ?? nodeVersions[1],
+      queryVersion: projectService?.queryVersion ?? queryVersions[1],
       poiEnabled: projectService?.poiEnabled ?? false,
     }),
-    [projectService]
+    [projectService, nodeVersions, queryVersions]
+  );
+
+  const imageVersions = useMemo(
+    () => ({ query: queryVersions, node: nodeVersions }),
+    [nodeVersions, queryVersions]
   );
 
   const projectStateChange = (
@@ -197,11 +205,18 @@ const ProjectDetailsPage = () => {
     }
   };
 
-  const startIndexingSteps = createStartIndexingSteps(projectConfig, startProject);
+  const startIndexingSteps = useMemo(
+    () => createStartIndexingSteps(projectConfig, imageVersions, startProject),
+    [projectConfig]
+  );
+  const restartProjectSteps = useMemo(
+    () => createRestartProjectSteps(projectConfig, imageVersions, startProject),
+    [projectConfig]
+  );
   const stopIndexingSteps = createStopIndexingSteps(stopProject, () =>
     indexingAction(ProjectAction.AnnounceNotIndexing, onModalClose)
   );
-  const restartProjectSteps = createRestartProjectSteps(projectConfig, startProject);
+
   const stopProjectSteps = createStopProjectSteps(stopProject);
   const removeProjectSteps = createRemoveProjectSteps(removeProject);
   const announceIndexingSteps = createAnnounceIndexingSteps(() =>
@@ -214,21 +229,24 @@ const ProjectDetailsPage = () => {
     indexingAction(ProjectAction.AnnounceNotIndexing, onModalClose)
   );
 
-  const steps = {
-    ...startIndexingSteps,
-    ...restartProjectSteps,
-    ...stopIndexingSteps,
-    ...stopProjectSteps,
-    ...removeProjectSteps,
-    ...announceIndexingSteps,
-    ...announceReadySteps,
-    ...announceNotIndexingSteps,
-  };
+  const steps = useMemo(
+    () => ({
+      ...startIndexingSteps,
+      ...restartProjectSteps,
+      ...stopIndexingSteps,
+      ...stopProjectSteps,
+      ...removeProjectSteps,
+      ...announceIndexingSteps,
+      ...announceReadySteps,
+      ...announceNotIndexingSteps,
+    }),
+    [projectConfig]
+  );
 
   const [modalTitle, modalSteps] = useMemo(() => {
     if (!actionType) return ['', []];
     return [ProjectActionName[actionType], steps[actionType]];
-  }, [actionType]);
+  }, [actionType, projectConfig]);
 
   return (
     <Container>

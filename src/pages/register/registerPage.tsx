@@ -17,6 +17,7 @@ import { useSigner, useWeb3 } from 'hooks/web3Hook';
 import { RegisterFormKey, TRegisterValues } from 'types/schemas';
 import { indexerRegistry, indexerRequestApprove } from 'utils/indexerActions';
 import { createIndexerMetadata } from 'utils/ipfs';
+import { verifyProxyEndpoint } from 'utils/validateService';
 
 import { Container } from '../login/styles';
 import IndexerRegistryView from './indexerRegistryView';
@@ -32,7 +33,7 @@ const RegisterPage = () => {
   const isRegistedIndexer = useIsRegistedIndexer();
   const isIndexer = useIsIndexer();
   const sdk = useContractSDK();
-  const tokenBalance = useTokenBalance(account);
+  const { tokenBalance, getTokenBalance } = useTokenBalance(account);
   const history = useHistory();
   const initialStep = useInitialStep();
   const { updateIndexer } = useCoordinatorIndexer();
@@ -66,7 +67,6 @@ const RegisterPage = () => {
   };
 
   const onTransactionFailed = (error: any) => {
-    // TODO: show alert
     console.error('Send transaction failed:', error);
     setLoading(false);
   };
@@ -106,6 +106,8 @@ const RegisterPage = () => {
   ) => {
     try {
       setLoading(true);
+      await getTokenBalance();
+
       const { name, proxyEndpoint, amount, rate } = values;
       if (Number(tokenBalance) < amount) {
         setLoading(false);
@@ -115,16 +117,20 @@ const RegisterPage = () => {
         return;
       }
 
-      const indexerMetadata = await createIndexerMetadata(name, proxyEndpoint);
-      // TODO: 1. validate `proxy endpoint`, default request `/discovery`;
-      // helper.setErrors({ [RegisterFormKey.proxyEndpoint]: 'Invalid proxy endpoint' });
+      const isValidProxyEndpoint = await verifyProxyEndpoint(proxyEndpoint);
+      if (!isValidProxyEndpoint) {
+        setLoading(false);
+        helper.setErrors({ [RegisterFormKey.proxyEndpoint]: 'Invalid proxy endpoint' });
+        return;
+      }
 
-      // TODO: need to review whether need `rate * 10`
+      const indexerMetadata = await createIndexerMetadata(name, proxyEndpoint);
       const tx = await indexerRegistry(sdk, signer, amount.toString(), indexerMetadata, rate * 10);
       const receipt = await tx.wait(1);
       if (!receipt.status) {
         throw new Error('Send indexer registry transaction failed');
       }
+
       moveToNextStep();
     } catch (e) {
       onTransactionFailed(e);

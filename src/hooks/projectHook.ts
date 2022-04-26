@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useLazyQuery } from '@apollo/client';
+import yaml from 'js-yaml';
 import { isEmpty, isUndefined } from 'lodash';
 
 import { useContractSDK } from 'containers/contractSdk';
@@ -10,13 +11,20 @@ import { useLoading } from 'containers/loadingContext';
 import { useNotification } from 'containers/notificationContext';
 import { useWeb3 } from 'hooks/web3Hook';
 import {
+  DockerRegistry,
   IndexingStatus,
+  partialIpfsDeploymentManifest,
   ProjectServiceMetadata,
   TQueryMetadata,
 } from 'pages/project-details/types';
 import { coordinatorServiceUrl, createApolloClient } from 'utils/apolloClient';
-import { cidToBytes32, getMetadata } from 'utils/ipfs';
-import { GET_PROJECT, GET_PROJECT_DETAILS, GET_QUERY_METADATA } from 'utils/queries';
+import { cat, cidToBytes32, IPFS_PROJECT_CLIENT } from 'utils/ipfs';
+import {
+  GET_PROJECT,
+  GET_PROJECT_DETAILS,
+  GET_QUERY_METADATA,
+  GET_REGISTRY_VERSIONS,
+} from 'utils/queries';
 
 // TODO: review whether need default value or other ways to provide default value
 // TODO: refactor get project details
@@ -150,7 +158,7 @@ export const getProjectDetails = async (deploymentId: string): Promise<ProjectDe
     return projectInitValue;
   }
 
-  const projectMetadata = await getMetadata(projectInfo.metadata);
+  const projectMetadata = await cat(projectInfo.metadata);
   const queryMetadata = await getQueryMetadata(deploymentId);
   const projectDetails = {
     ...projectInfo,
@@ -235,3 +243,47 @@ export function useProjectDetailList(data: any) {
 
   return { projectDetailList, getProjectDetailList };
 }
+
+export const getManifest = async (cid: string) => {
+  const projectYaml = await cat(cid, IPFS_PROJECT_CLIENT);
+  const resultManifest = yaml.load(projectYaml) as partialIpfsDeploymentManifest;
+  return resultManifest;
+};
+
+// get image versions
+const defaultNodeVersions = ['v0.33.0', 'v0.32.0', 'v0.31.1'];
+const defaultQueryVersions = ['v0.14.1', 'v0.14.0', 'v0.13.0', 'v0.12.0'];
+
+export const useNodeVersions = (cid: string) => {
+  const [getNodeVersions, { data }] = useLazyQuery(GET_REGISTRY_VERSIONS);
+
+  const fetchNodeVersions = useCallback(async () => {
+    const manifest = await getManifest(cid);
+    const range = manifest.runner?.node?.version ?? '>=0.30.0';
+    getNodeVersions({ variables: { range, registry: DockerRegistry.node } });
+  }, [cid]);
+
+  useEffect(() => {
+    fetchNodeVersions();
+  }, [fetchNodeVersions]);
+
+  const versions = data?.getRegistryVersions;
+  return !isEmpty(versions) ? versions : defaultNodeVersions;
+};
+
+export const useQueryVersions = (cid: string) => {
+  const [getQueryVersions, { data }] = useLazyQuery(GET_REGISTRY_VERSIONS);
+
+  const fetchQueryVersions = useCallback(async () => {
+    const manifest = await getManifest(cid);
+    const range = manifest.runner?.query?.version ?? '>=0.10.0';
+    getQueryVersions({ variables: { range, registry: DockerRegistry.query } });
+  }, [cid]);
+
+  useEffect(() => {
+    fetchQueryVersions();
+  }, [fetchQueryVersions]);
+
+  const versions = data?.getRegistryVersions;
+  return !isEmpty(versions) ? versions : defaultQueryVersions;
+};

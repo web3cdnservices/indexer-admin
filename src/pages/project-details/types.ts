@@ -3,6 +3,11 @@
 
 import { FormikHelpers, FormikValues } from 'formik';
 
+export enum DockerRegistry {
+  query = 'onfinality/subql-query',
+  node = 'onfinality/subql-node',
+}
+
 export enum IndexingStatus {
   NOTINDEXING,
   INDEXING,
@@ -73,4 +78,28 @@ export type TQueryMetadata = {
   queryNodeVersion: string;
   indexerStatus: string;
   queryStatus: string;
+};
+
+// manifest types
+export type Runner = {
+  node?: {
+    name: string;
+    version: string;
+  };
+  query?: {
+    name: string;
+    version: string;
+  };
+};
+
+export type partialIpfsDeploymentManifest = {
+  dataSources: any[];
+  schema: {
+    file: string;
+  };
+  network: {
+    chainId?: string;
+  };
+  specVersion: string;
+  runner?: Runner;
 };

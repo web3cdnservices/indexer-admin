@@ -4,7 +4,8 @@
 import { utils } from 'ethers';
 import { create } from 'ipfs-http-client';
 
-export const IPFS = create({ url: window.env.IPFS_GATEWAY });
+export const IPFS_METADATA_CLIENT = create({ url: window.env.IPFS_GATEWAY });
+export const IPFS_PROJECT_CLIENT = create({ url: 'https://ipfs.subquery.network/ipfs/api/v0' });
 
 export function cidToBytes32(cid: string): string {
   return `0x${Buffer.from(utils.base58.decode(cid)).slice(2).toString('hex')}`;
@@ -27,13 +28,13 @@ export function concatU8A(a: Uint8Array, b: Uint8Array): Uint8Array {
 }
 
 export async function createIndexerMetadata(name: string, url: string): Promise<string> {
-  const result = await IPFS.add(JSON.stringify({ name, url }), { pin: true });
+  const result = await IPFS_METADATA_CLIENT.add(JSON.stringify({ name, url }), { pin: true });
   const cid = result.cid.toV0().toString();
   return cidToBytes32(cid);
 }
 
-export async function getMetadata(metadataCID: string) {
-  const results = IPFS.cat(metadataCID);
+export async function cat(cid: string, client = IPFS_METADATA_CLIENT) {
+  const results = client.cat(cid);
   let raw: Uint8Array | undefined;
 
   // eslint-disable-next-line no-restricted-syntax
@@ -41,9 +42,15 @@ export async function getMetadata(metadataCID: string) {
     raw = raw ? concatU8A(raw, result) : result;
   }
   if (!raw) {
-    console.error('Unable to fetch metadata from ipfs');
+    console.error(`Unable to fetch data from ipfs: ${cid}`);
     return raw;
   }
 
-  return JSON.parse(Buffer.from(raw).toString('utf8'));
+  const result = Buffer.from(raw).toString('utf8');
+
+  try {
+    return JSON.parse(Buffer.from(raw).toString('utf8'));
+  } catch {
+    return result;
+  }
 }
