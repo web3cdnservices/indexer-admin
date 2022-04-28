@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useEffect, useMemo, useState } from 'react';
+import { useHistory } from 'react-router';
 import { useMutation } from '@apollo/client';
 import { isUndefined } from 'lodash';
 
@@ -28,6 +29,7 @@ import { privateToAddress, validateController } from 'utils/validateService';
 
 import {
   AccountActionName,
+  configControllerFailed,
   configControllerSucceed,
   createButonItem,
   createControllerSteps,
@@ -58,6 +60,7 @@ const Registry = () => {
   const [updateController] = useMutation(UPDAET_CONTROLLER);
   const [removeAccounts] = useMutation(REMOVE_ACCOUNTS);
   const { setPageLoading } = useLoading();
+  const history = useHistory();
 
   prompts.controller.desc = `Balance ${controllerBalance} DEV`;
   const controllerItem = !controller ? prompts.emptyController : prompts.controller;
@@ -104,14 +107,13 @@ const Registry = () => {
 
       setController(controllerAddress);
 
-      console.log('controllerAddress:', controllerAddress);
-
       try {
         await updateController({ variables: { controller: privateKey } });
         dispatchNotification(configControllerSucceed(controllerAddress));
         setCurrentStep(1);
       } catch {
         onModalClose();
+        dispatchNotification(configControllerFailed(controllerAddress));
       }
       formHelper.setStatus({ loading: false });
     },
@@ -130,8 +132,13 @@ const Registry = () => {
     [metadata]
   );
 
+  const unregisterCompleted = async () => {
+    await removeAccounts();
+    history.replace('/register');
+  };
+
   const unregisterStep = createUnregisterSteps(() =>
-    accountAction(AccountAction.unregister, '', onModalClose, removeAccounts)
+    accountAction(AccountAction.unregister, '', onModalClose, unregisterCompleted)
   );
 
   const steps = useMemo(

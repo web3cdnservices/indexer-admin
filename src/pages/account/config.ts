@@ -118,3 +118,10 @@ export const configControllerSucceed = (controller: string): Notification => ({
   message: `Config controller: ${controller} in coordinator service successfully`,
   dismiss: dismiss(),
 });
+
+export const configControllerFailed = (controller: string): Notification => ({
+  type: 'danger',
+  title: 'Sync Controller Failed',
+  message: `Config controller: ${controller} in coordinator service Failed`,
+  dismiss: dismiss(),
+});

@@ -78,9 +78,7 @@ export const UPDAET_CONTROLLER = gql`
 
 export const REMOVE_ACCOUNTS = gql`
   mutation {
-    removeAccounts {
-      id
-    }
+    removeAccounts
   }
 `;
 

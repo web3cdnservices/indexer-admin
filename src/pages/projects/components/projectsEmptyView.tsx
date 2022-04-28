@@ -20,7 +20,7 @@ type Props = {
   onClick: () => void;
 };
 
-const linkUrl = 'https://testnet.thechaindata.com/explorer';
+const linkUrl = 'https://frontier.subquery.network/explorer';
 const ExplorerLink = () => (
   <a target="_blank" href={linkUrl} rel="noreferrer">
     SubQuery Explorer
