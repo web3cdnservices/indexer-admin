@@ -77,7 +77,6 @@ const ProjectDetailsPage = () => {
 
   const fetchQueryMetadata = async () => {
     const data = await getQueryMetadata(id);
-    setProgress(calculateProgress(data.targetHeight, data.lastProcessedHeight));
     setMetadata(data);
   };
 
@@ -89,6 +88,10 @@ const ProjectDetailsPage = () => {
   useEffect(() => {
     setPageLoading(isUndefined(projectInfo));
   }, [projectInfo]);
+
+  useEffect(() => {
+    metadata && setProgress(calculateProgress(metadata.targetHeight, metadata.lastProcessedHeight));
+  }, [metadata]);
 
   useEffect(() => {
     fetchQueryMetadata();
@@ -176,7 +179,6 @@ const ProjectDetailsPage = () => {
 
   const startProject = async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
     try {
-      console.log('values:', values);
       const poiEnabled = values.poiEnabled || values.poiEnabled === 'true';
       await startProjectRequest({ variables: { ...values, poiEnabled, id } });
       onModalClose();
