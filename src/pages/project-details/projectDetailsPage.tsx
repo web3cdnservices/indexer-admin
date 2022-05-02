@@ -156,7 +156,7 @@ const ProjectDetailsPage = () => {
       networkDictionary: projectService?.networkDictionary ?? '',
       nodeVersion: projectService?.nodeVersion ? projectService.nodeVersion : nodeVersions[0],
       queryVersion: projectService?.queryVersion ? projectService.queryVersion : queryVersions[0],
-      poiEnabled: projectService?.poiEnabled ?? false,
+      poiEnabled: projectService?.networkEndpoint ? projectService?.poiEnabled : true,
     }),
     [projectService, nodeVersions, queryVersions]
   );
