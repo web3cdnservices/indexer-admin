@@ -177,7 +177,7 @@ const ProjectDetailsPage = () => {
   const startProject = async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
     try {
       console.log('values:', values);
-      const poiEnabled = values.poiEnabled === 'true';
+      const poiEnabled = values.poiEnabled || values.poiEnabled === 'true';
       await startProjectRequest({ variables: { ...values, poiEnabled, id } });
       onModalClose();
       projectStateChange(ProjectNotification.Started);
