@@ -23,6 +23,7 @@ import { useAccountAction } from 'hooks/transactionHook';
 import { useIsMetaMask, useWeb3 } from 'hooks/web3Hook';
 import { AccountAction } from 'pages/project-details/types';
 import { ControllerFormKey, MetadataFormKey } from 'types/schemas';
+import { balanceSufficient } from 'utils/account';
 import { createIndexerMetadata } from 'utils/ipfs';
 import { REMOVE_ACCOUNTS, UPDAET_CONTROLLER } from 'utils/queries';
 import { privateToAddress, validateController } from 'utils/validateService';
@@ -36,7 +37,7 @@ import {
   createUnregisterSteps,
   createUpdateMetadataSteps,
 } from './config';
-import prompts from './prompts';
+import prompts, { notifications } from './prompts';
 import { Container } from './styles';
 
 const Registry = () => {
@@ -62,13 +63,19 @@ const Registry = () => {
   const { setPageLoading } = useLoading();
   const history = useHistory();
 
-  prompts.controller.desc = `Balance ${controllerBalance} DEV`;
+  prompts.controller.desc = `Balance: ${controllerBalance} DEV`;
   const controllerItem = !controller ? prompts.emptyController : prompts.controller;
   const indexerItem = prompts.indexer;
 
   useEffect(() => {
     setPageLoading(isUndefined(account) || isUndefined(indexer));
   }, [account, indexer]);
+
+  useEffect(() => {
+    if (controllerBalance && !balanceSufficient(controllerBalance)) {
+      dispatchNotification(notifications.controller);
+    }
+  }, [controllerBalance]);
 
   const onButtonPress = (type: AccountAction) => {
     setActionType(type);
@@ -154,7 +161,6 @@ const Registry = () => {
           name={indexerName}
           buttons={indexerButtons}
           account={account ?? ''}
-          status="active"
           desc={`Balance: ${indexerBalance} DEV`}
         />
       )}

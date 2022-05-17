@@ -72,7 +72,6 @@ const ProjectDetailsPage = () => {
   const [progress, setProgress] = useState(0);
   const [metadata, setMetadata] = useState<TQueryMetadata>();
   const [visible, setVisible] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
   const [actionType, setActionType] = useState<ProjectAction>();
 
   const fetchQueryMetadata = async () => {
@@ -146,8 +145,6 @@ const ProjectDetailsPage = () => {
 
   const onModalClose = (error?: any) => {
     setVisible(false);
-    setCurrentStep(0);
-
     if (error?.data?.message) {
       dispatchNotification(txErrorNotification(error.data.message));
     }
@@ -179,8 +176,9 @@ const ProjectDetailsPage = () => {
 
   const startProject = async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
     try {
-      const poiEnabled = values.poiEnabled || values.poiEnabled === 'true';
+      const poiEnabled = values.poiEnabled === 'true';
       await startProjectRequest({ variables: { ...values, poiEnabled, id } });
+
       onModalClose();
       projectStateChange(ProjectNotification.Started);
     } catch (e) {
@@ -191,10 +189,10 @@ const ProjectDetailsPage = () => {
   const stopProject = async () => {
     try {
       await stopProjectRequest({ variables: { id } });
+      onModalClose();
       projectStateChange(ProjectNotification.Terminated);
-      setCurrentStep(1);
     } catch (e) {
-      console.log('fail to stop project', e);
+      console.error('fail to stop project', e);
     }
   };
 
@@ -203,15 +201,13 @@ const ProjectDetailsPage = () => {
       await removeProjectRequest({ variables: { id } });
       history.replace('/projects');
     } catch (e) {
-      console.log('fail to remove project', e);
+      console.error('fail to remove project', e);
     }
   };
 
   const startIndexingSteps = createStartIndexingSteps(projectConfig, imageVersions, startProject);
   const restartProjectSteps = createRestartProjectSteps(projectConfig, imageVersions, startProject);
-  const stopIndexingSteps = createStopIndexingSteps(stopProject, () =>
-    indexingAction(ProjectAction.AnnounceNotIndexing, onModalClose)
-  );
+  const stopIndexingSteps = createStopIndexingSteps(stopProject);
 
   const stopProjectSteps = createStopProjectSteps(stopProject);
   const removeProjectSteps = createRemoveProjectSteps(removeProject);
@@ -262,7 +258,6 @@ const ProjectDetailsPage = () => {
         onClose={onModalClose}
         // @ts-ignore
         steps={modalSteps}
-        currentStep={currentStep}
         type={actionType}
         loading={loading}
       />

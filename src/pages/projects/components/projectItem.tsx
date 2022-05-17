@@ -3,13 +3,14 @@
 
 import { FC, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ProgressBar } from '@subql/react-ui';
+import { ProgressBar, Spinner } from '@subql/react-ui';
+import { isUndefined } from 'lodash';
 import styled from 'styled-components';
 
 import Avatar from 'components/avatar';
 import { Text } from 'components/primary';
 import StatusLabel from 'components/statusLabel';
-import { ProjectDetails } from 'hooks/projectHook';
+import { ProjectDetails, useDeploymentStatus } from 'hooks/projectHook';
 import { cidToBytes32 } from 'utils/ipfs';
 import { calculateProgress } from 'utils/project';
 
@@ -45,8 +46,10 @@ const ProfileContainer = styled.div`
 type Props = ProjectDetails;
 
 const ProjectItem: FC<Props> = (props) => {
+  const { id, name, metadata } = props;
+
   const history = useHistory();
-  const { id, name, status, metadata } = props;
+  const status = useDeploymentStatus(id);
 
   const progress = useMemo(() => {
     if (!metadata) return 0;
@@ -55,7 +58,7 @@ const ProjectItem: FC<Props> = (props) => {
   }, [metadata]);
 
   return (
-    <Container onClick={() => history.push(`/project/${id}`, { data: props })}>
+    <Container onClick={() => history.push(`/project/${id}`, { data: { ...props, status } })}>
       <ItemContainer pl={15} flex={7}>
         <Avatar address={cidToBytes32(id)} size={70} />
         <ProfileContainer>
@@ -71,7 +74,11 @@ const ProjectItem: FC<Props> = (props) => {
         <Progress progress={progress / 100} />
       </ItemContainer>
       <ItemContainer flex={1}>
-        <StatusLabel text={statusText[status]} color={statusColor[status]} />
+        {!isUndefined(status) ? (
+          <StatusLabel text={statusText[status]} color={statusColor[status]} />
+        ) : (
+          <Spinner />
+        )}
       </ItemContainer>
     </Container>
   );

@@ -191,26 +191,34 @@ export const useProjectDetails = (deploymentId: string): ProjectDetails | undefi
   return project;
 };
 
+export const useDeploymentStatus = (deploymentId: string) => {
+  const [status, setStatus] = useState<IndexingStatus | undefined>();
+  const { account } = useWeb3();
+  const sdk = useContractSDK();
+
+  const getDeploymentStatus = useCallback(async () => {
+    if (!sdk || !account || !deploymentId) return;
+    const { status } = await sdk.queryRegistry.deploymentStatusByIndexer(
+      cidToBytes32(deploymentId),
+      account
+    );
+
+    setStatus(status);
+  }, [sdk, account, deploymentId]);
+
+  useEffect(() => {
+    getDeploymentStatus();
+  }, [getDeploymentStatus]);
+
+  return status;
+};
+
 // TODO: need to refactor
 export function useProjectDetailList(data: any) {
   const projects = data?.getProjects as ProjectServiceMetadata[];
   const [projectDetailList, setProjecList] = useState<ProjectDetails[]>();
 
   const { setPageLoading } = useLoading();
-  const { account } = useWeb3();
-  const sdk = useContractSDK();
-
-  const getProjectStatus = useCallback(
-    async (deploymentId: string) => {
-      if (!sdk || !account || !deploymentId) return IndexingStatus.NOTINDEXING;
-      const { status } = await sdk.queryRegistry.deploymentStatusByIndexer(
-        cidToBytes32(deploymentId),
-        account
-      );
-      return status;
-    },
-    [sdk, account]
-  );
 
   const getProjectDetailList = useCallback(async () => {
     if (isUndefined(projects)) return;
@@ -222,14 +230,10 @@ export function useProjectDetailList(data: any) {
 
     try {
       const result = await Promise.all(
-        projects.map(({ id }) =>
-          Promise.all([getProjectDetails(id), getQueryMetadata(id), getProjectStatus(id)])
-        )
+        projects.map(({ id }) => Promise.all([getProjectDetails(id), getQueryMetadata(id)]))
       );
       setProjecList(
-        result
-          .map(([detail, metadata, status]) => ({ ...detail, status, metadata }))
-          .filter(({ id }) => !!id)
+        result.map(([detail, metadata]) => ({ ...detail, metadata })).filter(({ id }) => !!id)
       );
     } catch (e) {
       console.error('Get project details failed:', e);
@@ -251,15 +255,15 @@ export const getManifest = async (cid: string) => {
 };
 
 // get image versions
-const defaultNodeVersions = ['v0.34.0', 'v0.33.0', 'v0.33.0'];
-const defaultQueryVersions = ['v0.15.0', 'v0.14.0', 'v0.13.0'];
+const defaultNodeVersions = ['v1.0.0', 'v0.35.2', 'v0.35.1', 'v0.34.0'];
+const defaultQueryVersions = ['v1.0.0', 'v0.16.0', 'v0.15.0'];
 
 export const useNodeVersions = (cid: string) => {
   const [getNodeVersions, { data }] = useLazyQuery(GET_REGISTRY_VERSIONS);
 
   const fetchNodeVersions = useCallback(async () => {
     const manifest = await getManifest(cid);
-    const range = manifest.runner?.node?.version ?? '>=0.32.0';
+    const range = manifest.runner?.node?.version ?? '>=0.34.0';
     getNodeVersions({ variables: { range, registry: DockerRegistry.node } });
   }, [cid]);
 
@@ -276,7 +280,7 @@ export const useQueryVersions = (cid: string) => {
 
   const fetchQueryVersions = useCallback(async () => {
     const manifest = await getManifest(cid);
-    const range = manifest.runner?.query?.version ?? '>=0.13.0';
+    const range = manifest.runner?.query?.version ?? '>=0.15.0';
     getQueryVersions({ variables: { range, registry: DockerRegistry.query } });
   }, [cid]);
 

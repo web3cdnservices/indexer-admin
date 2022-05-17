@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC, useMemo } from 'react';
-import { Tag } from '@subql/react-ui';
 import { isEmpty } from 'lodash';
 import styled from 'styled-components';
 
@@ -17,10 +16,9 @@ type Props = {
   buttons: AccountButtonItem[];
   name?: string;
   account?: string;
-  status?: string;
 };
 
-const AccountCard: FC<Props> = ({ title, desc, buttons, name, account, status }) => {
+const AccountCard: FC<Props> = ({ title, desc, buttons, name, account }) => {
   const renderButtons = useMemo(
     () =>
       buttons.map(({ title, type, loading, disabled, onClick }) => (
@@ -45,7 +43,6 @@ const AccountCard: FC<Props> = ({ title, desc, buttons, name, account, status })
             <Text size={30} fw="bold" mr={20}>
               {title}
             </Text>
-            {!!status && <Tag text={status} state="success" />}
           </ContentContainer>
         </HeaderContainer>
         {account ? (

@@ -129,7 +129,7 @@ export const useTokenBalance = (account: Account, deps?: HookDependency) => {
 };
 
 export const useBalance = (account: Account) => {
-  const [balance, setBalance] = useState('0.00');
+  const [balance, setBalance] = useState<string>();
   const { library } = useWeb3();
 
   const getBalance = useCallback(async () => {

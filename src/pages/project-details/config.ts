@@ -208,10 +208,7 @@ export const createStopProjectSteps = (onStopProject: ClickAction) => ({
   ],
 });
 
-export const createStopIndexingSteps = (
-  onStopProject: ClickAction,
-  onSendTransaction: ClickAction
-) => ({
+export const createStopIndexingSteps = (onStopProject: ClickAction) => ({
   [ProjectAction.StopIndexing]: [
     {
       index: 0,
@@ -219,13 +216,6 @@ export const createStopIndexingSteps = (
       desc: prompts.stopProject.desc,
       buttonTitle: 'Confirm',
       onClick: onStopProject,
-    },
-    {
-      index: 1,
-      title: prompts.announceNotIndexing.title,
-      desc: prompts.announceNotIndexing.desc,
-      buttonTitle: 'Send Transction',
-      onClick: onSendTransaction,
     },
   ],
 });

@@ -78,11 +78,11 @@ export enum ProjectFormKey {
   poiEnabled = 'poiEnabled',
 }
 
-export const CIDv0 = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}/i);
+export const CIDv0 = new RegExp(/^Qm[1-9A-HJ-NP-Za-km-z]{44}/i);
 export const ProjectFormSchema = yup.object({
   [ProjectFormKey.deploymentId]: yup
     .string()
-    .matches(CIDv0, `Doesn't match deployment id format`)
+    .matches(CIDv0, `Invalid deployment id format`)
     .defined(),
 });
 
