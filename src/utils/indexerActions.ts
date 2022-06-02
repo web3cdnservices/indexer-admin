@@ -47,9 +47,12 @@ export async function indexerRegistry(
     throw new Error(ErrorMessages.amountError);
   }
 
+  const overrides = { gasLimit: '1300000', type: 0 };
+  console.log(amount.toString(), metadata, commissionRate);
+
   const tx = await sdk.indexerRegistry
     .connect(signer)
-    .registerIndexer(utils.parseEther(amount), metadata, commissionRate);
+    .registerIndexer(utils.parseEther(amount), metadata, commissionRate, overrides);
   return tx;
 }
 

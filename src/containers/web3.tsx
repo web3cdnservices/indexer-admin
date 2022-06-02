@@ -14,14 +14,14 @@ import { NetworkToChainID, RPC_URLS } from 'utils/web3';
 import { Props } from './unstated';
 
 const injectedConntector = new InjectedConnector({
-  supportedChainIds: [1280, 1281, 1285],
+  supportedChainIds: [595, 1281, 1285],
 });
 
 const injectNetwork = window.env.NETWORK as keyof typeof NetworkToChainID;
 
 const networkConnector = new NetworkConnector({
   urls: RPC_URLS,
-  defaultChainId: (NetworkToChainID[injectNetwork] as number) ?? 1280,
+  defaultChainId: (NetworkToChainID[injectNetwork] as number) ?? 595,
 });
 
 // TODO: Acala would use https://github.com/AcalaNetwork/bodhi.js
