@@ -16,7 +16,7 @@ export const useIsApproved = () => {
   const checkAllowance = useCallback(async () => {
     if (!account || !sdk) return;
     try {
-      const mimAmount = (await sdk.indexerRegistry.minimumStakingAmont()) ?? 1000;
+      const mimAmount = (await sdk.indexerRegistry.minimumStakingAmount()) ?? 1000;
       const amount = await sdk.sqToken.allowance(account, sdk.staking.address);
       setIsApprove(!!amount.gte(mimAmount));
     } catch {

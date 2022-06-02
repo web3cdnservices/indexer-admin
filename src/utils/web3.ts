@@ -6,7 +6,7 @@ import { intToHex } from 'ethereumjs-util';
 
 export enum ChainID {
   local = 1281,
-  testnet = 1280,
+  testnet = 595,
   mainnet = 1285,
 }
 
@@ -27,7 +27,7 @@ export const NetworkToChainID: Record<SubqueryNetwork, ChainID> = {
 export const isSupportNetwork = (chaiId?: number) => ChainIDs.includes(chaiId ?? 0);
 
 export const RPC_URLS: Record<number, string> = {
-  1280: 'https://sqtn.api.onfinality.io/public',
+  595: 'https://tc7-eth.aca-dev.network',
   1281: 'http://127.0.0.1:9933',
   1285: 'https://moonriver.api.onfinality.io/public',
   1287: 'https://moonbeam-alpha.api.onfinality.io/public',
@@ -35,12 +35,12 @@ export const RPC_URLS: Record<number, string> = {
 
 export const networks: Record<number, SubqueryNetwork> = {
   1281: Networks.local,
-  1280: Networks.testnet,
+  595: Networks.testnet,
   1285: Networks.mainnet,
 };
 
 export const chainNames: Record<number, string> = {
-  1280: 'SQN Testnet',
+  595: 'SQN Testnet',
   1281: 'Moonbeam Local',
   1285: 'Moonriver',
   1287: 'Moonbeam Dev',
@@ -49,10 +49,10 @@ export const chainNames: Record<number, string> = {
 export const NETWORK_CONFIGS = {
   [ChainID.testnet]: {
     chainId: intToHex(ChainID.testnet),
-    chainName: 'SQN Testnet',
+    chainName: 'Acala Testnet',
     nativeCurrency: {
-      name: 'DEV',
-      symbol: 'DEV',
+      name: 'Acala',
+      symbol: 'Acala',
       decimals: 18,
     },
     rpcUrls: [RPC_URLS[ChainID.testnet]],
