@@ -76,6 +76,7 @@ export enum ProjectFormKey {
   nodeVersion = 'nodeVersion',
   queryVersion = 'queryVersion',
   poiEnabled = 'poiEnabled',
+  forceEnabled = 'forceEnabled',
 }
 
 export const CIDv0 = new RegExp(/^Qm[1-9A-HJ-NP-Za-km-z]{44}/i);
@@ -97,6 +98,7 @@ export const initialIndexingValues = (config: ProjectConfig) => ({
   [ProjectFormKey.nodeVersion]: config.nodeVersion,
   [ProjectFormKey.queryVersion]: config.queryVersion,
   [ProjectFormKey.poiEnabled]: config.poiEnabled,
+  [ProjectFormKey.forceEnabled]: config.forceEnabled,
 });
 
 export const StartIndexingSchema = yup.object({
@@ -105,6 +107,7 @@ export const StartIndexingSchema = yup.object({
   [ProjectFormKey.nodeVersion]: yup.string().defined(),
   [ProjectFormKey.queryVersion]: yup.string().defined(),
   [ProjectFormKey.poiEnabled]: yup.boolean().required(),
+  [ProjectFormKey.forceEnabled]: yup.boolean().required(),
 });
 
 export type IndexingEndpoint = yup.Asserts<typeof StartIndexingSchema>;

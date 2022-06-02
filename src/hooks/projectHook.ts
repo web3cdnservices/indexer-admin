@@ -62,6 +62,7 @@ const projectInitValue = {
   nodeVersion: '',
   queryVersion: '',
   poiEnabled: false,
+  forceEnabled: false,
   queryEndpoint: '',
   nodeEndpoint: '',
   status: 0,

@@ -54,6 +54,7 @@ const modalStyles = {
     transform: 'translate(-50%, -50%)',
     maxWidth: 900,
     minWidth: 700,
+    maxHeight: '80%',
     padding: 0,
   },
   overlay: {
@@ -114,7 +115,7 @@ const ModalView: FC<Props> = ({
             <ButtonContainer align="right" mt={50}>
               <Button
                 width={260}
-                mt={20}
+                mt={0}
                 title={item.buttonTitle}
                 onClick={submitForm}
                 loading={loading || status?.loading}

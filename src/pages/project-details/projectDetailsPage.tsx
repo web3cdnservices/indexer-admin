@@ -157,6 +157,7 @@ const ProjectDetailsPage = () => {
       nodeVersion: projectService?.nodeVersion ? projectService.nodeVersion : nodeVersions[0],
       queryVersion: projectService?.queryVersion ? projectService.queryVersion : queryVersions[0],
       poiEnabled: projectService?.networkEndpoint ? projectService?.poiEnabled : true,
+      forceEnabled: projectService?.networkEndpoint ? projectService?.forceEnabled : true,
     }),
     [projectService, nodeVersions, queryVersions]
   );
@@ -177,10 +178,12 @@ const ProjectDetailsPage = () => {
   const startProject = async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
     try {
       const poiEnabled = values.poiEnabled === 'true';
-      await startProjectRequest({ variables: { ...values, poiEnabled, id } });
+      const forceEnabled = values.forceEnabled === 'true';
+      console.log('forceEnabled', forceEnabled);
+      // await startProjectRequest({ variables: { ...values, poiEnabled, forceEnabled, id } });
 
-      onModalClose();
-      projectStateChange(ProjectNotification.Started);
+      // onModalClose();
+      // projectStateChange(ProjectNotification.Started);
     } catch (e) {
       formHelper.setErrors({ [ProjectFormKey.networkEndpoint]: 'Invalid service endpoint' });
     }
