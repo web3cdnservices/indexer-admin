@@ -179,11 +179,10 @@ const ProjectDetailsPage = () => {
     try {
       const poiEnabled = values.poiEnabled === 'true';
       const forceEnabled = values.forceEnabled === 'true';
-      console.log('forceEnabled', forceEnabled);
-      // await startProjectRequest({ variables: { ...values, poiEnabled, forceEnabled, id } });
+      await startProjectRequest({ variables: { ...values, poiEnabled, forceEnabled, id } });
 
-      // onModalClose();
-      // projectStateChange(ProjectNotification.Started);
+      onModalClose();
+      projectStateChange(ProjectNotification.Started);
     } catch (e) {
       formHelper.setErrors({ [ProjectFormKey.networkEndpoint]: 'Invalid service endpoint' });
     }
