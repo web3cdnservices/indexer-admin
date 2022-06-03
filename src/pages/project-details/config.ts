@@ -113,11 +113,6 @@ const startProjectForms = (
       options: ['true', 'false'],
     },
     {
-      formKey: ProjectFormKey.poiEnabled,
-      title: 'Enable POI',
-      options: ['true', 'false'],
-    },
-    {
       formKey: ProjectFormKey.forceEnabled,
       title: 'Enable Force Start',
       options: ['true', 'false'],

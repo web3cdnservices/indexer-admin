@@ -27,6 +27,7 @@ export const ADD_INDEXER = gql`
 
 export const START_PROJECT = gql`
   mutation StartProject(
+    $forceEnabled: Boolean!
     $poiEnabled: Boolean!
     $queryVersion: String!
     $nodeVersion: String!
@@ -35,6 +36,7 @@ export const START_PROJECT = gql`
     $id: String!
   ) {
     startProject(
+      forceEnabled: $forceEnabled
       poiEnabled: $poiEnabled
       queryVersion: $queryVersion
       nodeVersion: $nodeVersion
@@ -56,7 +58,7 @@ export const START_PROJECT = gql`
 `;
 
 export const STOP_PROJECT = gql`
-  mutation RestartProject($id: String!) {
+  mutation StopProject($id: String!) {
     stopProject(id: $id) {
       id
       status

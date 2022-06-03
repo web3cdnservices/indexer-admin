@@ -54,7 +54,7 @@ const modalStyles = {
     transform: 'translate(-50%, -50%)',
     maxWidth: 900,
     minWidth: 700,
-    maxHeight: '80%',
+    maxHeight: '90%',
     padding: 0,
   },
   overlay: {
