@@ -20,6 +20,7 @@ import {
 import { coordinatorServiceUrl, createApolloClient } from 'utils/apolloClient';
 import { cat, cidToBytes32, IPFS_PROJECT_CLIENT } from 'utils/ipfs';
 import {
+  GET_INDEXER_PROJECTS,
   GET_PROJECT,
   GET_PROJECT_DETAILS,
   GET_QUERY_METADATA,
@@ -38,8 +39,19 @@ const metadataInitValue = {
   indexerHealthy: undefined,
   indexerNodeVersion: '',
   queryNodeVersion: '',
-  indexerStatus: '',
-  queryStatus: '',
+  indexerStatus: 'TERMINATED',
+  queryStatus: 'TERMINATED',
+};
+
+const projectServiceMetadtaValue: ProjectServiceMetadata = {
+  id: '',
+  networkEndpoint: '',
+  networkDictionary: '',
+  nodeVersion: '',
+  queryVersion: '',
+  poiEnabled: false,
+  forceEnabled: false,
+  status: 0,
 };
 
 const projectInitValue = {
@@ -56,16 +68,7 @@ const projectInitValue = {
   createdTimestamp: '',
   updatedTimestamp: '',
   metadata: undefined,
-  id: '',
-  networkEndpoint: '',
-  networkDictionary: '',
-  nodeVersion: '',
-  queryVersion: '',
-  poiEnabled: false,
-  forceEnabled: false,
-  queryEndpoint: '',
-  nodeEndpoint: '',
-  status: 0,
+  ...projectServiceMetadtaValue,
 };
 
 export const useProjectService = (deploymentId: string) => {
@@ -131,6 +134,12 @@ type Result = {
   };
 };
 
+type IndexerProject = {
+  indexerId: string;
+  deploymentId: string;
+  status: string;
+};
+
 const queryRegistryClient = createApolloClient(window.env.REGISTRY_PROJECT);
 const coordinatorClient = createApolloClient(coordinatorServiceUrl);
 
@@ -169,6 +178,18 @@ export const getProjectDetails = async (deploymentId: string): Promise<ProjectDe
   };
 
   return projectDetails;
+};
+
+export const getIndexingProjects = async (indexer: string): Promise<ProjectServiceMetadata[]> => {
+  const res = await queryRegistryClient.query<{ deploymentIndexers: { nodes: IndexerProject[] } }>({
+    query: GET_INDEXER_PROJECTS,
+    variables: { indexer },
+  });
+
+  const projects = res.data.deploymentIndexers.nodes;
+  return projects
+    .filter((p) => p.status !== 'TERMINATED')
+    .map((p) => ({ ...projectServiceMetadtaValue, id: p.deploymentId }));
 };
 
 export const useProjectDetails = (deploymentId: string): ProjectDetails | undefined => {
@@ -214,14 +235,32 @@ export const useDeploymentStatus = (deploymentId: string) => {
   return status;
 };
 
+function combineProjects(
+  localProjects: ProjectServiceMetadata[],
+  indexingProjects: ProjectServiceMetadata[]
+): ProjectServiceMetadata[] {
+  if (isEmpty(localProjects)) return indexingProjects;
+  const removedProjects = indexingProjects.filter(
+    (p) => !localProjects.find((lp) => lp.id === p.id)
+  );
+
+  return [...localProjects, ...removedProjects];
+}
+
 // TODO: need to refactor
 export function useProjectDetailList(data: any) {
-  const projects = data?.getProjects as ProjectServiceMetadata[];
   const [projectDetailList, setProjecList] = useState<ProjectDetails[]>();
+  const localProjects = data?.getProjects as ProjectServiceMetadata[];
 
   const { setPageLoading } = useLoading();
+  const { account } = useWeb3();
 
   const getProjectDetailList = useCallback(async () => {
+    if (!account) return;
+
+    const indexingProjects = await getIndexingProjects(account);
+    const projects = combineProjects(localProjects, indexingProjects);
+
     if (isUndefined(projects)) return;
     if (isEmpty(projects)) {
       setPageLoading(false);
@@ -240,7 +279,7 @@ export function useProjectDetailList(data: any) {
       console.error('Get project details failed:', e);
       setPageLoading(false);
     }
-  }, [projects]);
+  }, [localProjects, account]);
 
   useEffect(() => {
     getProjectDetailList();

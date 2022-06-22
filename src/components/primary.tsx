@@ -63,6 +63,8 @@ type StyledButtonProps = {
   width?: number;
   mt?: number;
   mb?: number;
+  mr?: number;
+  ml?: number;
 };
 
 export const StyledButton = styled(SubButton)<StyledButtonProps>`
@@ -71,6 +73,8 @@ export const StyledButton = styled(SubButton)<StyledButtonProps>`
   padding: 16px 50px;
   margin-top: ${({ mt }) => mt ?? 0}px;
   margin-bottom: ${({ mb }) => mb ?? 0}px;
+  margin-right: ${({ mr }) => mr ?? 0}px;
+  margin-left: ${({ ml }) => ml ?? 0}px;
   font-weight: 500;
 `;
 

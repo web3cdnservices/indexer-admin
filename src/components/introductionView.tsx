@@ -10,7 +10,6 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   border-radius: 18px;
   margin-bottom: 50px;
   padding: 60px;
@@ -51,7 +50,7 @@ const IntroductionView: FC<Props> = ({ item, onClick, loading, link }) => {
           {link}
         </Text>
       </TextContainer>
-      <Button type="primary" title={buttonTitle} loading={loading} onClick={onClick} />
+      <Button mt={80} type="primary" title={buttonTitle} loading={loading} onClick={onClick} />
     </Container>
   );
 };

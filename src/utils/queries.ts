@@ -69,12 +69,32 @@ export const STOP_PROJECT = gql`
   }
 `;
 
-export const UPDAET_CONTROLLER = gql`
-  mutation UpdateController($controller: String!) {
-    updateController(controller: $controller) {
-      indexer
-      controller
+export const GET_CONTROLLERS = gql`
+  query {
+    controllers {
+      id
+      address
     }
+  }
+`;
+
+export const ADD_CONTROLLER = gql`
+  mutation AddController {
+    addController
+  }
+`;
+
+export const REMOVE_CONTROLLER = gql`
+  mutation RemoveController($id: String!) {
+    removeAccount(id: $id) {
+      id
+    }
+  }
+`;
+
+export const WITHDRAW_CONTROLLER = gql`
+  query WithdrawController($id: String!) {
+    withrawController(id: $id)
   }
 `;
 
@@ -170,6 +190,18 @@ export const GET_QUERY_METADATA = gql`
 `;
 
 // query project registry
+export const GET_INDEXER_PROJECTS = gql`
+  query GetIndexerProjects($indexer: String!) {
+    deploymentIndexers(filter: { indexerId: { equalTo: $indexer } }) {
+      nodes {
+        indexerId
+        deploymentId
+        status
+      }
+    }
+  }
+`;
+
 export const GET_PROJECT_DETAILS = gql`
   query GetProjectDetails($deploymentId: String!) {
     deployments(filter: { id: { equalTo: $deploymentId } }) {

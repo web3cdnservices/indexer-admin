@@ -30,7 +30,7 @@ export const notifications = {
     type: 'danger',
     title: 'Insufficient Balance',
     message:
-      'The controller account has insufficient funds to pay the transaction fee. Please top up your controller account ASAP.',
+      'The controller account has insufficient assets to pay the transaction fee. Please top up your controller account ASAP.',
     dismiss: dismiss(50000, false),
   } as Notification,
 };

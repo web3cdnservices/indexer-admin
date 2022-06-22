@@ -7,10 +7,10 @@ export type Account = string | null | undefined;
 
 export type AccountButtonItem = {
   title: string;
-  type: AccountAction;
+  type?: AccountAction;
   loading?: boolean;
   disabled?: boolean;
-  onClick: (type: AccountAction) => void;
+  onClick: (type?: AccountAction) => void;
 };
 
 export type IndexerMetadata = {

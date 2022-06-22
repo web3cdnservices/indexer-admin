@@ -8,7 +8,6 @@ import { isUndefined } from 'lodash';
 
 import AccountCard from 'components/accountCard';
 import ModalView from 'components/modalView';
-import { useContractSDK } from 'containers/contractSdk';
 import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useLoading } from 'containers/loadingContext';
 import { useNotification } from 'containers/notificationContext';
@@ -22,46 +21,41 @@ import {
 import { useAccountAction } from 'hooks/transactionHook';
 import { useIsMetaMask, useWeb3 } from 'hooks/web3Hook';
 import { AccountAction } from 'pages/project-details/types';
-import { ControllerFormKey, MetadataFormKey } from 'types/schemas';
+import { MetadataFormKey } from 'types/schemas';
 import { balanceSufficient } from 'utils/account';
 import { createIndexerMetadata } from 'utils/ipfs';
-import { REMOVE_ACCOUNTS, UPDAET_CONTROLLER } from 'utils/queries';
-import { privateToAddress, validateController } from 'utils/validateService';
+import { REMOVE_ACCOUNTS } from 'utils/queries';
 
 import {
   AccountActionName,
-  configControllerFailed,
-  configControllerSucceed,
   createButonItem,
-  createControllerSteps,
   createUnregisterSteps,
   createUpdateMetadataSteps,
 } from './config';
 import prompts, { notifications } from './prompts';
 import { Container } from './styles';
+import { AccountButtonItem } from './types';
 
-const Registry = () => {
+const Account = () => {
   const [visible, setVisible] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [inputController, setController] = useState('');
   const [actionType, setActionType] = useState<AccountAction>();
 
   const { account } = useWeb3();
-  const sdk = useContractSDK();
   const isIndexer = useIsIndexer();
   const { indexer } = useCoordinatorIndexer();
   const { metadata, fetchMetadata } = useIndexerMetadata();
   const accountAction = useAccountAction();
   const isMetaMask = useIsMetaMask();
   const isController = useIsController(account);
-  const { controller, getController } = useController();
+  const { controller } = useController();
   const controllerBalance = useBalance(controller);
   const indexerBalance = useBalance(account);
   const { dispatchNotification } = useNotification();
-  const [updateController] = useMutation(UPDAET_CONTROLLER);
-  const [removeAccounts] = useMutation(REMOVE_ACCOUNTS);
   const { setPageLoading } = useLoading();
   const history = useHistory();
+
+  const [removeAccounts] = useMutation(REMOVE_ACCOUNTS);
 
   prompts.controller.desc = `Balance: ${controllerBalance} ACALA`;
   const controllerItem = !controller ? prompts.emptyController : prompts.controller;
@@ -77,7 +71,7 @@ const Registry = () => {
     }
   }, [controllerBalance]);
 
-  const onButtonPress = (type: AccountAction) => {
+  const onButtonPress = (type?: AccountAction) => {
     setActionType(type);
     setVisible(true);
   };
@@ -94,38 +88,12 @@ const Registry = () => {
     createButonItem(AccountAction.unregister, onButtonPress),
   ];
 
-  const controllerButtons = [createButonItem(AccountAction.configCntroller, onButtonPress)];
-
-  const controllerSteps = createControllerSteps(
-    async (values, formHelper) => {
-      formHelper.setStatus({ loading: true });
-      const privateKey = values[ControllerFormKey.privateKey];
-      const controllerAddress = privateToAddress(privateKey);
-      const indexerController = await sdk?.indexerRegistry.indexerToController(account ?? '');
-      const isExist =
-        !!controllerAddress && (await sdk?.indexerRegistry.isController(controllerAddress));
-
-      const error = validateController(privateKey, isExist, account ?? '', indexerController);
-      if (error) {
-        formHelper.setStatus({ loading: false });
-        formHelper.setErrors({ [ControllerFormKey.privateKey]: error });
-        return;
-      }
-
-      setController(controllerAddress);
-
-      try {
-        await updateController({ variables: { controller: privateKey } });
-        dispatchNotification(configControllerSucceed(controllerAddress));
-        setCurrentStep(1);
-      } catch {
-        onModalClose();
-        dispatchNotification(configControllerFailed(controllerAddress));
-      }
-      formHelper.setStatus({ loading: false });
-    },
-    () => accountAction(AccountAction.configCntroller, inputController, onModalClose, getController)
-  );
+  const controllerButtons = [
+    {
+      title: 'Manange Controller',
+      onClick: () => history.push('/controller-management'),
+    } as AccountButtonItem,
+  ];
 
   const updateMetadataStep = useMemo(
     () =>
@@ -148,10 +116,7 @@ const Registry = () => {
     accountAction(AccountAction.unregister, '', onModalClose, unregisterCompleted)
   );
 
-  const steps = useMemo(
-    () => ({ ...controllerSteps, ...unregisterStep, ...updateMetadataStep }),
-    [metadata, inputController]
-  );
+  const steps = useMemo(() => ({ ...unregisterStep, ...updateMetadataStep }), [metadata]);
 
   return (
     <Container>
@@ -187,4 +152,4 @@ const Registry = () => {
   );
 };
 
-export default Registry;
+export default Account;

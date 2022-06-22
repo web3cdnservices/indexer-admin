@@ -3,6 +3,8 @@
 
 import { FormikHelpers, FormikValues } from 'formik';
 
+import { ControllerAction } from 'pages/controllers/types';
+
 export enum DockerRegistry {
   query = 'onfinality/subql-query',
   node = 'onfinality/subql-node',
@@ -30,7 +32,6 @@ export type TransactionType =
 export enum AccountAction {
   unregister = 'unregister',
   updateMetaData = 'updateMetadata',
-  configCntroller = 'configCntroller',
 }
 
 export enum ProjectsAction {
@@ -48,8 +49,8 @@ export enum ProjectAction {
   RemoveProject = 'Remove Project',
 }
 
-export type ModalAction = AccountAction | ProjectsAction | ProjectAction;
-
+// TODO: move these types to global types
+export type ModalAction = AccountAction | ControllerAction | ProjectsAction | ProjectAction;
 export type ClickAction = (type?: ModalAction) => void;
 export type FormSubmit = (values: FormikValues, helper: FormikHelpers<FormikValues>) => void;
 
