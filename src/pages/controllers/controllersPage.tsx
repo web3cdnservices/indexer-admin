@@ -23,6 +23,7 @@ import {
   createRemoveAccountSteps,
   createWithdrawSteps,
   withdrawControllerFailed,
+  withdrawControllerLoading,
   withdrawControllerSucceed,
 } from './config';
 import ControllerItem from './controllerItem';
@@ -36,13 +37,13 @@ const controllersPage = () => {
   const [account, setAccount] = useState<Controller>();
   const [visible, setVisible] = useState(false);
 
-  const { dispatchNotification } = useNotification();
+  const { dispatchNotification, removeNotification } = useNotification();
   const accountAction = useAccountAction();
   const { controller: currentController, getController } = useController();
 
   const [removeController] = useMutation(REMOVE_CONTROLLER);
   const [addController, { loading: addControllerRequesting }] = useMutation(ADD_CONTROLLER);
-  const [withdrawController, { loading }] = useLazyQuery(WITHDRAW_CONTROLLER, {
+  const [withdrawController] = useLazyQuery(WITHDRAW_CONTROLLER, {
     fetchPolicy: 'network-only',
   });
   const [getControllers, { data: controllerData }] = useLazyQuery<{ controllers: Controller[] }>(
@@ -91,14 +92,18 @@ const controllersPage = () => {
   });
 
   const withdrawSteps = createWithdrawSteps(async () => {
-    const res = await withdrawController({ variables: { id: account?.id } });
     onModalClose();
+    const address = account?.address;
+    const notificationId = dispatchNotification(withdrawControllerLoading(address));
 
-    if (res.data.withdrawController) {
-      dispatchNotification(withdrawControllerSucceed(account?.address));
+    const res = await withdrawController({ variables: { id: account?.id } });
+    removeNotification(notificationId);
+    if (res.data.withrawController) {
+      dispatchNotification(withdrawControllerSucceed(address));
     } else {
-      dispatchNotification(withdrawControllerFailed(account?.address));
+      dispatchNotification(withdrawControllerFailed(address));
     }
+    await getControllers();
   });
 
   const configControllerSteps = createConfigControllerSteps(() =>
@@ -164,7 +169,6 @@ const controllersPage = () => {
       {actionType && (
         <ModalView
           visible={visible}
-          loading={loading}
           onClose={onModalClose}
           steps={steps[actionType]}
           type={actionType}

@@ -3,6 +3,7 @@
 
 import { FC } from 'react';
 import { Tag } from '@subql/react-ui';
+import { isUndefined } from 'lodash';
 
 import { asyncRender } from 'components/asyncRender';
 import { Button, Text } from 'components/primary';
@@ -41,14 +42,16 @@ const ControllerItem: FC<Props> = ({
       </AccountContainer>
       <Balance>{asyncRender(!!balance, <Text>{`${balance} ACA`}</Text>)}</Balance>
       <Status>{isActived && <Tag text="Actived" state="success" />}</Status>
-      <Buttons>
-        {!isActived && <Button title="Configure" onClick={() => onConfigController(account)} />}
-        {emptyBalance ? (
-          <Button ml={10} title="Remove" onClick={() => onRemoveController(account)} />
-        ) : (
-          <Button ml={10} title="Withdraw" onClick={() => onWithdraw(account)} />
-        )}
-      </Buttons>
+      {asyncRender(
+        !!controller && !isUndefined(balance),
+        <Buttons>
+          {!isActived && <Button title="Configure" onClick={() => onConfigController(account)} />}
+          {!isActived && emptyBalance && (
+            <Button ml={10} title="Remove" onClick={() => onRemoveController(account)} />
+          )}
+          {!emptyBalance && <Button ml={10} title="Withdraw" onClick={() => onWithdraw(account)} />}
+        </Buttons>
+      )}
     </ItemContainer>
   );
 };

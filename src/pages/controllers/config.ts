@@ -40,6 +40,16 @@ export const createWithdrawSteps = (withdraw: ClickAction) => ({
 });
 
 // notifications
+export const withdrawControllerLoading = (controller = ''): Notification => {
+  const { type, title, message } = notification.widthdraw.loading;
+  return {
+    type,
+    title,
+    message: message(controller),
+    dismiss: dismiss(30000, true),
+  };
+};
+
 export const withdrawControllerSucceed = (controller = ''): Notification => {
   const { type, title, message } = notification.widthdraw.success;
   return {

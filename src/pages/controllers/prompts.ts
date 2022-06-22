@@ -35,6 +35,11 @@ export const prompts = {
   },
   notification: {
     widthdraw: {
+      loading: {
+        type: 'default' as NOTIFICATION_TYPE,
+        title: 'Controller withdrawl',
+        message: (c: string) => `Withdraw all the asset for controller: ${c}  may take 20s`,
+      },
       success: {
         type: 'success' as NOTIFICATION_TYPE,
         title: 'Controller withdrawl Succeed',
