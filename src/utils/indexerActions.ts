@@ -1,6 +1,7 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import { getOverrides } from '@subql/network-clients';
 import { utils } from 'ethers';
 
 import { SDK } from 'containers/contractSdk';
@@ -47,8 +48,8 @@ export async function indexerRegistry(
     throw new Error(ErrorMessages.amountError);
   }
 
-  const overrides = { gasLimit: '1300000', type: 0 };
   console.log(amount.toString(), metadata, commissionRate);
+  const overrides = await getOverrides();
 
   const tx = await sdk.indexerRegistry
     .connect(signer)
@@ -70,7 +71,8 @@ export async function unRegister(sdk: SDK, signer: Signer) {
     throw new Error(ErrorMessages.sdkOrSignerError);
   }
 
-  const tx = sdk.indexerRegistry.connect(signer).unregisterIndexer({ gasLimit: '1000000' });
+  const overrides = await getOverrides();
+  const tx = sdk.indexerRegistry.connect(signer).unregisterIndexer(overrides);
   return tx;
 }
 

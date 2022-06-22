@@ -22,6 +22,7 @@
     "@sentry/react": "^6.19.6",
     "@sentry/tracing": "^6.19.6",
     "@subql/contract-sdk": "0.6.1-2",
+    "@subql/network-clients": "0.1.1-6",
     "@subql/react-ui": "^1.0.1-21",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",

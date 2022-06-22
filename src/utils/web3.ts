@@ -62,8 +62,8 @@ export const NETWORK_CONFIGS = {
     chainId: intToHex(1287),
     chainName: 'Moonbase Alpha',
     nativeCurrency: {
-      name: 'ACALA',
-      symbol: 'ACALA',
+      name: 'ACA',
+      symbol: 'ACA',
       decimals: 18,
     },
     rpcUrls: [RPC_URLS[1287]],

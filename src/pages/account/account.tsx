@@ -57,7 +57,7 @@ const Account = () => {
 
   const [removeAccounts] = useMutation(REMOVE_ACCOUNTS);
 
-  prompts.controller.desc = `Balance: ${controllerBalance} ACALA`;
+  prompts.controller.desc = `Balance: ${controllerBalance} ACA`;
   const controllerItem = !controller ? prompts.emptyController : prompts.controller;
   const indexerItem = prompts.indexer;
 
@@ -126,7 +126,7 @@ const Account = () => {
           name={indexerName}
           buttons={indexerButtons}
           account={account ?? ''}
-          desc={`Balance: ${indexerBalance} ACALA`}
+          desc={`Balance: ${indexerBalance} ACA`}
         />
       )}
       {(isIndexer || isController) && (
