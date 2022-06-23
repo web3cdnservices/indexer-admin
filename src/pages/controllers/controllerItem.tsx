@@ -34,6 +34,8 @@ const ControllerItem: FC<Props> = ({
   const emptyBalance = Number(balance) === 0;
   const account = { id, address };
 
+  console.log('balance:', balance, 'controller:', controller);
+
   return (
     <ItemContainer>
       <AccountContainer>
@@ -43,7 +45,7 @@ const ControllerItem: FC<Props> = ({
       <Balance>{asyncRender(!!balance, <Text>{`${balance} ACA`}</Text>)}</Balance>
       <Status>{isActived && <Tag text="Actived" state="success" />}</Status>
       {asyncRender(
-        !!controller && !isUndefined(balance),
+        !isUndefined(controller) && !isUndefined(balance),
         <Buttons>
           {!isActived && <Button title="Configure" onClick={() => onConfigController(account)} />}
           {!isActived && emptyBalance && (
