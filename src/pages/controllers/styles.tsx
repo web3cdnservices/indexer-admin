@@ -12,6 +12,7 @@ export const Container = styled.div`
   padding: 30px 100px;
   padding-bottom: 80px;
   overflow-y: scroll;
+  min-width: 1200px;
 `;
 
 export const HeaderContainer = styled.div`
@@ -55,10 +56,17 @@ export const ItemContainer = styled.div`
   }
 `;
 
-export const AccountContainer = styled.div`
+export const ItemContentContainer = styled.div`
   display: flex;
   flex: 6;
+  align-items: center;
+`;
+
+export const AccountContainer = styled.div`
+  display: flex;
+  flex: 4;
   flex-direction: column;
+  margin: 0px 20px;
 `;
 
 export const Balance = styled.div`
@@ -74,6 +82,7 @@ export const Status = styled.div`
 
 export const Buttons = styled.div`
   display: flex;
-  flex: 3;
+  flex: 2;
   justify-content: flex-end;
+  min-width: 300px;
 `;

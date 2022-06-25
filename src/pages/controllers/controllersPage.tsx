@@ -3,11 +3,12 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { isEmpty } from 'lodash';
+import { isEmpty, isUndefined } from 'lodash';
 
 import IntroductionView from 'components/introductionView';
 import ModalView from 'components/modalView';
 import { Button, Text } from 'components/primary';
+import { useLoading } from 'containers/loadingContext';
 import { useNotification } from 'containers/notificationContext';
 import { useController } from 'hooks/indexerHook';
 import { useAccountAction } from 'hooks/transactionHook';
@@ -38,22 +39,20 @@ const controllersPage = () => {
   const [visible, setVisible] = useState(false);
 
   const { dispatchNotification, removeNotification } = useNotification();
-  const accountAction = useAccountAction();
   const { controller: currentController, getController } = useController();
+  const accountAction = useAccountAction();
+  const { setPageLoading } = useLoading();
 
   const [removeController] = useMutation(REMOVE_CONTROLLER);
-  const [addController, { loading: addControllerRequesting }] = useMutation(ADD_CONTROLLER);
-  const [withdrawController] = useLazyQuery(WITHDRAW_CONTROLLER, {
-    fetchPolicy: 'network-only',
-  });
-  const [getControllers, { data: controllerData }] = useLazyQuery<{ controllers: Controller[] }>(
-    GET_CONTROLLERS,
-    { fetchPolicy: 'network-only' }
-  );
+  const [createController, { loading: createControllerRequesting }] = useMutation(ADD_CONTROLLER);
+  const [withdrawController] = useLazyQuery(WITHDRAW_CONTROLLER);
+  const [getControllers, { data: controllerData }] =
+    useLazyQuery<{ controllers: Controller[] }>(GET_CONTROLLERS);
 
   useEffect(() => {
+    setPageLoading(isUndefined(controllerData));
     getControllers();
-  }, []);
+  }, [controllerData]);
 
   const isActivedController = (address: string): boolean => {
     return address.toLowerCase() === currentController?.toLowerCase();
@@ -72,8 +71,8 @@ const controllersPage = () => {
     ];
   }, [controllerData, currentController]);
 
-  const addControllerAction = async () => {
-    await addController();
+  const createControllerAction = async () => {
+    await createController();
     await getControllers();
   };
 
@@ -133,8 +132,8 @@ const controllersPage = () => {
           <Button
             title={header.button}
             type="primary"
-            loading={addControllerRequesting}
-            onClick={addControllerAction}
+            loading={createControllerRequesting}
+            onClick={createControllerAction}
           />
         </HeaderContainer>
       )}
@@ -162,7 +161,7 @@ const controllersPage = () => {
               desc: intro.desc,
               buttonTitle: intro.buttonTitle,
             }}
-            onClick={addControllerAction}
+            onClick={createControllerAction}
           />
         </IntroContainer>
       )}

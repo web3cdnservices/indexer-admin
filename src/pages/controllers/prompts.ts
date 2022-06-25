@@ -18,13 +18,13 @@ export const prompts = {
   },
   action: {
     configController: {
-      title: 'Update your controller on contract',
+      title: 'Active your controller on contract',
       desc: 'Press the button to send the transaction to network and update the new controller account on contract. The transaction processing time may take around 10s, it depends on the network status and gas fee. You will see the processing status on the top of the page once you confim the transaction on the MetaMask.',
       buttonTitle: 'Send Transction',
     },
     removeAccount: {
       title: 'Remove this account',
-      desc: 'You will not be able to find this account again once you confirm removal. Are you sure you want to remove it?',
+      desc: 'This action will remove the account from your coordinator service. You will not be able to find this account again once you confirm removal. Please make sure there has no assets in this account. Are you sure you want to remove it?',
       buttonTitle: 'Confirm Removal',
     },
     withdraw: {
@@ -32,6 +32,12 @@ export const prompts = {
       desc: 'You are about to withdraw the full balance from this account to your index account. The amount you receive will be the full balance minus the transaction fee. Transaction fee is determined by the network.',
       buttonTitle: 'Confirm Withdrawl',
     },
+  },
+  controllerItem: {
+    active: 'Actived',
+    activeBtn: 'Active',
+    widthdrawBtn: 'Withdraw',
+    removeBtn: 'Remove',
   },
   notification: {
     widthdraw: {
