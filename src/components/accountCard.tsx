@@ -36,7 +36,7 @@ const AccountCard: FC<Props> = ({ title, desc, buttons, name, account }) => {
   );
 
   return (
-    <Container>
+    <Container key={title}>
       <div>
         <HeaderContainer>
           <ContentContainer>

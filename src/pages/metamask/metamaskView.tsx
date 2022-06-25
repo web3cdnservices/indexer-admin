@@ -21,7 +21,9 @@ const MetaMaskView = () => {
   const { indexer } = useCoordinatorIndexer();
   const isMetaMask = useIsMetaMask();
   const isMetaMaskInstalled = useIsMetaMaskInstalled();
+
   const [isNetworkError, setNetworkError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
     setNetworkError(error?.name === NetworkError.unSupportedNetworkError);
@@ -35,9 +37,9 @@ const MetaMaskView = () => {
     return invalidAccount;
   }, [isNetworkError, isMetaMaskInstalled, isMetaMask, account, indexer]);
 
-  const onButtonClick = useCallback(() => {
+  const onButtonClick = useCallback(async () => {
     if (isNetworkError) {
-      switchNetwork();
+      await switchNetwork();
       return;
     }
     if (!isMetaMaskInstalled) {
@@ -47,7 +49,8 @@ const MetaMaskView = () => {
       return;
     }
     if (!isMetaMask) {
-      connectWithMetaMask(activate);
+      const result = await connectWithMetaMask(activate);
+      setErrorMsg(result);
     }
   }, [isMetaMask, isNetworkError, isMetaMaskInstalled]);
 
@@ -76,6 +79,9 @@ const MetaMaskView = () => {
       </Label>
       <Text alignCenter mt={15}>
         {data.desc}
+      </Text>
+      <Text color="red" alignCenter mt={15}>
+        {errorMsg}
       </Text>
       <Button mt={50} type="secondary" title="" onClick={onButtonClick} leftItem={metaMaskItem} />
     </Container>

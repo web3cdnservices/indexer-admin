@@ -12,11 +12,20 @@ export const NetworkError = {
   unSupportedNetworkError: 'UnsupportedChainIdError',
 };
 
+const ethMethods = {
+  requestAccount: 'eth_requestAccounts',
+  switchChain: 'wallet_switchEthereumChain',
+  addChain: 'wallet_switchEthereumChain',
+}
+
 export async function connectWithMetaMask(activate: Function) {
-  if (window.ethereum) {
-    await window.ethereum.request({ method: 'eth_requestAccounts' });
+  if (!window.ethereum) return 'MetaMask is not installed';
+  try {
+    await window.ethereum.request({ method: ethMethods.requestAccount });
     await connect(activate);
-    return;
+    return '';
+  } catch (e) {
+    return e.message;
   }
 }
 
@@ -27,13 +36,13 @@ export async function switchNetwork() {
 
   try {
     await window.ethereum.request({
-      method: 'wallet_switchEthereumChain',
+      method: ethMethods.switchChain,
       params: [{ chainId: intToHex(chainId) }],
     })
   } catch (e) {
     if (e.code === 4902) {
       await ethereum.request({
-        method: 'wallet_addEthereumChain',
+        method: ethMethods.addChain,
         params: [NETWORK_CONFIGS[chainId]],
       })
     } else {
