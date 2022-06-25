@@ -5,7 +5,7 @@ import { SubqueryNetwork } from '@subql/contract-sdk';
 import { intToHex } from 'ethereumjs-util';
 
 export enum ChainID {
-  local = 1281,
+  local = 31337,
   testnet = 595,
   mainnet = 1285,
 }
@@ -28,22 +28,22 @@ export const isSupportNetwork = (chaiId?: number) => ChainIDs.includes(chaiId ??
 
 export const RPC_URLS: Record<number, string> = {
   595: 'https://tc7-eth.aca-dev.network',
-  1281: 'http://127.0.0.1:9933',
   1285: 'https://moonriver.api.onfinality.io/public',
   1287: 'https://moonbeam-alpha.api.onfinality.io/public',
+  31337: 'http://127.0.0.1:8545',
 };
 
 export const networks: Record<number, SubqueryNetwork> = {
-  1281: Networks.local,
   595: Networks.testnet,
   1285: Networks.mainnet,
+  31337: Networks.local,
 };
 
 export const chainNames: Record<number, string> = {
-  595: 'SQN Testnet',
-  1281: 'Moonbeam Local',
+  595: 'Acala Testnet',
   1285: 'Moonriver',
   1287: 'Moonbeam Dev',
+  31337: 'Hardhat Local',
 };
 
 export const NETWORK_CONFIGS = {
@@ -62,8 +62,8 @@ export const NETWORK_CONFIGS = {
     chainId: intToHex(1287),
     chainName: 'Moonbase Alpha',
     nativeCurrency: {
-      name: 'ACA',
-      symbol: 'ACA',
+      name: 'DEV',
+      symbol: 'DEV',
       decimals: 18,
     },
     rpcUrls: [RPC_URLS[1287]],
