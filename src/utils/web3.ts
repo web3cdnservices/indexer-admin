@@ -1,7 +1,6 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { SubqueryNetwork } from '@subql/contract-sdk';
 import { intToHex } from 'ethereumjs-util';
 
 export enum ChainID {
@@ -15,6 +14,8 @@ export enum Networks {
   testnet = 'testnet',
   mainnet = 'mainnet',
 }
+
+export type SubqueryNetwork = 'mainnet' | 'testnet' | 'local';
 
 export const ChainIDs = [ChainID.local, ChainID.testnet, ChainID.mainnet];
 
