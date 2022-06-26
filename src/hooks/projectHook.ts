@@ -74,15 +74,15 @@ const projectInitValue = {
 export const useProjectService = (deploymentId: string) => {
   const { notification } = useNotification();
   const [projectService, setService] = useState<ProjectServiceMetadata>();
-  const [getProjectService, { data }] = useLazyQuery(GET_PROJECT, {
-    fetchPolicy: 'network-only',
-  });
+  const [getProject, { data }] = useLazyQuery(GET_PROJECT, { fetchPolicy: 'network-only' });
+
+  const getProjectService = () => getProject({ variables: { id: deploymentId } });
 
   useEffect(() => {
-    data ? setService(data.project) : getProjectService({ variables: { id: deploymentId } });
+    data ? setService(data.project) : getProjectService();
   }, [deploymentId, data, notification?.type]);
 
-  return projectService;
+  return { projectService, getProjectService };
 };
 
 export const useIndexingStatus = (deploymentId: string): IndexingStatus | undefined => {

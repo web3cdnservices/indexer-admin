@@ -24,7 +24,7 @@ import { useRouter } from 'hooks/routerHook';
 import { useIndexingAction } from 'hooks/transactionHook';
 import { ProjectFormKey } from 'types/schemas';
 import { ProjectNotification } from 'utils/notification';
-import { calculateProgress } from 'utils/project';
+import { calculateProgress, isTrue } from 'utils/project';
 import { REMOVE_PROJECT, START_PROJECT, STOP_PROJECT } from 'utils/queries';
 import { txErrorNotification } from 'utils/transactions';
 
@@ -61,7 +61,7 @@ const ProjectDetailsPage = () => {
   useRouter(!projectDetails);
 
   const indexingAction = useIndexingAction(id);
-  const projectService = useProjectService(id);
+  const { projectService, getProjectService } = useProjectService(id);
   const { dispatchNotification } = useNotification();
   const [startProjectRequest, { loading: startProjectLoading }] = useMutation(START_PROJECT);
   const [stopProjectRequest, { loading: stopProjectLoading }] = useMutation(STOP_PROJECT);
@@ -80,8 +80,11 @@ const ProjectDetailsPage = () => {
   };
 
   const updateServiceStatus = () => {
-    const intervalId = setInterval(() => fetchQueryMetadata(), 2000);
-    setTimeout(() => clearInterval(intervalId), 15000);
+    const intervalId = setInterval(() => fetchQueryMetadata(), 6000);
+    setTimeout(() => {
+      clearInterval(intervalId);
+      getProjectService();
+    }, 60000);
   };
 
   useEffect(() => {
@@ -103,6 +106,7 @@ const ProjectDetailsPage = () => {
 
   const projectStatus = useMemo(() => {
     const healthy = metadata?.indexerStatus === 'HEALTHY';
+    console.log('queryMetadata:', metadata);
     switch (status) {
       case IndexingStatus.NOTINDEXING:
         return healthy ? ProjectStatus.Started : ProjectStatus.NotIndexing;
@@ -177,9 +181,15 @@ const ProjectDetailsPage = () => {
 
   const startProject = async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
     try {
-      const poiEnabled = values.poiEnabled === 'true';
-      const forceEnabled = values.forceEnabled === 'true';
-      await startProjectRequest({ variables: { ...values, poiEnabled, forceEnabled, id } });
+      const { poiEnabled, forceEnabled } = values;
+      await startProjectRequest({
+        variables: {
+          ...values,
+          poiEnabled: isTrue(poiEnabled),
+          forceEnabled: isTrue(forceEnabled),
+          id,
+        },
+      });
 
       onModalClose();
       projectStateChange(ProjectNotification.Started);

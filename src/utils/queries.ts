@@ -143,6 +143,7 @@ export const GET_PROJECT = gql`
       nodeVersion
       queryVersion
       poiEnabled
+      forceEnabled
     }
   }
 `;

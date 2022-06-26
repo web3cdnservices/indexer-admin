@@ -36,3 +36,7 @@ export function indexingStatusCode(status: IndexingStatus) {
 export function projectId(cid: string): string {
   return cid.substring(0, 15).toLowerCase();
 }
+
+export function isTrue(value: boolean | string): boolean {
+  return value === true || value === 'true';
+}

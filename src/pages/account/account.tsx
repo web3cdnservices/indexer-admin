@@ -122,6 +122,7 @@ const Account = () => {
     <Container>
       {isMetaMask && isIndexer && (
         <AccountCard
+          key={account}
           title={indexerItem.title}
           name={indexerName}
           buttons={indexerButtons}
@@ -131,6 +132,7 @@ const Account = () => {
       )}
       {(isIndexer || isController) && (
         <AccountCard
+          key={account}
           title={controllerItem.title}
           name={controllerItem.name}
           account={controller}
