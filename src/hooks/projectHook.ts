@@ -11,9 +11,10 @@ import { useLoading } from 'containers/loadingContext';
 import { useNotification } from 'containers/notificationContext';
 import { useWeb3 } from 'hooks/web3Hook';
 import {
+  ChainType,
   DockerRegistry,
   IndexingStatus,
-  partialIpfsDeploymentManifest,
+  PartialIpfsDeploymentManifest,
   ProjectServiceMetadata,
   TQueryMetadata,
 } from 'pages/project-details/types';
@@ -290,11 +291,22 @@ export function useProjectDetailList(data: any) {
 
 export const getManifest = async (cid: string) => {
   const projectYaml = await cat(cid, IPFS_PROJECT_CLIENT);
-  const resultManifest = yaml.load(projectYaml) as partialIpfsDeploymentManifest;
+  const resultManifest = yaml.load(projectYaml) as PartialIpfsDeploymentManifest;
   return resultManifest;
 };
 
-// get image versions
+function dockerRegistryFromChain(chainType: ChainType): DockerRegistry {
+  switch (chainType) {
+    case 'cosmos':
+      return DockerRegistry.cosmos;
+    case 'avalanche':
+      return DockerRegistry.avalanche;
+    default:
+      return DockerRegistry.substrateNode;
+  }
+}
+
+// TODO: remove this: get image versions
 const defaultNodeVersions = ['v1.0.0', 'v0.35.2', 'v0.35.1', 'v0.34.0'];
 const defaultQueryVersions = ['v1.0.0', 'v0.16.0', 'v0.15.0'];
 
@@ -303,8 +315,13 @@ export const useNodeVersions = (cid: string) => {
 
   const fetchNodeVersions = useCallback(async () => {
     const manifest = await getManifest(cid);
-    const range = manifest.runner?.node?.version ?? '>=0.34.0';
-    getNodeVersions({ variables: { range, registry: DockerRegistry.node } });
+    const { dataSources, runner } = manifest;
+    const runtime = dataSources[0].kind;
+    const chainType = runtime.split('/')[0] as ChainType;
+
+    const registry = dockerRegistryFromChain(chainType);
+    const range = runner?.node?.version ?? '>=0.34.0';
+    getNodeVersions({ variables: { range, registry } });
   }, [cid]);
 
   useEffect(() => {

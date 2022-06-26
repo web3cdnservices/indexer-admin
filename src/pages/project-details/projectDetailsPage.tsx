@@ -106,7 +106,6 @@ const ProjectDetailsPage = () => {
 
   const projectStatus = useMemo(() => {
     const healthy = metadata?.indexerStatus === 'HEALTHY';
-    console.log('queryMetadata:', metadata);
     switch (status) {
       case IndexingStatus.NOTINDEXING:
         return healthy ? ProjectStatus.Started : ProjectStatus.NotIndexing;

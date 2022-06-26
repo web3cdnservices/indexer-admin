@@ -5,9 +5,13 @@ import { FormikHelpers, FormikValues } from 'formik';
 
 import { ControllerAction } from 'pages/controllers/types';
 
+export type ChainType = 'cosmos' | 'avalanche' | 'substrate';
+
 export enum DockerRegistry {
   query = 'onfinality/subql-query',
-  node = 'onfinality/subql-node',
+  substrateNode = 'onfinality/subql-node',
+  cosmos = 'onfinality/subql-node-cosmos',
+  avalanche = 'onfinality/subql-node-avalanche',
 }
 
 export enum IndexingStatus {
@@ -94,8 +98,12 @@ export type Runner = {
   };
 };
 
-export type partialIpfsDeploymentManifest = {
-  dataSources: any[];
+type DataSources = {
+  kind: string;
+};
+
+export type PartialIpfsDeploymentManifest = {
+  dataSources: DataSources[];
   schema: {
     file: string;
   };
