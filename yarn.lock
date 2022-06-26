@@ -2959,17 +2959,17 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@subql/contract-sdk@0.6.1-2":
-  version "0.6.1-2"
-  resolved "https://registry.yarnpkg.com/@subql/contract-sdk/-/contract-sdk-0.6.1-2.tgz#75f46c780ec778081c74f99f95a55836b3d62515"
-  integrity sha512-TBS0pb+HoXz4yLXClBD2a4x0HcOcbmpkc1ZcbAm0VMnWZQq6ov7WcZ/JecdZdsY7Xt8w7OKKINPKcckOPkHddg==
+"@subql/contract-sdk@0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@subql/contract-sdk/-/contract-sdk-0.7.0.tgz#548dc641421b67852807b42225497a42c5fccb26"
+  integrity sha512-dRfvIF0pJNzco31Y1rFkG+NkU5yY/A52OKIPYJNJ8u3niWcS8lwwTfwOEZ1GOVHiBgbOLqEbyKPoUAr2QlB8uQ==
   dependencies:
     "@openzeppelin/contracts-upgradeable" "^4.5.2"
 
-"@subql/network-clients@0.1.1-7":
-  version "0.1.1-7"
-  resolved "https://registry.yarnpkg.com/@subql/network-clients/-/network-clients-0.1.1-7.tgz#3456e6849b070cc4f0ef4f4acf12601e067f60f8"
-  integrity sha512-XwV0k8dQ2bvHBLBBDGncizY7msf5gOvknB4MSz71RC6mLnThV4KPTJWTRtUQCcOCsNty8vYIo9CBdgOmrauAFw==
+"@subql/network-clients@0.1.1-8":
+  version "0.1.1-8"
+  resolved "https://registry.yarnpkg.com/@subql/network-clients/-/network-clients-0.1.1-8.tgz#ff75104528fdf742f53c1f3a413997a43823e36b"
+  integrity sha512-tLWjIZpf7kFC7dBURt2qOXDN/3ZXC+rb4+otMznGBeb1UaKdPUwwROjGFQsCEa5wzmMiCMlfOBAxsWPwQx0Wuw==
   dependencies:
     axios "^0.27.2"
     buffer "^6.0.3"

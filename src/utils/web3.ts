@@ -56,7 +56,7 @@ export const NETWORK_CONFIGS = {
       decimals: 18,
     },
     rpcUrls: [RPC_URLS[ChainID.testnet]],
-    blockExplorerUrls: null,
+    blockExplorerUrls: ['https://blockscout.mandala.acala.network/'],
   },
   1287: {
     chainId: intToHex(1287),

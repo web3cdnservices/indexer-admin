@@ -15,7 +15,7 @@ export const NetworkError = {
 const ethMethods = {
   requestAccount: 'eth_requestAccounts',
   switchChain: 'wallet_switchEthereumChain',
-  addChain: 'wallet_switchEthereumChain',
+  addChain: 'wallet_addEthereumChain',
 }
 
 export async function connectWithMetaMask(activate: Function) {
@@ -40,6 +40,7 @@ export async function switchNetwork() {
       params: [{ chainId: intToHex(chainId) }],
     })
   } catch (e) {
+    console.log('e:', e);
     if (e.code === 4902) {
       await ethereum.request({
         method: ethMethods.addChain,
