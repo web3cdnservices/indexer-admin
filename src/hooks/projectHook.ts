@@ -306,10 +306,6 @@ function dockerRegistryFromChain(chainType: ChainType): DockerRegistry {
   }
 }
 
-// TODO: remove this: get image versions
-const defaultNodeVersions = ['v1.0.0', 'v0.35.2', 'v0.35.1', 'v0.34.0'];
-const defaultQueryVersions = ['v1.0.0', 'v0.16.0', 'v0.15.0'];
-
 export const useNodeVersions = (cid: string) => {
   const [getNodeVersions, { data }] = useLazyQuery(GET_REGISTRY_VERSIONS);
 
@@ -329,7 +325,7 @@ export const useNodeVersions = (cid: string) => {
   }, [fetchNodeVersions]);
 
   const versions = data?.getRegistryVersions;
-  return !isEmpty(versions) ? versions : defaultNodeVersions;
+  return !isEmpty(versions) ? versions : [];
 };
 
 export const useQueryVersions = (cid: string) => {
@@ -346,5 +342,5 @@ export const useQueryVersions = (cid: string) => {
   }, [fetchQueryVersions]);
 
   const versions = data?.getRegistryVersions;
-  return !isEmpty(versions) ? versions : defaultQueryVersions;
+  return !isEmpty(versions) ? versions : [];
 };
