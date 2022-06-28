@@ -125,7 +125,13 @@ const RegisterPage = () => {
       }
 
       const indexerMetadata = await createIndexerMetadata(name, proxyEndpoint);
-      const tx = await indexerRegistry(sdk, signer, amount.toString(), indexerMetadata, rate * 10);
+      const tx = await indexerRegistry(
+        sdk,
+        signer,
+        amount.toString(),
+        indexerMetadata,
+        rate * 10000
+      );
       const receipt = await tx.wait(1);
       if (!receipt.status) {
         throw new Error('Send indexer registry transaction failed');

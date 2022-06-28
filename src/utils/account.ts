@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export function balanceSufficient(balance: string): boolean {
-  return parseFloat(balance) > parseFloat('0.08');
+  return parseFloat(balance) > parseFloat('0.8');
 }
 
 export function openAccountExporer(account: string) {

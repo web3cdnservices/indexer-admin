@@ -51,8 +51,6 @@ export async function indexerRegistry(
   console.log(amount.toString(), metadata, commissionRate);
   const overrides = await getEthGas();
 
-  console.log('overrides:', overrides);
-
   const tx = await sdk.indexerRegistry
     .connect(signer)
     .registerIndexer(utils.parseEther(amount), metadata, commissionRate, overrides);
