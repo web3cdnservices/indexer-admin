@@ -283,6 +283,7 @@ export function useProjectDetailList(data: any) {
   }, [localProjects, account]);
 
   useEffect(() => {
+    setPageLoading(true);
     getProjectDetailList();
   }, [getProjectDetailList, data]);
 
@@ -295,6 +296,7 @@ export const getManifest = async (cid: string) => {
   return resultManifest;
 };
 
+// TODO: migrate to docker registry module
 function dockerRegistryFromChain(chainType: ChainType): DockerRegistry {
   switch (chainType) {
     case 'cosmos':
@@ -306,6 +308,12 @@ function dockerRegistryFromChain(chainType: ChainType): DockerRegistry {
   }
 }
 
+const defaultRange = {
+  substrate: '>=1.1.1',
+  cosmos: '>=0.1.0',
+  avalanche: '>=0.1.1',
+};
+
 export const useNodeVersions = (cid: string) => {
   const [getNodeVersions, { data }] = useLazyQuery(GET_REGISTRY_VERSIONS);
 
@@ -316,7 +324,7 @@ export const useNodeVersions = (cid: string) => {
     const chainType = runtime.split('/')[0] as ChainType;
 
     const registry = dockerRegistryFromChain(chainType);
-    const range = runner?.node?.version ?? '>=0.34.0';
+    const range = runner?.node?.version ?? defaultRange[chainType];
     getNodeVersions({ variables: { range, registry } });
   }, [cid]);
 
@@ -324,7 +332,11 @@ export const useNodeVersions = (cid: string) => {
     fetchNodeVersions();
   }, [fetchNodeVersions]);
 
-  const versions = data?.getRegistryVersions;
+  const registryVersions = data?.getRegistryVersions;
+  console.log('registryVersions:', registryVersions);
+
+  // FIXME: special filter for subql-node [v1.2.1]
+  const versions = registryVersions?.filter((v: string) => v !== 'v1.2.1');
   return !isEmpty(versions) ? versions : [];
 };
 
