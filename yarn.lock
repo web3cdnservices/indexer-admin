@@ -2966,10 +2966,10 @@
   dependencies:
     "@openzeppelin/contracts-upgradeable" "^4.5.2"
 
-"@subql/network-clients@0.1.1-8":
-  version "0.1.1-8"
-  resolved "https://registry.yarnpkg.com/@subql/network-clients/-/network-clients-0.1.1-8.tgz#ff75104528fdf742f53c1f3a413997a43823e36b"
-  integrity sha512-tLWjIZpf7kFC7dBURt2qOXDN/3ZXC+rb4+otMznGBeb1UaKdPUwwROjGFQsCEa5wzmMiCMlfOBAxsWPwQx0Wuw==
+"@subql/network-clients@0.1.1-10":
+  version "0.1.1-10"
+  resolved "https://registry.yarnpkg.com/@subql/network-clients/-/network-clients-0.1.1-10.tgz#320c42dd5d3559d4c15d5ec0e08b613c595b29f3"
+  integrity sha512-WAwbhK1muL/cV4I2xQUIJYaWFH/37HJo/URUvH/Jn7M07zC3uS4VxtgkZszURVK+KnoK1QANCQzYxHU1etEHEA==
   dependencies:
     axios "^0.27.2"
     buffer "^6.0.3"
