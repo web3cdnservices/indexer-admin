@@ -179,8 +179,6 @@ export const GET_QUERY_METADATA = gql`
       lastProcessedTimestamp
       targetHeight
       chain
-      specName
-      genesisHash
       indexerHealthy
       indexerNodeVersion
       queryNodeVersion
