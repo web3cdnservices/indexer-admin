@@ -6,19 +6,19 @@ import { NOTIFICATION_TYPE } from 'react-notifications-component';
 export const prompts = {
   header: {
     mainTitle: 'Manage Controller Accounts',
-    title: 'Create and manange your controller accounts here',
+    title: 'Create and manage your controller accounts here',
     subTitle:
       'You can Configure the account you wish to set as the controller on the coordinator services',
     button: 'Create an Account',
   },
   intro: {
     title: 'Manage Controller Accounts',
-    desc: 'You can create as manay accounts as you want. You can then configure the one you wish to set as the controller on coordinator services.',
+    desc: 'You can create as many accounts as you want. You can then configure the one you wish to set as the controller on coordinator services.',
     buttonTitle: 'Create an Account',
   },
   action: {
     configController: {
-      title: 'Active your controller on contract',
+      title: 'Activate your controller on contract',
       desc: 'Press the button to send the transaction to network and update the new controller account on contract. The transaction processing time may take around 10s, it depends on the network status and gas fee. You will see the processing status on the top of the page once you confim the transaction on the MetaMask.',
       buttonTitle: 'Send Transction',
     },
