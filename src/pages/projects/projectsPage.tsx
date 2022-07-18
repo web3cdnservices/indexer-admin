@@ -44,7 +44,8 @@ const Projects = () => {
 
   const step = createAddProjectSteps(async (values, helper) => {
     try {
-      const id = values[ProjectFormKey.deploymentId];
+      // TODO: need to verify the id with subql-common library
+      const id = values[ProjectFormKey.deploymentId].trim();
       await addProject({ variables: { id } });
 
       setVisible(false);
