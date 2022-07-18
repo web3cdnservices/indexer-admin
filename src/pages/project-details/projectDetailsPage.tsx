@@ -160,7 +160,7 @@ const ProjectDetailsPage = () => {
       nodeVersion: projectService?.nodeVersion ? projectService.nodeVersion : nodeVersions[0],
       queryVersion: projectService?.queryVersion ? projectService.queryVersion : queryVersions[0],
       poiEnabled: projectService?.networkEndpoint ? projectService?.poiEnabled : true,
-      forceEnabled: projectService?.networkEndpoint ? projectService?.forceEnabled : true,
+      forceEnabled: projectService?.networkEndpoint ? projectService?.forceEnabled : false,
     }),
     [projectService, nodeVersions, queryVersions]
   );

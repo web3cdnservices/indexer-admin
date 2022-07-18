@@ -22,7 +22,7 @@ const prompts = {
   },
   [RegisterStep.sync]: {
     title: 'Sync the indexer with coordinator service',
-    desc: 'This connect account has been an indexer already, please press the sync button to sync this account with you coordinator service, otherwise you can switch you account in the wallet to select the correct account.',
+    desc: 'This account has been an indexer already, please press the sync button to sync this account with your coordinator service, otherwise you can switch your account in the wallet to select the correct account.',
     buttonTitle: 'Sync',
   },
 };
