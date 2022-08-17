@@ -22,9 +22,9 @@ export const useIndexerEra = () => {
   const updateEra = useCallback(async () => {
     if (!sdk || !account) return;
 
-    const [currentEra, lastClaimedEra, lastSettledEra] = await Promise.all([
-      sdk?.eraManager.eraNumber(),
-      sdk.rewardsDistributor.getLastClaimEra(account),
+    const lastClaimedEra = (await sdk.rewardsDistributor.getRewardInfo(account)).lastClaimEra;
+    const [currentEra, lastSettledEra] = await Promise.all([
+      sdk.eraManager.eraNumber(),
       sdk.rewardsDistributor.getLastSettledEra(account),
     ]);
 
