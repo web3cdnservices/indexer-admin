@@ -11,6 +11,7 @@ import { Button, Text } from 'components/primary';
 import { useBalance } from 'hooks/indexerHook';
 import { openAccountExporer } from 'utils/account';
 
+import { useTokenSymbol } from '../../hooks/network';
 import { prompts } from './prompts';
 import {
   AccountContainer,
@@ -44,6 +45,7 @@ const ControllerItem: FC<Props> = ({
   const balance = useBalance(address);
   const emptyBalance = Number(balance) === 0;
   const account = { id, address };
+  const tokenSymbol = useTokenSymbol();
 
   return (
     <ItemContainer>
@@ -57,7 +59,7 @@ const ControllerItem: FC<Props> = ({
             {address}
           </Text>
         </AccountContainer>
-        <Balance>{asyncRender(!!balance, <Text>{`${balance} ACA`}</Text>)}</Balance>
+        <Balance>{asyncRender(!!balance, <Text>{`${balance} ${tokenSymbol}`}</Text>)}</Balance>
         <Status>{isActived && <Tag text={active} state="success" />}</Status>
       </ItemContentContainer>
       {asyncRender(

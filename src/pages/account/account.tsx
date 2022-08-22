@@ -18,6 +18,7 @@ import {
   useIsController,
   useIsIndexer,
 } from 'hooks/indexerHook';
+import { useTokenSymbol } from 'hooks/network';
 import { useAccountAction } from 'hooks/transactionHook';
 import { useIsMetaMask, useWeb3 } from 'hooks/web3Hook';
 import { AccountAction } from 'pages/project-details/types';
@@ -54,10 +55,11 @@ const Account = () => {
   const { dispatchNotification } = useNotification();
   const { setPageLoading } = useLoading();
   const history = useHistory();
+  const tokenSymbol = useTokenSymbol();
 
   const [removeAccounts] = useMutation(REMOVE_ACCOUNTS);
 
-  prompts.controller.desc = `Balance: ${controllerBalance} ACA`;
+  prompts.controller.desc = `Balance: ${controllerBalance} ${tokenSymbol}`;
   const controllerItem = !controller ? prompts.emptyController : prompts.controller;
   const indexerItem = prompts.indexer;
 
@@ -127,7 +129,7 @@ const Account = () => {
           name={indexerName}
           buttons={indexerButtons}
           account={account ?? ''}
-          desc={`Balance: ${indexerBalance} ACA`}
+          desc={`Balance: ${indexerBalance} ${tokenSymbol}`}
         />
       )}
       {(isIndexer || isController) && (

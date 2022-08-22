@@ -1,11 +1,27 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useContractSDK } from 'containers/contractSdk';
 
 import { useWeb3 } from './web3Hook';
+
+export const useTokenSymbol = () => {
+  const { chainId } = useWeb3();
+  const tokenSymbol = useMemo(() => {
+    if (chainId === 595) {
+      return 'ACA';
+    }
+    if (chainId === 1287) {
+      return 'DEV';
+    }
+
+    return 'DEV';
+  }, [chainId]);
+
+  return tokenSymbol;
+};
 
 export type IndexerEra = {
   currentEra: string;
