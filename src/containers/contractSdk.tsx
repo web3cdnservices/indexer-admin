@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { ContractDeployment, ContractSDK, SdkOptions } from '@subql/contract-sdk';
+import moonbaseDeployment from '@subql/contract-sdk/publish/moonbase.json';
 import testnetDeployment from '@subql/contract-sdk/publish/testnet.json';
 
 import { useIsMetaMask, useWeb3 } from 'hooks/web3Hook';
@@ -12,8 +13,8 @@ import { ChainID, isSupportNetwork, Networks, SubqueryNetwork } from 'utils/web3
 import { createContainer } from './unstated';
 
 const deployments: Record<SubqueryNetwork, ContractDeployment> = {
-  local: testnetDeployment,
   testnet: testnetDeployment,
+  moonbase: moonbaseDeployment,
   mainnet: testnetDeployment,
 };
 
@@ -25,7 +26,7 @@ function createContractOptions(network: SubqueryNetwork): SdkOptions {
 }
 
 const options = {
-  [ChainID.local]: createContractOptions(Networks.local),
+  [ChainID.moonbase]: createContractOptions(Networks.moonbase),
   [ChainID.testnet]: createContractOptions(Networks.testnet),
   [ChainID.mainnet]: createContractOptions(Networks.mainnet),
 };

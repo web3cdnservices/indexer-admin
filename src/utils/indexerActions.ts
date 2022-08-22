@@ -1,7 +1,6 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { getEthGas } from '@subql/network-clients';
 import { utils } from 'ethers';
 
 import { SDK } from 'containers/contractSdk';
@@ -48,12 +47,9 @@ export async function indexerRegistry(
     throw new Error(ErrorMessages.amountError);
   }
 
-  console.log(amount.toString(), metadata, commissionRate);
-  const overrides = await getEthGas();
-
   const tx = await sdk.indexerRegistry
     .connect(signer)
-    .registerIndexer(utils.parseEther(amount), metadata, commissionRate, overrides);
+    .registerIndexer(utils.parseEther(amount), metadata, commissionRate);
   return tx;
 }
 
@@ -71,8 +67,7 @@ export async function unRegister(sdk: SDK, signer: Signer) {
     throw new Error(ErrorMessages.sdkOrSignerError);
   }
 
-  const overrides = await getEthGas();
-  const tx = sdk.indexerRegistry.connect(signer).unregisterIndexer(overrides);
+  const tx = sdk.indexerRegistry.connect(signer).unregisterIndexer();
   return tx;
 }
 

@@ -3070,10 +3070,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@subql/contract-sdk@0.10.1-1":
-  version "0.10.1-1"
-  resolved "https://registry.yarnpkg.com/@subql/contract-sdk/-/contract-sdk-0.10.1-1.tgz#b0f9a9093ce5938ca585c82e0453675b345c4fa5"
-  integrity sha512-EqQWiLiMmN91wzy/j/5NIRGVT77Lys4sf7Zbj5muTmDddnD+ReYy+w6P/1OR+DQJbU/ymIAbSTy+FAlFuh3Mxw==
+"@subql/contract-sdk@0.10.2-6":
+  version "0.10.2-6"
+  resolved "https://registry.yarnpkg.com/@subql/contract-sdk/-/contract-sdk-0.10.2-6.tgz#7be9d7180c49b6c0ee314bc5d1e39b089e37848c"
+  integrity sha512-Lj1xhu+OVY0ejIKRfdiZAKwPUgHFeJAc266sJeakaQwNce+uKepn6kWHFYxXqbIqeR+YanQf0AErLcvktlkFbg==
   dependencies:
     "@openzeppelin/contracts-upgradeable" "^4.5.2"
     "@polkadot/ui-keyring" "^2.9.4"

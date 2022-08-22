@@ -4,23 +4,23 @@
 import { intToHex } from 'ethereumjs-util';
 
 export enum ChainID {
-  local = 31337,
   testnet = 595,
+  moonbase = 1287,
   mainnet = 1285,
 }
 
 export enum Networks {
-  local = 'local',
+  moonbase = 'moonbase',
   testnet = 'testnet',
   mainnet = 'mainnet',
 }
 
-export type SubqueryNetwork = 'mainnet' | 'testnet' | 'local';
+export type SubqueryNetwork = 'mainnet' | 'testnet' | 'moonbase';
 
-export const ChainIDs = [ChainID.local, ChainID.testnet, ChainID.mainnet];
+export const ChainIDs = [ChainID.moonbase, ChainID.testnet, ChainID.mainnet];
 
 export const NetworkToChainID: Record<SubqueryNetwork, ChainID> = {
-  local: ChainID.local,
+  moonbase: ChainID.moonbase,
   testnet: ChainID.testnet,
   mainnet: ChainID.mainnet,
 };
@@ -36,8 +36,8 @@ export const RPC_URLS: Record<number, string> = {
 
 export const networks: Record<number, SubqueryNetwork> = {
   595: Networks.testnet,
+  1287: Networks.moonbase,
   1285: Networks.mainnet,
-  31337: Networks.local,
 };
 
 export const chainNames: Record<number, string> = {
@@ -59,7 +59,7 @@ export const NETWORK_CONFIGS = {
     rpcUrls: [RPC_URLS[ChainID.testnet]],
     blockExplorerUrls: ['https://blockscout.mandala.acala.network/'],
   },
-  1287: {
+  [ChainID.moonbase]: {
     chainId: intToHex(1287),
     chainName: 'Moonbase Alpha',
     nativeCurrency: {
@@ -68,6 +68,6 @@ export const NETWORK_CONFIGS = {
       decimals: 18,
     },
     rpcUrls: [RPC_URLS[1287]],
-    blockExplorerUrls: ['https://moonbase-blockscout.testnet.moonbeam.network/'],
+    blockExplorerUrls: ['https://moonbase.moonscan.io/'],
   },
 };
