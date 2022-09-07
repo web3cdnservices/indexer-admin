@@ -41,7 +41,7 @@ export const useIndexerEra = () => {
     const lastClaimedEra = (await sdk.rewardsDistributor.getRewardInfo(account)).lastClaimEra;
     const [currentEra, lastSettledEra] = await Promise.all([
       sdk.eraManager.eraNumber(),
-      sdk.rewardsDistributor.getLastSettledEra(account),
+      sdk.rewardsStaking.getLastSettledEra(account),
     ]);
 
     setIndexerEra({

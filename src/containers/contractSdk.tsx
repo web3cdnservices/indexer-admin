@@ -4,7 +4,6 @@
 import React from 'react';
 import { ContractDeployment, ContractSDK, SdkOptions } from '@subql/contract-sdk';
 import moonbaseDeployment from '@subql/contract-sdk/publish/moonbase.json';
-import testnetDeployment from '@subql/contract-sdk/publish/testnet.json';
 
 import { useIsMetaMask, useWeb3 } from 'hooks/web3Hook';
 import Logger from 'utils/logger';
@@ -13,9 +12,9 @@ import { ChainID, isSupportNetwork, Networks, SubqueryNetwork } from 'utils/web3
 import { createContainer } from './unstated';
 
 const deployments: Record<SubqueryNetwork, ContractDeployment> = {
-  testnet: testnetDeployment,
+  testnet: moonbaseDeployment,
   moonbase: moonbaseDeployment,
-  mainnet: testnetDeployment,
+  mainnet: moonbaseDeployment,
 };
 
 function createContractOptions(network: SubqueryNetwork): SdkOptions {
