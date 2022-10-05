@@ -121,6 +121,30 @@ export const REMOVE_PROJECT = gql`
   }
 `;
 
+export const PAYG_PRICE = gql`
+  mutation PaygProject(
+    $paygPrice: String!
+    $paygExpiration: Float!
+    $paygThreshold: Float!
+    $paygOverflow: Float!
+    $id: String!
+  ) {
+    paygProject(
+      paygPrice: $paygPrice
+      paygExpiration: $paygExpiration
+      paygThreshold: $paygThreshold
+      paygOverflow: $paygOverflow
+      id: $id
+    ) {
+      id
+      paygPrice
+      paygExpiration
+      paygThreshold
+      paygOverflow
+    }
+  }
+`;
+
 export const CONFIG_SERVICES = gql`
   mutation UpdateServices($queryEndpoint: String!, $nodeEndpoint: String!, $id: String!) {
     updateProjectServices(queryEndpoint: $queryEndpoint, nodeEndpoint: $nodeEndpoint, id: $id) {
@@ -144,6 +168,10 @@ export const GET_PROJECT = gql`
       queryVersion
       poiEnabled
       forceEnabled
+      paygPrice
+      paygExpiration
+      paygThreshold
+      paygOverflow
     }
   }
 `;
@@ -160,6 +188,51 @@ export const GET_PROJECTS = gql`
       nodeVersion
       queryVersion
       poiEnabled
+      paygPrice
+      paygExpiration
+      paygThreshold
+      paygOverflow
+    }
+  }
+`;
+
+export const GET_CHANNELS = gql`
+  query {
+    channels {
+      id
+      status
+      deploymentId
+      consumer
+      total
+      spent
+      onchain
+      price
+      challengeAt
+      expirationAt
+      lastFinal
+    }
+  }
+`;
+
+export const CHANNEL_CHECKPOINT = gql`
+  mutation ChannelCheckpoint($id: String!) {
+    channelCheckpoint(id: $id) {
+      id
+      spent
+      remote
+      onchain
+    }
+  }
+`;
+
+export const CHANNEL_CLOSE = gql`
+  mutation ChannelClose($id: String!) {
+    channelClose(id: $id) {
+      id
+      spent
+      remote
+      onchain
+      lastFinal
     }
   }
 `;

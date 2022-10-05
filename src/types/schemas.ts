@@ -77,6 +77,10 @@ export enum ProjectFormKey {
   queryVersion = 'queryVersion',
   poiEnabled = 'poiEnabled',
   forceEnabled = 'forceEnabled',
+  paygPrice = 'paygPrice',
+  paygExpiration = 'paygExpiration',
+  paygThreshold = 'paygThreshold',
+  paygOverflow = 'paygOverflow',
 }
 
 export const CIDv0 = new RegExp(/^Qm[1-9A-HJ-NP-Za-km-z]{44}/i);
@@ -99,6 +103,10 @@ export const initialIndexingValues = (config: ProjectConfig) => ({
   [ProjectFormKey.queryVersion]: config.queryVersion,
   [ProjectFormKey.poiEnabled]: config.poiEnabled,
   [ProjectFormKey.forceEnabled]: config.forceEnabled,
+  [ProjectFormKey.paygPrice]: config.paygPrice,
+  [ProjectFormKey.paygExpiration]: config.paygExpiration,
+  [ProjectFormKey.paygThreshold]: config.paygThreshold,
+  [ProjectFormKey.paygOverflow]: config.paygOverflow,
 });
 
 export const StartIndexingSchema = yup.object({
@@ -108,6 +116,13 @@ export const StartIndexingSchema = yup.object({
   [ProjectFormKey.queryVersion]: yup.string().defined(),
   [ProjectFormKey.poiEnabled]: yup.boolean().required(),
   [ProjectFormKey.forceEnabled]: yup.boolean().required(),
+});
+
+export const ProjectPaygSchema = yup.object({
+  [ProjectFormKey.paygPrice]: yup.string().defined(),
+  [ProjectFormKey.paygExpiration]: yup.number().defined(),
+  [ProjectFormKey.paygThreshold]: yup.number().defined(),
+  [ProjectFormKey.paygOverflow]: yup.number().defined(),
 });
 
 export type IndexingEndpoint = yup.Asserts<typeof StartIndexingSchema>;

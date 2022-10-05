@@ -2,11 +2,23 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Notification } from 'containers/notificationContext';
-import { initialIndexingValues, ProjectFormKey, StartIndexingSchema } from 'types/schemas';
+import {
+  initialIndexingValues,
+  ProjectFormKey,
+  ProjectPaygSchema,
+  StartIndexingSchema,
+} from 'types/schemas';
 import { dismiss, ProjectNotification } from 'utils/notification';
 
 import prompts from './prompts';
-import { ClickAction, FormSubmit, ProjectAction, ProjectConfig, ProjectStatus } from './types';
+import {
+  ClickAction,
+  FormSubmit,
+  PaygStatus,
+  ProjectAction,
+  ProjectConfig,
+  ProjectStatus,
+} from './types';
 
 export type ButtonItem = {
   title: string;
@@ -62,6 +74,14 @@ export const createServiceButtonItems = (onButtonClick: (type: ProjectAction) =>
   ],
 });
 
+export const createPaygButtonItems = (onButtonClick: (type: ProjectAction) => void) => ({
+  [PaygStatus.Open]: [
+    createButtonItem('Change price', () => onButtonClick(ProjectAction.PaygChangePrice)),
+    createButtonItem('Close PAYG', () => onButtonClick(ProjectAction.PaygClose)),
+  ],
+  [PaygStatus.Close]: [createButtonItem('Open PAYG', () => onButtonClick(ProjectAction.PaygOpen))],
+});
+
 export const ProjectActionName = {
   [ProjectAction.StartIndexing]: 'Start Indexing Project',
   [ProjectAction.RestartProject]: 'Restart Indexing Project',
@@ -71,6 +91,9 @@ export const ProjectActionName = {
   [ProjectAction.RemoveProject]: 'Remove Project',
   [ProjectAction.AnnounceNotIndexing]: 'Announce Not Indexing Project',
   [ProjectAction.StopIndexing]: 'Stop Indexing',
+  [ProjectAction.PaygOpen]: 'Open PAYG',
+  [ProjectAction.PaygChangePrice]: 'Change Price',
+  [ProjectAction.PaygClose]: 'Close PAYG',
 };
 
 export type ImageVersions = {
@@ -221,6 +244,73 @@ export const createStopIndexingSteps = (onStopProject: ClickAction) => ({
       desc: prompts.stopProject.desc,
       buttonTitle: 'Confirm',
       onClick: onStopProject,
+    },
+  ],
+});
+
+const setPaygPriceForms = (config: ProjectConfig, onFormSubmit: FormSubmit) => ({
+  formValues: initialIndexingValues(config),
+  schema: ProjectPaygSchema,
+  onFormSubmit,
+  items: [
+    {
+      formKey: ProjectFormKey.paygPrice,
+      title: 'Set Price (Units: SQT)',
+      placeholder: '1.0000',
+    },
+    {
+      formKey: ProjectFormKey.paygExpiration,
+      title: 'Minimum expiration time',
+      placeholder: '3600',
+    },
+    {
+      formKey: ProjectFormKey.paygThreshold,
+      title: 'Count of automatic checkpoint to chain',
+      placeholder: '1000',
+    },
+    {
+      formKey: ProjectFormKey.paygOverflow,
+      title: 'Maximum allowed conflict count',
+      placeholder: '5',
+    },
+  ],
+});
+
+export const createPaygOpenSteps = (config: ProjectConfig, onPaygOpen: FormSubmit) => ({
+  [ProjectAction.PaygOpen]: [
+    {
+      index: 0,
+      title: prompts.paygOpen.title,
+      desc: prompts.paygOpen.desc,
+      buttonTitle: 'Confirm',
+      form: setPaygPriceForms(config, onPaygOpen),
+    },
+  ],
+});
+
+export const createPaygChangePriceSteps = (
+  config: ProjectConfig,
+  onPaygChangePrice: FormSubmit
+) => ({
+  [ProjectAction.PaygChangePrice]: [
+    {
+      index: 0,
+      title: prompts.paygChangePrice.title,
+      desc: prompts.paygChangePrice.desc,
+      buttonTitle: 'Confirm',
+      form: setPaygPriceForms(config, onPaygChangePrice),
+    },
+  ],
+});
+
+export const createPaygCloseSteps = (onPaygClose: ClickAction) => ({
+  [ProjectAction.PaygClose]: [
+    {
+      index: 0,
+      title: prompts.paygClose.title,
+      desc: prompts.paygClose.desc,
+      buttonTitle: 'Confirm',
+      onClick: onPaygClose,
     },
   ],
 });

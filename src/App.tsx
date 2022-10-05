@@ -34,6 +34,7 @@ const AppContents = () => {
           <Switch>
             <Route component={Pages.Projects} path="/projects" />
             <Route exact component={Pages.ProjectDetail} path="/project/:id" />
+            <Route component={Pages.Payg} path="/payg" />
             <Route component={Pages.Account} path="/account" />
             <Route component={Pages.ControllerManagement} path="/controller-management" />
             <Route component={Pages.Network} path="/network" />

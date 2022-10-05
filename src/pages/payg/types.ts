@@ -5,6 +5,43 @@ import { FormikHelpers, FormikValues } from 'formik';
 
 import { ControllerAction } from 'pages/controllers/types';
 
+export enum Status {
+  FINALIZED,
+  OPEN,
+  CHALLENGE,
+}
+
+export const statusColor = {
+  [Status.FINALIZED]: 'rgba(70, 219, 103, 0.4)',
+  [Status.OPEN]: 'rgba(67, 136, 221, 0.24)',
+  [Status.CHALLENGE]: 'rgba(214, 48, 48, 0.3)',
+};
+
+export const statusText = {
+  [Status.FINALIZED]: 'FINALIZED',
+  [Status.OPEN]: 'OPEN',
+  [Status.CHALLENGE]: 'CHALLENGE',
+};
+
+export type ChannelDetail = {
+  id: string;
+  status: Status;
+  deploymentId: string;
+  consumer: string;
+  total: string;
+  spent: string;
+  onchain: string;
+  price: string;
+  expirationAt: number;
+  challengeAt: number;
+};
+
+export enum ChannelAction {
+  Checkpoint = 'Checkpoint',
+  Respond = 'Respond',
+  Finalize = 'Finalize',
+}
+
 export type ChainType = 'cosmos' | 'avalanche' | 'substrate';
 
 export enum DockerRegistry {
@@ -74,9 +111,6 @@ export type ProjectConfig = {
   poiEnabled: boolean;
   forceEnabled: boolean;
   paygPrice: string;
-  paygExpiration: number;
-  paygThreshold: number;
-  paygOverflow: number;
 };
 
 export type ProjectServiceMetadata = {
