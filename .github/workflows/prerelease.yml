@@ -37,8 +37,8 @@ jobs:
       - name: Yarn
         run: yarn install --network-timeout=30000
 
-      - name: Bump & build
-        run: echo "Changes found" && npm version prerelease --no-git-tag-version && yarn build
+      # - name: Bump & build
+      #   run: echo "Changes found" && npm version prerelease --no-git-tag-version && yarn build
 
       - uses: JS-DevTools/npm-publish@v1
         name: Publish

@@ -1,0 +1,39 @@
+{
+  "files": {
+    "main.css": "/static/css/main.07d8a864.chunk.css",
+    "main.js": "/static/js/main.eda253e7.chunk.js",
+    "main.js.map": "/static/js/main.eda253e7.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.e6670186.js",
+    "runtime-main.js.map": "/static/js/runtime-main.e6670186.js.map",
+    "static/css/2.148dd226.chunk.css": "/static/css/2.148dd226.chunk.css",
+    "static/js/2.9d8398a6.chunk.js": "/static/js/2.9d8398a6.chunk.js",
+    "static/js/2.9d8398a6.chunk.js.map": "/static/js/2.9d8398a6.chunk.js.map",
+    "static/js/3.3b9489c4.chunk.js": "/static/js/3.3b9489c4.chunk.js",
+    "static/js/3.3b9489c4.chunk.js.map": "/static/js/3.3b9489c4.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.148dd226.chunk.css.map": "/static/css/2.148dd226.chunk.css.map",
+    "static/css/main.07d8a864.chunk.css.map": "/static/css/main.07d8a864.chunk.css.map",
+    "static/js/2.9d8398a6.chunk.js.LICENSE.txt": "/static/js/2.9d8398a6.chunk.js.LICENSE.txt",
+    "static/media/arrow.8961c2a1.svg": "/static/media/arrow.8961c2a1.svg",
+    "static/media/cross.9aeef195.svg": "/static/media/cross.9aeef195.svg",
+    "static/media/discord.46ef476e.svg": "/static/media/discord.46ef476e.svg",
+    "static/media/github.3c2fbcc1.svg": "/static/media/github.3c2fbcc1.svg",
+    "static/media/linkendin.077ef4b2.svg": "/static/media/linkendin.077ef4b2.svg",
+    "static/media/matrix.0fc904a9.svg": "/static/media/matrix.0fc904a9.svg",
+    "static/media/medium.b5c13839.svg": "/static/media/medium.b5c13839.svg",
+    "static/media/metamask.09e5f554.svg": "/static/media/metamask.09e5f554.svg",
+    "static/media/background-image.css": "/static/media/pfbg_768@2x.eea28e73.jpg",
+    "static/media/about-modal-box.css": "/static/media/pfbg_992@2x.30e8d31f.jpg",
+    "static/media/form-control.css": "/static/media/status-icon-sprite.4fee9fef.svg",
+    "static/media/subquery.8b4df4b6.svg": "/static/media/subquery.8b4df4b6.svg",
+    "static/media/telegram.224cb085.svg": "/static/media/telegram.224cb085.svg",
+    "static/media/twitter.ab5c408e.svg": "/static/media/twitter.ab5c408e.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.e6670186.js",
+    "static/css/2.148dd226.chunk.css",
+    "static/js/2.9d8398a6.chunk.js",
+    "static/css/main.07d8a864.chunk.css",
+    "static/js/main.eda253e7.chunk.js"
+  ]
+}
