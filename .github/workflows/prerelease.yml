@@ -27,7 +27,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 100
-          # token: ${{ secrets.REPO_TOKEN }}
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.4.1
@@ -37,8 +36,8 @@ jobs:
       - name: Yarn
         run: yarn install --network-timeout=30000
 
-      # - name: Bump & build
-      #   run: echo "Changes found" && npm version prerelease --no-git-tag-version && yarn build
+      - name: Bump & build
+        run: echo "Changes found" && npm version prerelease --no-git-tag-version
 
       - uses: JS-DevTools/npm-publish@v1
         name: Publish
@@ -54,4 +53,4 @@ jobs:
           add: "package.json"
           message: "[SKIP CI] Prerelease"
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
