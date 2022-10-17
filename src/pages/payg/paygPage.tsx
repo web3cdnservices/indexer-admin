@@ -38,8 +38,8 @@ const Payg = () => {
     spent: '',
     onchain: '',
     price: '',
-    expirationAt: 0,
-    challengeAt: 0,
+    expiredAt: 0,
+    terminatedAt: 0,
   });
 
   const onModalClose = () => {

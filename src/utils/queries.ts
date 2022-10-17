@@ -207,8 +207,8 @@ export const GET_CHANNELS = gql`
       spent
       onchain
       price
-      challengeAt
-      expirationAt
+      terminatedAt
+      expiredAt
       lastFinal
     }
   }

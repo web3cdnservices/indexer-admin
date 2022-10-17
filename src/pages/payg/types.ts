@@ -8,19 +8,19 @@ import { ControllerAction } from 'pages/controllers/types';
 export enum Status {
   FINALIZED,
   OPEN,
-  CHALLENGE,
+  TERMINATING,
 }
 
 export const statusColor = {
   [Status.FINALIZED]: 'rgba(70, 219, 103, 0.4)',
   [Status.OPEN]: 'rgba(67, 136, 221, 0.24)',
-  [Status.CHALLENGE]: 'rgba(214, 48, 48, 0.3)',
+  [Status.TERMINATING]: 'rgba(214, 48, 48, 0.3)',
 };
 
 export const statusText = {
   [Status.FINALIZED]: 'FINALIZED',
   [Status.OPEN]: 'OPEN',
-  [Status.CHALLENGE]: 'CHALLENGE',
+  [Status.TERMINATING]: 'TERMINATING',
 };
 
 export type ChannelDetail = {
@@ -32,8 +32,8 @@ export type ChannelDetail = {
   spent: string;
   onchain: string;
   price: string;
-  expirationAt: number;
-  challengeAt: number;
+  expiredAt: number;
+  terminatedAt: number;
 };
 
 export enum ChannelAction {
