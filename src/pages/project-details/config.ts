@@ -3,7 +3,9 @@
 
 import { Notification } from 'containers/notificationContext';
 import {
+  initalPAYGValues,
   initialIndexingValues,
+  OpenPAYGFormKey,
   ProjectFormKey,
   ProjectPaygSchema,
   StartIndexingSchema,
@@ -14,11 +16,14 @@ import prompts from './prompts';
 import {
   ClickAction,
   FormSubmit,
+  PAYGAction,
   PaygStatus,
   ProjectAction,
   ProjectConfig,
   ProjectStatus,
 } from './types';
+
+const { project, announce, payg } = prompts;
 
 export type ButtonItem = {
   title: string;
@@ -74,13 +79,19 @@ export const createServiceButtonItems = (onButtonClick: (type: ProjectAction) =>
   ],
 });
 
-export const createPaygButtonItems = (onButtonClick: (type: ProjectAction) => void) => ({
+export const createPaygButtonItems = (onButtonClick: (type: PAYGAction) => void) => ({
   [PaygStatus.Open]: [
-    createButtonItem('Change price', () => onButtonClick(ProjectAction.PaygChangePrice)),
-    createButtonItem('Close PAYG', () => onButtonClick(ProjectAction.PaygClose)),
+    createButtonItem('Change price', () => onButtonClick(PAYGAction.PaygChangePrice)),
+    createButtonItem('Close PAYG', () => onButtonClick(PAYGAction.PaygClose)),
   ],
-  [PaygStatus.Close]: [createButtonItem('Open PAYG', () => onButtonClick(ProjectAction.PaygOpen))],
+  [PaygStatus.Close]: [createButtonItem('Open PAYG', () => onButtonClick(PAYGAction.PaygOpen))],
 });
+
+export const PAYGActionName = {
+  [PAYGAction.PaygOpen]: 'Open PAYG',
+  [PAYGAction.PaygChangePrice]: 'Change Price',
+  [PAYGAction.PaygClose]: 'Close PAYG',
+};
 
 export const ProjectActionName = {
   [ProjectAction.StartIndexing]: 'Start Indexing Project',
@@ -91,9 +102,6 @@ export const ProjectActionName = {
   [ProjectAction.RemoveProject]: 'Remove Project',
   [ProjectAction.AnnounceNotIndexing]: 'Announce Not Indexing Project',
   [ProjectAction.StopIndexing]: 'Stop Indexing',
-  [ProjectAction.PaygOpen]: 'Open PAYG',
-  [ProjectAction.PaygChangePrice]: 'Change Price',
-  [ProjectAction.PaygClose]: 'Close PAYG',
 };
 
 export type ImageVersions = {
@@ -151,8 +159,8 @@ export const createStartIndexingSteps = (
   [ProjectAction.StartIndexing]: [
     {
       index: 0,
-      title: prompts.startProject.title,
-      desc: prompts.startProject.desc,
+      title: project.start.title,
+      desc: project.start.desc,
       buttonTitle: 'Confirm',
       form: startProjectForms(config, versions, onStartProject),
       onClick: onStartProject,
@@ -168,8 +176,8 @@ export const createRestartProjectSteps = (
   [ProjectAction.RestartProject]: [
     {
       index: 0,
-      title: prompts.restartProject.title,
-      desc: prompts.restartProject.desc,
+      title: project.restart.title,
+      desc: project.restart.desc,
       buttonTitle: 'Confirm',
       form: startProjectForms(config, versions, onStartProject),
     },
@@ -180,8 +188,8 @@ export const createRemoveProjectSteps = (onRemoveProject: ClickAction) => ({
   [ProjectAction.RemoveProject]: [
     {
       index: 0,
-      title: prompts.removeProject.title,
-      desc: prompts.removeProject.desc,
+      title: project.remove.title,
+      desc: project.remove.desc,
       buttonTitle: 'Confirm',
       onClick: onRemoveProject,
     },
@@ -192,8 +200,8 @@ export const createAnnounceIndexingSteps = (onSendTransaction: ClickAction) => (
   [ProjectAction.AnnounceIndexing]: [
     {
       index: 0,
-      title: prompts.announceIndexing.title,
-      desc: prompts.announceIndexing.desc,
+      title: announce.indexing.title,
+      desc: announce.indexing.desc,
       buttonTitle: 'Send Transction',
       onClick: onSendTransaction,
     },
@@ -204,8 +212,8 @@ export const createReadyIndexingSteps = (onSendTransaction: ClickAction) => ({
   [ProjectAction.AnnounceReady]: [
     {
       index: 0,
-      title: prompts.announceReady.title,
-      desc: prompts.announceReady.desc,
+      title: announce.ready.title,
+      desc: announce.ready.desc,
       buttonTitle: 'Send Transction',
       onClick: onSendTransaction,
     },
@@ -216,8 +224,8 @@ export const createNotIndexingSteps = (onSendTransaction: ClickAction) => ({
   [ProjectAction.AnnounceNotIndexing]: [
     {
       index: 0,
-      title: prompts.announceNotIndexing.title,
-      desc: prompts.announceNotIndexing.desc,
+      title: announce.notIndexing.title,
+      desc: announce.notIndexing.desc,
       buttonTitle: 'Send Transction',
       onClick: onSendTransaction,
     },
@@ -228,8 +236,8 @@ export const createStopProjectSteps = (onStopProject: ClickAction) => ({
   [ProjectAction.StopProject]: [
     {
       index: 0,
-      title: prompts.stopProject.title,
-      desc: prompts.stopProject.desc,
+      title: project.stop.title,
+      desc: project.stop.desc,
       buttonTitle: 'Confirm',
       onClick: onStopProject,
     },
@@ -240,8 +248,8 @@ export const createStopIndexingSteps = (onStopProject: ClickAction) => ({
   [ProjectAction.StopIndexing]: [
     {
       index: 0,
-      title: prompts.stopProject.title,
-      desc: prompts.stopProject.desc,
+      title: project.stop.title,
+      desc: project.stop.desc,
       buttonTitle: 'Confirm',
       onClick: onStopProject,
     },
@@ -249,50 +257,38 @@ export const createStopIndexingSteps = (onStopProject: ClickAction) => ({
 });
 
 const setPaygPriceForms = (config: ProjectConfig, onFormSubmit: FormSubmit) => ({
-  formValues: initialIndexingValues(config),
+  formValues: initalPAYGValues(config),
   schema: ProjectPaygSchema,
   onFormSubmit,
   items: [
     {
-      formKey: ProjectFormKey.paygPrice,
-      title: 'Set Price (Units: SQT)',
-      placeholder: '1.0000',
+      formKey: OpenPAYGFormKey.paygPrice,
+      title: 'Advertise a price per 1,000 requests (SQT)',
+      placeholder: '300',
     },
     {
-      formKey: ProjectFormKey.paygExpiration,
-      title: 'Minimum expiration time',
-      placeholder: '3600',
-    },
-    {
-      formKey: ProjectFormKey.paygThreshold,
-      title: 'Count of automatic checkpoint to chain',
-      placeholder: '1000',
-    },
-    {
-      formKey: ProjectFormKey.paygOverflow,
-      title: 'Maximum allowed conflict count',
-      placeholder: '5',
+      formKey: OpenPAYGFormKey.paygPeriod,
+      title: 'Validity Period',
+      placeholder: 'Set a validity period',
     },
   ],
 });
 
-export const createPaygOpenSteps = (config: ProjectConfig, onPaygOpen: FormSubmit) => ({
-  [ProjectAction.PaygOpen]: [
-    {
-      index: 0,
-      title: prompts.paygOpen.title,
-      desc: prompts.paygOpen.desc,
-      buttonTitle: 'Confirm',
-      form: setPaygPriceForms(config, onPaygOpen),
-    },
-  ],
-});
+export const createPaygOpenSteps = (config: ProjectConfig, onPaygOpen: FormSubmit) => [
+  {
+    index: 0,
+    title: payg.open.title,
+    desc: payg.open.desc,
+    buttonTitle: 'Confirm',
+    form: setPaygPriceForms(config, onPaygOpen),
+  },
+];
 
 export const createPaygChangePriceSteps = (
   config: ProjectConfig,
   onPaygChangePrice: FormSubmit
 ) => ({
-  [ProjectAction.PaygChangePrice]: [
+  [PAYGAction.PaygChangePrice]: [
     {
       index: 0,
       title: prompts.paygChangePrice.title,
@@ -304,7 +300,7 @@ export const createPaygChangePriceSteps = (
 });
 
 export const createPaygCloseSteps = (onPaygClose: ClickAction) => ({
-  [ProjectAction.PaygClose]: [
+  [PAYGAction.PaygClose]: [
     {
       index: 0,
       title: prompts.paygClose.title,

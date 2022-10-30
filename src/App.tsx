@@ -11,12 +11,14 @@ import Loading from 'components/loading';
 import { ContractSDKProvider } from 'containers/contractSdk';
 import { CoordinatorIndexerProvider } from 'containers/coordinatorIndexer';
 import { LoadingProvider } from 'containers/loadingContext';
+import { ModalProvider } from 'containers/modalContext';
 import { NotificationProvider, Notifications } from 'containers/notificationContext';
 import { Web3Provider } from 'containers/web3';
 import { useShowMetaMask } from 'hooks/web3Hook';
 import MetaMaskView from 'pages/metamask/metamaskView';
 import { coordinatorServiceUrl, createApolloClient } from 'utils/apolloClient';
 
+import { GModalView } from './components/modalView';
 import * as Pages from './pages';
 
 import 'react-notifications-component/dist/theme.css';
@@ -34,7 +36,6 @@ const AppContents = () => {
           <Switch>
             <Route component={Pages.Projects} path="/projects" />
             <Route exact component={Pages.ProjectDetail} path="/project/:id" />
-            <Route component={Pages.Payg} path="/payg" />
             <Route component={Pages.Account} path="/account" />
             <Route component={Pages.ControllerManagement} path="/controller-management" />
             <Route component={Pages.Network} path="/network" />
@@ -46,6 +47,7 @@ const AppContents = () => {
         )}
         <Notifications />
         <Loading />
+        <GModalView />
       </div>
       <Pages.Footer />
     </Router>
@@ -70,11 +72,13 @@ const App: FC = () => (
         <ContractSDKProvider>
           <CoordinatorIndexerProvider>
             <LoadingProvider>
-              <NotificationProvider>
-                <div className="App">
-                  <AppContents />
-                </div>
-              </NotificationProvider>
+              <ModalProvider>
+                <NotificationProvider>
+                  <div className="App">
+                    <AppContents />
+                  </div>
+                </NotificationProvider>
+              </ModalProvider>
             </LoadingProvider>
           </CoordinatorIndexerProvider>
         </ContractSDKProvider>

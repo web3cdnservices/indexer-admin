@@ -20,7 +20,7 @@ export const Separator = styled.div<{
 
 type TextProps = {
   size?: number;
-  fw?: string;
+  fw?: string | number;
   ml?: number;
   mr?: number;
   mt?: number;

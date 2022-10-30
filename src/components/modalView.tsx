@@ -4,11 +4,10 @@
 import { FC } from 'react';
 import Modal from 'react-modal';
 import { Steps } from 'antd';
-import { Form, Formik, FormikValues } from 'formik';
+import { Form, Formik } from 'formik';
 import styled from 'styled-components';
-import { ObjectSchema } from 'yup';
 
-import { ClickAction, FormSubmit, ModalAction } from 'pages/project-details/types';
+import { StepItem, TModal, useModal } from 'containers/modalContext';
 import { RegistrySteps } from 'pages/register/styles';
 import { getStepStatus } from 'pages/register/utils';
 import cross from 'resources/cross.svg';
@@ -16,31 +15,6 @@ import cross from 'resources/cross.svg';
 import { FieldItem } from './formItem';
 import Icon from './Icon';
 import { Button, ButtonContainer, Text } from './primary';
-
-export type TFieldItem = {
-  title: string;
-  formKey: string;
-  value?: string | number;
-  placeholder?: string;
-  options?: string[];
-};
-
-export type FormConfig = {
-  placeHolder?: string;
-  formValues: FormikValues;
-  schema: ObjectSchema<any>;
-  onFormSubmit: FormSubmit;
-  items: TFieldItem[];
-};
-
-export type StepItem = {
-  index: number;
-  title: string;
-  desc: string;
-  buttonTitle: string;
-  onClick?: ClickAction;
-  form?: FormConfig;
-};
 
 const modalStyles = {
   content: {
@@ -63,17 +37,14 @@ const modalStyles = {
   },
 };
 
-type Props = {
-  visible: boolean;
-  steps: StepItem[] | undefined;
-  title?: string;
-  currentStep?: number;
-  loading?: boolean;
-  type?: ModalAction;
-  onClose: () => void;
+export const GModalView = () => {
+  const { modalData } = useModal();
+  if (!modalData || !modalData.visible) return null;
+
+  return <ModalView {...modalData} />;
 };
 
-const ModalView: FC<Props> = ({
+const ModalView: FC<TModal> = ({
   visible,
   title,
   onClose,
@@ -148,7 +119,7 @@ const ModalView: FC<Props> = ({
   );
 
   const renderHeader = () => (
-    <HeaderContainer onClick={onClose}>
+    <HeaderContainer onClick={() => onClose && onClose()}>
       <Text fw="500" size={20}>
         {title}
       </Text>

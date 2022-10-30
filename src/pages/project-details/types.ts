@@ -56,13 +56,21 @@ export enum ProjectAction {
   AnnounceNotIndexing = 'AnnounceNotIndexing',
   StopIndexing = 'StopIndexing',
   RemoveProject = 'Remove Project',
+}
+
+export enum PAYGAction {
   PaygOpen = 'Open PAYG',
   PaygChangePrice = 'Change Price',
   PaygClose = 'Close PAYG',
 }
 
 // TODO: move these types to global types
-export type ModalAction = AccountAction | ControllerAction | ProjectsAction | ProjectAction;
+export type ModalAction =
+  | AccountAction
+  | ControllerAction
+  | ProjectsAction
+  | ProjectAction
+  | PAYGAction;
 export type ClickAction = (type?: ModalAction) => void;
 export type FormSubmit = (values: FormikValues, helper: FormikHelpers<FormikValues>) => void;
 

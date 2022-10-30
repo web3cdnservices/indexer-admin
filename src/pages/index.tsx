@@ -7,7 +7,6 @@ import Footer from './footer/footer';
 import Header from './header/header';
 import Login from './login/loginPage';
 import Network from './network/networkPage';
-import Payg from './payg/paygPage';
 import ProjectDetail from './project-details/projectDetailsPage';
 import Projects from './projects/projectsPage';
 import Register from './register/registerPage';
@@ -22,5 +21,4 @@ export {
   ProjectDetail,
   Register,
   Network,
-  Payg,
 };

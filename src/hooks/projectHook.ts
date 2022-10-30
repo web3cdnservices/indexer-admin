@@ -337,7 +337,6 @@ export const useNodeVersions = (cid: string) => {
   }, [fetchNodeVersions]);
 
   const registryVersions = data?.getRegistryVersions;
-  console.log('registryVersions:', registryVersions);
 
   // FIXME: special filter for subql-node [v1.2.1]
   const versions = registryVersions?.filter((v: string) => v !== 'v1.2.1');

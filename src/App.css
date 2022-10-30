@@ -77,3 +77,7 @@
   align-items: center;
   justify-content: center;
 }
+
+.tableStyle {
+  width: 100%;
+}

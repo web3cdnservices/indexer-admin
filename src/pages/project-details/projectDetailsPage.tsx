@@ -29,7 +29,6 @@ import { PAYG_PRICE, REMOVE_PROJECT, START_PROJECT, STOP_PROJECT } from 'utils/q
 import { txErrorNotification } from 'utils/transactions';
 
 import ProjectDetailsHeader from './components/projectDetailHeader';
-import ProjectPaygView from './components/projectPaygView';
 import ProjectServiceCard from './components/projectServiceCard';
 import ProjectStatusView from './components/projectStatusView';
 import ProjectTabbarView from './components/projectTabBarView';
@@ -38,9 +37,7 @@ import {
   createAnnounceIndexingSteps,
   createNetworkButtonItems,
   createNotIndexingSteps,
-  createPaygButtonItems,
   createPaygChangePriceSteps,
-  createPaygCloseSteps,
   createPaygOpenSteps,
   createReadyIndexingSteps,
   createRemoveProjectSteps,
@@ -53,7 +50,7 @@ import {
   ProjectActionName,
 } from './config';
 import { Container, ContentContainer } from './styles';
-import { IndexingStatus, PaygStatus, ProjectAction, ProjectStatus, TQueryMetadata } from './types';
+import { IndexingStatus, ProjectAction, ProjectStatus, TQueryMetadata } from './types';
 
 const ProjectDetailsPage = () => {
   const { id } = useParams() as { id: string };
@@ -67,7 +64,7 @@ const ProjectDetailsPage = () => {
 
   const indexingAction = useIndexingAction(id);
   const { projectService, getProjectService } = useProjectService(id);
-  const paygStatus = projectService?.paygPrice ? PaygStatus.Open : PaygStatus.Close;
+  // const paygStatus = projectService?.paygPrice ? PaygStatus.Open : PaygStatus.Close;
   const { dispatchNotification } = useNotification();
   const [startProjectRequest, { loading: startProjectLoading }] = useMutation(START_PROJECT);
   const [stopProjectRequest, { loading: stopProjectLoading }] = useMutation(STOP_PROJECT);
@@ -143,11 +140,6 @@ const ProjectDetailsPage = () => {
     setVisible(true);
   });
 
-  const paygBtnItems = createPaygButtonItems((type: ProjectAction) => {
-    setActionType(type);
-    setVisible(true);
-  });
-
   const networkActionItems = useMemo(() => {
     if (isUndefined(projectStatus)) return [];
     return networkBtnItems[projectStatus];
@@ -157,11 +149,6 @@ const ProjectDetailsPage = () => {
     if (isUndefined(projectStatus)) return [];
     return serviceBtnItems[projectStatus];
   }, [projectStatus]);
-
-  const paygActionItems = useMemo(() => {
-    if (isUndefined(paygStatus)) return [];
-    return paygBtnItems[paygStatus];
-  }, [paygStatus]);
 
   const onModalClose = (error?: any) => {
     setVisible(false);
@@ -237,6 +224,7 @@ const ProjectDetailsPage = () => {
     }
   };
 
+  // TODO: PAYG part
   const paygChangePrice = async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
     try {
       const { paygPrice, paygExpiration, paygThreshold, paygOverflow } = values;
@@ -253,23 +241,6 @@ const ProjectDetailsPage = () => {
       updateServiceStatus();
     } catch (e) {
       formHelper.setErrors({ [ProjectFormKey.paygPrice]: 'Invalid PAYG' });
-    }
-  };
-
-  const paygClose = async () => {
-    try {
-      onModalClose();
-      await paygPriceRequest({
-        variables: {
-          paygPrice: '',
-          paygExpiration: projectService?.paygExpiration,
-          paygThreshold: projectService?.paygThreshold,
-          paygOverflow: projectService?.paygOverflow,
-          id,
-        },
-      });
-    } catch (e) {
-      console.error('fail to close PAYG', e);
     }
   };
 
@@ -290,7 +261,6 @@ const ProjectDetailsPage = () => {
   );
   const paygOpenSteps = createPaygOpenSteps(projectConfig, paygChangePrice);
   const paygChangePriceSteps = createPaygChangePriceSteps(projectConfig, paygChangePrice);
-  const paygCloseSteps = createPaygCloseSteps(paygClose);
 
   const steps = {
     ...startIndexingSteps,
@@ -303,7 +273,6 @@ const ProjectDetailsPage = () => {
     ...announceNotIndexingSteps,
     ...paygOpenSteps,
     ...paygChangePriceSteps,
-    ...paygCloseSteps,
   };
 
   const [modalTitle, modalSteps] = useMemo(() => {
@@ -323,15 +292,7 @@ const ProjectDetailsPage = () => {
             metadata={metadata}
           />
           <ProjectServiceCard id={id} actionItems={serviceActionItems} data={metadata} />
-          <ProjectPaygView
-            actionItems={paygActionItems}
-            status={paygStatus}
-            price={projectService?.paygPrice}
-            expiration={projectService?.paygExpiration}
-            threshold={projectService?.paygThreshold}
-            overflow={projectService?.paygOverflow}
-          />
-          <ProjectTabbarView id={id} project={projectInfo} />
+          <ProjectTabbarView id={id} project={projectInfo} config={projectConfig} />
         </ContentContainer>
       )}
       <ModalView

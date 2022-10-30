@@ -77,6 +77,7 @@ export enum ProjectFormKey {
   queryVersion = 'queryVersion',
   poiEnabled = 'poiEnabled',
   forceEnabled = 'forceEnabled',
+  // FIXME: remove
   paygPrice = 'paygPrice',
   paygExpiration = 'paygExpiration',
   paygThreshold = 'paygThreshold',
@@ -103,10 +104,6 @@ export const initialIndexingValues = (config: ProjectConfig) => ({
   [ProjectFormKey.queryVersion]: config.queryVersion,
   [ProjectFormKey.poiEnabled]: config.poiEnabled,
   [ProjectFormKey.forceEnabled]: config.forceEnabled,
-  [ProjectFormKey.paygPrice]: config.paygPrice,
-  [ProjectFormKey.paygExpiration]: config.paygExpiration,
-  [ProjectFormKey.paygThreshold]: config.paygThreshold,
-  [ProjectFormKey.paygOverflow]: config.paygOverflow,
 });
 
 export const StartIndexingSchema = yup.object({
@@ -118,11 +115,20 @@ export const StartIndexingSchema = yup.object({
   [ProjectFormKey.forceEnabled]: yup.boolean().required(),
 });
 
-export const ProjectPaygSchema = yup.object({
-  [ProjectFormKey.paygPrice]: yup.string().defined(),
-  [ProjectFormKey.paygExpiration]: yup.number().defined(),
-  [ProjectFormKey.paygThreshold]: yup.number().defined(),
-  [ProjectFormKey.paygOverflow]: yup.number().defined(),
+export type IndexingEndpoint = yup.Asserts<typeof StartIndexingSchema>;
+
+// PAYG
+export enum OpenPAYGFormKey {
+  paygPrice = 'paygPrice',
+  paygPeriod = 'paygPeriod',
+}
+
+export const initalPAYGValues = (config: ProjectConfig) => ({
+  [OpenPAYGFormKey.paygPrice]: config.paygPrice,
+  [OpenPAYGFormKey.paygPeriod]: config.paygExpiration,
 });
 
-export type IndexingEndpoint = yup.Asserts<typeof StartIndexingSchema>;
+export const ProjectPaygSchema = yup.object({
+  [OpenPAYGFormKey.paygPrice]: yup.string().defined(),
+  [OpenPAYGFormKey.paygPeriod]: yup.number().defined(),
+});

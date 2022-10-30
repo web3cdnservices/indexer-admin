@@ -7,8 +7,7 @@
     "test": "craco test",
     "eject": "craco eject",
     "lint": "eslint src/**/*.{ts,tsx}",
-    "start:node": "sh ./scripts/start-node.sh",
-    "deploy:contract": "sh ./scripts/deploy-contract.sh && yarn upgrade @subql/contract-sdk"
+    "start:node": "sh ./scripts/start-node.sh"
   },
   "bin": {
     "subql-indexer-admin": "./bin/run"
@@ -21,7 +20,8 @@
     "@patternfly/react-log-viewer": "^4.43.19",
     "@sentry/react": "^6.19.6",
     "@sentry/tracing": "^6.19.6",
-    "@subql/contract-sdk": "^0.10.2-34",
+    "@subql/components": "1.0.1-35",
+    "@subql/contract-sdk": "^0.10.2-36",
     "@subql/react-ui": "^1.0.1-21",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",

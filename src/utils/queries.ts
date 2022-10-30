@@ -3,6 +3,13 @@
 
 import { gql } from '@apollo/client';
 
+// TODO: use the public queries for `network-clients`
+export enum ChannelStatus {
+  FINALISED,
+  OPEN,
+  TERMINATED,
+}
+
 export type QueryResult = {
   loading?: boolean;
   data?: any;
@@ -121,26 +128,14 @@ export const REMOVE_PROJECT = gql`
   }
 `;
 
-export const PAYG_PRICE = gql`
-  mutation PaygProject(
-    $paygPrice: String!
-    $paygExpiration: Float!
-    $paygThreshold: Float!
-    $paygOverflow: Float!
-    $id: String!
-  ) {
-    paygProject(
-      paygPrice: $paygPrice
-      paygExpiration: $paygExpiration
-      paygThreshold: $paygThreshold
-      paygOverflow: $paygOverflow
-      id: $id
-    ) {
+export const CHANNEL_CLOSE = gql`
+  mutation ChannelClose($id: String!) {
+    channelClose(id: $id) {
       id
-      paygPrice
-      paygExpiration
-      paygThreshold
-      paygOverflow
+      spent
+      remote
+      onchain
+      lastFinal
     }
   }
 `;
@@ -192,47 +187,6 @@ export const GET_PROJECTS = gql`
       paygExpiration
       paygThreshold
       paygOverflow
-    }
-  }
-`;
-
-export const GET_CHANNELS = gql`
-  query {
-    channels {
-      id
-      status
-      deploymentId
-      consumer
-      total
-      spent
-      onchain
-      price
-      terminatedAt
-      expiredAt
-      lastFinal
-    }
-  }
-`;
-
-export const CHANNEL_CHECKPOINT = gql`
-  mutation ChannelCheckpoint($id: String!) {
-    channelCheckpoint(id: $id) {
-      id
-      spent
-      remote
-      onchain
-    }
-  }
-`;
-
-export const CHANNEL_CLOSE = gql`
-  mutation ChannelClose($id: String!) {
-    channelClose(id: $id) {
-      id
-      spent
-      remote
-      onchain
-      lastFinal
     }
   }
 `;
@@ -297,5 +251,64 @@ export const GET_PROJECT_DETAILS = gql`
 export const GET_REGISTRY_VERSIONS = gql`
   query GetRegistryVersions($range: String!, $registry: String!) {
     getRegistryVersions(range: $range, registry: $registry)
+  }
+`;
+
+// PAYG
+export const PAYG_PRICE = gql`
+  mutation PaygProject(
+    $paygPrice: String!
+    $paygExpiration: Float!
+    $paygThreshold: Float!
+    $paygOverflow: Float!
+    $id: String!
+  ) {
+    paygProject(
+      paygPrice: $paygPrice
+      paygExpiration: $paygExpiration
+      paygThreshold: $paygThreshold
+      paygOverflow: $paygOverflow
+      id: $id
+    ) {
+      id
+      paygPrice
+      paygExpiration
+      paygThreshold
+      paygOverflow
+    }
+  }
+`;
+
+export const GET_PAYG_PLANS = gql`
+  query GetPaygPlans($indexer: String!, $deploymentId: String!, $status: ChannelStatus!) {
+    stateChannels(
+      filter: {
+        indexer: { equalTo: $indexer }
+        status: { equalTo: $status }
+        deploymentId: { equalTo: $deploymentId }
+      }
+    ) {
+      id
+      indexer
+      consumer
+      status
+      total
+      spent
+      isFinal
+      expiredAt
+      terminatedAt
+    }
+  }
+`;
+
+// TODO: don't need this anymore
+export const CHANNEL_CHECKPOINT = gql`
+  mutation ChannelCheckpoint($id: String!) {
+    channelCheckpoint(id: $id) {
+      id
+      spent
+      remote
+      onchain
+    }
   }
 `;

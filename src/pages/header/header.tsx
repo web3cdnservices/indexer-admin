@@ -19,7 +19,6 @@ enum TabbarItem {
   account = 'Account',
   network = 'Network',
   projects = 'Projects',
-  payg = 'PAYG',
 }
 
 const TabBar = styled(NavLink)`
@@ -74,11 +73,6 @@ const Header = () => {
         {controller && (
           <TabBar to="/projects" activeStyle={activeStyle}>
             {TabbarItem.projects}
-          </TabBar>
-        )}
-        {controller && (
-          <TabBar to="/payg" activeStyle={activeStyle}>
-            {TabbarItem.payg}
           </TabBar>
         )}
       </div>
