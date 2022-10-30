@@ -78,7 +78,7 @@ export function usePAYGPlans(deploymentId: string, status: ChannelStatus) {
     () =>
       queryPAYGPlans({
         variables: {
-          indexer: '0xbB64D716FAbDEC3a106bb913Fb4f82c1EeC851b8',
+          indexer,
           deploymentId,
           status,
         },

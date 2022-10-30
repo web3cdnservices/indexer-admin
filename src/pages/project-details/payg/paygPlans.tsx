@@ -38,7 +38,7 @@ function plansToDatasource(plans: Plan[] | undefined) {
 }
 
 export function PAYGPlan({ deploymentId, onTerminate }: Props) {
-  const { plans, loading } = usePAYGPlans(deploymentId, ChannelStatus.OPEN);
+  const { plans } = usePAYGPlans(deploymentId, ChannelStatus.OPEN);
   const dataSource = useMemo(() => plansToDatasource(plans), [plans]);
 
   const teminateBtn = (id: string) => (
