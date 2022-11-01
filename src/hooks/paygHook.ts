@@ -1,13 +1,14 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useCallback, useEffect, useMemo } from 'react';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ApolloQueryResult, useMutation } from '@apollo/client';
+import { GraphqlQueryClient, NETWORK_CONFIGS } from '@subql/network-clients';
 import { FormikHelpers, FormikValues } from 'formik';
 
 import { useModal } from 'containers/modalContext';
 import { ProjectFormKey } from 'types/schemas';
-import { ChannelStatus, GET_PAYG_PLANS, PAYG_PRICE } from 'utils/queries';
+import { GET_PAYG_PLANS, PAYG_PRICE } from 'utils/queries';
 
 import { useProjectService } from './projectHook';
 import { useWeb3 } from './web3Hook';
@@ -54,6 +55,12 @@ export function usePAYGConfig(deploymentId: string) {
 }
 
 // hook for PAYG plans
+export enum ChannelStatus {
+  FINALISED = 'FINALISED',
+  OPEN = 'OPEN',
+  TERMINATED = 'TERMINATED',
+}
+
 export type Plan = {
   id: string;
   indexer: string;
@@ -66,40 +73,45 @@ export type Plan = {
   terminatedAt: string;
 };
 
-export function usePAYGPlans(deploymentId: string, status: ChannelStatus) {
-  const [queryPAYGPlans, { data, loading }] = useLazyQuery(GET_PAYG_PLANS, {
-    fetchPolicy: 'network-only',
-  });
+const config = NETWORK_CONFIGS.kepler;
+const client = new GraphqlQueryClient(config);
+const networkClient = client.explorerClient;
 
-  const plans = useMemo((): [Plan] | undefined => data?.stateChannels.nodes, [data]);
+export function usePAYGPlans(deploymentId: string) {
+  const [data, setData] = useState<ApolloQueryResult<{ stateChannels: { nodes: Plan[] } }>>();
+
+  const plans = useMemo((): Plan[] | undefined => data?.data.stateChannels.nodes, [data]);
   const { account: indexer } = useWeb3();
 
   const getPlans = useCallback(
-    () =>
-      queryPAYGPlans({
+    async (id: string, _status: ChannelStatus) => {
+      const response = await networkClient.query({
+        query: GET_PAYG_PLANS,
         variables: {
-          indexer,
-          deploymentId,
-          status,
+          indexer: '0xbB64D716FAbDEC3a106bb913Fb4f82c1EeC851b8',
+          deploymentId: id,
+          status: _status,
         },
-      }),
-    [indexer, deploymentId, status]
+      });
+      setData(response);
+    },
+    [indexer, deploymentId]
   );
 
   useEffect(() => {
-    indexer && getPlans();
+    indexer && getPlans(deploymentId, ChannelStatus.OPEN);
   }, [indexer]);
 
-  return { getPlans, plans, loading };
+  return { getPlans, plans };
 }
 
 export function statusToTagState(status: ChannelStatus) {
   switch (status) {
     case ChannelStatus.OPEN:
-      return { state: 'info', text: 'Active' };
+      return { state: 'success', text: 'Active' };
     case ChannelStatus.TERMINATED:
       return { state: 'error', text: 'Terminated' };
     default:
-      return { state: 'success', text: 'Completed' };
+      return { state: 'info', text: 'Completed' };
   }
 }

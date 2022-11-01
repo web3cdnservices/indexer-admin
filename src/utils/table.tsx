@@ -4,18 +4,18 @@
 import { TableText, TableTitle, Tag } from '@subql/components';
 
 // TODO: this can migrate to @subql/components -> table as utils
-export function createTextColumn<T>(index: T, title: string) {
+export function createTextColumn<T>(index: T, title: string, toolTip?: string) {
   return {
     dataIndex: index,
-    title: <TableTitle title={title} />,
+    title: <TableTitle tooltip={toolTip} title={title} />,
     render: (val: string) => <TableText>{val}</TableText>,
   };
 }
 
-export function createTagColumn<T>(index: T, title: string) {
+export function createTagColumn<T>(index: T, title: string, tooTip?: string) {
   return {
     dataIndex: index,
-    title: <TableTitle title={title} />,
+    title: <TableTitle tooltip={tooTip} title={title} />,
     render: ({ state, text }: { state: 'error' | 'success' | 'info'; text: string }) => (
       <Tag state={state}>{text}</Tag>
     ),

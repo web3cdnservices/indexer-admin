@@ -52,6 +52,13 @@ const prompts = {
       title: 'Enable Flex Plan',
       desc: 'This will open the function of pay-as-you-go, which supports micro-payment and instant requests. The query service will based on HTTP and p2p network at the same time. If consumer establish the service, the service will be in the form of state channel.',
     },
+    channels: {
+      title: 'Flex Plans',
+      tabs: {
+        open: 'Ongoing',
+        closed: 'Closed',
+      },
+    },
   },
   // TODO: remove later
   paygChangePrice: {

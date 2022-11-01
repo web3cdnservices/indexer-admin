@@ -2,8 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useCallback, useState, VFC } from 'react';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
+import { Tabs } from '@subql/components';
 
 import { ProjectDetails } from 'hooks/projectHook';
 import { projectId } from 'utils/project';
@@ -25,10 +24,22 @@ type Props = {
   config: ProjectConfig;
 };
 
+const tabItems = [
+  {
+    label: 'Project Details',
+  },
+  {
+    label: 'Service Log',
+  },
+  {
+    label: 'Flex Plan',
+  },
+];
+
 const ProjectTabbarView: VFC<Props> = ({ id, project, config }) => {
   const [value, setValue] = useState<TabbarItem>(TabbarItem.PAYG);
 
-  const handleChange = (_: any, newValue: TabbarItem) => {
+  const handleChange = (newValue: TabbarItem) => {
     setValue(newValue);
   };
 
@@ -47,11 +58,7 @@ const ProjectTabbarView: VFC<Props> = ({ id, project, config }) => {
 
   return (
     <div style={{ marginTop: 30 }}>
-      <Tabs value={value} onChange={handleChange} textColor="primary" indicatorColor="primary">
-        <Tab value={TabbarItem.ProjectDetails} label="Project Details" />
-        <Tab value={TabbarItem.NodeLog} label="Service Log" />
-        <Tab value={TabbarItem.PAYG} label="Flex Plan" />
-      </Tabs>
+      <Tabs tabs={tabItems} onTabClick={handleChange} />
       {renderContent()}
     </div>
   );

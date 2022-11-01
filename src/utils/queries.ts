@@ -4,11 +4,6 @@
 import { gql } from '@apollo/client';
 
 // TODO: use the public queries for `network-clients`
-export enum ChannelStatus {
-  FINALISED,
-  OPEN,
-  TERMINATED,
-}
 
 export type QueryResult = {
   loading?: boolean;
@@ -288,15 +283,17 @@ export const GET_PAYG_PLANS = gql`
         deploymentId: { equalTo: $deploymentId }
       }
     ) {
-      id
-      indexer
-      consumer
-      status
-      total
-      spent
-      isFinal
-      expiredAt
-      terminatedAt
+      nodes {
+        id
+        indexer
+        consumer
+        status
+        total
+        spent
+        isFinal
+        expiredAt
+        terminatedAt
+      }
     }
   }
 `;

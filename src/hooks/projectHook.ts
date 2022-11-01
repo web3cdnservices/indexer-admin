@@ -145,7 +145,7 @@ type IndexerProject = {
   status: string;
 };
 
-const queryRegistryClient = createApolloClient(window.env.REGISTRY_PROJECT);
+export const queryRegistryClient = createApolloClient(window.env.REGISTRY_PROJECT);
 const coordinatorClient = createApolloClient(coordinatorServiceUrl);
 
 export const getQueryMetadata = async (id: string): Promise<TQueryMetadata> => {

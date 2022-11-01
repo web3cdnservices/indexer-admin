@@ -3,7 +3,7 @@
 
 import { FC, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Spinner } from '@subql/react-ui';
+import { Spinner } from '@subql/components';
 import { isUndefined } from 'lodash';
 
 import Avatar from 'components/avatar';
