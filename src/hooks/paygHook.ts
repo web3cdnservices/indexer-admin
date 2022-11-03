@@ -56,7 +56,7 @@ export function usePAYGConfig(deploymentId: string) {
 
 // hook for PAYG plans
 export enum ChannelStatus {
-  FINALISED = 'FINALISED',
+  FINALIZED = 'FINALIZED',
   OPEN = 'OPEN',
   TERMINATED = 'TERMINATED',
 }
@@ -66,7 +66,7 @@ export type Plan = {
   indexer: string;
   consumer: string;
   status: ChannelStatus;
-  total: number;
+  total: number; // deposit SQT amount
   spent: number;
   isFinal: boolean;
   expiredAt: string;
@@ -103,15 +103,4 @@ export function usePAYGPlans(deploymentId: string) {
   }, [indexer]);
 
   return { getPlans, plans };
-}
-
-export function statusToTagState(status: ChannelStatus) {
-  switch (status) {
-    case ChannelStatus.OPEN:
-      return { state: 'success', text: 'Active' };
-    case ChannelStatus.TERMINATED:
-      return { state: 'error', text: 'Terminated' };
-    default:
-      return { state: 'info', text: 'Completed' };
-  }
 }

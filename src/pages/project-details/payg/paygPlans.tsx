@@ -1,14 +1,20 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Button, Table, TableTitle, Tabs } from '@subql/components';
 
 import { Text } from 'components/primary';
 import { ChannelStatus, usePAYGPlans } from 'hooks/paygHook';
 
 import prompts from '../prompts';
-import { planColumns, plansToDatasource, TabbarItem, tabItems } from './paygDatasource';
+import {
+  planColumns,
+  plansToDatasource,
+  TabbarItem,
+  tabItems,
+  tabToStatus,
+} from './paygDatasource';
 import { PlansContainer } from './styles';
 
 const { channels } = prompts.payg;
@@ -19,11 +25,16 @@ type Props = {
 };
 
 export function PAYGPlan({ deploymentId, onTerminate }: Props) {
+  const [tabItem, setTabItem] = useState(TabbarItem.ONGOING);
   const { plans, getPlans } = usePAYGPlans(deploymentId);
-  const dataSource = useMemo(() => plansToDatasource(deploymentId, plans), [plans]);
+  const dataSource = useMemo(
+    () => plansToDatasource(deploymentId, plans, tabItem),
+    [plans, tabItem]
+  );
 
   const onTabChange = (tabValue: TabbarItem) => {
-    const status = tabValue === TabbarItem.ONGOING ? ChannelStatus.OPEN : ChannelStatus.FINALISED;
+    const status = tabToStatus(tabValue);
+    setTabItem(tabValue);
     getPlans(deploymentId, status);
   };
 

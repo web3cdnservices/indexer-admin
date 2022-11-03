@@ -56,6 +56,7 @@ const prompts = {
       title: 'Flex Plans',
       tabs: {
         open: 'Ongoing',
+        expired: 'Expired',
         closed: 'Closed',
       },
     },
