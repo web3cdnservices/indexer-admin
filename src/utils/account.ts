@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export function balanceSufficient(balance: string): boolean {
-  return parseFloat(balance) > parseFloat('0.8');
+  return parseFloat(balance) > parseFloat('0.2');
 }
 
 export function openAccountExporer(account: string) {
-  const url = `https://blockscout.mandala.acala.network/address/${account}`;
+  const url = `https://moonbase.moonscan.io/address/${account}`;
   window.open(url, '_blank', 'noopener,noreferrer');
 }

@@ -37,7 +37,7 @@ const tabItems = [
 ];
 
 const ProjectTabbarView: VFC<Props> = ({ id, project, config }) => {
-  const [value, setValue] = useState<TabbarItem>(TabbarItem.PAYG);
+  const [value, setValue] = useState<TabbarItem>(TabbarItem.ProjectDetails);
 
   const handleChange = (newValue: TabbarItem) => {
     setValue(newValue);
