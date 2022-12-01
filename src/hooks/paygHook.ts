@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ApolloQueryResult, useMutation } from '@apollo/client';
+import { formatEther, parseEther } from '@ethersproject/units';
 import { GraphqlQueryClient, NETWORK_CONFIGS } from '@subql/network-clients';
 import { FormikHelpers, FormikValues } from 'formik';
 
@@ -13,6 +14,8 @@ import { GET_PAYG_PLANS, PAYG_PRICE } from 'utils/queries';
 import { useProjectService } from './projectHook';
 import { useWeb3 } from './web3Hook';
 
+const daySeconds = 3600 * 24;
+
 // hook for PAYG configuration
 export function usePAYGConfig(deploymentId: string) {
   const [paygPriceRequest, { loading }] = useMutation(PAYG_PRICE);
@@ -21,8 +24,8 @@ export function usePAYGConfig(deploymentId: string) {
 
   const paygConfig = useMemo(
     () => ({
-      paygPrice: projectService?.paygPrice ?? '',
-      paygExpiration: projectService?.paygExpiration ?? 0,
+      paygPrice: formatEther(projectService?.paygPrice ?? 0),
+      paygExpiration: (projectService?.paygExpiration ?? 0) / daySeconds,
     }),
     [projectService]
   );
@@ -31,10 +34,11 @@ export function usePAYGConfig(deploymentId: string) {
     async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
       try {
         const { paygPrice, paygPeriod } = values;
+        const price = parseEther(paygPrice);
         await paygPriceRequest({
           variables: {
-            paygPrice: paygPrice.toString(),
-            paygExpiration: Number(paygPeriod),
+            paygPrice: price.toString(),
+            paygExpiration: Number(paygPeriod * daySeconds),
             // TODO: remove these 2 param on coordinator service side
             paygThreshold: 10,
             paygOverflow: 10,
