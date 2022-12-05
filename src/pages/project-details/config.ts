@@ -284,21 +284,6 @@ export const createPaygOpenSteps = (config: ProjectConfig, onPaygOpen: FormSubmi
   },
 ];
 
-export const createPaygChangePriceSteps = (
-  config: ProjectConfig,
-  onPaygChangePrice: FormSubmit
-) => ({
-  [PAYGAction.PaygChangePrice]: [
-    {
-      index: 0,
-      title: prompts.paygChangePrice.title,
-      desc: prompts.paygChangePrice.desc,
-      buttonTitle: 'Confirm',
-      form: setPaygPriceForms(config, onPaygChangePrice),
-    },
-  ],
-});
-
 export const createPaygCloseSteps = (onPaygClose: ClickAction) => ({
   [PAYGAction.PaygClose]: [
     {

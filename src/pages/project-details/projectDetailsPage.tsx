@@ -4,6 +4,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { formatEther } from '@ethersproject/units';
 import { FormikHelpers, FormikValues } from 'formik';
 import { isUndefined } from 'lodash';
 
@@ -37,8 +38,6 @@ import {
   createAnnounceIndexingSteps,
   createNetworkButtonItems,
   createNotIndexingSteps,
-  createPaygChangePriceSteps,
-  createPaygOpenSteps,
   createReadyIndexingSteps,
   createRemoveProjectSteps,
   createRestartProjectSteps,
@@ -165,8 +164,9 @@ const ProjectDetailsPage = () => {
       queryVersion: projectService?.queryVersion ? projectService.queryVersion : queryVersions[0],
       poiEnabled: projectService?.networkEndpoint ? projectService?.poiEnabled : true,
       forceEnabled: projectService?.networkEndpoint ? projectService?.forceEnabled : false,
-      paygPrice: projectService?.paygPrice ? projectService?.paygPrice : '',
-      paygExpiration: projectService?.paygExpiration ? projectService?.paygExpiration : 3600,
+      paygPrice: formatEther(projectService?.paygPrice ? projectService?.paygPrice : 0),
+      paygExpiration:
+        (projectService?.paygExpiration ? projectService?.paygExpiration : 0) / (3600 * 24),
       paygThreshold: projectService?.paygThreshold ? projectService?.paygThreshold : 1000,
       paygOverflow: projectService?.paygOverflow ? projectService?.paygOverflow : 5,
     }),
@@ -224,26 +224,6 @@ const ProjectDetailsPage = () => {
     }
   };
 
-  // TODO: PAYG part
-  const paygChangePrice = async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
-    try {
-      const { paygPrice, paygExpiration, paygThreshold, paygOverflow } = values;
-      await paygPriceRequest({
-        variables: {
-          paygPrice,
-          paygExpiration: Number(paygExpiration),
-          paygThreshold: Number(paygThreshold),
-          paygOverflow: Number(paygOverflow),
-          id,
-        },
-      });
-      onModalClose();
-      updateServiceStatus();
-    } catch (e) {
-      formHelper.setErrors({ [ProjectFormKey.paygPrice]: 'Invalid PAYG' });
-    }
-  };
-
   const startIndexingSteps = createStartIndexingSteps(projectConfig, imageVersions, startProject);
   const restartProjectSteps = createRestartProjectSteps(projectConfig, imageVersions, startProject);
   const stopIndexingSteps = createStopIndexingSteps(stopProject);
@@ -259,8 +239,6 @@ const ProjectDetailsPage = () => {
   const announceNotIndexingSteps = createNotIndexingSteps(() =>
     indexingAction(ProjectAction.AnnounceNotIndexing, onModalClose)
   );
-  const paygOpenSteps = createPaygOpenSteps(projectConfig, paygChangePrice);
-  const paygChangePriceSteps = createPaygChangePriceSteps(projectConfig, paygChangePrice);
 
   const steps = {
     ...startIndexingSteps,
@@ -271,8 +249,6 @@ const ProjectDetailsPage = () => {
     ...announceIndexingSteps,
     ...announceReadySteps,
     ...announceNotIndexingSteps,
-    ...paygOpenSteps,
-    ...paygChangePriceSteps,
   };
 
   const [modalTitle, modalSteps] = useMemo(() => {
