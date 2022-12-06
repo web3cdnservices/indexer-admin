@@ -162,7 +162,6 @@ const ProjectDetailsPage = () => {
       networkDictionary: projectService?.networkDictionary ?? '',
       nodeVersion: projectService?.nodeVersion ? projectService.nodeVersion : nodeVersions[0],
       queryVersion: projectService?.queryVersion ? projectService.queryVersion : queryVersions[0],
-      poiEnabled: projectService?.networkEndpoint ? projectService?.poiEnabled : true,
       forceEnabled: projectService?.networkEndpoint ? projectService?.forceEnabled : false,
       paygPrice: formatEther(projectService?.paygPrice ? projectService?.paygPrice : 0),
       paygExpiration:
@@ -188,11 +187,10 @@ const ProjectDetailsPage = () => {
 
   const startProject = async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
     try {
-      const { poiEnabled, forceEnabled } = values;
+      const { forceEnabled } = values;
       await startProjectRequest({
         variables: {
           ...values,
-          poiEnabled: isTrue(poiEnabled),
           forceEnabled: isTrue(forceEnabled),
           id,
         },

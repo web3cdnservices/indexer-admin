@@ -50,7 +50,6 @@ const projectServiceMetadtaValue: ProjectServiceMetadata = {
   networkDictionary: '',
   nodeVersion: '',
   queryVersion: '',
-  poiEnabled: false,
   forceEnabled: false,
   status: 0,
   paygPrice: '',

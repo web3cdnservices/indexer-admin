@@ -79,7 +79,6 @@ export type ProjectConfig = {
   networkDictionary: string;
   nodeVersion: string;
   queryVersion: string;
-  poiEnabled: boolean;
   forceEnabled: boolean;
   paygPrice: string;
   paygExpiration: number;

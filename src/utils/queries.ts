@@ -30,7 +30,6 @@ export const ADD_INDEXER = gql`
 export const START_PROJECT = gql`
   mutation StartProject(
     $forceEnabled: Boolean!
-    $poiEnabled: Boolean!
     $queryVersion: String!
     $nodeVersion: String!
     $networkDictionary: String!
@@ -39,7 +38,6 @@ export const START_PROJECT = gql`
   ) {
     startProject(
       forceEnabled: $forceEnabled
-      poiEnabled: $poiEnabled
       queryVersion: $queryVersion
       nodeVersion: $nodeVersion
       networkDictionary: $networkDictionary
@@ -52,7 +50,6 @@ export const START_PROJECT = gql`
       networkDictionary
       nodeVersion
       queryVersion
-      poiEnabled
       nodeEndpoint
       queryEndpoint
     }
@@ -156,7 +153,6 @@ export const GET_PROJECT = gql`
       networkDictionary
       nodeVersion
       queryVersion
-      poiEnabled
       forceEnabled
       paygPrice
       paygExpiration
@@ -177,7 +173,6 @@ export const GET_PROJECTS = gql`
       networkDictionary
       nodeVersion
       queryVersion
-      poiEnabled
       paygPrice
       paygExpiration
       paygThreshold

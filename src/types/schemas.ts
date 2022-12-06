@@ -75,7 +75,6 @@ export enum ProjectFormKey {
   networkDictionary = 'networkDictionary',
   nodeVersion = 'nodeVersion',
   queryVersion = 'queryVersion',
-  poiEnabled = 'poiEnabled',
   forceEnabled = 'forceEnabled',
   // FIXME: remove
   paygPrice = 'paygPrice',
@@ -102,7 +101,6 @@ export const initialIndexingValues = (config: ProjectConfig) => ({
   [ProjectFormKey.networkDictionary]: config.networkDictionary ?? '',
   [ProjectFormKey.nodeVersion]: config.nodeVersion,
   [ProjectFormKey.queryVersion]: config.queryVersion,
-  [ProjectFormKey.poiEnabled]: config.poiEnabled,
   [ProjectFormKey.forceEnabled]: config.forceEnabled,
 });
 
@@ -111,7 +109,6 @@ export const StartIndexingSchema = yup.object({
   [ProjectFormKey.networkDictionary]: yup.string().optional(),
   [ProjectFormKey.nodeVersion]: yup.string().defined(),
   [ProjectFormKey.queryVersion]: yup.string().defined(),
-  [ProjectFormKey.poiEnabled]: yup.boolean().required(),
   [ProjectFormKey.forceEnabled]: yup.boolean().required(),
 });
 
