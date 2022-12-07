@@ -55,13 +55,11 @@ export function validateController(key: string, isExist?: boolean, account?: str
 export async function verifyProxyEndpoint(url: string) {
   try {
     const { host, protocol } = new URL(url);
-    const cid = 'QmTQTnBTcvv3Eb3M6neDiwuubWVDAoqyAgKmXtTtJKAHoH';
-    const requestUrl = `${protocol}//${host}/metadata/${cid}`;
+    const requestUrl = `${protocol}//${host}/healthy`;
 
-    const result = await axios.get(requestUrl);
-    return !!result;
+    const response = await axios.get(requestUrl);
+    return response.status === 200;
   } catch (error) {
-    const e = error as AxiosError;
-    return e.response?.status === 400;
+    return false;
   }
 }
