@@ -26,7 +26,7 @@ import { useIndexingAction } from 'hooks/transactionHook';
 import { ProjectFormKey } from 'types/schemas';
 import { ProjectNotification } from 'utils/notification';
 import { calculateProgress, isTrue } from 'utils/project';
-import { PAYG_PRICE, REMOVE_PROJECT, START_PROJECT, STOP_PROJECT } from 'utils/queries';
+import { REMOVE_PROJECT, START_PROJECT, STOP_PROJECT } from 'utils/queries';
 import { txErrorNotification } from 'utils/transactions';
 
 import ProjectDetailsHeader from './components/projectDetailHeader';
@@ -68,7 +68,6 @@ const ProjectDetailsPage = () => {
   const [startProjectRequest, { loading: startProjectLoading }] = useMutation(START_PROJECT);
   const [stopProjectRequest, { loading: stopProjectLoading }] = useMutation(STOP_PROJECT);
   const [removeProjectRequest, { loading: removeProjectLoading }] = useMutation(REMOVE_PROJECT);
-  const [paygPriceRequest, { loading: paygPriceLoading }] = useMutation(PAYG_PRICE);
   const queryVersions = useQueryVersions(id);
   const nodeVersions = useNodeVersions(id);
 
@@ -103,8 +102,8 @@ const ProjectDetailsPage = () => {
   }, [status]);
 
   const loading = useMemo(
-    () => startProjectLoading || stopProjectLoading || removeProjectLoading || paygPriceLoading,
-    [startProjectLoading, stopProjectLoading, removeProjectLoading, paygPriceLoading]
+    () => startProjectLoading || stopProjectLoading || removeProjectLoading,
+    [startProjectLoading, stopProjectLoading, removeProjectLoading]
   );
 
   const projectStatus = useMemo(() => {

@@ -263,7 +263,7 @@ const setPaygPriceForms = (config: ProjectConfig, onFormSubmit: FormSubmit) => (
     },
     {
       formKey: OpenPAYGFormKey.paygPeriod,
-      title: 'Validity Period',
+      title: 'Validity Period (days)',
       placeholder: 'Set a validity period',
     },
   ],

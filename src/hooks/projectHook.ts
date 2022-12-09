@@ -53,7 +53,7 @@ const projectServiceMetadtaValue: ProjectServiceMetadata = {
   forceEnabled: false,
   status: 0,
   paygPrice: '',
-  paygExpiration: 3600,
+  paygExpiration: 3600 * 24,
   paygThreshold: 1000,
   paygOverflow: 5,
 };

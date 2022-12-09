@@ -22,13 +22,16 @@ export function usePAYGConfig(deploymentId: string) {
   const { projectService, getProjectService } = useProjectService(deploymentId);
   const { removeModal } = useModal();
 
-  const paygConfig = useMemo(
-    () => ({
-      paygPrice: projectService?.paygPrice ? formatEther(projectService.paygPrice) : '',
+  const paygConfig = useMemo(() => {
+    if (!projectService || !projectService.paygPrice) {
+      return { paygPrice: '', paygExpiration: 0 };
+    }
+
+    return {
+      paygPrice: formatEther(projectService.paygPrice),
       paygExpiration: (projectService?.paygExpiration ?? 0) / daySeconds,
-    }),
-    [projectService]
-  );
+    };
+  }, [projectService]);
 
   const changePAYGCofnig = useCallback(
     async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
