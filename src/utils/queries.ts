@@ -269,30 +269,6 @@ export const PAYG_PRICE = gql`
   }
 `;
 
-export const GET_PAYG_PLANS = gql`
-  query GetPaygPlans($indexer: String!, $deploymentId: String!, $status: ChannelStatus!) {
-    stateChannels(
-      filter: {
-        indexer: { equalTo: $indexer }
-        status: { equalTo: $status }
-        deploymentId: { equalTo: $deploymentId }
-      }
-    ) {
-      nodes {
-        id
-        indexer
-        consumer
-        status
-        total
-        spent
-        isFinal
-        expiredAt
-        terminatedAt
-      }
-    }
-  }
-`;
-
 // TODO: don't need this anymore
 export const CHANNEL_CHECKPOINT = gql`
   mutation ChannelCheckpoint($id: String!) {
