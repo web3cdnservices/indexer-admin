@@ -24,7 +24,7 @@ export function usePAYGConfig(deploymentId: string) {
 
   const paygConfig = useMemo(
     () => ({
-      paygPrice: formatEther(projectService?.paygPrice ?? 0),
+      paygPrice: projectService?.paygPrice ? formatEther(projectService.paygPrice) : '',
       paygExpiration: (projectService?.paygExpiration ?? 0) / daySeconds,
     }),
     [projectService]
