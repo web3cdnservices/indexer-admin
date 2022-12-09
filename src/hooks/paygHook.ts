@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ApolloQueryResult, useMutation } from '@apollo/client';
 import { formatEther, parseEther } from '@ethersproject/units';
 import { GraphqlQueryClient, NETWORK_CONFIGS } from '@subql/network-clients';
+import { BigNumber } from 'ethers';
 import { FormikHelpers, FormikValues } from 'formik';
 
 import { useModal } from 'containers/modalContext';
@@ -28,7 +29,7 @@ export function usePAYGConfig(deploymentId: string) {
     }
 
     return {
-      paygPrice: formatEther(projectService.paygPrice),
+      paygPrice: formatEther(BigNumber.from(projectService.paygPrice).mul(1000)),
       paygExpiration: (projectService?.paygExpiration ?? 0) / daySeconds,
     };
   }, [projectService]);
@@ -40,7 +41,7 @@ export function usePAYGConfig(deploymentId: string) {
         const price = parseEther(paygPrice);
         await paygPriceRequest({
           variables: {
-            paygPrice: price.toString(),
+            paygPrice: price.div(1000).toString(),
             paygExpiration: Number(paygPeriod * daySeconds),
             // TODO: remove these 2 param on coordinator service side
             paygThreshold: 10,
