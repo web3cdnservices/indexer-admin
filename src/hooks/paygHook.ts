@@ -28,7 +28,7 @@ export function usePAYGConfig(deploymentId: string) {
     }
 
     return {
-      paygPrice: formatEther(projectService.paygPrice ?? '0'),
+      paygPrice: formatEther(projectService.paygPrice),
       paygExpiration: (projectService?.paygExpiration ?? 0) / daySeconds,
     };
   }, [projectService]);
