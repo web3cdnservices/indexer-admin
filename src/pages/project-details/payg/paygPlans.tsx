@@ -5,16 +5,10 @@ import { useMemo, useState } from 'react';
 import { Button, Table, TableTitle, Tabs } from '@subql/components';
 
 import { Text } from 'components/primary';
-import { ChannelStatus, usePAYGPlans } from 'hooks/paygHook';
+import { ChannelStatus, FlexPlanStatus, usePAYGPlans } from 'hooks/paygHook';
 
 import prompts from '../prompts';
-import {
-  planColumns,
-  plansToDatasource,
-  TabbarItem,
-  tabItems,
-  tabToStatus,
-} from './paygDatasource';
+import { planColumns, plansToDatasource, tabItems } from './paygDatasource';
 import { PlansContainer } from './styles';
 
 const { channels } = prompts.payg;
@@ -25,20 +19,19 @@ type Props = {
 };
 
 export function PAYGPlan({ deploymentId, onTerminate }: Props) {
-  const [tabItem, setTabItem] = useState(TabbarItem.ONGOING);
+  const [tabItem, setTabItem] = useState<FlexPlanStatus>(FlexPlanStatus.ONGOING);
   const { plans, getPlans } = usePAYGPlans(deploymentId);
   const dataSource = useMemo(
     () => plansToDatasource(deploymentId, plans, tabItem),
     [plans, tabItem]
   );
 
-  const onTabChange = (tabValue: TabbarItem) => {
-    const status = tabToStatus(tabValue);
+  const onTabChange = (tabValue: FlexPlanStatus) => {
     setTabItem(tabValue);
-    getPlans(deploymentId, status);
+    getPlans(deploymentId, tabValue);
   };
 
-  const teminateBtn = ({ id, status }: { id: string; status: ChannelStatus }) => (
+  const teminateBtn = ({ id }: { id: string; status: ChannelStatus }) => (
     <Button
       type="link"
       size="medium"

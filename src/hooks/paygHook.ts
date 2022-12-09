@@ -5,15 +5,21 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ApolloQueryResult, useMutation } from '@apollo/client';
 import { formatEther, parseEther } from '@ethersproject/units';
 import { GraphqlQueryClient, NETWORK_CONFIGS } from '@subql/network-clients';
+import { GetIndexerClosedFlexPlans, GetIndexerOngoingFlexPlans } from '@subql/network-query';
 import { BigNumber } from 'ethers';
 import { FormikHelpers, FormikValues } from 'formik';
 
 import { useModal } from 'containers/modalContext';
 import { ProjectFormKey } from 'types/schemas';
-import { GET_PAYG_PLANS, PAYG_PRICE } from 'utils/queries';
+import { PAYG_PRICE } from 'utils/queries';
 
 import { useProjectService } from './projectHook';
 import { useWeb3 } from './web3Hook';
+
+export enum FlexPlanStatus {
+  ONGOING,
+  CLOSED,
+}
 
 const daySeconds = 3600 * 24;
 
@@ -85,6 +91,10 @@ const config = NETWORK_CONFIGS.kepler;
 const client = new GraphqlQueryClient(config);
 const networkClient = client.explorerClient;
 
+function queryFromStatus(status: FlexPlanStatus) {
+  return status === FlexPlanStatus.ONGOING ? GetIndexerOngoingFlexPlans : GetIndexerClosedFlexPlans;
+}
+
 export function usePAYGPlans(deploymentId: string) {
   const [data, setData] = useState<ApolloQueryResult<{ stateChannels: { nodes: Plan[] } }>>();
 
@@ -92,13 +102,14 @@ export function usePAYGPlans(deploymentId: string) {
   const { account: indexer } = useWeb3();
 
   const getPlans = useCallback(
-    async (id: string, _status: ChannelStatus) => {
+    async (id: string, status: FlexPlanStatus) => {
+      if (!indexer) return;
       const response = await networkClient.query({
-        query: GET_PAYG_PLANS,
+        query: queryFromStatus(status),
         variables: {
-          indexer: '0xbB64D716FAbDEC3a106bb913Fb4f82c1EeC851b8',
+          indexer,
           deploymentId: id,
-          status: _status,
+          now: new Date(),
         },
       });
       setData(response);
@@ -107,7 +118,7 @@ export function usePAYGPlans(deploymentId: string) {
   );
 
   useEffect(() => {
-    indexer && getPlans(deploymentId, ChannelStatus.OPEN);
+    indexer && getPlans(deploymentId, FlexPlanStatus.ONGOING);
   }, [indexer]);
 
   return { getPlans, plans };
