@@ -3,18 +3,21 @@
 
 import React from 'react';
 import { ContractDeployment, ContractSDK, SdkOptions } from '@subql/contract-sdk';
-import moonbaseDeployment from '@subql/contract-sdk/publish/moonbase.json';
+import keplerDeployment from '@subql/contract-sdk/publish/kepler.json';
+import mainnetDeployment from '@subql/contract-sdk/publish/mainnet.json';
+import testnetDeployment from '@subql/contract-sdk/publish/testnet.json';
+import { intToHex } from 'ethereumjs-util';
 
 import { useIsMetaMask, useWeb3 } from 'hooks/web3Hook';
 import Logger from 'utils/logger';
-import { ChainID, isSupportNetwork, Networks, SubqueryNetwork } from 'utils/web3';
+import { ChainID, isSupportNetwork, SubqueryNetwork } from 'utils/web3';
 
 import { createContainer } from './unstated';
 
 const deployments: Record<SubqueryNetwork, ContractDeployment> = {
-  testnet: moonbaseDeployment,
-  moonbase: moonbaseDeployment,
-  mainnet: moonbaseDeployment,
+  testnet: testnetDeployment,
+  kepler: keplerDeployment,
+  mainnet: mainnetDeployment,
 };
 
 function createContractOptions(network: SubqueryNetwork): SdkOptions {
@@ -25,9 +28,9 @@ function createContractOptions(network: SubqueryNetwork): SdkOptions {
 }
 
 const options = {
-  [ChainID.moonbase]: createContractOptions(Networks.moonbase),
-  [ChainID.testnet]: createContractOptions(Networks.testnet),
-  [ChainID.mainnet]: createContractOptions(Networks.mainnet),
+  [ChainID.testnet]: createContractOptions('testnet'),
+  [ChainID.kepler]: createContractOptions('kepler'),
+  [ChainID.mainnet]: createContractOptions('mainnet'),
 };
 
 export type SDK = ContractSDK | undefined;
@@ -38,9 +41,9 @@ function useContractsImpl(logger: Logger): SDK {
   const isMetaMask = useIsMetaMask();
 
   React.useEffect(() => {
-    if (!chainId || !isSupportNetwork(chainId)) return;
+    if (!chainId || !isSupportNetwork(intToHex(chainId) as ChainID)) return;
 
-    const sdkOption = options[chainId as ChainID];
+    const sdkOption = options[intToHex(chainId) as ChainID];
     if (!sdkOption || !sdkOption.network || !sdkOption.deploymentDetails) {
       throw new Error(
         'Invalid sdk options, contracts provider requires network and deploymentDetails'

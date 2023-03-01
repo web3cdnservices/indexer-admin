@@ -79,11 +79,6 @@ export async function configController(sdk: SDK, signer: Signer, controller: str
     throw new Error(ErrorMessages.controllerError);
   }
 
-  const indexer = await sdk.indexerRegistry.controllerToIndexer(controller);
-  if (indexer !== emptyControllerAccount) {
-    throw new Error(ErrorMessages.controllerExist);
-  }
-
   const tx = await sdk.indexerRegistry.connect(signer).setControllerAccount(controller);
   return tx;
 }

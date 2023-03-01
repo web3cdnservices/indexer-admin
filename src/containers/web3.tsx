@@ -9,7 +9,7 @@ import { NetworkConnector } from '@web3-react/network-connector';
 import { providers } from 'ethers';
 
 import { useWeb3 } from 'hooks/web3Hook';
-import { ChainID, NetworkToChainID, RPC_URLS } from 'utils/web3';
+import { ChainID, hexToInt, NetworkToChainID, RPC_URLS } from 'utils/web3';
 
 import { Props } from './unstated';
 
@@ -21,10 +21,9 @@ const injectNetwork = window.env.NETWORK as keyof typeof NetworkToChainID;
 
 const networkConnector = new NetworkConnector({
   urls: RPC_URLS,
-  defaultChainId: (NetworkToChainID[injectNetwork] as number) ?? ChainID.moonbase,
+  defaultChainId: hexToInt(NetworkToChainID[injectNetwork] ?? ChainID.testnet),
 });
 
-// TODO: Acala would use https://github.com/AcalaNetwork/bodhi.js
 const getLibrary = (provider: any): providers.Web3Provider => {
   return new providers.Web3Provider(provider);
 };

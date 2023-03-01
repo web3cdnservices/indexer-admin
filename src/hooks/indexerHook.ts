@@ -57,15 +57,7 @@ export const useIsIndexer = (): boolean | undefined => {
 // 2. using try catch | async await other than promise
 export const useIsController = (account: Account) => {
   const [isController, setIsController] = useState(false);
-  const sdk = useContractSDK();
-
-  useEffect(() => {
-    sdk?.indexerRegistry
-      .isController(account ?? '')
-      .then((isController) => setIsController(isController))
-      .catch(() => setIsController(false));
-  }, [account, sdk]);
-
+  // TODO: get controller from subquery project
   return isController;
 };
 
@@ -76,7 +68,7 @@ export const useController = () => {
 
   const getController = useCallback(async () => {
     try {
-      const controller = await sdk?.indexerRegistry.indexerToController(account ?? '');
+      const controller = await sdk?.indexerRegistry.getController(account ?? '');
       setController(controller === emptyControllerAccount ? '' : controller);
     } catch {
       setController(undefined);
@@ -88,22 +80,6 @@ export const useController = () => {
   }, [getController]);
 
   return { controller, getController };
-};
-
-export const useControllerToIndexer = (account: Account) => {
-  const [indexer, setIndexer] = useState('');
-  const sdk = useContractSDK();
-
-  useEffect(() => {
-    sdk?.indexerRegistry
-      .controllerToIndexer(account ?? '')
-      .then((indexer) => {
-        setIndexer(indexer);
-      })
-      .catch(() => setIndexer(''));
-  }, [account, sdk]);
-
-  return indexer;
 };
 
 export const useTokenBalance = (account: Account, deps?: HookDependency) => {
@@ -158,7 +134,7 @@ export const useIndexerMetadata = () => {
   const fetchMetadata = useCallback(async () => {
     if (!account) return;
     try {
-      const metadataHash = await sdk?.indexerRegistry.metadataByIndexer(account);
+      const metadataHash = await sdk?.indexerRegistry.metadata(account);
       if (!metadataHash) return;
 
       const metadata = await cat(bytes32ToCid(metadataHash));

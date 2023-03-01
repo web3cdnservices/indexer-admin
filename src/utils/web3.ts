@@ -1,73 +1,37 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { intToHex } from 'ethereumjs-util';
+import { networks } from '@subql/contract-sdk';
 
 export enum ChainID {
-  testnet = 595,
-  moonbase = 1287,
-  mainnet = 1285,
+  testnet = '0x13881',
+  kepler = '0x89',
+  mainnet = '0x89',
 }
 
-export enum Networks {
-  moonbase = 'moonbase',
-  testnet = 'testnet',
-  mainnet = 'mainnet',
-}
+export type SubqueryNetwork = 'mainnet' | 'kepler' | 'testnet';
 
-export type SubqueryNetwork = 'mainnet' | 'testnet' | 'moonbase';
-
-export const ChainIDs = [ChainID.moonbase, ChainID.testnet, ChainID.mainnet];
+export const ChainIDs = [ChainID.testnet, ChainID.kepler, ChainID.mainnet];
 
 export const NetworkToChainID: Record<SubqueryNetwork, ChainID> = {
-  moonbase: ChainID.moonbase,
   testnet: ChainID.testnet,
+  kepler: ChainID.kepler,
   mainnet: ChainID.mainnet,
 };
 
-export const isSupportNetwork = (chaiId?: number) => ChainIDs.includes(chaiId ?? 0);
+export const isSupportNetwork = (chaiId: ChainID) => ChainIDs.includes(chaiId);
 
 export const RPC_URLS: Record<number, string> = {
-  595: 'https://tc7-eth.aca-dev.network',
-  1285: 'https://moonriver.api.onfinality.io/public',
-  1287: 'https://moonbeam-alpha.api.onfinality.io/public',
-  31337: 'http://127.0.0.1:8545',
-};
-
-export const networks: Record<number, SubqueryNetwork> = {
-  595: Networks.testnet,
-  1287: Networks.moonbase,
-  1285: Networks.mainnet,
-};
-
-export const chainNames: Record<number, string> = {
-  595: 'Acala Testnet',
-  1285: 'Moonriver',
-  1287: 'Moonbeam Dev',
-  31337: 'Hardhat Local',
+  80001: 'https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78',
+  137: 'https://polygon-rpc.com/',
 };
 
 export const NETWORK_CONFIGS = {
-  [ChainID.testnet]: {
-    chainId: intToHex(ChainID.testnet),
-    chainName: 'Acala Testnet',
-    nativeCurrency: {
-      name: 'Acala',
-      symbol: 'Acala',
-      decimals: 18,
-    },
-    rpcUrls: [RPC_URLS[ChainID.testnet]],
-    blockExplorerUrls: ['https://blockscout.mandala.acala.network/'],
-  },
-  [ChainID.moonbase]: {
-    chainId: intToHex(1287),
-    chainName: 'Moonbase Alpha',
-    nativeCurrency: {
-      name: 'DEV',
-      symbol: 'DEV',
-      decimals: 18,
-    },
-    rpcUrls: [RPC_URLS[1287]],
-    blockExplorerUrls: ['https://moonbase.moonscan.io/'],
-  },
+  [ChainID.testnet]: networks.testnet,
+  [ChainID.kepler]: networks.kepler,
+  [ChainID.mainnet]: networks.mainnet,
 };
+
+export function hexToInt(hex: string) {
+  return parseInt(hex, 16);
+}
