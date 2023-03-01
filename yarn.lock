@@ -2945,10 +2945,10 @@
   dependencies:
     "@openzeppelin/contracts-upgradeable" "^4.5.2"
 
-"@subql/network-clients@^0.3.1-3":
-  version "0.3.1-3"
-  resolved "https://registry.yarnpkg.com/@subql/network-clients/-/network-clients-0.3.1-3.tgz#38739a8a47d247f32e447ad7002e372ca0146b6d"
-  integrity sha512-89kzWnWe5iCpiX23fH9lZRlFOKwTSr6xLp5h5pa2LFiW2O23eusOUCZTRenVt/mrn/1wq3eoZOWfs6R5TaInow==
+"@subql/network-clients@^0.3.1-4":
+  version "0.3.1-4"
+  resolved "https://registry.yarnpkg.com/@subql/network-clients/-/network-clients-0.3.1-4.tgz#75cdef3aa0f068d6d32e8ced328c22e3ba175ba1"
+  integrity sha512-n2Y/4AX4XKIBX2vD6GN0bFG37BCPz3I/mUgQqgLY/hdDmN+FoDvESPaFX1RyxCV8cgvoeAgQbPubbz8GAzrflg==
   dependencies:
     "@apollo/client" "^3.7.0"
     "@ethersproject/bignumber" "^5.7.0"

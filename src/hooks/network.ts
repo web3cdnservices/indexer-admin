@@ -10,10 +10,10 @@ import { useWeb3 } from './web3Hook';
 export const useTokenSymbol = () => {
   const { chainId } = useWeb3();
   const tokenSymbol = useMemo(() => {
-    if (chainId === 595) {
-      return 'ACA';
+    if (chainId === 80001) {
+      return 'MATIC';
     }
-    if (chainId === 1287) {
+    if (chainId === 173) {
       return 'DEV';
     }
 

@@ -37,7 +37,7 @@ export async function switchNetwork() {
   try {
     await window.ethereum.request({
       method: ethMethods.switchChain,
-      params: [{ chainId: intToHex(chainId) }],
+      params: [{ chainId: chainId }],
     })
   } catch (e) {
     console.log('e:', e);

@@ -14,7 +14,7 @@ import { ChainID, hexToInt, NetworkToChainID, RPC_URLS } from 'utils/web3';
 import { Props } from './unstated';
 
 const injectedConntector = new InjectedConnector({
-  supportedChainIds: [595, 1287, 1285],
+  supportedChainIds: [137, 80001],
 });
 
 const injectNetwork = window.env.NETWORK as keyof typeof NetworkToChainID;

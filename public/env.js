@@ -7,5 +7,5 @@ window.env = {
   COORDINATOR_SERVICE_PORT: 8000,
   COORDINATOR_SERVICE_URL: 'http://ec2-3-27-14-20.ap-southeast-2.compute.amazonaws.com:8000/graphql',
   IPFS_GATEWAY: 'https://unauthipfs.subquery.network/ipfs/api/v0',
-  REGISTRY_PROJECT: 'https://api.subquery.network/sq/subquery/kepler-testnet-subql-project',
+  REGISTRY_PROJECT: 'https://api.subquery.network/sq/subquery/kepler-subquery-project-mumbai',
 };
