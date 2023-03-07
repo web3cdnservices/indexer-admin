@@ -6,6 +6,6 @@ export function balanceSufficient(balance: string): boolean {
 }
 
 export function openAccountExporer(account: string) {
-  const url = `https://moonbase.moonscan.io/address/${account}`;
+  const url = `https://mumbai.polygonscan.com/address/${account}`;
   window.open(url, '_blank', 'noopener,noreferrer');
 }
