@@ -24,4 +24,3 @@ yarn-error.log*
 
 # public
 /public/env.js
-/build
