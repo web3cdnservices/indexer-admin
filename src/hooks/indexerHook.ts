@@ -55,11 +55,13 @@ export const useIsIndexer = (): boolean | undefined => {
 // TODO: refactor these hooks
 // 1. using `useMemo` | `useCallback` to replace custome useState
 // 2. using try catch | async await other than promise
+/* eslint-disable */
 export const useIsController = (account: Account) => {
   const [isController, setIsController] = useState(false);
   // TODO: get controller from subquery project
   return isController;
 };
+/* eslint-enable */
 
 export const useController = () => {
   const [controller, setController] = useState<string>();
