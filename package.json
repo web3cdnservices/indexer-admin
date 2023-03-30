@@ -1,6 +1,6 @@
 {
   "name": "@subql/indexer-admin",
-  "version": "0.3.4-6",
+  "version": "0.3.4-7",
   "scripts": {
     "start": "PORT=8008 craco start -- --rest-cache",
     "build": "craco build",
