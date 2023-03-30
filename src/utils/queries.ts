@@ -15,6 +15,7 @@ export const GET_COORDINATOR_INDEXER = gql`
   query {
     accountMetadata {
       indexer
+      network
     }
   }
 `;
@@ -85,7 +86,7 @@ export const ADD_CONTROLLER = gql`
 
 export const REMOVE_CONTROLLER = gql`
   mutation RemoveController($id: String!) {
-    removeAccount(id: $id) {
+    removeController(id: $id) {
       id
     }
   }

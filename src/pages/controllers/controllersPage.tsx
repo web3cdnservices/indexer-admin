@@ -85,6 +85,7 @@ const controllersPage = () => {
   const onModalClose = () => setVisible(false);
 
   const removeAccountSteps = createRemoveAccountSteps(async () => {
+    console.log('account:', account?.id);
     await removeController({ variables: { id: account?.id } });
     await getControllers();
     onModalClose();
