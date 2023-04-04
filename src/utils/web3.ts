@@ -3,6 +3,10 @@
 
 import { networks } from '@subql/contract-sdk';
 
+export const SUPPORTED_NETWORK = (window.env.network ?? 'testnet') as keyof typeof networks;
+
+export const PRODUCTION_NETWORK = 'kepler';
+
 export enum ChainID {
   testnet = '0x13881',
   kepler = '0x89',
@@ -35,3 +39,10 @@ export const NETWORK_CONFIGS = {
 export function hexToInt(hex: string) {
   return parseInt(hex, 16);
 }
+
+export const SUPPORTED_NETWORK_PROJECTS_EXPLORER =
+  window.env.network === PRODUCTION_NETWORK
+    ? 'https://kepler.subquery.network/'
+    : 'https://kepler.thechaindata.com/';
+
+export const FLEX_PLAN_FEATURE = window.env.network !== PRODUCTION_NETWORK;

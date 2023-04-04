@@ -5,6 +5,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import IntroductionView from 'components/introductionView';
+import { SUPPORTED_NETWORK_PROJECTS_EXPLORER } from 'utils/web3';
 
 export const Container = styled.div`
   display: flex;
@@ -20,9 +21,8 @@ type Props = {
   onClick: () => void;
 };
 
-const linkUrl = 'https://kepler.thechaindata.com/explorer';
 const ExplorerLink = () => (
-  <a target="_blank" href={linkUrl} rel="noreferrer">
+  <a target="_blank" href={SUPPORTED_NETWORK_PROJECTS_EXPLORER} rel="noreferrer">
     SubQuery Explorer
   </a>
 );
