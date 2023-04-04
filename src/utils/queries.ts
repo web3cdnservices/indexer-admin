@@ -23,7 +23,7 @@ export const GET_COORDINATOR_INDEXER = gql`
 export const ADD_INDEXER = gql`
   mutation AddIndexer($indexer: String!) {
     addIndexer(indexer: $indexer) {
-      indexer
+      address
     }
   }
 `;
@@ -129,16 +129,6 @@ export const CHANNEL_CLOSE = gql`
       remote
       onchain
       lastFinal
-    }
-  }
-`;
-
-export const CONFIG_SERVICES = gql`
-  mutation UpdateServices($queryEndpoint: String!, $nodeEndpoint: String!, $id: String!) {
-    updateProjectServices(queryEndpoint: $queryEndpoint, nodeEndpoint: $nodeEndpoint, id: $id) {
-      status
-      nodeEndpoint
-      queryEndpoint
     }
   }
 `;
