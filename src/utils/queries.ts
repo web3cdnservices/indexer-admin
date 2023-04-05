@@ -22,7 +22,7 @@ export const GET_COORDINATOR_INDEXER = gql`
 
 export const ADD_INDEXER = gql`
   mutation AddIndexer($indexer: String!) {
-    addIndexer(indexer: $indexer) {
+    addIndexer(address: $indexer) {
       address
     }
   }
