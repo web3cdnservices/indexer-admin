@@ -9,11 +9,54 @@ import { Col, Collapse, Form, Input, Row, Select, Slider, Switch } from 'antd';
 
 import { ButtonContainer } from 'components/primary';
 import { useNodeVersions, useQueryVersions } from 'hooks/projectHook';
-import { ProjectFormKey, StartIndexingSchema } from 'types/schemas';
-import { isTrue } from 'utils/project';
+import {
+  defaultAdvancedConfig,
+  defaultBaseConfig,
+  ProjectFormKey,
+  StartIndexingSchema,
+} from 'types/schemas';
 import { START_PROJECT } from 'utils/queries';
 
+const { poiEnabled, timeout } = defaultAdvancedConfig;
 const { Item } = Form;
+
+const advancedOptionsConfig = [
+  {
+    name: ProjectFormKey.batchSize,
+    label: 'Batch Size',
+    tooltip: 'Batch size of blocks to fetch in one round',
+    min: 1,
+    max: 100,
+  },
+  {
+    name: ProjectFormKey.workers,
+    label: 'Workers',
+    tooltip: 'Number of worker threads to use for fetching and processing blocks.',
+    min: 1,
+    max: 8,
+  },
+  {
+    name: ProjectFormKey.cache,
+    label: 'Cache Number',
+    tooltip: 'The number of items to cache in memory for faster processing.',
+    min: 1,
+    max: 500,
+  },
+  {
+    name: ProjectFormKey.cpu,
+    label: 'Number of Cpus',
+    tooltip: 'The number of CPUs that can be used by the subquery indexer for this project.',
+    min: 1,
+    max: 8,
+  },
+  {
+    name: ProjectFormKey.memory,
+    label: 'Memory',
+    tooltip: 'The amount of memory that can be used by the subquery indexer for this project.',
+    min: 1,
+    max: 8192,
+  },
+];
 
 const getYupRule = (field: string) => ({
   validator(_: any, value: any) {
@@ -38,20 +81,13 @@ export const IndexingForm: FC<{ setVisible: Dispatch<SetStateAction<boolean>> }>
   setVisible,
 }) => {
   const [form] = Form.useForm();
-  const [showInput, setShowInput] = useState(false);
+  const [showInput, setShowInput] = useState(true);
   const [loading, setLoading] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const { id } = useParams() as { id: string };
   const nodeVersions = useNodeVersions(id);
   const queryVersions = useQueryVersions(id);
   const [startProjectRequest, { loading: startProjectLoading }] = useMutation(START_PROJECT);
-
-  const initialValues = {
-    purgeDB: false,
-    batchSize: 30,
-    workers: 2,
-    cache: 50,
-  };
 
   const onSwitchChange = () => {
     setShowInput(!showInput);
@@ -63,12 +99,9 @@ export const IndexingForm: FC<{ setVisible: Dispatch<SetStateAction<boolean>> }>
       await startProjectRequest({
         variables: {
           ...values,
+          poiEnabled,
+          timeout,
           networkDictionary: values.networkDictionary ?? '',
-          purgeDB: isTrue(values.purgeDB),
-          cpu: 1,
-          memory: 1,
-          timeout: 0,
-          poiEnabled: true,
           id,
         },
       });
@@ -87,7 +120,7 @@ export const IndexingForm: FC<{ setVisible: Dispatch<SetStateAction<boolean>> }>
       name="form"
       layout="vertical"
       onFinish={handleSubmit(setVisible)}
-      initialValues={initialValues}
+      initialValues={{ ...defaultBaseConfig, ...defaultAdvancedConfig }}
     >
       <Form.Item
         label="Network Endpoint"
@@ -97,15 +130,11 @@ export const IndexingForm: FC<{ setVisible: Dispatch<SetStateAction<boolean>> }>
         <Input placeholder="wss://polkadot.api.onfinality.io/public-ws" />
       </Form.Item>
 
-      <Form.Item
-        name={ProjectFormKey.networkDictionary}
-        label="Is Project Dictionary"
-        valuePropName="checked"
-      >
+      <Form.Item label="Is Project Dictionary" valuePropName="checked">
         <Switch onChange={onSwitchChange} defaultChecked checked={showInput} />
       </Form.Item>
 
-      {showInput && (
+      {!showInput && (
         <Item
           label="Dictionary Endpoint"
           name={ProjectFormKey.networkDictionary}
@@ -134,22 +163,21 @@ export const IndexingForm: FC<{ setVisible: Dispatch<SetStateAction<boolean>> }>
           </Item>
         </Col>
       </Row>
-      <Form.Item name="purgeDB" label="Purge Db" valuePropName="checked">
+      <Form.Item
+        name="purgeDB"
+        label="Purge Db"
+        valuePropName="checked"
+        tooltip="Clean the database dropping project schemas and tables on start of indexing."
+      >
         <Switch />
       </Form.Item>
       <Collapse defaultActiveKey="1">
         <Collapse.Panel header="Advanced Options" key="1">
-          <Form.Item name="batchSize" label="Batch Size">
-            <Slider min={1} max={100} />
-          </Form.Item>
-
-          <Form.Item name="workers" label="Workers">
-            <Slider min={1} max={8} />
-          </Form.Item>
-
-          <Form.Item name="cache" label="Cache Number">
-            <Slider min={1} max={100} />
-          </Form.Item>
+          {advancedOptionsConfig.map(({ name, label, tooltip, min, max }) => (
+            <Form.Item name={name} label={label} tooltip={tooltip}>
+              <Slider min={min} max={max} />
+            </Form.Item>
+          ))}
         </Collapse.Panel>
       </Collapse>
       {submitError && <Form.Item validateStatus="error" help={submitError} />}

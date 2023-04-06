@@ -6,6 +6,26 @@ import * as yup from 'yup';
 import { IndexerMetadata } from 'pages/account/types';
 import { ProjectConfig } from 'pages/project-details/types';
 
+import { IProjectAdvancedConfig, IProjectBaseConfig } from './types';
+
+export const defaultBaseConfig: IProjectBaseConfig = {
+  networkEndpoint: undefined,
+  networkDictionary: undefined,
+  nodeVersion: undefined,
+  queryVersion: undefined,
+};
+
+export const defaultAdvancedConfig: IProjectAdvancedConfig = {
+  purgeDB: false,
+  poiEnabled: true,
+  timeout: 1800,
+  workers: 2,
+  batchSize: 50,
+  cache: 300,
+  cpu: 2,
+  memory: 2046,
+};
+
 // indexer register
 export enum RegisterFormKey {
   name = 'name',
@@ -77,6 +97,11 @@ export enum ProjectFormKey {
   nodeVersion = 'nodeVersion',
   queryVersion = 'queryVersion',
   purgeDB = 'purgeDB',
+  batchSize = 'batchSize',
+  workers = 'workers',
+  cache = 'cache',
+  cpu = 'cpu',
+  memory = 'memory',
   // FIXME: remove
   paygPrice = 'paygPrice',
   paygExpiration = 'paygExpiration',
@@ -110,7 +135,6 @@ export const StartIndexingSchema = yup.object({
   [ProjectFormKey.networkDictionary]: yup.string().optional(),
   [ProjectFormKey.nodeVersion]: yup.string().defined(),
   [ProjectFormKey.queryVersion]: yup.string().defined(),
-  [ProjectFormKey.purgeDB]: yup.boolean().required(),
 });
 
 export type IndexingEndpoint = yup.Asserts<typeof StartIndexingSchema>;

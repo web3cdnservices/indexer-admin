@@ -6,3 +6,21 @@ export type FormValues = {
 };
 
 export type HookDependency = boolean | number | string;
+
+export interface IProjectBaseConfig {
+  networkEndpoint: string | undefined;
+  networkDictionary: string | undefined;
+  nodeVersion: string | undefined;
+  queryVersion: string | undefined;
+}
+
+export interface IProjectAdvancedConfig {
+  poiEnabled: boolean;
+  purgeDB: boolean;
+  timeout: number;
+  workers: number;
+  batchSize: number;
+  cache: number;
+  cpu: number;
+  memory: number;
+}
