@@ -109,6 +109,16 @@ export type ImageVersions = {
   query: string[];
 };
 
+type Steps<T extends ProjectAction | PAYGAction> = {
+  [key in T]: Array<{
+    index: number;
+    title: string;
+    desc: string;
+    buttonTitle: string;
+    onClick: ClickAction;
+  }>;
+};
+
 const startProjectForms = (
   config: ProjectConfig,
   versions: ImageVersions,
@@ -120,12 +130,17 @@ const startProjectForms = (
   items: [
     {
       formKey: ProjectFormKey.networkEndpoint,
-      title: 'Indexing Network Endpiont',
+      title: 'Indexing Network Endpoint',
       placeholder: 'wss://polkadot.api.onfinality.io/public-ws',
     },
     {
+      formKey: ProjectFormKey.indexDictionary,
+      title: 'Dictionary Project?',
+      options: ['true', 'false'],
+    },
+    {
       formKey: ProjectFormKey.networkDictionary,
-      title: 'Network Dictionary Endpiont',
+      title: 'Network Dictionary Endpoint',
       placeholder: 'https://api.subquery.network/sq/subquery/dictionary-polkadot',
     },
     {
@@ -139,8 +154,8 @@ const startProjectForms = (
       options: versions.query,
     },
     {
-      formKey: ProjectFormKey.forceEnabled,
-      title: 'Enable Force Start',
+      formKey: ProjectFormKey.purgeDB,
+      title: 'Enable Purge DB',
       options: ['true', 'false'],
     },
   ],
@@ -158,6 +173,7 @@ export const createStartIndexingSteps = (
       desc: project.start.desc,
       buttonTitle: 'Confirm',
       form: startProjectForms(config, versions, onStartProject),
+      popupType: 'drawer',
       onClick: onStartProject,
     },
   ],
@@ -174,6 +190,7 @@ export const createRestartProjectSteps = (
       title: project.restart.title,
       desc: project.restart.desc,
       buttonTitle: 'Confirm',
+      popupType: 'drawer',
       form: startProjectForms(config, versions, onStartProject),
     },
   ],
@@ -203,7 +220,9 @@ export const createAnnounceIndexingSteps = (onSendTransaction: ClickAction) => (
   ],
 });
 
-export const createReadyIndexingSteps = (onSendTransaction: ClickAction) => ({
+export const createReadyIndexingSteps = (
+  onSendTransaction: ClickAction
+): Steps<ProjectAction.AnnounceReady> => ({
   [ProjectAction.AnnounceReady]: [
     {
       index: 0,
@@ -215,7 +234,9 @@ export const createReadyIndexingSteps = (onSendTransaction: ClickAction) => ({
   ],
 });
 
-export const createNotIndexingSteps = (onSendTransaction: ClickAction) => ({
+export const createNotIndexingSteps = (
+  onSendTransaction: ClickAction
+): Steps<ProjectAction.AnnounceNotIndexing> => ({
   [ProjectAction.AnnounceNotIndexing]: [
     {
       index: 0,
@@ -227,7 +248,9 @@ export const createNotIndexingSteps = (onSendTransaction: ClickAction) => ({
   ],
 });
 
-export const createStopProjectSteps = (onStopProject: ClickAction) => ({
+export const createStopProjectSteps = (
+  onStopProject: ClickAction
+): Steps<ProjectAction.StopProject> => ({
   [ProjectAction.StopProject]: [
     {
       index: 0,
@@ -239,7 +262,9 @@ export const createStopProjectSteps = (onStopProject: ClickAction) => ({
   ],
 });
 
-export const createStopIndexingSteps = (onStopProject: ClickAction) => ({
+export const createStopIndexingSteps = (
+  onStopProject: ClickAction
+): Steps<ProjectAction.StopIndexing> => ({
   [ProjectAction.StopIndexing]: [
     {
       index: 0,
@@ -269,17 +294,19 @@ const setPaygPriceForms = (config: ProjectConfig, onFormSubmit: FormSubmit) => (
   ],
 });
 
-export const createPaygOpenSteps = (config: ProjectConfig, onPaygOpen: FormSubmit) => [
-  {
-    index: 0,
-    title: payg.open.title,
-    desc: payg.open.desc,
-    buttonTitle: 'Confirm',
-    form: setPaygPriceForms(config, onPaygOpen),
-  },
-];
+export const createPaygOpenSteps = (config: ProjectConfig, onPaygOpen: FormSubmit) => ({
+  [PAYGAction.PaygOpen]: [
+    {
+      index: 0,
+      title: payg.open.title,
+      desc: payg.open.desc,
+      buttonTitle: 'Confirm',
+      form: setPaygPriceForms(config, onPaygOpen),
+    },
+  ],
+});
 
-export const createPaygCloseSteps = (onPaygClose: ClickAction) => ({
+export const createPaygCloseSteps = (onPaygClose: ClickAction): Steps<PAYGAction.PaygClose> => ({
   [PAYGAction.PaygClose]: [
     {
       index: 0,

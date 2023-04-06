@@ -9,7 +9,6 @@ import { GetIndexerClosedFlexPlans, GetIndexerOngoingFlexPlans } from '@subql/ne
 import { BigNumber } from 'ethers';
 import { FormikHelpers, FormikValues } from 'formik';
 
-import { useModal } from 'containers/modalContext';
 import { ProjectFormKey } from 'types/schemas';
 import { PAYG_PRICE } from 'utils/queries';
 
@@ -27,7 +26,6 @@ const daySeconds = 3600 * 24;
 export function usePAYGConfig(deploymentId: string) {
   const [paygPriceRequest, { loading }] = useMutation(PAYG_PRICE);
   const { projectService, getProjectService } = useProjectService(deploymentId);
-  const { removeModal } = useModal();
 
   const paygConfig = useMemo(() => {
     if (!projectService || !projectService.paygPrice) {
@@ -57,7 +55,6 @@ export function usePAYGConfig(deploymentId: string) {
         });
 
         getProjectService();
-        removeModal();
       } catch (e) {
         formHelper.setErrors({ [ProjectFormKey.paygPrice]: `Invalid PAYG: ${e}` });
       }

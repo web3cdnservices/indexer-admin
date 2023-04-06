@@ -69,7 +69,7 @@ export const FieldItem: VFC<Props> = ({
       )}
       {!!errors?.[fieldKey] && (
         <Text mt={5} color="red" size={15}>
-          {errors[fieldKey]}
+          <>{errors[fieldKey]}</>
         </Text>
       )}
     </Container>

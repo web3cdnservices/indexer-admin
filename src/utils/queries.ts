@@ -5,6 +5,31 @@ import { gql } from '@apollo/client';
 
 // TODO: use the public queries for `network-clients`
 
+const ProjectFields = `
+  id
+  status
+  chainType
+  nodeEndpoint
+  queryEndpoint
+  baseConfig {
+    networkEndpoint
+    networkDictionary
+    nodeVersion
+    queryVersion
+  }
+  advancedConfig {
+    poiEnabled
+    purgeDB
+    purgeDB
+    timeout
+    worker
+    batchSize
+    cache
+    cpu
+    memory
+  }
+`;
+
 export type QueryResult = {
   loading?: boolean;
   data?: any;
@@ -30,29 +55,40 @@ export const ADD_INDEXER = gql`
 
 export const START_PROJECT = gql`
   mutation StartProject(
-    $forceEnabled: Boolean!
+    $purgeDB: Boolean!
+    $poiEnabled: Boolean!
     $queryVersion: String!
     $nodeVersion: String!
     $networkDictionary: String!
     $networkEndpoint: String!
+    $batchSize: Int!
+    $workers: Int!
+    $timeout: Int!
+    $cache: Int!
+    $cpu: Int!
+    $memory: Int!
     $id: String!
   ) {
     startProject(
-      forceEnabled: $forceEnabled
-      queryVersion: $queryVersion
-      nodeVersion: $nodeVersion
-      networkDictionary: $networkDictionary
-      networkEndpoint: $networkEndpoint
       id: $id
+      baseConfig: {
+        networkEndpoint: $networkEndpoint
+        networkDictionary: $networkDictionary
+        nodeVersion: $nodeVersion
+        queryVersion: $queryVersion
+      }
+      advancedConfig: {
+        poiEnabled: $poiEnabled
+        purgeDB: $purgeDB
+        timeout: $timeout
+        batchSize: $batchSize
+        worker: $workers
+        cache: $cache
+        cpu: $cpu
+        memory: $memory
+      }
     ) {
-      id
-      status
-      networkEndpoint
-      networkDictionary
-      nodeVersion
-      queryVersion
-      nodeEndpoint
-      queryEndpoint
+      ${ProjectFields}
     }
   }
 `;
@@ -136,19 +172,7 @@ export const CHANNEL_CLOSE = gql`
 export const GET_PROJECT = gql`
   query Project($id: String!) {
     project(id: $id) {
-      id
-      status
-      nodeEndpoint
-      queryEndpoint
-      networkEndpoint
-      networkDictionary
-      nodeVersion
-      queryVersion
-      forceEnabled
-      paygPrice
-      paygExpiration
-      paygThreshold
-      paygOverflow
+      ${ProjectFields}
     }
   }
 `;
@@ -156,18 +180,7 @@ export const GET_PROJECT = gql`
 export const GET_PROJECTS = gql`
   query {
     getProjects {
-      id
-      status
-      nodeEndpoint
-      queryEndpoint
-      networkEndpoint
-      networkDictionary
-      nodeVersion
-      queryVersion
-      paygPrice
-      paygExpiration
-      paygThreshold
-      paygOverflow
+      ${ProjectFields}
     }
   }
 `;

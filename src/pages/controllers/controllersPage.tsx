@@ -6,7 +6,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import { isEmpty, isUndefined } from 'lodash';
 
 import IntroductionView from 'components/introductionView';
-import ModalView from 'components/modalView';
+import { PopupView } from 'components/popupView';
 import { Button, Text } from 'components/primary';
 import { useLoading } from 'containers/loadingContext';
 import { useNotification } from 'containers/notificationContext';
@@ -46,8 +46,9 @@ const controllersPage = () => {
   const [removeController] = useMutation(REMOVE_CONTROLLER);
   const [createController, { loading: createControllerRequesting }] = useMutation(ADD_CONTROLLER);
   const [withdrawController] = useLazyQuery(WITHDRAW_CONTROLLER);
-  const [getControllers, { data: controllerData }] =
-    useLazyQuery<{ controllers: Controller[] }>(GET_CONTROLLERS);
+  const [getControllers, { data: controllerData }] = useLazyQuery<{ controllers: Controller[] }>(
+    GET_CONTROLLERS
+  );
 
   useEffect(() => {
     setPageLoading(isUndefined(controllerData));
@@ -167,7 +168,8 @@ const controllersPage = () => {
         </IntroContainer>
       )}
       {actionType && (
-        <ModalView
+        <PopupView
+          setVisible={setVisible}
           visible={visible}
           onClose={onModalClose}
           steps={steps[actionType]}

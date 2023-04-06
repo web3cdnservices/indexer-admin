@@ -72,10 +72,11 @@ export const initialControllerValues = {
 export enum ProjectFormKey {
   deploymentId = 'deploymentId',
   networkEndpoint = 'networkEndpoint',
+  indexDictionary = 'indexDictionary',
   networkDictionary = 'networkDictionary',
   nodeVersion = 'nodeVersion',
   queryVersion = 'queryVersion',
-  forceEnabled = 'forceEnabled',
+  purgeDB = 'purgeDB',
   // FIXME: remove
   paygPrice = 'paygPrice',
   paygExpiration = 'paygExpiration',
@@ -101,7 +102,7 @@ export const initialIndexingValues = (config: ProjectConfig) => ({
   [ProjectFormKey.networkDictionary]: config.networkDictionary ?? '',
   [ProjectFormKey.nodeVersion]: config.nodeVersion,
   [ProjectFormKey.queryVersion]: config.queryVersion,
-  [ProjectFormKey.forceEnabled]: config.forceEnabled,
+  [ProjectFormKey.purgeDB]: config.purgeDB,
 });
 
 export const StartIndexingSchema = yup.object({
@@ -109,7 +110,7 @@ export const StartIndexingSchema = yup.object({
   [ProjectFormKey.networkDictionary]: yup.string().optional(),
   [ProjectFormKey.nodeVersion]: yup.string().defined(),
   [ProjectFormKey.queryVersion]: yup.string().defined(),
-  [ProjectFormKey.forceEnabled]: yup.boolean().required(),
+  [ProjectFormKey.purgeDB]: yup.boolean().required(),
 });
 
 export type IndexingEndpoint = yup.Asserts<typeof StartIndexingSchema>;

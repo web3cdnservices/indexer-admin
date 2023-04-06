@@ -21,9 +21,9 @@ type Props = {
 const AccountCard: FC<Props> = ({ title, desc, buttons, name, account }) => {
   const renderButtons = useMemo(
     () =>
-      buttons.map(({ title, type, loading, disabled, onClick }) => (
+      buttons.map(({ title, type, loading, disabled, onClick }, id) => (
         <Button
-          key={type}
+          key={id}
           width={230}
           mb={20}
           title={title}
@@ -36,7 +36,7 @@ const AccountCard: FC<Props> = ({ title, desc, buttons, name, account }) => {
   );
 
   return (
-    <Container key={title}>
+    <Container>
       <div>
         <HeaderContainer>
           <ContentContainer>

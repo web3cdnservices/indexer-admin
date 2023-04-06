@@ -9,7 +9,7 @@ import { FormikHelpers, FormikValues } from 'formik';
 import { isUndefined } from 'lodash';
 
 import AlertView from 'components/alertView';
-import ModalView from 'components/modalView';
+import { PopupView } from 'components/popupView';
 import { useLoading } from 'containers/loadingContext';
 import { useNotification } from 'containers/notificationContext';
 import {
@@ -74,6 +74,7 @@ const ProjectDetailsPage = () => {
   const [progress, setProgress] = useState(0);
   const [metadata, setMetadata] = useState<TQueryMetadata>();
   const [visible, setVisible] = useState(false);
+
   const [actionType, setActionType] = useState<ProjectAction>();
 
   const fetchQueryMetadata = async () => {
@@ -148,7 +149,7 @@ const ProjectDetailsPage = () => {
     return serviceBtnItems[projectStatus];
   }, [projectStatus]);
 
-  const onModalClose = (error?: any) => {
+  const onPopoverClose = (error?: any) => {
     setVisible(false);
     if (error?.data?.message) {
       dispatchNotification(txErrorNotification(error.data.message));
@@ -161,7 +162,7 @@ const ProjectDetailsPage = () => {
       networkDictionary: projectService?.networkDictionary ?? '',
       nodeVersion: projectService?.nodeVersion ? projectService.nodeVersion : nodeVersions[0],
       queryVersion: projectService?.queryVersion ? projectService.queryVersion : queryVersions[0],
-      forceEnabled: projectService?.networkEndpoint ? projectService?.forceEnabled : false,
+      purgeDB: projectService?.networkEndpoint ? projectService?.purgeDB : false,
       paygPrice: formatEther(projectService?.paygPrice ? projectService?.paygPrice : 0),
       paygExpiration:
         (projectService?.paygExpiration ? projectService?.paygExpiration : 0) / (3600 * 24),
@@ -186,16 +187,16 @@ const ProjectDetailsPage = () => {
 
   const startProject = async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
     try {
-      const { forceEnabled } = values;
+      const { purgeDB } = values;
       await startProjectRequest({
         variables: {
           ...values,
-          forceEnabled: isTrue(forceEnabled),
+          purgeDB: isTrue(purgeDB),
           id,
         },
       });
 
-      onModalClose();
+      onPopoverClose();
       projectStateChange(ProjectNotification.Started);
     } catch (e) {
       formHelper.setErrors({ [ProjectFormKey.networkEndpoint]: 'Invalid service endpoint' });
@@ -205,7 +206,7 @@ const ProjectDetailsPage = () => {
   const stopProject = async () => {
     try {
       await stopProjectRequest({ variables: { id } });
-      onModalClose();
+      onPopoverClose();
       projectStateChange(ProjectNotification.Terminated);
     } catch (e) {
       console.error('fail to stop project', e);
@@ -228,13 +229,13 @@ const ProjectDetailsPage = () => {
   const stopProjectSteps = createStopProjectSteps(stopProject);
   const removeProjectSteps = createRemoveProjectSteps(removeProject);
   const announceIndexingSteps = createAnnounceIndexingSteps(() =>
-    indexingAction(ProjectAction.AnnounceIndexing, onModalClose)
+    indexingAction(ProjectAction.AnnounceIndexing, onPopoverClose)
   );
   const announceReadySteps = createReadyIndexingSteps(() =>
-    indexingAction(ProjectAction.AnnounceReady, onModalClose)
+    indexingAction(ProjectAction.AnnounceReady, onPopoverClose)
   );
   const announceNotIndexingSteps = createNotIndexingSteps(() =>
-    indexingAction(ProjectAction.AnnounceNotIndexing, onModalClose)
+    indexingAction(ProjectAction.AnnounceNotIndexing, onPopoverClose)
   );
 
   const steps = {
@@ -268,10 +269,11 @@ const ProjectDetailsPage = () => {
           <ProjectTabbarView id={id} project={projectInfo} config={projectConfig} />
         </ContentContainer>
       )}
-      <ModalView
+      <PopupView
+        setVisible={setVisible}
         visible={visible}
         title={modalTitle}
-        onClose={onModalClose}
+        onClose={onPopoverClose}
         // @ts-ignore
         steps={modalSteps}
         type={actionType}

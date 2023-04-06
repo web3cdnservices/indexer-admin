@@ -79,7 +79,7 @@ export type ProjectConfig = {
   networkDictionary: string;
   nodeVersion: string;
   queryVersion: string;
-  forceEnabled: boolean;
+  purgeDB: boolean;
   paygPrice: string;
   paygExpiration: number;
   paygThreshold: number;

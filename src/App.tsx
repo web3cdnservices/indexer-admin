@@ -11,18 +11,16 @@ import Loading from 'components/loading';
 import { ContractSDKProvider } from 'containers/contractSdk';
 import { CoordinatorIndexerProvider } from 'containers/coordinatorIndexer';
 import { LoadingProvider } from 'containers/loadingContext';
-import { ModalProvider } from 'containers/modalContext';
 import { NotificationProvider, Notifications } from 'containers/notificationContext';
 import { Web3Provider } from 'containers/web3';
 import { useShowMetaMask } from 'hooks/web3Hook';
 import MetaMaskView from 'pages/metamask/metamaskView';
 import { coordinatorServiceUrl, createApolloClient } from 'utils/apolloClient';
 
-import { GModalView } from './components/modalView';
 import * as Pages from './pages';
 
 import 'react-notifications-component/dist/theme.css';
-import 'antd/dist/antd.css';
+import 'antd/dist/reset.css';
 import './App.css';
 
 const AppContents = () => {
@@ -47,7 +45,6 @@ const AppContents = () => {
         )}
         <Notifications />
         <Loading />
-        <GModalView />
       </div>
       <Pages.Footer />
     </Router>
@@ -72,13 +69,11 @@ const App: FC = () => (
         <ContractSDKProvider>
           <CoordinatorIndexerProvider>
             <LoadingProvider>
-              <ModalProvider>
-                <NotificationProvider>
-                  <div className="App">
-                    <AppContents />
-                  </div>
-                </NotificationProvider>
-              </ModalProvider>
+              <NotificationProvider>
+                <div className="App">
+                  <AppContents />
+                </div>
+              </NotificationProvider>
             </LoadingProvider>
           </CoordinatorIndexerProvider>
         </ContractSDKProvider>

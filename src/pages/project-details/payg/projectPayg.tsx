@@ -3,7 +3,6 @@
 
 import { useMemo } from 'react';
 
-import { useModal } from 'containers/modalContext';
 import { usePAYGConfig } from 'hooks/paygHook';
 
 import { createPaygOpenSteps } from '../config';
@@ -22,20 +21,19 @@ type TProjectPAYG = {
 export function ProjectPAYG({ id, config }: TProjectPAYG) {
   const { paygConfig, changePAYGCofnig, loading } = usePAYGConfig(id);
   const { paygPrice, paygExpiration } = paygConfig ?? config;
-  const { showModal } = useModal();
 
   const paygEnabled = useMemo(() => paygPrice && paygExpiration, [paygPrice, paygExpiration]);
 
   const paygOpenSteps = createPaygOpenSteps(config, changePAYGCofnig);
 
   const onUpdatePayg = (title: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const modalItem = {
       visible: true,
       steps: paygOpenSteps,
       title,
       loading,
     };
-    showModal(modalItem);
   };
 
   return (

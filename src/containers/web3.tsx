@@ -1,7 +1,7 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { FC, useCallback, useEffect, VFC } from 'react';
+import { PropsWithChildren, useCallback, useEffect, VFC } from 'react';
 import { Web3ReactProvider } from '@web3-react/core';
 import { Web3ReactManagerFunctions } from '@web3-react/core/dist/types';
 import { InjectedConnector } from '@web3-react/injected-connector';
@@ -10,8 +10,6 @@ import { providers } from 'ethers';
 
 import { useWeb3 } from 'hooks/web3Hook';
 import { ChainID, hexToInt, NetworkToChainID, RPC_URLS } from 'utils/web3';
-
-import { Props } from './unstated';
 
 const injectedConntector = new InjectedConnector({
   supportedChainIds: [137, 80001],
@@ -50,7 +48,7 @@ const InitProvider: VFC = () => {
   return null;
 };
 
-export const Web3Provider: FC = ({ children }: Props) => {
+export const Web3Provider: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       <InitProvider />

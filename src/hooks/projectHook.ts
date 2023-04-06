@@ -44,13 +44,13 @@ const metadataInitValue = {
   queryStatus: 'TERMINATED',
 };
 
-const projectServiceMetadtaValue: ProjectServiceMetadata = {
+const projectServiceMetadataValue: ProjectServiceMetadata = {
   id: '',
   networkEndpoint: '',
   networkDictionary: '',
   nodeVersion: '',
   queryVersion: '',
-  forceEnabled: false,
+  purgeDB: false,
   status: 0,
   paygPrice: '',
   paygExpiration: 3600 * 24,
@@ -72,7 +72,7 @@ const projectInitValue = {
   createdTimestamp: '',
   updatedTimestamp: '',
   metadata: undefined,
-  ...projectServiceMetadtaValue,
+  ...projectServiceMetadataValue,
 };
 
 export const useProjectService = (deploymentId: string) => {
@@ -193,7 +193,7 @@ export const getIndexingProjects = async (indexer: string): Promise<ProjectServi
   const projects = res.data.deploymentIndexers.nodes;
   return projects
     .filter((p) => p.status !== 'TERMINATED')
-    .map((p) => ({ ...projectServiceMetadtaValue, id: p.deploymentId }));
+    .map((p) => ({ ...projectServiceMetadataValue, id: p.deploymentId }));
 };
 
 export const useProjectDetails = (deploymentId: string): ProjectDetails | undefined => {
@@ -317,7 +317,7 @@ const defaultRange = {
   avalanche: '>=0.1.1',
 };
 
-export const useNodeVersions = (cid: string) => {
+export const useNodeVersions = (cid: string): string[] => {
   const [getNodeVersions, { data }] = useLazyQuery(GET_REGISTRY_VERSIONS);
 
   const fetchNodeVersions = useCallback(async () => {
@@ -342,7 +342,7 @@ export const useNodeVersions = (cid: string) => {
   return !isEmpty(versions) ? versions : [];
 };
 
-export const useQueryVersions = (cid: string) => {
+export const useQueryVersions = (cid: string): string[] => {
   const [getQueryVersions, { data }] = useLazyQuery(GET_REGISTRY_VERSIONS);
 
   const fetchQueryVersions = useCallback(async () => {

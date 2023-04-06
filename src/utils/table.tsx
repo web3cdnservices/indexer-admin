@@ -12,10 +12,10 @@ export function createTextColumn<T>(index: T, title: string, toolTip?: string) {
   };
 }
 
-export function createTagColumn<T>(index: T, title: string, tooTip?: string) {
+export function createTagColumn<T>(index: T, title: string, toolTip?: string) {
   return {
     dataIndex: index,
-    title: <TableTitle tooltip={tooTip} title={title} />,
+    title: <TableTitle tooltip={toolTip} title={title} />,
     render: ({ state, text }: { state: 'error' | 'success' | 'info'; text: string }) => (
       <Tag state={state}>{text}</Tag>
     ),

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { isEmpty, isUndefined } from 'lodash';
 
-import ModalView from 'components/modalView';
+import { PopupView } from 'components/popupView';
 import { Button, Text } from 'components/primary';
 import { useLoading } from 'containers/loadingContext';
 import { useIsIndexer } from 'hooks/indexerHook';
@@ -76,7 +76,8 @@ const Projects = () => {
   return (
     <Container>
       {isIndexer && renderProjects()}
-      <ModalView
+      <PopupView
+        setVisible={setVisible}
         visible={visible}
         // @ts-ignore
         title={step.addProject[0].title}

@@ -7,7 +7,7 @@ import { useMutation } from '@apollo/client';
 import { isUndefined } from 'lodash';
 
 import AccountCard from 'components/accountCard';
-import ModalView from 'components/modalView';
+import { PopupView } from 'components/popupView';
 import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useLoading } from 'containers/loadingContext';
 import { useNotification } from 'containers/notificationContext';
@@ -124,7 +124,6 @@ const Account = () => {
     <Container>
       {isMetaMask && isIndexer && (
         <AccountCard
-          key={account}
           title={indexerItem.title}
           name={indexerName}
           buttons={indexerButtons}
@@ -134,7 +133,7 @@ const Account = () => {
       )}
       {(isIndexer || isController) && (
         <AccountCard
-          key={account}
+          key={2}
           title={controllerItem.title}
           name={controllerItem.name}
           account={controller}
@@ -143,7 +142,8 @@ const Account = () => {
         />
       )}
       {actionType && (
-        <ModalView
+        <PopupView
+          setVisible={setVisible}
           visible={visible}
           title={AccountActionName[actionType]}
           onClose={onModalClose}
