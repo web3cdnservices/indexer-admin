@@ -1,20 +1,18 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import { IPFS_URLS } from '@subql/network-clients';
 import { utils } from 'ethers';
 import { create } from 'ipfs-http-client';
 
-export const IPFS_METADATA_CLIENT = create({ url: window.env.IPFS_GATEWAY });
-export const IPFS_PROJECT_CLIENT = create({ url: 'https://ipfs.subquery.network/ipfs/api/v0' });
+export const IPFS_METADATA_CLIENT = create({ url: IPFS_URLS.metadata });
+export const IPFS_PROJECT_CLIENT = create({ url: IPFS_URLS.project });
 
 export function cidToBytes32(cid: string): string {
   return `0x${Buffer.from(utils.base58.decode(cid)).slice(2).toString('hex')}`;
 }
 
 export function bytes32ToCid(bytes: string): string {
-  // Add our default ipfs values for first 2 bytes:
-  // function:0x12=sha2, size:0x20=256 bits
-  // and cut off leading "0x"
   const hashHex = `1220${bytes.slice(2)}`;
   const hashBytes = Buffer.from(hashHex, 'hex');
   return utils.base58.encode(hashBytes);
@@ -41,6 +39,7 @@ export async function cat(cid: string, client = IPFS_METADATA_CLIENT) {
   for await (const result of results) {
     raw = raw ? concatU8A(raw, result) : result;
   }
+
   if (!raw) {
     console.error(`Unable to fetch data from ipfs: ${cid}`);
     return raw;

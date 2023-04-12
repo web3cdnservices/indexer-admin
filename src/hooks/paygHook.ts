@@ -86,7 +86,7 @@ export type Plan = {
 
 const config = NETWORK_CONFIGS.kepler;
 const client = new GraphqlQueryClient(config);
-const networkClient = client.explorerClient;
+const { networkClient } = client;
 
 function queryFromStatus(status: FlexPlanStatus) {
   return status === FlexPlanStatus.ONGOING ? GetIndexerOngoingFlexPlans : GetIndexerClosedFlexPlans;
