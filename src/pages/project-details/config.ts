@@ -121,7 +121,7 @@ type Steps<T extends ProjectAction | PAYGAction> = {
 };
 
 const startProjectForms = (
-  config: ProjectServiceMetadata | undefined,
+  config: ProjectServiceMetadata,
   versions: ImageVersions,
   onFormSubmit: FormSubmit
 ) => ({
@@ -163,7 +163,7 @@ const startProjectForms = (
 });
 
 export const createStartIndexingSteps = (
-  config: ProjectServiceMetadata | undefined,
+  config: ProjectServiceMetadata,
   versions: ImageVersions,
   onStartProject: FormSubmit
 ) => ({
@@ -181,7 +181,7 @@ export const createStartIndexingSteps = (
 });
 
 export const createRestartProjectSteps = (
-  config: ProjectServiceMetadata | undefined,
+  config: ProjectServiceMetadata,
   versions: ImageVersions,
   onStartProject: FormSubmit
 ) => ({

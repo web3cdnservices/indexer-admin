@@ -22,7 +22,7 @@ enum TabbarItem {
 type Props = {
   id: string;
   project: ProjectDetails;
-  config: ProjectServiceMetadata | undefined;
+  config: ProjectServiceMetadata;
 };
 
 const tabItems = [

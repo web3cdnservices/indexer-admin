@@ -122,17 +122,17 @@ export const initialProjectValues = {
 };
 
 // start indexing project
-export const initialIndexingValues = (config: ProjectServiceMetadata | undefined) => ({
-  [ProjectFormKey.networkEndpoint]: config?.networkEndpoint,
-  [ProjectFormKey.networkDictionary]: config?.networkDictionary ?? '',
-  [ProjectFormKey.nodeVersion]: config?.nodeVersion,
-  [ProjectFormKey.queryVersion]: config?.queryVersion,
-  [ProjectFormKey.purgeDB]: config?.purgeDB,
-  [ProjectFormKey.batchSize]: config?.batchSize,
-  [ProjectFormKey.workers]: config?.worker,
-  [ProjectFormKey.cache]: config?.cache,
-  [ProjectFormKey.cpu]: config?.cpu,
-  [ProjectFormKey.memory]: config?.memory,
+export const initialIndexingValues = (config: ProjectServiceMetadata) => ({
+  [ProjectFormKey.networkEndpoint]: config.networkEndpoint,
+  [ProjectFormKey.networkDictionary]: config.networkDictionary ?? '',
+  [ProjectFormKey.nodeVersion]: config.nodeVersion,
+  [ProjectFormKey.queryVersion]: config.queryVersion,
+  [ProjectFormKey.purgeDB]: config.purgeDB,
+  [ProjectFormKey.batchSize]: config.batchSize,
+  [ProjectFormKey.workers]: config.worker,
+  [ProjectFormKey.cache]: config.cache,
+  [ProjectFormKey.cpu]: config.cpu,
+  [ProjectFormKey.memory]: config.memory,
 });
 
 export const StartIndexingSchema = yup.object({
