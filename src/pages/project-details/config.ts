@@ -20,6 +20,7 @@ import {
   PaygStatus,
   ProjectAction,
   ProjectConfig,
+  ProjectServiceMetadata,
   ProjectStatus,
 } from './types';
 
@@ -120,7 +121,7 @@ type Steps<T extends ProjectAction | PAYGAction> = {
 };
 
 const startProjectForms = (
-  config: ProjectConfig,
+  config: ProjectServiceMetadata | undefined,
   versions: ImageVersions,
   onFormSubmit: FormSubmit
 ) => ({
@@ -162,7 +163,7 @@ const startProjectForms = (
 });
 
 export const createStartIndexingSteps = (
-  config: ProjectConfig,
+  config: ProjectServiceMetadata | undefined,
   versions: ImageVersions,
   onStartProject: FormSubmit
 ) => ({
@@ -180,7 +181,7 @@ export const createStartIndexingSteps = (
 });
 
 export const createRestartProjectSteps = (
-  config: ProjectConfig,
+  config: ProjectServiceMetadata | undefined,
   versions: ImageVersions,
   onStartProject: FormSubmit
 ) => ({

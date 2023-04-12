@@ -10,7 +10,7 @@ import { FLEX_PLAN_FEATURE } from 'utils/web3';
 
 import ProjectLogView from '../../../components/logView';
 import { ProjectPAYG } from '../payg/projectPayg';
-import { ProjectConfig } from '../types';
+import { ProjectServiceMetadata } from '../types';
 import ProjectDetailsView from './projectDetailsView';
 
 enum TabbarItem {
@@ -22,7 +22,7 @@ enum TabbarItem {
 type Props = {
   id: string;
   project: ProjectDetails;
-  config: ProjectConfig;
+  config: ProjectServiceMetadata | undefined;
 };
 
 const tabItems = [

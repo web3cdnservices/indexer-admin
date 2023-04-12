@@ -47,53 +47,62 @@ const PopupContent: FC<{
     setVisible: Dispatch<SetStateAction<boolean>>,
     type: ModalAction | undefined
   ) => {
+    // TODO: refactor this
     if (type && (type === ProjectAction.RestartProject || type === ProjectAction.StartIndexing)) {
-      return <IndexingForm setVisible={setVisible} />;
+      return <IndexingForm initialValues={item.form?.formValues ?? {}} setVisible={setVisible} />;
     }
 
-    return item?.form ? (
-      <Formik
-        initialValues={item.form.formValues}
-        validationSchema={item.form.schema}
-        onSubmit={item.form.onFormSubmit}
-      >
-        {({ status, errors, submitForm, setFieldValue, initialValues }) => (
-          <InputForm>
-            <div>
-              {item.form?.items.map(({ title = '', formKey = '', placeholder = '', options }) => (
-                <FieldItem
-                  key={title}
-                  title={title}
-                  fieldKey={formKey}
-                  initialValue={initialValues[formKey]}
-                  placeholder={placeholder}
-                  setFieldValue={setFieldValue}
-                  options={options}
-                  errors={errors}
-                />
-              ))}
-              {item.desc && (
-                <Text mt={20} size={13} color="gray">
-                  {item.desc}
-                </Text>
-              )}
-              <Button
-                label={stepItem?.buttonTitle ?? 'Confirm'}
-                type="secondary"
-                onClick={submitForm}
-                loading={loading || status?.loading}
-              />
-            </div>
-          </InputForm>
+    return (
+      <ContentContainer>
+        {item?.form && (
+          <Formik
+            initialValues={item.form.formValues}
+            validationSchema={item.form.schema}
+            onSubmit={item.form.onFormSubmit}
+          >
+            {({ status, errors, submitForm, setFieldValue, initialValues }) => (
+              <InputForm>
+                <div>
+                  {item.form?.items.map(
+                    ({ title = '', formKey = '', placeholder = '', options }) => (
+                      <FieldItem
+                        key={title}
+                        title={title}
+                        fieldKey={formKey}
+                        initialValue={initialValues[formKey]}
+                        placeholder={placeholder}
+                        setFieldValue={setFieldValue}
+                        options={options}
+                        errors={errors}
+                      />
+                    )
+                  )}
+                  {item.desc && (
+                    <Text size={13} color="gray">
+                      {item.desc}
+                    </Text>
+                  )}
+                  <ButtonContainer align="right" mt={20}>
+                    <Button
+                      label={stepItem?.buttonTitle ?? 'Confirm'}
+                      type="secondary"
+                      onClick={submitForm}
+                      loading={loading || status?.loading}
+                    />
+                  </ButtonContainer>
+                </div>
+              </InputForm>
+            )}
+          </Formik>
         )}
-      </Formik>
-    ) : null;
+      </ContentContainer>
+    );
   };
 
   const renderContent = (item: StepItem) => (
     <ContentContainer>
       <DescContainer>
-        <Text fw="500" mt={10} size={25}>
+        <Text fw="500" mt={20} size={25}>
           {item.title}
         </Text>
         <Text alignCenter mt={20} size={15} color="gray">
@@ -169,13 +178,7 @@ export const PopupView: FC<TModal> = ({
       )}
 
       {popupType === 'modal' && (
-        <Modal
-          open={visible}
-          width="40%"
-          onCancel={onClose}
-          title={<Title title={title ?? ''} />}
-          footer={null}
-        >
+        <Modal open={visible} width="40%" onCancel={onClose} footer={null}>
           <PopupContent
             setVisible={setVisible}
             loading={loading}
@@ -200,11 +203,12 @@ const ContentContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  padding: 20px;
 `;
 
 const DescContainer = styled.div`
   display: flex;
-  width: 80%;
+  padding: 10px;
   flex-direction: column;
   align-items: center;
 `;
@@ -214,4 +218,5 @@ const InputForm = styled(Form)`
   flex: 1;
   flex-direction: column;
   justify-content: space-between;
+  margin-top: 20px;
 `;

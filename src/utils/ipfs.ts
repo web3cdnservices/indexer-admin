@@ -5,8 +5,10 @@ import { IPFS_URLS } from '@subql/network-clients';
 import { utils } from 'ethers';
 import { create } from 'ipfs-http-client';
 
-export const IPFS_METADATA_CLIENT = create({ url: IPFS_URLS.metadata });
 export const IPFS_PROJECT_CLIENT = create({ url: IPFS_URLS.project });
+export const IPFS_METADATA_CLIENT = create({
+  url: 'https://unauthipfs.subquery.network/ipfs/api/v0',
+});
 
 export function cidToBytes32(cid: string): string {
   return `0x${Buffer.from(utils.base58.decode(cid)).slice(2).toString('hex')}`;

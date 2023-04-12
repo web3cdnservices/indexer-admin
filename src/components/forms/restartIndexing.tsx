@@ -6,15 +6,11 @@ import { useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button } from '@subql/components';
 import { Col, Collapse, Form, Input, Row, Select, Slider, Switch } from 'antd';
+import { FormikValues } from 'formik';
 
 import { ButtonContainer } from 'components/primary';
 import { useNodeVersions, useQueryVersions } from 'hooks/projectHook';
-import {
-  defaultAdvancedConfig,
-  defaultBaseConfig,
-  ProjectFormKey,
-  StartIndexingSchema,
-} from 'types/schemas';
+import { defaultAdvancedConfig, ProjectFormKey, StartIndexingSchema } from 'types/schemas';
 import { START_PROJECT } from 'utils/queries';
 
 const { poiEnabled, timeout } = defaultAdvancedConfig;
@@ -77,9 +73,12 @@ function displayVersion(versions: string[]) {
   ));
 }
 
-export const IndexingForm: FC<{ setVisible: Dispatch<SetStateAction<boolean>> }> = ({
-  setVisible,
-}) => {
+type Props = {
+  initialValues: FormikValues;
+  setVisible: Dispatch<SetStateAction<boolean>>;
+};
+
+export const IndexingForm: FC<Props> = ({ initialValues, setVisible }) => {
   const [form] = Form.useForm();
   const [showInput, setShowInput] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -120,7 +119,7 @@ export const IndexingForm: FC<{ setVisible: Dispatch<SetStateAction<boolean>> }>
       name="form"
       layout="vertical"
       onFinish={handleSubmit(setVisible)}
-      initialValues={{ ...defaultBaseConfig, ...defaultAdvancedConfig }}
+      initialValues={initialValues}
     >
       <Form.Item
         label="Network Endpoint"

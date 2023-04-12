@@ -79,11 +79,18 @@ export type ProjectConfig = {
   networkDictionary: string;
   nodeVersion: string;
   queryVersion: string;
+  poiEnabled: boolean;
   purgeDB: boolean;
-  paygPrice: string;
-  paygExpiration: number;
-  paygThreshold: number;
-  paygOverflow: number;
+  timeout: number;
+  worker: number;
+  batchSize: number;
+  cache: number;
+  cpu: number;
+  memory: number;
+
+  // TODO: remvoe these fields
+  paygPrice?: number;
+  paygExpiration?: number;
 };
 
 export type ProjectServiceMetadata = {

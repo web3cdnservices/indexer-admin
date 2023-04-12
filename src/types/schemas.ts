@@ -4,7 +4,7 @@
 import * as yup from 'yup';
 
 import { IndexerMetadata } from 'pages/account/types';
-import { ProjectConfig } from 'pages/project-details/types';
+import { ProjectConfig, ProjectServiceMetadata } from 'pages/project-details/types';
 
 import { IProjectAdvancedConfig, IProjectBaseConfig } from './types';
 
@@ -122,12 +122,17 @@ export const initialProjectValues = {
 };
 
 // start indexing project
-export const initialIndexingValues = (config: ProjectConfig) => ({
-  [ProjectFormKey.networkEndpoint]: config.networkEndpoint,
-  [ProjectFormKey.networkDictionary]: config.networkDictionary ?? '',
-  [ProjectFormKey.nodeVersion]: config.nodeVersion,
-  [ProjectFormKey.queryVersion]: config.queryVersion,
-  [ProjectFormKey.purgeDB]: config.purgeDB,
+export const initialIndexingValues = (config: ProjectServiceMetadata | undefined) => ({
+  [ProjectFormKey.networkEndpoint]: config?.networkEndpoint,
+  [ProjectFormKey.networkDictionary]: config?.networkDictionary ?? '',
+  [ProjectFormKey.nodeVersion]: config?.nodeVersion,
+  [ProjectFormKey.queryVersion]: config?.queryVersion,
+  [ProjectFormKey.purgeDB]: config?.purgeDB,
+  [ProjectFormKey.batchSize]: config?.batchSize,
+  [ProjectFormKey.workers]: config?.worker,
+  [ProjectFormKey.cache]: config?.cache,
+  [ProjectFormKey.cpu]: config?.cpu,
+  [ProjectFormKey.memory]: config?.memory,
 });
 
 export const StartIndexingSchema = yup.object({

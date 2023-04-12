@@ -31,7 +31,7 @@ export const createAddProjectSteps = (onAddProject: FormSubmit) => ({
         items: [
           {
             formKey: ProjectFormKey.deploymentId,
-            title: 'Add new project',
+            title: 'Deployment ID',
             placeholder: 'QmYDpk94SCgxv4j2PyLkaD8fWJpHwJufMLX2HGjefsNHH4',
           },
         ],

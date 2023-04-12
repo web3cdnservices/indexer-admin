@@ -4,7 +4,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { formatEther } from '@ethersproject/units';
 import { FormikHelpers, FormikValues } from 'formik';
 import { isUndefined } from 'lodash';
 
@@ -156,22 +155,6 @@ const ProjectDetailsPage = () => {
     }
   };
 
-  const projectConfig = useMemo(
-    () => ({
-      networkEndpoint: projectService?.networkEndpoint ?? '',
-      networkDictionary: projectService?.networkDictionary ?? '',
-      nodeVersion: projectService?.nodeVersion ? projectService.nodeVersion : nodeVersions[0],
-      queryVersion: projectService?.queryVersion ? projectService.queryVersion : queryVersions[0],
-      purgeDB: projectService?.networkEndpoint ? projectService?.purgeDB : false,
-      paygPrice: formatEther(projectService?.paygPrice ? projectService?.paygPrice : 0),
-      paygExpiration:
-        (projectService?.paygExpiration ? projectService?.paygExpiration : 0) / (3600 * 24),
-      paygThreshold: projectService?.paygThreshold ? projectService?.paygThreshold : 1000,
-      paygOverflow: projectService?.paygOverflow ? projectService?.paygOverflow : 5,
-    }),
-    [projectService, nodeVersions, queryVersions]
-  );
-
   const imageVersions = useMemo(
     () => ({ query: queryVersions, node: nodeVersions }),
     [nodeVersions, queryVersions]
@@ -222,32 +205,42 @@ const ProjectDetailsPage = () => {
     }
   };
 
-  const startIndexingSteps = createStartIndexingSteps(projectConfig, imageVersions, startProject);
-  const restartProjectSteps = createRestartProjectSteps(projectConfig, imageVersions, startProject);
-  const stopIndexingSteps = createStopIndexingSteps(stopProject);
+  const steps = useMemo(() => {
+    const startIndexingSteps = createStartIndexingSteps(
+      projectService,
+      imageVersions,
+      startProject
+    );
+    const restartProjectSteps = createRestartProjectSteps(
+      projectService,
+      imageVersions,
+      startProject
+    );
+    const stopIndexingSteps = createStopIndexingSteps(stopProject);
 
-  const stopProjectSteps = createStopProjectSteps(stopProject);
-  const removeProjectSteps = createRemoveProjectSteps(removeProject);
-  const announceIndexingSteps = createAnnounceIndexingSteps(() =>
-    indexingAction(ProjectAction.AnnounceIndexing, onPopoverClose)
-  );
-  const announceReadySteps = createReadyIndexingSteps(() =>
-    indexingAction(ProjectAction.AnnounceReady, onPopoverClose)
-  );
-  const announceNotIndexingSteps = createNotIndexingSteps(() =>
-    indexingAction(ProjectAction.AnnounceNotIndexing, onPopoverClose)
-  );
+    const stopProjectSteps = createStopProjectSteps(stopProject);
+    const removeProjectSteps = createRemoveProjectSteps(removeProject);
+    const announceIndexingSteps = createAnnounceIndexingSteps(() =>
+      indexingAction(ProjectAction.AnnounceIndexing, onPopoverClose)
+    );
+    const announceReadySteps = createReadyIndexingSteps(() =>
+      indexingAction(ProjectAction.AnnounceReady, onPopoverClose)
+    );
+    const announceNotIndexingSteps = createNotIndexingSteps(() =>
+      indexingAction(ProjectAction.AnnounceNotIndexing, onPopoverClose)
+    );
 
-  const steps = {
-    ...startIndexingSteps,
-    ...restartProjectSteps,
-    ...stopIndexingSteps,
-    ...stopProjectSteps,
-    ...removeProjectSteps,
-    ...announceIndexingSteps,
-    ...announceReadySteps,
-    ...announceNotIndexingSteps,
-  };
+    return {
+      ...startIndexingSteps,
+      ...restartProjectSteps,
+      ...stopIndexingSteps,
+      ...stopProjectSteps,
+      ...removeProjectSteps,
+      ...announceIndexingSteps,
+      ...announceReadySteps,
+      ...announceNotIndexingSteps,
+    };
+  }, [projectService, imageVersions, startProject, stopProject, removeProject]);
 
   const [modalTitle, modalSteps] = useMemo(() => {
     if (!actionType) return ['', []];
@@ -266,7 +259,7 @@ const ProjectDetailsPage = () => {
             metadata={metadata}
           />
           <ProjectServiceCard id={id} actionItems={serviceActionItems} data={metadata} />
-          <ProjectTabbarView id={id} project={projectInfo} config={projectConfig} />
+          <ProjectTabbarView id={id} project={projectInfo} config={projectService} />
         </ContentContainer>
       )}
       <PopupView

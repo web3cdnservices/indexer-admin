@@ -83,7 +83,13 @@ export const useProjectService = (deploymentId: string) => {
   const getProjectService = () => getProject({ variables: { id: deploymentId } });
 
   useEffect(() => {
-    data ? setService(data.project) : getProjectService();
+    data
+      ? setService({
+          ...data.project,
+          ...data.project.baseConfig,
+          ...data.project.advancedConfig,
+        })
+      : getProjectService();
   }, [deploymentId, data, notification?.type]);
 
   return { projectService, getProjectService };

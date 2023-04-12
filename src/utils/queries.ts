@@ -197,10 +197,11 @@ export const GET_QUERY_METADATA = gql`
   query QueryMetadata($id: String!) {
     queryMetadata(id: $id) {
       lastProcessedHeight
-      lastProcessedTimestamp
       targetHeight
+      lastProcessedHeight
+      lastProcessedTimestamp
+      specName
       chain
-      indexerHealthy
       indexerNodeVersion
       queryNodeVersion
       indexerStatus

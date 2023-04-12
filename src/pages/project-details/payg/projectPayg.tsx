@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 import { usePAYGConfig } from 'hooks/paygHook';
 
 import { createPaygOpenSteps } from '../config';
-import { ProjectConfig } from '../types';
+import { ProjectServiceMetadata } from '../types';
 import { PAYGConfig } from './paygConfig';
 import { Introduction } from './paygIntroduction';
 import { PAYGPlan } from './paygPlans';
@@ -14,7 +14,7 @@ import { Container } from './styles';
 
 type TProjectPAYG = {
   id: string;
-  config: ProjectConfig;
+  config: ProjectServiceMetadata;
   paygUpdated?: () => void;
 };
 
