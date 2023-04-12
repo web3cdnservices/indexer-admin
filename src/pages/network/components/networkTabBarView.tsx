@@ -21,7 +21,7 @@ const NetworkTabbarView: VFC = () => {
   const renderContent = useCallback(() => {
     switch (value) {
       default:
-        return <ServiceLogView height={500} container="coordinator_service" />;
+        return <ServiceLogView height={500} container="indexer_coordinator" />;
     }
   }, [value]);
 
