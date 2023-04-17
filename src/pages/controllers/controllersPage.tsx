@@ -1,7 +1,7 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { isEmpty, isUndefined } from 'lodash';
 
@@ -36,6 +36,7 @@ const controllersPage = () => {
   const { header, intro } = prompts;
   const [actionType, setActionType] = useState<ControllerAction>();
   const [account, setAccount] = useState<Controller>();
+  const [controllers, setControllers] = useState<Controller[]>([]);
   const [visible, setVisible] = useState(false);
 
   const { dispatchNotification, removeNotification } = useNotification();
@@ -52,25 +53,25 @@ const controllersPage = () => {
 
   useEffect(() => {
     setPageLoading(isUndefined(controllerData));
-    getControllers();
+    if (!controllerData) getControllers();
   }, [controllerData]);
+
+  useEffect(() => {
+    if (!controllerData || isEmpty(controllerData?.controllers)) return;
+
+    const rawControllers = controllerData?.controllers;
+    const index = rawControllers.findIndex((c) => isActivedController(c.address));
+    if (index !== -1) {
+      const [item] = rawControllers.splice(index, 1);
+      rawControllers.unshift(item);
+    }
+
+    setControllers(rawControllers);
+  }, [controllerData, currentController]);
 
   const isActivedController = (address: string): boolean => {
     return address.toLowerCase() === currentController?.toLowerCase();
   };
-
-  const controllers = useMemo(() => {
-    if (!controllerData || isEmpty(controllerData?.controllers)) return [];
-
-    const { controllers: rawControllers } = controllerData;
-    const activeAccount = rawControllers.find(({ address }) => isActivedController(address));
-    if (!activeAccount) return rawControllers;
-
-    return [
-      activeAccount,
-      ...rawControllers.filter(({ address }) => !isActivedController(address)),
-    ];
-  }, [controllerData, currentController]);
 
   const createControllerAction = async () => {
     await createController();
@@ -86,9 +87,8 @@ const controllersPage = () => {
   const onModalClose = () => setVisible(false);
 
   const removeAccountSteps = createRemoveAccountSteps(async () => {
-    console.log('account:', account?.id);
     await removeController({ variables: { id: account?.id } });
-    await getControllers();
+    setControllers(controllers.filter((c) => c.id !== account?.id));
     onModalClose();
   });
 
