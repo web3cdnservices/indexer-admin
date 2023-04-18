@@ -65,13 +65,13 @@ const Account = () => {
 
   useEffect(() => {
     setPageLoading(isUndefined(account) || isUndefined(indexer));
-  }, [account, indexer]);
+  }, [account, indexer, setPageLoading]);
 
   useEffect(() => {
     if (controllerBalance && !balanceSufficient(controllerBalance)) {
       dispatchNotification(notifications.controller);
     }
-  }, [controllerBalance]);
+  }, [controllerBalance, dispatchNotification]);
 
   const onButtonPress = (type?: AccountAction) => {
     setActionType(type);
@@ -106,7 +106,7 @@ const Account = () => {
         const metadata = await createIndexerMetadata(name, proxyEndpoint);
         await accountAction(AccountAction.updateMetaData, metadata, onModalClose, fetchMetadata);
       }, metadata),
-    [metadata]
+    [accountAction, fetchMetadata, metadata]
   );
 
   const unregisterCompleted = async () => {
@@ -118,7 +118,10 @@ const Account = () => {
     accountAction(AccountAction.unregister, '', onModalClose, unregisterCompleted)
   );
 
-  const steps = useMemo(() => ({ ...unregisterStep, ...updateMetadataStep }), [metadata]);
+  const steps = useMemo(
+    () => ({ ...unregisterStep, ...updateMetadataStep }),
+    [unregisterStep, updateMetadataStep]
+  );
 
   return (
     <Container>

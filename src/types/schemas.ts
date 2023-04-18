@@ -4,16 +4,9 @@
 import * as yup from 'yup';
 
 import { IndexerMetadata } from 'pages/account/types';
-import { ProjectConfig, ProjectServiceMetadata } from 'pages/project-details/types';
+import { ProjectConfig } from 'pages/project-details/types';
 
-import { IProjectAdvancedConfig, IProjectBaseConfig } from './types';
-
-export const defaultBaseConfig: IProjectBaseConfig = {
-  networkEndpoint: undefined,
-  networkDictionary: undefined,
-  nodeVersion: undefined,
-  queryVersion: undefined,
-};
+import { IProjectAdvancedConfig } from './types';
 
 export const defaultAdvancedConfig: IProjectAdvancedConfig = {
   purgeDB: false,
@@ -98,7 +91,7 @@ export enum ProjectFormKey {
   queryVersion = 'queryVersion',
   purgeDB = 'purgeDB',
   batchSize = 'batchSize',
-  workers = 'workers',
+  worker = 'worker',
   cache = 'cache',
   cpu = 'cpu',
   memory = 'memory',
@@ -121,25 +114,20 @@ export const initialProjectValues = {
   [ProjectFormKey.deploymentId]: '',
 };
 
-// start indexing project
-export const initialIndexingValues = (config: ProjectServiceMetadata) => ({
-  [ProjectFormKey.networkEndpoint]: config.networkEndpoint,
-  [ProjectFormKey.networkDictionary]: config.networkDictionary ?? '',
-  [ProjectFormKey.nodeVersion]: config.nodeVersion,
-  [ProjectFormKey.queryVersion]: config.queryVersion,
-  [ProjectFormKey.purgeDB]: config.purgeDB,
-  [ProjectFormKey.batchSize]: config.batchSize,
-  [ProjectFormKey.workers]: config.worker,
-  [ProjectFormKey.cache]: config.cache,
-  [ProjectFormKey.cpu]: config.cpu,
-  [ProjectFormKey.memory]: config.memory,
-});
-
 export const StartIndexingSchema = yup.object({
-  [ProjectFormKey.networkEndpoint]: yup.string().defined(),
+  [ProjectFormKey.networkEndpoint]: yup
+    .string()
+    .required('Network endpoint is required')
+    .min(1, 'Network endpoint cannot be empty'),
   [ProjectFormKey.networkDictionary]: yup.string().optional(),
-  [ProjectFormKey.nodeVersion]: yup.string().defined(),
-  [ProjectFormKey.queryVersion]: yup.string().defined(),
+  [ProjectFormKey.nodeVersion]: yup
+    .string()
+    .required('Node version is required')
+    .min(1, 'Node version cannot be empty'),
+  [ProjectFormKey.queryVersion]: yup
+    .string()
+    .required('Query version is required')
+    .min(1, 'Query version cannot be empty'),
 });
 
 export type IndexingEndpoint = yup.Asserts<typeof StartIndexingSchema>;

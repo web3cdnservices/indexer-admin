@@ -54,7 +54,7 @@ export const useAccountAction = () => {
         onProcess(e);
       }
     },
-    [accountTransactions]
+    [accountTransactions, notificationContext]
   );
 };
 
@@ -84,6 +84,6 @@ export const useIndexingAction = (id: string) => {
         onProcess(e);
       }
     },
-    [indexingTransactions]
+    [indexingTransactions, notificationContext]
   );
 };

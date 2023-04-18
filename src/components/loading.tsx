@@ -28,4 +28,10 @@ const Loading: FC = () => {
   );
 };
 
+export const LoadingSpinner = () => (
+  <Container>
+    <Spinner size={30} />
+  </Container>
+);
+
 export default Loading;

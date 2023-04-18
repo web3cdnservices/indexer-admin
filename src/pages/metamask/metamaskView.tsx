@@ -17,7 +17,7 @@ import prompts from './prompts';
 import { Container, ContentContainer, MetaMaskContainer } from './styles';
 
 const MetaMaskView = () => {
-  const { account, activate, error } = useWeb3();
+  const { activate, error } = useWeb3();
   const { indexer } = useCoordinatorIndexer();
   const isMetaMask = useIsMetaMask();
   const isMetaMaskInstalled = useIsMetaMaskInstalled();
@@ -35,7 +35,7 @@ const MetaMaskView = () => {
     if (isNetworkError) return invalidNetwork;
     if (!isMetaMask) return connect;
     return invalidAccount;
-  }, [isNetworkError, isMetaMaskInstalled, isMetaMask, account, indexer]);
+  }, [isNetworkError, isMetaMaskInstalled, isMetaMask, indexer]);
 
   const onButtonClick = useCallback(async () => {
     if (isNetworkError) {
@@ -52,7 +52,7 @@ const MetaMaskView = () => {
       const result = await connectWithMetaMask(activate);
       setErrorMsg(result);
     }
-  }, [isMetaMask, isNetworkError, isMetaMaskInstalled]);
+  }, [isNetworkError, isMetaMaskInstalled, isMetaMask, activate]);
 
   const metaMaskItem = useMemo(
     () => (

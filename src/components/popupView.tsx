@@ -49,7 +49,7 @@ const PopupContent: FC<{
   ) => {
     // TODO: refactor this
     if (type && (type === ProjectAction.RestartProject || type === ProjectAction.StartIndexing)) {
-      return <IndexingForm initialValues={item.form?.formValues ?? {}} setVisible={setVisible} />;
+      return <IndexingForm setVisible={setVisible} />;
     }
 
     return (

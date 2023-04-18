@@ -59,7 +59,7 @@ const ProjectTabbarView: VFC<Props> = ({ id, project, config }) => {
       default:
         return <div />;
     }
-  }, [value]);
+  }, [config, id, project, value]);
 
   return (
     <div style={{ marginTop: 30 }}>

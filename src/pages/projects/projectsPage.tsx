@@ -1,16 +1,24 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useState } from 'react';
-import { useLazyQuery, useMutation } from '@apollo/client';
-import { isEmpty, isUndefined } from 'lodash';
+import { useState } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
+import { renderAsync, useAsyncMemo } from '@subql/react-hooks';
+import { isEmpty } from 'lodash';
 
+import { LoadingSpinner } from 'components/loading';
 import { PopupView } from 'components/popupView';
 import { Button, Text } from 'components/primary';
-import { useLoading } from 'containers/loadingContext';
 import { useIsIndexer } from 'hooks/indexerHook';
-import { ProjectDetails, useProjectDetailList } from 'hooks/projectHook';
-import { ProjectsAction } from 'pages/project-details/types';
+import {
+  combineProjects,
+  getIndexingProjects,
+  getProjectDetails,
+  getQueryMetadata,
+  ProjectDetails,
+} from 'hooks/projectHook';
+import { useWeb3 } from 'hooks/web3Hook';
+import { ProjectsAction, ProjectServiceMetadata } from 'pages/project-details/types';
 import { ProjectFormKey } from 'types/schemas';
 import { ADD_PROJECT, GET_PROJECTS } from 'utils/queries';
 
@@ -20,23 +28,40 @@ import EmptyView from './components/projectsEmptyView';
 import { createAddProjectSteps } from './constant';
 import { Container, ContentContainer, HeaderContainer } from './styles';
 
+async function getProjectDetailList(
+  account: string | null | undefined,
+  data: { getProjects: ProjectDetails[] }
+): Promise<ProjectDetails[] | undefined> {
+  const localProjects = data?.getProjects as ProjectServiceMetadata[];
+
+  const indexingProjects = await getIndexingProjects(account ?? '');
+  const projects = combineProjects(localProjects, indexingProjects);
+
+  const result = await Promise.all(
+    projects.map(({ id }) => Promise.all([getProjectDetails(id), getQueryMetadata(id)]))
+  );
+
+  return result.map(([detail, metadata]) => ({ ...detail, metadata })).filter(({ id }) => !!id);
+}
+
 const Projects = () => {
   const isIndexer = useIsIndexer();
-  const { setPageLoading } = useLoading();
-  const [addProject, { loading }] = useMutation(ADD_PROJECT);
-  const [getProjectList, { data }] = useLazyQuery(GET_PROJECTS, { fetchPolicy: 'network-only' });
-  const { projectDetailList } = useProjectDetailList(data);
+  const [addProject, { loading: addProjectLoading }] = useMutation(ADD_PROJECT);
+  const {
+    data: projects,
+    refetch,
+    loading: projectsLoading,
+  } = useQuery(GET_PROJECTS, { fetchPolicy: 'network-only' });
+  const { account } = useWeb3();
+
+  const projectDetailsList = useAsyncMemo(async () => {
+    if (!projectsLoading) {
+      return getProjectDetailList(account, projects);
+    }
+    return undefined;
+  }, [projects, account, projectsLoading]);
 
   const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    setPageLoading(isUndefined(projectDetailList));
-  }, [projectDetailList]);
-
-  useEffect(() => {
-    setPageLoading(true);
-    getProjectList();
-  }, []);
 
   const onModalClose = () => {
     setVisible(false);
@@ -47,16 +72,14 @@ const Projects = () => {
       // TODO: need to verify the id with subql-common library
       const id = values[ProjectFormKey.deploymentId].trim();
       await addProject({ variables: { id } });
-
+      await refetch();
       setVisible(false);
-      getProjectList();
     } catch (_) {
       helper.setErrors({ [ProjectFormKey.deploymentId]: 'Invalid deployment id' });
     }
   });
 
-  const renderProjects = () => {
-    if (isUndefined(projectDetailList)) return null;
+  const renderProjects = (projectDetailList: ProjectDetails[]) => {
     return !isEmpty(projectDetailList) ? (
       <ContentContainer>
         <HeaderContainer>
@@ -73,23 +96,29 @@ const Projects = () => {
     );
   };
 
-  return (
-    <Container>
-      {isIndexer && renderProjects()}
-      <PopupView
-        setVisible={setVisible}
-        visible={visible}
-        // @ts-ignore
-        title={step.addProject[0].title}
-        onClose={onModalClose}
-        // @ts-ignore
-        steps={step.addProject}
-        currentStep={0}
-        type={ProjectsAction.addProject}
-        loading={loading}
-      />
-    </Container>
-  );
+  if (projectsLoading) return <LoadingSpinner />;
+
+  return renderAsync(projectDetailsList, {
+    loading: () => <LoadingSpinner />,
+    error: () => <>Getting Project Details failed</>,
+    data: (projectDetailList) => (
+      <Container>
+        {isIndexer && renderProjects(projectDetailList)}
+        <PopupView
+          setVisible={setVisible}
+          visible={visible}
+          // @ts-ignore
+          title={step.addProject[0].title}
+          onClose={onModalClose}
+          // @ts-ignore
+          steps={step.addProject}
+          currentStep={0}
+          type={ProjectsAction.addProject}
+          loading={addProjectLoading}
+        />
+      </Container>
+    ),
+  });
 };
 
 export default Projects;

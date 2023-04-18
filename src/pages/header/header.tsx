@@ -41,7 +41,6 @@ const Header = () => {
   const controller = useController(account);
   const { tokenBalance } = useTokenBalance(account, pathname);
 
-  const activeStyle = { fontWeight: 500, color: '#4388dd' };
   const dropdownStyle = { border: 'unset !important', padding: 15, width: 100 };
 
   const createItem = (key: string, label: string) => ({ key, label });
@@ -61,8 +60,10 @@ const Header = () => {
     [tokenBalance]
   );
 
-  const renderTabbars = useCallback(
-    () => (
+  const renderTabbars = useCallback(() => {
+    const activeStyle = { fontWeight: 500, color: '#4388dd' };
+
+    return (
       <div>
         <TabBar to="/account" activeStyle={activeStyle}>
           {TabbarItem.account}
@@ -76,9 +77,8 @@ const Header = () => {
           </TabBar>
         )}
       </div>
-    ),
-    [controller]
-  );
+    );
+  }, [controller]);
 
   const renderAddress = () =>
     isRootPage ? (

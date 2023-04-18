@@ -48,12 +48,12 @@ export const prompts = {
       },
       success: {
         type: 'success' as NOTIFICATION_TYPE,
-        title: 'Controller withdrawl Succeed',
+        title: 'Controller withdrawl succeeded',
         message: (c: string) => `Withdraw controller: ${c} assets successfully`,
       },
       failed: {
         type: 'danger' as NOTIFICATION_TYPE,
-        title: 'Controller withdrawl Failed',
+        title: 'Controller withdrawl failed',
         message: (c: string) => `Withdraw controller: ${c} assets failed`,
       },
     },

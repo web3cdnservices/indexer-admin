@@ -12,7 +12,7 @@ import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useLoading } from 'containers/loadingContext';
 
 export function useIsMetaMaskInstalled(): boolean {
-  return useMemo(() => window.ethereum?.isMetaMask, [window.ethereum]);
+  return useMemo(() => window.ethereum?.isMetaMask, []);
 }
 
 export const useWeb3 = (): Web3ReactContextInterface<providers.Web3Provider> => useWeb3React();
@@ -25,13 +25,13 @@ export function useWeb3Provider(): providers.Web3Provider | undefined {
 export type Signer = JsonRpcSigner | undefined;
 
 export function useSigner(): Signer {
-  const { active, account, library } = useWeb3();
-  return useMemo(() => library?.getSigner(), [active, account]);
+  const { library } = useWeb3();
+  return useMemo(() => library?.getSigner(), [library]);
 }
 
 export function useIsMetaMask(): boolean | undefined {
-  const { active, library } = useWeb3();
-  return useMemo(() => library?.provider?.isMetaMask, [active, library?.provider.isMetaMask]);
+  const { library } = useWeb3();
+  return useMemo(() => library?.provider?.isMetaMask, [library?.provider?.isMetaMask]);
 }
 
 export function useShowMetaMask(): boolean | undefined {
@@ -60,7 +60,7 @@ export function useShowMetaMask(): boolean | undefined {
 
     const enable = (!pageLoading && !isIndexer && !isEmpty(indexer)) || !metamaskAvailable;
     setShowMetaMask(enable);
-  }, [account, indexer, isIndexer, pageLoading]);
+  }, [account, indexer, isIndexer, isMetaMask, isMetaMaskInstalled, pageLoading, setPageLoading]);
 
   return showMetaMask;
 }

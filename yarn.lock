@@ -3040,6 +3040,14 @@
   dependencies:
     graphql "^16.5.0"
 
+"@subql/react-hooks@^0.1.1-0":
+  version "0.1.1-0"
+  resolved "https://registry.yarnpkg.com/@subql/react-hooks/-/react-hooks-0.1.1-0.tgz#45ceb26e4c9d59315106fc54f5df97f9eafbdc08"
+  integrity sha512-T5F5et72IGE/0nFflUgNzYqfnw/PrSBuV1snaGPq0e935em5bSJMU+ENeUfotKfA26jnfGtEfTbi2Nl/hpaOQA==
+  dependencies:
+    class-transformer "^0.5.1"
+    class-validator "^0.13.2"
+
 "@subql/react-ui@^1.0.1-21":
   version "1.0.1-22"
   resolved "https://registry.yarnpkg.com/@subql/react-ui/-/react-ui-1.0.1-22.tgz#d7497b5e46fb751fced9960cac9cbb5d2604e4bf"
@@ -5814,6 +5822,11 @@ cjs-module-lexer@^0.6.0:
   resolved "https://registry.yarnpkg.com/cjs-module-lexer/-/cjs-module-lexer-0.6.0.tgz#4186fcca0eae175970aee870b9fe2d6cf8d5655f"
   integrity sha512-uc2Vix1frTfnuzxxu1Hp4ktSvM3QaI4oXl4ZUqL1wjTu/BGki9TrCWoqLTg/drR1KwAEarXuRFCG2Svr1GxPFw==
 
+class-transformer@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/class-transformer/-/class-transformer-0.5.1.tgz#24147d5dffd2a6cea930a3250a677addf96ab336"
+  integrity sha512-SQa1Ws6hUbfC98vKGxZH3KFY0Y1lm5Zm0SY8XX9zbK7FJCyVEac3ATW0RIpwzW+oOfmHE5PMPufDG9hCfoEOMw==
+
 class-utils@^0.3.5:
   version "0.3.6"
   resolved "https://registry.yarnpkg.com/class-utils/-/class-utils-0.3.6.tgz#f93369ae8b9a7ce02fd41faad0ca83033190c463"
@@ -5823,6 +5836,14 @@ class-utils@^0.3.5:
     define-property "^0.2.5"
     isobject "^3.0.0"
     static-extend "^0.1.1"
+
+class-validator@^0.13.2:
+  version "0.13.2"
+  resolved "https://registry.yarnpkg.com/class-validator/-/class-validator-0.13.2.tgz#64b031e9f3f81a1e1dcd04a5d604734608b24143"
+  integrity sha512-yBUcQy07FPlGzUjoLuUfIOXzgynnQPPruyK1Ge2B74k9ROwnle1E+NxLWnUv5OLU8hA/qL5leAE9XnXq3byaBw==
+  dependencies:
+    libphonenumber-js "^1.9.43"
+    validator "^13.7.0"
 
 classnames@2.x, classnames@^2.2.1, classnames@^2.2.3, classnames@^2.2.5, classnames@^2.2.6, classnames@^2.3.1, classnames@^2.3.2:
   version "2.3.2"
@@ -10787,6 +10808,11 @@ levn@~0.3.0:
   dependencies:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
+
+libphonenumber-js@^1.9.43:
+  version "1.10.26"
+  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.10.26.tgz#3e6604357b3434b0005f85778b44153f4fadeecd"
+  integrity sha512-oB3l4J5gEhMV+ymmlIjWedsbCpsNRqbEZ/E/MpN2QVyinKNra6DcuXywxSk/72M3DZDoH/6kzurOq1erznBMwQ==
 
 lilconfig@^2.0.5, lilconfig@^2.0.6:
   version "2.1.0"
@@ -16732,6 +16758,11 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
+
+validator@^13.7.0:
+  version "13.9.0"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-13.9.0.tgz#33e7b85b604f3bbce9bb1a05d5c3e22e1c2ff855"
+  integrity sha512-B+dGG8U3fdtM0/aNK4/X8CXq/EcxU2WPrPEkJGslb47qyHsxmbggTWK0yEA4qnYVNF+nxNlN88o14hIcPmSIEA==
 
 value-equal@^1.0.1:
   version "1.0.1"

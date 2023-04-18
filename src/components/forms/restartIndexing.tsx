@@ -5,11 +5,12 @@ import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button } from '@subql/components';
+import { renderAsync, useAsyncMemo } from '@subql/react-hooks';
 import { Col, Collapse, Form, Input, Row, Select, Slider, Switch } from 'antd';
-import { FormikValues } from 'formik';
 
+import { LoadingSpinner } from 'components/loading';
 import { ButtonContainer } from 'components/primary';
-import { useNodeVersions, useQueryVersions } from 'hooks/projectHook';
+import { getProjectService, useNodeVersions, useQueryVersions } from 'hooks/projectHook';
 import { defaultAdvancedConfig, ProjectFormKey, StartIndexingSchema } from 'types/schemas';
 import { START_PROJECT } from 'utils/queries';
 
@@ -25,7 +26,7 @@ const advancedOptionsConfig = [
     max: 100,
   },
   {
-    name: ProjectFormKey.workers,
+    name: ProjectFormKey.worker,
     label: 'Workers',
     tooltip: 'Number of worker threads to use for fetching and processing blocks.',
     min: 1,
@@ -74,16 +75,16 @@ function displayVersion(versions: string[]) {
 }
 
 type Props = {
-  initialValues: FormikValues;
   setVisible: Dispatch<SetStateAction<boolean>>;
 };
 
-export const IndexingForm: FC<Props> = ({ initialValues, setVisible }) => {
+export const IndexingForm: FC<Props> = ({ setVisible }) => {
   const [form] = Form.useForm();
   const [showInput, setShowInput] = useState(true);
   const [loading, setLoading] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const { id } = useParams() as { id: string };
+
   const nodeVersions = useNodeVersions(id);
   const queryVersions = useQueryVersions(id);
   const [startProjectRequest, { loading: startProjectLoading }] = useMutation(START_PROJECT);
@@ -91,6 +92,10 @@ export const IndexingForm: FC<Props> = ({ initialValues, setVisible }) => {
   const onSwitchChange = () => {
     setShowInput(!showInput);
   };
+
+  const defaultValues = useAsyncMemo(async () => {
+    return getProjectService(id);
+  }, [id]);
 
   const handleSubmit = (setVisible: Dispatch<SetStateAction<boolean>>) => async (values: any) => {
     setLoading(true);
@@ -100,6 +105,7 @@ export const IndexingForm: FC<Props> = ({ initialValues, setVisible }) => {
           ...values,
           poiEnabled,
           timeout,
+          workers: values.worker,
           networkDictionary: values.networkDictionary ?? '',
           id,
         },
@@ -113,81 +119,93 @@ export const IndexingForm: FC<Props> = ({ initialValues, setVisible }) => {
     }
   };
 
-  return (
-    <Form
-      form={form}
-      name="form"
-      layout="vertical"
-      onFinish={handleSubmit(setVisible)}
-      initialValues={initialValues}
-    >
-      <Form.Item
-        label="Network Endpoint"
-        name={ProjectFormKey.networkEndpoint}
-        rules={[getYupRule(ProjectFormKey.networkEndpoint)]}
-      >
-        <Input placeholder="wss://polkadot.api.onfinality.io/public-ws" />
-      </Form.Item>
-
-      <Form.Item label="Is Project Dictionary" valuePropName="checked">
-        <Switch onChange={onSwitchChange} defaultChecked checked={showInput} />
-      </Form.Item>
-
-      {!showInput && (
-        <Item
-          label="Dictionary Endpoint"
-          name={ProjectFormKey.networkDictionary}
-          rules={[getYupRule(ProjectFormKey.networkEndpoint)]}
+  return renderAsync(defaultValues, {
+    loading: () => <LoadingSpinner />,
+    error: () => <>Unable to get default values</>,
+    data: (defaultValues) => {
+      const { baseConfig, advancedConfig } = defaultValues;
+      return (
+        <Form
+          form={form}
+          name="form"
+          layout="vertical"
+          onFinish={handleSubmit(setVisible)}
+          initialValues={{ ...baseConfig, ...advancedConfig }}
         >
-          <Input placeholder="https://api.subquery.network/sq/subquery/dictionary-polkadot" />
-        </Item>
-      )}
-      <Row gutter={16}>
-        <Col span={12}>
-          <Item
-            label="Indexer Version"
-            name={ProjectFormKey.nodeVersion}
-            rules={[getYupRule(ProjectFormKey.nodeVersion)]}
+          <Form.Item
+            label="Network Endpoint"
+            name={ProjectFormKey.networkEndpoint}
+            rules={[getYupRule(ProjectFormKey.networkEndpoint)]}
           >
-            <Select>{displayVersion(nodeVersions)}</Select>
-          </Item>
-        </Col>
-        <Col span={12}>
-          <Item
-            label="Query Version"
-            name={ProjectFormKey.queryVersion}
-            rules={[getYupRule(ProjectFormKey.queryVersion)]}
+            <Input placeholder="wss://polkadot.api.onfinality.io/public-ws" />
+          </Form.Item>
+
+          <Form.Item label="Is Project Dictionary" valuePropName="checked">
+            <Switch onChange={onSwitchChange} defaultChecked checked={showInput} />
+          </Form.Item>
+
+          {!showInput && (
+            <Item
+              label="Dictionary Endpoint"
+              name={ProjectFormKey.networkDictionary}
+              rules={[getYupRule(ProjectFormKey.networkEndpoint)]}
+            >
+              <Input placeholder="https://api.subquery.network/sq/subquery/dictionary-polkadot" />
+            </Item>
+          )}
+          <Row gutter={16}>
+            <Col span={12}>
+              <Item
+                label="Indexer Version"
+                name={ProjectFormKey.nodeVersion}
+                rules={[getYupRule(ProjectFormKey.nodeVersion)]}
+              >
+                <Select>{displayVersion(nodeVersions)}</Select>
+              </Item>
+            </Col>
+            <Col span={12}>
+              <Item
+                label="Query Version"
+                name={ProjectFormKey.queryVersion}
+                rules={[getYupRule(ProjectFormKey.queryVersion)]}
+              >
+                <Select>{displayVersion(queryVersions)}</Select>
+              </Item>
+            </Col>
+          </Row>
+          <Form.Item
+            name="purgeDB"
+            label="Purge Db"
+            valuePropName="checked"
+            tooltip="Clean the database dropping project schemas and tables on start of indexing."
           >
-            <Select>{displayVersion(queryVersions)}</Select>
-          </Item>
-        </Col>
-      </Row>
-      <Form.Item
-        name="purgeDB"
-        label="Purge Db"
-        valuePropName="checked"
-        tooltip="Clean the database dropping project schemas and tables on start of indexing."
-      >
-        <Switch />
-      </Form.Item>
-      <Collapse defaultActiveKey="1">
-        <Collapse.Panel header="Advanced Options" key="1">
-          {advancedOptionsConfig.map(({ name, label, tooltip, min, max }) => (
-            <Form.Item name={name} label={label} tooltip={tooltip}>
-              <Slider min={min} max={max} />
-            </Form.Item>
-          ))}
-        </Collapse.Panel>
-      </Collapse>
-      {submitError && <Form.Item validateStatus="error" help={submitError} />}
-      <Form.Item>
-        <ButtonContainer align="right" mt={30}>
-          <Button label="Submit" type="secondary" onClick={() => form.submit()} loading={loading}>
-            Submit
-          </Button>
-        </ButtonContainer>
-      </Form.Item>
-      {}
-    </Form>
-  );
+            <Switch />
+          </Form.Item>
+          <Collapse defaultActiveKey="1">
+            <Collapse.Panel header="Advanced Options" key="1">
+              {advancedOptionsConfig.map(({ name, label, tooltip, min, max }, id) => (
+                <Form.Item key={id} name={name} label={label} tooltip={tooltip}>
+                  <Slider min={min} max={max} />
+                </Form.Item>
+              ))}
+            </Collapse.Panel>
+          </Collapse>
+          {submitError && <Form.Item validateStatus="error" help={submitError} />}
+          <Form.Item>
+            <ButtonContainer align="right" mt={30}>
+              <Button
+                label="Submit"
+                type="secondary"
+                onClick={() => form.submit()}
+                loading={loading}
+              >
+                Submit
+              </Button>
+            </ButtonContainer>
+          </Form.Item>
+          {}
+        </Form>
+      );
+    },
+  });
 };

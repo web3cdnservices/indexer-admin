@@ -23,7 +23,7 @@ const NetworkPage = () => {
 
   useEffect(() => {
     setPageLoading(isUndefined(indexerEra));
-  }, [indexerEra]);
+  }, [indexerEra, setPageLoading]);
 
   const eraItems = useMemo(
     () => (

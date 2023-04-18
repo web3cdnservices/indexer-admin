@@ -21,12 +21,12 @@ const LogView: VFC<Props> = ({ container, height = 650 }) => {
 
   useEffect(() => {
     getLog({ variables: { container } });
-  }, []);
+  }, [container, getLog]);
 
   const log = useMemo(() => {
     if (loading || error) return '';
     return data?.getLog.log;
-  }, [data, loading]);
+  }, [data?.getLog.log, error, loading]);
 
   return (
     <Container height={height}>

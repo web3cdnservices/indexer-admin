@@ -23,7 +23,7 @@ export function PAYGPlan({ deploymentId, onTerminate }: Props) {
   const { plans, getPlans } = usePAYGPlans(deploymentId);
   const dataSource = useMemo(
     () => plansToDatasource(deploymentId, plans, tabItem),
-    [plans, tabItem]
+    [deploymentId, plans, tabItem]
   );
 
   const onTabChange = (tabValue: FlexPlanStatus) => {

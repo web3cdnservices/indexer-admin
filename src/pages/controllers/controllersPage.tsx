@@ -54,10 +54,14 @@ const controllersPage = () => {
   useEffect(() => {
     setPageLoading(isUndefined(controllerData));
     if (!controllerData) getControllers();
-  }, [controllerData]);
+  }, [controllerData, getControllers, setPageLoading]);
 
   useEffect(() => {
     if (!controllerData || isEmpty(controllerData?.controllers)) return;
+
+    const isActivedController = (address: string): boolean => {
+      return address.toLowerCase() === currentController?.toLowerCase();
+    };
 
     const rawControllers = controllerData?.controllers;
     const index = rawControllers.findIndex((c) => isActivedController(c.address));
@@ -68,10 +72,6 @@ const controllersPage = () => {
 
     setControllers(rawControllers);
   }, [controllerData, currentController]);
-
-  const isActivedController = (address: string): boolean => {
-    return address.toLowerCase() === currentController?.toLowerCase();
-  };
 
   const createControllerAction = async () => {
     await createController();

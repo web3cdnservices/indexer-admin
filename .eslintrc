@@ -23,6 +23,8 @@
   "plugins": ["react", "@typescript-eslint", "import", "simple-import-sort", "unused-imports", "react-hooks", "header"],
   "rules": {
     "no-use-before-define": "off",
+    "react-hooks/exhaustive-deps": "error",
+    "unused-imports/no-unused-imports": "warn",
     "@typescript-eslint/no-use-before-define": ["off"],
     "@typescript-eslint/explicit-module-boundary-types": ["off"],
     "react/jsx-filename-extension": ["warn", { "extensions": [".tsx"] }],
@@ -40,7 +42,6 @@
     "react/require-default-props": "off",
     "no-restricted-properties": "off",
     "no-unused-expressions": "off",
-    "unused-imports/no-unused-imports": "error",
     "react/no-array-index-key": "off",
     "jsx-a11y/control-has-associated-label": "off",
     "@typescript-eslint/no-explicit-any":"off",

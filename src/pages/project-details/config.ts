@@ -4,7 +4,6 @@
 import { Notification } from 'containers/notificationContext';
 import {
   initalPAYGValues,
-  initialIndexingValues,
   OpenPAYGFormKey,
   ProjectFormKey,
   ProjectPaygSchema,
@@ -120,12 +119,13 @@ type Steps<T extends ProjectAction | PAYGAction> = {
   }>;
 };
 
+// TODO: refactor
 const startProjectForms = (
   config: ProjectServiceMetadata,
   versions: ImageVersions,
   onFormSubmit: FormSubmit
 ) => ({
-  formValues: initialIndexingValues(config),
+  formValues: undefined, // TODO: see restartIndexing form
   schema: StartIndexingSchema,
   onFormSubmit,
   items: [

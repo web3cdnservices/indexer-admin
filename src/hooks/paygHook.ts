@@ -59,7 +59,7 @@ export function usePAYGConfig(deploymentId: string) {
         formHelper.setErrors({ [ProjectFormKey.paygPrice]: `Invalid PAYG: ${e}` });
       }
     },
-    []
+    [deploymentId, getProjectService, paygPriceRequest]
   );
 
   return { paygConfig, changePAYGCofnig, loading };
@@ -111,12 +111,12 @@ export function usePAYGPlans(deploymentId: string) {
       });
       setData(response);
     },
-    [indexer, deploymentId]
+    [indexer]
   );
 
   useEffect(() => {
     indexer && getPlans(deploymentId, FlexPlanStatus.ONGOING);
-  }, [indexer]);
+  }, [deploymentId, getPlans, indexer]);
 
   return { getPlans, plans };
 }

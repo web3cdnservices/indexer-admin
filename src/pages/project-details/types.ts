@@ -1,6 +1,7 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import { AsyncData } from '@subql/react-hooks';
 import { FormikHelpers, FormikValues } from 'formik';
 
 import { ControllerAction } from 'pages/controllers/types';
@@ -74,20 +75,27 @@ export type ModalAction =
 export type ClickAction = (type?: ModalAction) => void;
 export type FormSubmit = (values: FormikValues, helper: FormikHelpers<FormikValues>) => void;
 
-export type ProjectConfig = {
-  networkEndpoint: string;
-  networkDictionary: string;
-  nodeVersion: string;
-  queryVersion: string;
-  poiEnabled: boolean;
-  purgeDB: boolean;
-  timeout: number;
-  worker: number;
-  batchSize: number;
-  cache: number;
-  cpu: number;
-  memory: number;
+export interface AsyncMemoReturn<T> extends AsyncData<T> {
+  refetch: (retainCurrent?: boolean) => void;
+}
 
+export type ProjectConfig = {
+  baseConfig: {
+    networkEndpoint: string;
+    networkDictionary: string;
+    nodeVersion: string;
+    queryVersion: string;
+  };
+  advancedConfig: {
+    poiEnabled: boolean;
+    purgeDB: boolean;
+    timeout: number;
+    worker: number;
+    batchSize: number;
+    cache: number;
+    cpu: number;
+    memory: number;
+  };
   // TODO: remvoe these fields
   paygPrice?: number;
   paygExpiration?: number;

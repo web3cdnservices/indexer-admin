@@ -119,7 +119,7 @@ export const useBalance = (account: Account) => {
     } catch (e) {
       console.error('Get balance failed for:', account);
     }
-  }, [account]);
+  }, [account, library]);
 
   useEffect(() => {
     getBalance();

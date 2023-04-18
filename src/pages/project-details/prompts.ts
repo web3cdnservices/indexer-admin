@@ -1,6 +1,8 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import { SUPPORTED_NETWORK_PROJECTS_EXPLORER } from 'utils/web3';
+
 const prompts = {
   // project management
   project: {
@@ -44,8 +46,8 @@ const prompts = {
         'The Flex Plan is a fast and transactional payment plan. As an Indexer, you can advertise your Flex Plan price for each SubQuery project that you have announced you are ready to index.',
         'Consumers can make as many requests to your projects as they wish and will be charged at a price per request. At the end of an Era, these tokens will be distributed to all participating indexers based on the Cobb-Douglas production function.',
       ],
-      sub: 'Learn more ',
-      link: 'https://kepler.thechaindata.com/',
+      sub: 'Learn more',
+      link: SUPPORTED_NETWORK_PROJECTS_EXPLORER,
       button: 'Enable Flex Plan',
     },
     open: {

@@ -98,9 +98,11 @@ export const STOP_PROJECT = gql`
     stopProject(id: $id) {
       id
       status
-      networkEndpoint
       nodeEndpoint
       queryEndpoint
+      baseConfig {
+        networkEndpoint
+      }
     }
   }
 `;

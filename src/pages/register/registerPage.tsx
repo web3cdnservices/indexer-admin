@@ -49,7 +49,7 @@ const RegisterPage = () => {
     setPageLoading(isUndefined(initialStep) || isUndefined(isRegistedIndexer));
     if (initialStep) setStep(initialStep);
     if (isRegistedIndexer) setStep(RegisterStep.sync);
-  }, [initialStep, isRegistedIndexer]);
+  }, [initialStep, isRegistedIndexer, setPageLoading]);
 
   useEffect(() => {
     if (!account) {
@@ -57,7 +57,7 @@ const RegisterPage = () => {
     } else if (isIndexer) {
       history.replace('/account');
     }
-  }, [isIndexer, account]);
+  }, [isIndexer, account, history]);
 
   const item = useMemo(() => currentStep && prompts[currentStep], [currentStep]);
 
@@ -84,7 +84,7 @@ const RegisterPage = () => {
     await updateIndexer(account);
     setLoading(false);
     return history.replace('/account');
-  }, [isIndexer]);
+  }, [account, dispatchNotification, history, updateIndexer]);
 
   const onApprove = async () => {
     setLoading(true);

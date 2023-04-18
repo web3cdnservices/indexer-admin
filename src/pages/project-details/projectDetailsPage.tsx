@@ -1,13 +1,15 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { renderAsync } from '@subql/react-hooks';
 import { FormikHelpers, FormikValues } from 'formik';
 import { isUndefined } from 'lodash';
 
 import AlertView from 'components/alertView';
+import { LoadingSpinner } from 'components/loading';
 import { PopupView } from 'components/popupView';
 import { useLoading } from 'containers/loadingContext';
 import { useNotification } from 'containers/notificationContext';
@@ -76,22 +78,22 @@ const ProjectDetailsPage = () => {
 
   const [actionType, setActionType] = useState<ProjectAction>();
 
-  const fetchQueryMetadata = async () => {
+  const fetchQueryMetadata = useCallback(async () => {
     const data = await getQueryMetadata(id);
     setMetadata(data);
-  };
+  }, [id, setMetadata]);
 
-  const updateServiceStatus = () => {
+  const updateServiceStatus = useCallback(() => {
     const intervalId = setInterval(() => fetchQueryMetadata(), 6000);
     setTimeout(() => {
       clearInterval(intervalId);
       getProjectService();
     }, 60000);
-  };
+  }, [fetchQueryMetadata, getProjectService]);
 
   useEffect(() => {
     setPageLoading(isUndefined(projectInfo));
-  }, [projectInfo]);
+  }, [projectInfo, setPageLoading]);
 
   useEffect(() => {
     metadata && setProgress(calculateProgress(metadata.targetHeight, metadata.lastProcessedHeight));
@@ -99,7 +101,7 @@ const ProjectDetailsPage = () => {
 
   useEffect(() => {
     fetchQueryMetadata();
-  }, [status]);
+  }, [fetchQueryMetadata, status]);
 
   const loading = useMemo(
     () => startProjectLoading || stopProjectLoading || removeProjectLoading,
@@ -141,52 +143,59 @@ const ProjectDetailsPage = () => {
   const networkActionItems = useMemo(() => {
     if (isUndefined(projectStatus)) return [];
     return networkBtnItems[projectStatus];
-  }, [projectStatus]);
+  }, [networkBtnItems, projectStatus]);
 
   const serviceActionItems = useMemo(() => {
     if (isUndefined(projectStatus)) return [];
     return serviceBtnItems[projectStatus];
-  }, [projectStatus]);
+  }, [projectStatus, serviceBtnItems]);
 
-  const onPopoverClose = (error?: any) => {
-    setVisible(false);
-    if (error?.data?.message) {
-      dispatchNotification(txErrorNotification(error.data.message));
-    }
-  };
+  const onPopoverClose = useCallback(
+    (error?: any) => {
+      setVisible(false);
+      if (error?.data?.message) {
+        dispatchNotification(txErrorNotification(error.data.message));
+      }
+    },
+    [dispatchNotification]
+  );
 
   const imageVersions = useMemo(
     () => ({ query: queryVersions, node: nodeVersions }),
     [nodeVersions, queryVersions]
   );
 
-  const projectStateChange = (
-    type: ProjectNotification.Started | ProjectNotification.Terminated
-  ) => {
-    const notification = notifications[type];
-    dispatchNotification(notification);
-    updateServiceStatus();
-  };
+  const projectStateChange = useCallback(
+    (type: ProjectNotification.Started | ProjectNotification.Terminated) => {
+      const notification = notifications[type];
+      dispatchNotification(notification);
+      updateServiceStatus();
+    },
+    [dispatchNotification, updateServiceStatus]
+  );
 
-  const startProject = async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
-    try {
-      const { purgeDB } = values;
-      await startProjectRequest({
-        variables: {
-          ...values,
-          purgeDB: isTrue(purgeDB),
-          id,
-        },
-      });
+  const startProject = useCallback(
+    async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
+      try {
+        const { purgeDB } = values;
+        await startProjectRequest({
+          variables: {
+            ...values,
+            purgeDB: isTrue(purgeDB),
+            id,
+          },
+        });
 
-      onPopoverClose();
-      projectStateChange(ProjectNotification.Started);
-    } catch (e) {
-      formHelper.setErrors({ [ProjectFormKey.networkEndpoint]: 'Invalid service endpoint' });
-    }
-  };
+        onPopoverClose();
+        projectStateChange(ProjectNotification.Started);
+      } catch (e) {
+        formHelper.setErrors({ [ProjectFormKey.networkEndpoint]: 'Invalid service endpoint' });
+      }
+    },
+    [startProjectRequest, onPopoverClose, projectStateChange, id]
+  );
 
-  const stopProject = async () => {
+  const stopProject = useCallback(async () => {
     try {
       await stopProjectRequest({ variables: { id } });
       onPopoverClose();
@@ -194,16 +203,16 @@ const ProjectDetailsPage = () => {
     } catch (e) {
       console.error('fail to stop project', e);
     }
-  };
+  }, [stopProjectRequest, onPopoverClose, projectStateChange, id]);
 
-  const removeProject = async () => {
+  const removeProject = useCallback(async () => {
     try {
       await removeProjectRequest({ variables: { id } });
       history.replace('/projects');
     } catch (e) {
       console.error('fail to remove project', e);
     }
-  };
+  }, [removeProjectRequest, history, id]);
 
   const steps = useMemo(() => {
     const startIndexingSteps = createStartIndexingSteps(
@@ -240,16 +249,26 @@ const ProjectDetailsPage = () => {
       ...announceReadySteps,
       ...announceNotIndexingSteps,
     };
-  }, [projectService, imageVersions, startProject, stopProject, removeProject]);
+  }, [
+    projectService,
+    imageVersions,
+    startProject,
+    stopProject,
+    removeProject,
+    indexingAction,
+    onPopoverClose,
+  ]);
 
   const [modalTitle, modalSteps] = useMemo(() => {
     if (!actionType) return ['', []];
     return [ProjectActionName[actionType], steps[actionType]];
   }, [actionType, steps]);
 
-  return (
-    <Container>
-      {projectInfo && (
+  return renderAsync(projectInfo, {
+    loading: () => <LoadingSpinner />,
+    error: () => <>Unable to get Project Info</>,
+    data: (projectInfo) => (
+      <Container>
         <ContentContainer>
           <ProjectDetailsHeader id={id} projectStatus={projectStatus} project={projectInfo} />
           <ProjectStatusView
@@ -261,20 +280,20 @@ const ProjectDetailsPage = () => {
           <ProjectServiceCard id={id} actionItems={serviceActionItems} data={metadata} />
           <ProjectTabbarView id={id} project={projectInfo} config={projectService} />
         </ContentContainer>
-      )}
-      <PopupView
-        setVisible={setVisible}
-        visible={visible}
-        title={modalTitle}
-        onClose={onPopoverClose}
-        // @ts-ignore
-        steps={modalSteps}
-        type={actionType}
-        loading={loading}
-      />
-      <AlertView {...alertInfo} />
-    </Container>
-  );
+        <PopupView
+          setVisible={setVisible}
+          visible={visible}
+          title={modalTitle}
+          onClose={onPopoverClose}
+          // @ts-ignore
+          steps={modalSteps}
+          type={actionType}
+          loading={loading}
+        />
+        <AlertView {...alertInfo} />
+      </Container>
+    ),
+  });
 };
 
 export default ProjectDetailsPage;

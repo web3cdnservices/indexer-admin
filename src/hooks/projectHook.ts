@@ -3,14 +3,15 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useLazyQuery } from '@apollo/client';
+import { useAsyncMemo } from '@subql/react-hooks';
 import yaml from 'js-yaml';
-import { isEmpty, isUndefined } from 'lodash';
+import { isEmpty } from 'lodash';
 
 import { useContractSDK } from 'containers/contractSdk';
-import { useLoading } from 'containers/loadingContext';
 import { useNotification } from 'containers/notificationContext';
 import { useWeb3 } from 'hooks/web3Hook';
 import {
+  AsyncMemoReturn,
   ChainType,
   DockerRegistry,
   IndexingStatus,
@@ -46,18 +47,22 @@ const metadataInitValue = {
 
 const defaultProjectValue: ProjectServiceMetadata = {
   id: '',
-  networkEndpoint: '',
-  networkDictionary: '',
-  nodeVersion: '',
-  queryVersion: '',
-  purgeDB: false,
-  poiEnabled: true,
-  timeout: 1800,
-  worker: 2,
-  batchSize: 50,
-  cache: 300,
-  cpu: 2,
-  memory: 2046,
+  baseConfig: {
+    networkEndpoint: '',
+    networkDictionary: '',
+    nodeVersion: '',
+    queryVersion: '',
+  },
+  advancedConfig: {
+    purgeDB: false,
+    poiEnabled: true,
+    timeout: 1800,
+    worker: 2,
+    batchSize: 50,
+    cache: 300,
+    cpu: 2,
+    memory: 2046,
+  },
   status: 0,
   paygPrice: 0,
   paygExpiration: 3600 * 24,
@@ -82,12 +87,27 @@ const projectInitValue = {
   ...defaultProjectValue,
 };
 
+export const getProjectService = async (deploymentId: string) => {
+  const { data } = await coordinatorClient.query({
+    query: GET_PROJECT,
+    variables: { id: deploymentId },
+  });
+
+  if (!data) {
+    return defaultProjectValue;
+  }
+
+  return data.project;
+};
+
 export const useProjectService = (deploymentId: string) => {
   const { notification } = useNotification();
   const [projectService, setService] = useState<ProjectServiceMetadata>(defaultProjectValue);
   const [getProject, { data }] = useLazyQuery(GET_PROJECT, { fetchPolicy: 'network-only' });
 
-  const getProjectService = () => getProject({ variables: { id: deploymentId } });
+  const getProjectService = useCallback(() => {
+    return getProject({ variables: { id: deploymentId } });
+  }, [deploymentId, getProject]);
 
   useEffect(() => {
     data
@@ -97,7 +117,7 @@ export const useProjectService = (deploymentId: string) => {
           ...data.project.advancedConfig,
         })
       : getProjectService();
-  }, [deploymentId, data, notification?.type]);
+  }, [deploymentId, data, notification?.type, getProjectService]);
 
   return { projectService, getProjectService };
 };
@@ -209,25 +229,19 @@ export const getIndexingProjects = async (indexer: string): Promise<ProjectServi
     .map((p) => ({ ...defaultProjectValue, id: p.deploymentId }));
 };
 
-export const useProjectDetails = (deploymentId: string): ProjectDetails | undefined => {
-  const [project, setProject] = useState<ProjectDetails | undefined>();
+export const useProjectDetails = (
+  deploymentId: string
+): AsyncMemoReturn<ProjectDetails | undefined> => {
   const { notification } = useNotification();
 
-  const fetchMeta = useCallback(async () => {
+  return useAsyncMemo(async () => {
     try {
       const projectDetails = await getProjectDetails(deploymentId);
-      setProject(projectDetails);
+      return projectDetails;
     } catch (error) {
-      setProject(undefined);
-      console.error('Unable to get project details', error);
+      return undefined;
     }
-  }, [deploymentId]);
-
-  useEffect(() => {
-    fetchMeta();
-  }, [fetchMeta, notification?.type]);
-
-  return project;
+  }, [deploymentId, notification?.type]);
 };
 
 export const useDeploymentStatus = (deploymentId: string) => {
@@ -252,7 +266,7 @@ export const useDeploymentStatus = (deploymentId: string) => {
   return status;
 };
 
-function combineProjects(
+export function combineProjects(
   localProjects: ProjectServiceMetadata[],
   indexingProjects: ProjectServiceMetadata[]
 ): ProjectServiceMetadata[] {
@@ -262,48 +276,6 @@ function combineProjects(
   );
 
   return [...localProjects, ...removedProjects];
-}
-
-// TODO: need to refactor
-export function useProjectDetailList(data: any) {
-  const [projectDetailList, setProjecList] = useState<ProjectDetails[]>();
-  const localProjects = data?.getProjects as ProjectServiceMetadata[];
-
-  const { setPageLoading } = useLoading();
-  const { account } = useWeb3();
-
-  const getProjectDetailList = useCallback(async () => {
-    if (!account) return;
-
-    const indexingProjects = await getIndexingProjects(account);
-    const projects = combineProjects(localProjects, indexingProjects);
-
-    if (isUndefined(projects)) return;
-    if (isEmpty(projects)) {
-      setPageLoading(false);
-      setProjecList([]);
-      return;
-    }
-
-    try {
-      const result = await Promise.all(
-        projects.map(({ id }) => Promise.all([getProjectDetails(id), getQueryMetadata(id)]))
-      );
-      setProjecList(
-        result.map(([detail, metadata]) => ({ ...detail, metadata })).filter(({ id }) => !!id)
-      );
-    } catch (e) {
-      console.error('Get project details failed:', e);
-      setPageLoading(false);
-    }
-  }, [localProjects, account]);
-
-  useEffect(() => {
-    setPageLoading(true);
-    getProjectDetailList();
-  }, [getProjectDetailList, data]);
-
-  return { projectDetailList, getProjectDetailList };
 }
 
 export const getManifest = async (cid: string) => {
@@ -342,7 +314,7 @@ export const useNodeVersions = (cid: string): string[] => {
     const registry = dockerRegistryFromChain(chainType);
     const range = runner?.node?.version ?? defaultRange[chainType];
     getNodeVersions({ variables: { range, registry } });
-  }, [cid]);
+  }, [cid, getNodeVersions]);
 
   useEffect(() => {
     fetchNodeVersions();
@@ -362,7 +334,7 @@ export const useQueryVersions = (cid: string): string[] => {
     const manifest = await getManifest(cid);
     const range = manifest.runner?.query?.version ?? '>=0.15.0';
     getQueryVersions({ variables: { range, registry: DockerRegistry.query } });
-  }, [cid]);
+  }, [cid, getQueryVersions]);
 
   useEffect(() => {
     fetchQueryVersions();

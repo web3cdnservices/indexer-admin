@@ -25,5 +25,5 @@ export const useRouter = (refresh = true) => {
     } else if (isFalse(controller)) {
       history.replace('/account');
     }
-  }, [isIndexer, controller]);
+  }, [isIndexer, controller, setPageLoading, pageLoading, refresh, history]);
 };

@@ -41,12 +41,12 @@ const ControllerItem: FC<Props> = ({
   onWithdraw,
 }) => {
   const { active, activeBtn, widthdrawBtn, removeBtn } = prompts.controllerItem;
-  const isActived = address === controller?.toLocaleLowerCase();
+  const isActived = address === controller;
+
   const balance = useBalance(address);
   const emptyBalance = Number(balance) === 0;
   const account = { id, address };
   const tokenSymbol = useTokenSymbol();
-
   return (
     <ItemContainer>
       <ItemContentContainer onClick={() => openAccountExporer(address)}>
