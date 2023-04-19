@@ -45,7 +45,7 @@ const metadataInitValue = {
   queryStatus: 'TERMINATED',
 };
 
-const defaultProjectValue: ProjectServiceMetadata = {
+const defaultProjectValues: ProjectServiceMetadata = {
   id: '',
   baseConfig: {
     networkEndpoint: '',
@@ -84,25 +84,25 @@ const projectInitValue = {
   createdTimestamp: '',
   updatedTimestamp: '',
   metadata: undefined,
-  ...defaultProjectValue,
+  ...defaultProjectValues,
 };
 
 export const getProjectService = async (deploymentId: string) => {
-  const { data } = await coordinatorClient.query({
-    query: GET_PROJECT,
-    variables: { id: deploymentId },
-  });
+  try {
+    const { data } = await coordinatorClient.query({
+      query: GET_PROJECT,
+      variables: { id: deploymentId },
+    });
 
-  if (!data) {
-    return defaultProjectValue;
+    return data?.project ?? defaultProjectValues;
+  } catch (error) {
+    return defaultProjectValues;
   }
-
-  return data.project;
 };
 
 export const useProjectService = (deploymentId: string) => {
   const { notification } = useNotification();
-  const [projectService, setService] = useState<ProjectServiceMetadata>(defaultProjectValue);
+  const [projectService, setService] = useState<ProjectServiceMetadata>(defaultProjectValues);
   const [getProject, { data }] = useLazyQuery(GET_PROJECT, { fetchPolicy: 'network-only' });
 
   const getProjectService = useCallback(() => {
@@ -226,7 +226,7 @@ export const getIndexingProjects = async (indexer: string): Promise<ProjectServi
   const projects = res.data.deploymentIndexers.nodes;
   return projects
     .filter((p) => p.status !== 'TERMINATED')
-    .map((p) => ({ ...defaultProjectValue, id: p.deploymentId }));
+    .map((p) => ({ ...defaultProjectValues, id: p.deploymentId }));
 };
 
 export const useProjectDetails = (

@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useState, VFC } from 'react';
+import { Button } from '@subql/components';
 import { Modal } from 'antd';
+import styled from 'styled-components';
 
-import { Button, Text } from './primary';
+import { ButtonContainer, Text } from './primary';
 
 type Props = {
   visible: boolean;
@@ -27,17 +29,39 @@ const AlertView: VFC<Props> = ({ visible = false, title, description }) => {
   const handleCancel = () => {
     setIsOpen(false);
   };
+
   return (
-    <Modal open={isOpen} title="Title" onOk={handleOk} onCancel={handleCancel}>
-      <Text fw="bold" size={35}>
-        {title}
-      </Text>
-      <Text alignCenter fw="400" mt={30} size={18}>
-        {description}
-      </Text>
-      <Button mt={100} width={300} title="Confirm" loading={loading} onClick={handleOk} />
+    <Modal open={isOpen} width="40%" onCancel={handleCancel} footer={null}>
+      <ContentContainer>
+        <DescContainer>
+          <Text alignCenter fw="500" mt={20} size={25}>
+            {title}
+          </Text>
+          <Text alignCenter mt={20} size={15} color="gray">
+            {description}
+          </Text>
+        </DescContainer>
+        <ButtonContainer align="right" mt={30}>
+          <Button label="Confirm" type="secondary" onClick={handleOk} loading={loading} />
+        </ButtonContainer>
+      </ContentContainer>
     </Modal>
   );
 };
 
 export default AlertView;
+
+const ContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+`;
+
+const DescContainer = styled.div`
+  display: flex;
+  padding: 10px;
+  flex-direction: column;
+  align-items: center;
+`;

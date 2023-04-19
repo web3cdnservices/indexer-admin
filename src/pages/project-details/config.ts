@@ -329,7 +329,7 @@ export const aletMessages = {
   [ProjectStatus.Terminated]: {
     title: 'Status Inconsistent',
     description:
-      'The current indexing service for this project is terminated but the indexing service status on Subquery Network is still INDEXING, we encourage you to press the Announce Not Indexing button to change the online status to NOTINDEXING as well',
+      'The current indexing service for this project is terminated but the indexing service status on Subquery Network is still INDEXING, we encourage you to press the Announce Not Indexing button to change the online status to NOT INDEXING as well',
   },
 };
 
