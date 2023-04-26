@@ -16,7 +16,7 @@ const prompts = (account: Account) => ({
   },
   invalidAccount: {
     title: 'Incorrect connected account with coordinator service',
-    desc: `Please switch the connected account to ${account}.`,
+    desc: `Please switch the connected account to ${account}`,
     buttonTitle: 'Switch account to use the admin app',
   },
   invalidNetwork: {
