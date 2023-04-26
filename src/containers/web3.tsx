@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { PropsWithChildren, useCallback, useEffect, VFC } from 'react';
+import { networks } from '@subql/contract-sdk';
 import { Web3ReactProvider } from '@web3-react/core';
 import { Web3ReactManagerFunctions } from '@web3-react/core/dist/types';
 import { InjectedConnector } from '@web3-react/injected-connector';
@@ -11,8 +12,11 @@ import { providers } from 'ethers';
 import { useWeb3 } from 'hooks/web3Hook';
 import { ChainID, hexToInt, NetworkToChainID, RPC_URLS } from 'utils/web3';
 
+export const SUPPORTED_NETWORK = window.env.NETWORK as keyof typeof NetworkToChainID;
+export const defaultChainId = parseInt(networks[SUPPORTED_NETWORK].chainId, 16);
+
 const injectedConntector = new InjectedConnector({
-  supportedChainIds: [137, 80001],
+  supportedChainIds: [defaultChainId],
 });
 
 const injectNetwork = window.env.NETWORK as keyof typeof NetworkToChainID;
