@@ -20,8 +20,8 @@ const prompts = {
   emptyController: {
     title: 'Controller Account',
     name: '',
-    buttonTitle: 'Config Controller',
-    desc: 'Controller account is a delegator of the indexer, need to config a controller account before you start the journey to indexing the projects, controller account will config in you coordinator service and send the status of the indexing services to the contract autimatically',
+    buttonTitle: 'Configure Controller',
+    desc: 'The controller account is a delegator of the indexer. You need to configure a controller account before you start indexing projects. The controller account will be configured in your coordinator service and will send the status of the indexing services to the contract automatically.',
   },
 };
 
@@ -30,7 +30,7 @@ export const notifications = {
     type: 'danger',
     title: 'Insufficient Balance',
     message:
-      'The controller account has insufficient assets to pay the transaction fee. Please top up your controller account ASAP.',
+      'The controller account has insufficient funds to pay the transaction fee. Please top up your controller account as soon as possible.',
     dismiss: dismiss(50000, false),
   } as Notification,
 };

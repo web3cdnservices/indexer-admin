@@ -5,24 +5,24 @@ import { RegisterStep } from './types';
 
 const prompts = {
   [RegisterStep.onboarding]: {
-    title: 'Stake to become a Subquery Indexer',
-    desc: 'Become an Indexer so you can index subquery projects. You need to stake a minimum of 1000 SQT in order to index subquery projects. Learn more about the indexer',
+    title: 'Stake to Become a Subquery Indexer',
+    desc: 'Become an indexer so you can index SubQuery projects. You need to stake a minimum of 1000 SQT in order to index SubQuery projects. Learn more about the indexer.',
     buttonTitle: 'Get Started',
   },
   [RegisterStep.authorisation]: {
-    title: 'Request approve authorisation',
-    desc: 'Indexer Admin app need you to approve the authorisation request to deposit the SQT token into Subquery Staking contract, this is a one-time operation for the specific account. Please press the approve button then confirm and send the transaction on MetaMask.',
+    title: 'Request Approval for Authorisation',
+    desc: 'The Indexer Admin app needs you to approve the authorisation request to deposit the SQT token into the SubQuery Staking contract. This is a one-time operation for the specific account. Please press the approve button and then confirm and send the transaction on MetaMask.',
     buttonTitle: 'Approve',
   },
   [RegisterStep.register]: {
-    title: 'Stake to become a Subquery Indexer',
+    title: 'Stake to Become a Subquery Indexer',
     desc: '',
-    // 'Become an indexer that you can index subquery project. You need to stake a minimum of 1000 SQT to index subquery project. The time for processing the transaciton dependent on the current status of the network and the gas fee, it usually takes 30 seconds',
+    // desc: 'Become an indexer so you can index SubQuery projects. You need to stake a minimum of 1000 SQT in order to index SubQuery projects. The time for processing the transaction depends on the current status of the network and the gas fee, and it usually takes around 30 seconds.',
     buttonTitle: 'Register Indexer',
   },
   [RegisterStep.sync]: {
-    title: 'Sync the indexer with coordinator service',
-    desc: 'This account has been an indexer already, please press the sync button to sync this account with your coordinator service, otherwise you can switch your account in the wallet to select the correct account.',
+    title: 'Sync the Indexer with Coordinator Service',
+    desc: 'This account has already been registered as an indexer. Please press the sync button to sync this account with your coordinator service. Alternatively, you can switch your account in the wallet to select the correct account.',
     buttonTitle: 'Sync',
   },
 };

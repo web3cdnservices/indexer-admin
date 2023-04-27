@@ -8,34 +8,34 @@ const prompts = {
   project: {
     start: {
       title: 'Indexing Project',
-      desc: 'Start indexing project will start the subquery node service indexing the project and start a query service at the same time. It takes around 1 mins to start the services, you can see the progress and related information after everything is ready.',
+      desc: 'Starting the indexing process for the project will start the SubQuery node service and indexing the project, and also start a query service at the same time. It takes around 1 minute to start the services. Once everything is ready, you can view the progress and related information.',
     },
     stop: {
       title: 'Stop Indexing the Project',
-      desc: 'Stop indexing the project will terminate the node and query services, once the services stopped, the service status will change to terminated. You can restart indexing the project at any time.',
+      desc: 'Stopping the indexing process for the project will terminate the node and query services. Once the services are stopped, the service status will change to "Terminated". You can restart indexing the project at any time.',
     },
     restart: {
       title: 'Restart Project',
-      desc: 'Restart indexing project will start the previous subquery node service to index the project, and start a query service at the same time. You can see the progress and related information after everything is ready.',
+      desc: 'Restarting the indexing process for the project will start the previous SubQuery node service to index the project and also start a query service at the same time. You can view the progress and related information once everything is ready.',
     },
     remove: {
-      title: 'Are you sure to remove the project',
-      desc: 'Remove project will remove the project and service containers from coordinator service and database, the indexing data will be removed at the same time. You can add the project back at any time, but need to indexing from the beginning.',
+      title: 'Are you sure you want to remove the project?',
+      desc: 'Removing the project will remove the project and service containers from the coordinator service and database, and the indexing data will also be removed. You can add the project back at any time, but it will need to be reindexed from the beginning.',
     },
   },
   // Indexing management on chain
   announce: {
     indexing: {
       title: 'Update Status on Subquery Network',
-      desc: 'Send transaction to start indexing the project on contract, the controller account on coordinator service will start to update the status of indexing service on the contract once the transaction completed. The transaction processing time may take around 10s, it depends on the network and gas fee. You will see the processing status on the top of the page once you confim the transaction on the MetaMask.',
+      desc: 'This action initiates a transaction to start indexing the project on the contract. Once the transaction is completed, the controller account on the coordinator service will begin updating the status of the indexing service on the contract. The transaction processing time may take around 10 seconds and will depend on the network and gas fee. You will be able to see the processing status on the top of the page once the transaction is confirmed on the MetaMask.',
     },
     ready: {
       title: 'Update Indexing To Ready',
-      desc: 'Send transaction to change indexing status to ready on contract, the explorer will display you query endpoint once the transaction completed. The transaction processing time may take around 10s, it depends on the network and gas fee. You will see the processing status on the top of the page once you confim the transaction on the MetaMask.',
+      desc: 'This action initiates a transaction to change the indexing status to "ready" on the contract. Once the transaction is completed, the explorer will display your query endpoint. The transaction processing time may take around 10 seconds and will depend on the network and gas fee. You will be able to see the processing status on the top of the page once the transaction is confirmed on the MetaMask.',
     },
     notIndexing: {
       title: 'Announce Not Indexing the Project',
-      desc: 'Send transaction to change indexing status to not indexing on contract, the project status will change to not indexing on the network. The transaction processing time may take around 10s, it depends on the network and gas fee. You will see the processing status on the top of the page once you confim the transaction on the MetaMask.',
+      desc: 'This action initiates a transaction to change the indexing status to "not indexing" on the contract. The project status will change to "not indexing" on the network. The transaction processing time may take around 10 seconds and will depend on the network and gas fee. You will be able to see the processing status on the top of the page once the transaction is confirmed on the MetaMask.',
     },
   },
   // PAYG
@@ -52,7 +52,7 @@ const prompts = {
     },
     open: {
       title: 'Enable Flex Plan',
-      desc: 'This will open the function of pay-as-you-go, which supports micro-payment and instant requests. The query service will based on HTTP and p2p network at the same time. If consumer establish the service, the service will be in the form of state channel.',
+      desc: 'This will enable the pay-as-you-go function, which supports micro-payments and instant requests. The query service will be based on HTTP and p2p network at the same time. If a consumer establishes the service, it will be in the form of a state channel.',
     },
     channels: {
       title: 'Flex Plans',
@@ -66,11 +66,11 @@ const prompts = {
   // TODO: remove later
   paygChangePrice: {
     title: 'Change Price',
-    desc: 'This will modify the cost of per query, the price of the established state channel will remain unchanged, and the new state channel will use the new price',
+    desc: 'This will modify the cost per query. The price of the established state channel will remain unchanged, and the new state channel will use the new price.',
   },
   paygClose: {
     title: 'Close PAYG',
-    desc: 'This will turn off the function of pay-as-you-go, the already established state channel will not be affected, and the new state channel will not be established.',
+    desc: 'This will turn off the pay-as-you-go function. The already established state channel will not be affected, and no new state channels will be established.',
   },
 };
 
