@@ -41,7 +41,7 @@ export const createWithdrawSteps = (withdraw: ClickAction) => ({
 
 // notifications
 export const withdrawControllerLoading = (controller = ''): Notification => {
-  const { type, title, message } = notification.widthdraw.loading;
+  const { type, title, message } = notification.withdrawal.loading;
   return {
     type,
     title,
@@ -51,7 +51,7 @@ export const withdrawControllerLoading = (controller = ''): Notification => {
 };
 
 export const withdrawControllerSucceed = (controller = ''): Notification => {
-  const { type, title, message } = notification.widthdraw.success;
+  const { type, title, message } = notification.withdrawal.success;
   return {
     type,
     title,
@@ -61,7 +61,7 @@ export const withdrawControllerSucceed = (controller = ''): Notification => {
 };
 
 export const withdrawControllerFailed = (controller = ''): Notification => {
-  const { type, title, message } = notification.widthdraw.failed;
+  const { type, title, message } = notification.withdrawal.failed;
   return {
     type,
     title,

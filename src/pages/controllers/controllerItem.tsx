@@ -40,7 +40,7 @@ const ControllerItem: FC<Props> = ({
   onRemoveController,
   onWithdraw,
 }) => {
-  const { active, activeBtn, widthdrawBtn, removeBtn } = prompts.controllerItem;
+  const { active, activeBtn, withdrawBtn, removeBtn } = prompts.controllerItem;
   const isActived = address === controller;
 
   const balance = useBalance(address);
@@ -70,7 +70,7 @@ const ControllerItem: FC<Props> = ({
             <Button ml={10} title={removeBtn} onClick={() => onRemoveController(account)} />
           )}
           {!emptyBalance && (
-            <Button ml={10} title={widthdrawBtn} onClick={() => onWithdraw(account)} />
+            <Button ml={10} title={withdrawBtn} onClick={() => onWithdraw(account)} />
           )}
         </Buttons>
       )}

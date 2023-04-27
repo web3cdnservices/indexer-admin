@@ -35,7 +35,7 @@ import ProjectServiceCard from './components/projectServiceCard';
 import ProjectStatusView from './components/projectStatusView';
 import ProjectTabbarView from './components/projectTabBarView';
 import {
-  aletMessages,
+  alertMessages,
   createAnnounceIndexingSteps,
   createNetworkButtonItems,
   createNotIndexingSteps,
@@ -125,7 +125,7 @@ const ProjectDetailsPage = () => {
   const alertInfo = useMemo(
     () =>
       projectStatus === ProjectStatus.Terminated
-        ? { visible: true, ...aletMessages[projectStatus] }
+        ? { visible: true, ...alertMessages[projectStatus] }
         : { visible: false },
     [projectStatus]
   );

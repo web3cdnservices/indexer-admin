@@ -5,24 +5,24 @@ import { Account } from 'pages/account/types';
 
 const prompts = (account: Account) => ({
   install: {
-    title: 'Install MetaMask to use Indexer App',
-    desc: 'No MetaMask Extension found in the browser. Please click the button to install the MetaMask Extension before connecting to the network.',
+    title: 'Install MetaMask to Use Indexer App',
+    desc: 'No MetaMask extension found in the browser. Please click the button to install the MetaMask extension before connecting to the network.',
     buttonTitle: 'Install MetaMask in the extension market',
   },
   connect: {
-    title: 'Connect wallet to use Indexer App',
+    title: 'Connect Wallet to Use Indexer App',
     desc: 'Use the indexer app to connect with the Subquery network. You can manage your accounts and projects inside the app.',
-    buttonTitle: 'Connect with MetaMask browser extension',
+    buttonTitle: 'Connect with MetaMask Browser Extension',
   },
   invalidAccount: {
-    title: 'Incorrect connected account with coordinator service',
-    desc: `Please switch the connected account to ${account}`,
-    buttonTitle: 'Switch account to use the admin app',
+    title: 'Incorrect Connected Account with Coordinator Service',
+    desc: `Please switch the connected account to ${account}.`,
+    buttonTitle: 'Switch Account to Use the Admin App',
   },
   invalidNetwork: {
-    title: 'Unsupported network type',
+    title: 'Unsupported Network Type',
     desc: 'MetaMask is connected to an unsupported network. Please press the button to switch to the correct network.',
-    buttonTitle: 'Switch to the supported network',
+    buttonTitle: 'Switch to the Supported Network',
   },
 });
 

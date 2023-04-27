@@ -320,16 +320,16 @@ export const createPaygCloseSteps = (onPaygClose: ClickAction): Steps<PAYGAction
 });
 
 // inconsistent status config
-export const aletMessages = {
+export const alertMessages = {
   [ProjectStatus.Started]: {
-    title: 'Ready to indexing the project on Suquery Network',
+    title: 'Ready to index the project on SubQuery Network',
     description:
-      'The current project has been alreay started, check the progress and logs make sure indexing is alright. Try press the Announce Indexing button to annouce indexing this project on Subquery Network. You can also try to restart indexing if something wrong happens.',
+      'The current project has already been started. Check the progress and logs to make sure indexing is going well. Try pressing the Announce Indexing button to announce indexing for this project on SubQuery Network. You can also try restarting indexing if something goes wrong.',
   },
   [ProjectStatus.Terminated]: {
-    title: 'Status Inconsistent',
+    title: 'Inconsistent Status',
     description:
-      'The current indexing service for this project is terminated however the indexing service status on the SubQuery Network is still ‘Indexing’. We encourage you to click the ‘Announce Not Indexing’ button to correct the online status to ‘Not Indexing’',
+      'The current indexing service for this project has been terminated, but the indexing service status on the SubQuery Network still shows as "Indexing". We encourage you to click the "Announce Not Indexing" button to correct the online status to "Not Indexing".',
   },
 };
 
@@ -338,13 +338,13 @@ export const notifications: Record<string, Notification> = {
   [ProjectNotification.Started]: {
     type: 'success',
     title: 'Project is starting',
-    message: `Starting project may take around 5 seconds`,
+    message: `Starting the project may take around 5 seconds`,
     dismiss: dismiss(),
   },
   [ProjectNotification.Terminated]: {
     type: 'success',
     title: 'Project Terminated',
-    message: `The project has been stopped, you can restart or update the status on network to not indexing`,
+    message: `The project has been stopped, you can restart or update the status on the network to "Not Indexing"`,
     dismiss: dismiss(),
   },
 };
