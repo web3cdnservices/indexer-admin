@@ -9,7 +9,8 @@ import { isUndefined } from 'lodash';
 import Avatar from 'components/avatar';
 import { Text } from 'components/primary';
 import StatusLabel from 'components/statusLabel';
-import { ProjectDetails, useDeploymentStatus } from 'hooks/projectHook';
+import { useDeploymentStatus } from 'hooks/projectHook';
+import { ProjectDetails } from 'pages/project-details/types';
 import { cidToBytes32 } from 'utils/ipfs';
 import { calculateProgress } from 'utils/project';
 
@@ -19,7 +20,7 @@ import { ItemContainer, ProfileContainer, Progress, ProjectItemContainer } from 
 type Props = ProjectDetails;
 
 const ProjectItem: FC<Props> = (props) => {
-  const { id, name, metadata } = props;
+  const { id, details, metadata } = props;
 
   const history = useHistory();
   const status = useDeploymentStatus(id);
@@ -38,7 +39,7 @@ const ProjectItem: FC<Props> = (props) => {
         <Avatar address={cidToBytes32(id)} size={70} />
         <ProfileContainer>
           <Text fw="600" size={18}>
-            {name}
+            {details.name}
           </Text>
           <Text size={13} mt={5}>
             {id}

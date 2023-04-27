@@ -12,7 +12,7 @@ import { FormikHelpers, FormikValues } from 'formik';
 import { ProjectFormKey } from 'types/schemas';
 import { PAYG_PRICE } from 'utils/queries';
 
-import { useProjectService } from './projectHook';
+import { useProjectDetails } from './projectHook';
 import { useWeb3 } from './web3Hook';
 
 export enum FlexPlanStatus {
@@ -25,18 +25,18 @@ const daySeconds = 3600 * 24;
 // hook for PAYG configuration
 export function usePAYGConfig(deploymentId: string) {
   const [paygPriceRequest, { loading }] = useMutation(PAYG_PRICE);
-  const { projectService, getProjectService } = useProjectService(deploymentId);
+  const projectQuery = useProjectDetails(deploymentId);
 
   const paygConfig = useMemo(() => {
-    if (!projectService || !projectService.paygPrice) {
+    if (!projectQuery.data || !projectQuery.data.paygPrice) {
       return { paygPrice: '', paygExpiration: 0 };
     }
 
     return {
-      paygPrice: formatEther(BigNumber.from(projectService.paygPrice).mul(1000)),
-      paygExpiration: (projectService?.paygExpiration ?? 0) / daySeconds,
+      paygPrice: formatEther(BigNumber.from(projectQuery.data.paygPrice).mul(1000)),
+      paygExpiration: (projectQuery.data?.paygExpiration ?? 0) / daySeconds,
     };
-  }, [projectService]);
+  }, [projectQuery]);
 
   const changePAYGCofnig = useCallback(
     async (values: FormikValues, formHelper: FormikHelpers<FormikValues>) => {
@@ -54,12 +54,12 @@ export function usePAYGConfig(deploymentId: string) {
           },
         });
 
-        getProjectService();
+        projectQuery.refetch();
       } catch (e) {
         formHelper.setErrors({ [ProjectFormKey.paygPrice]: `Invalid PAYG: ${e}` });
       }
     },
-    [deploymentId, getProjectService, paygPriceRequest]
+    [deploymentId, paygPriceRequest, projectQuery]
   );
 
   return { paygConfig, changePAYGCofnig, loading };

@@ -120,6 +120,24 @@ export type TQueryMetadata = {
   queryStatus: string;
 };
 
+export type ProjectDetails = {
+  nodeEndpoint: string;
+  queryEndpoint: string;
+  chainType: string;
+  details: {
+    name: string;
+    owner: string;
+    image: string;
+    description: string;
+    websiteUrl: string;
+    codeUrl: string;
+    version: string;
+    createdTimestamp: string;
+    updatedTimestamp: string;
+  };
+  metadata: TQueryMetadata;
+} & ProjectServiceMetadata;
+
 // manifest types
 export type Runner = {
   node?: {

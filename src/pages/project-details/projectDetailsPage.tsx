@@ -11,15 +11,12 @@ import { isUndefined } from 'lodash';
 import AlertView from 'components/alertView';
 import { LoadingSpinner } from 'components/loading';
 import { PopupView } from 'components/popupView';
-import { useLoading } from 'containers/loadingContext';
 import { useNotification } from 'containers/notificationContext';
 import {
   getQueryMetadata,
-  ProjectDetails,
   useIndexingStatus,
   useNodeVersions,
   useProjectDetails,
-  useProjectService,
   useQueryVersions,
 } from 'hooks/projectHook';
 import { useRouter } from 'hooks/routerHook';
@@ -50,21 +47,24 @@ import {
   ProjectActionName,
 } from './config';
 import { Container, ContentContainer } from './styles';
-import { IndexingStatus, ProjectAction, ProjectStatus, TQueryMetadata } from './types';
+import {
+  IndexingStatus,
+  ProjectAction,
+  ProjectDetails,
+  ProjectStatus,
+  TQueryMetadata,
+} from './types';
 
 const ProjectDetailsPage = () => {
   const { id } = useParams() as { id: string };
   const { data: projectDetails } = useLocation().state as { data: ProjectDetails };
 
   const status = useIndexingStatus(id);
-  const projectInfo = useProjectDetails(id);
-  const { setPageLoading } = useLoading();
+  const projectQuery = useProjectDetails(id);
   const history = useHistory();
   useRouter(!projectDetails);
 
   const indexingAction = useIndexingAction(id);
-  const { projectService, getProjectService } = useProjectService(id);
-  // const paygStatus = projectService?.paygPrice ? PaygStatus.Open : PaygStatus.Close;
   const { dispatchNotification } = useNotification();
   const [startProjectRequest, { loading: startProjectLoading }] = useMutation(START_PROJECT);
   const [stopProjectRequest, { loading: stopProjectLoading }] = useMutation(STOP_PROJECT);
@@ -87,13 +87,9 @@ const ProjectDetailsPage = () => {
     const intervalId = setInterval(() => fetchQueryMetadata(), 6000);
     setTimeout(() => {
       clearInterval(intervalId);
-      getProjectService();
+      projectQuery.refetch();
     }, 60000);
-  }, [fetchQueryMetadata, getProjectService]);
-
-  useEffect(() => {
-    setPageLoading(isUndefined(projectInfo));
-  }, [projectInfo, setPageLoading]);
+  }, [fetchQueryMetadata, projectQuery]);
 
   useEffect(() => {
     metadata && setProgress(calculateProgress(metadata.targetHeight, metadata.lastProcessedHeight));
@@ -216,12 +212,12 @@ const ProjectDetailsPage = () => {
 
   const steps = useMemo(() => {
     const startIndexingSteps = createStartIndexingSteps(
-      projectService,
+      projectDetails,
       imageVersions,
       startProject
     );
     const restartProjectSteps = createRestartProjectSteps(
-      projectService,
+      projectDetails,
       imageVersions,
       startProject
     );
@@ -250,7 +246,7 @@ const ProjectDetailsPage = () => {
       ...announceNotIndexingSteps,
     };
   }, [
-    projectService,
+    projectDetails,
     imageVersions,
     startProject,
     stopProject,
@@ -264,13 +260,13 @@ const ProjectDetailsPage = () => {
     return [ProjectActionName[actionType], steps[actionType]];
   }, [actionType, steps]);
 
-  return renderAsync(projectInfo, {
+  return renderAsync(projectQuery, {
     loading: () => <LoadingSpinner />,
     error: () => <>Unable to get Project Info</>,
-    data: (projectInfo) => (
+    data: ({ project }) => (
       <Container>
         <ContentContainer>
-          <ProjectDetailsHeader id={id} projectStatus={projectStatus} project={projectInfo} />
+          <ProjectDetailsHeader id={id} projectStatus={projectStatus} project={project} />
           <ProjectStatusView
             percent={progress}
             actionItems={networkActionItems}
@@ -278,7 +274,7 @@ const ProjectDetailsPage = () => {
             metadata={metadata}
           />
           <ProjectServiceCard id={id} actionItems={serviceActionItems} data={metadata} />
-          <ProjectTabbarView id={id} project={projectInfo} config={projectService} />
+          <ProjectTabbarView id={id} project={project} config={projectDetails} />
         </ContentContainer>
         <PopupView
           setVisible={setVisible}

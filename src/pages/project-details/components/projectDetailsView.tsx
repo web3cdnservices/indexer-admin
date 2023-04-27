@@ -5,7 +5,8 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { Text } from 'components/primary';
-import { ProjectDetails } from 'hooks/projectHook';
+
+import { ProjectDetails } from '../types';
 
 type InfoProps = {
   title: string;
@@ -32,14 +33,7 @@ type Props = {
 const formatDate = (date: string) => new Date(date).toLocaleDateString();
 
 const ProjectDetailsView: FC<Props> = ({ project }) => {
-  const {
-    description,
-    websiteUrl,
-    codeUrl,
-    currentDeployment,
-    createdTimestamp,
-    updatedTimestamp,
-  } = project;
+  const { description, websiteUrl, codeUrl, createdTimestamp, updatedTimestamp } = project.details;
   return (
     <Container>
       <LeftContainer>
@@ -50,7 +44,7 @@ const ProjectDetailsView: FC<Props> = ({ project }) => {
         </BottomContainer>
       </LeftContainer>
       <RightContainer>
-        <InfoView title="Deployment ID" desc={currentDeployment} />
+        <InfoView title="Deployment ID" desc={project.id} />
         <InfoView mt={30} title="Website URL" desc={websiteUrl} />
         <InfoView mt={30} title="Source Code URL" desc={codeUrl} />
       </RightContainer>

@@ -3,7 +3,7 @@
 
 import { gql } from '@apollo/client';
 
-// TODO: use the public queries for `network-clients`
+// TODO: use the public queries from `network-clients`
 
 const ProjectFields = `
   id
@@ -11,6 +11,17 @@ const ProjectFields = `
   chainType
   nodeEndpoint
   queryEndpoint
+  details {
+    name
+    owner
+    image
+    description
+    websiteUrl
+    codeUrl
+    version
+    createdTimestamp
+    updatedTimestamp
+  }
   baseConfig {
     networkEndpoint
     networkDictionary
@@ -30,29 +41,29 @@ const ProjectFields = `
   }
 `;
 
+const MetadataFields = `
+  metadata {
+    lastProcessedHeight
+    lastProcessedTimestamp
+    targetHeight
+    chain
+    specName
+    genesisHash
+    indexerHealthy
+    indexerNodeVersion
+    queryNodeVersion
+    indexerStatus
+    queryStatus
+  }
+`;
+
 export type QueryResult = {
   loading?: boolean;
   data?: any;
   error?: Error;
 };
 
-export const GET_COORDINATOR_INDEXER = gql`
-  query {
-    accountMetadata {
-      indexer
-      network
-    }
-  }
-`;
-
-export const ADD_INDEXER = gql`
-  mutation AddIndexer($indexer: String!) {
-    addIndexer(address: $indexer) {
-      address
-    }
-  }
-`;
-
+/// Projects
 export const START_PROJECT = gql`
   mutation StartProject(
     $purgeDB: Boolean!
@@ -96,13 +107,59 @@ export const START_PROJECT = gql`
 export const STOP_PROJECT = gql`
   mutation StopProject($id: String!) {
     stopProject(id: $id) {
-      id
+      ${ProjectFields}
+    }
+  }
+`;
+
+export const GET_PROJECT = gql`
+  query Project($id: String!) {
+    project(id: $id) {
+      ${ProjectFields}
+      ${MetadataFields}
+    }
+  }
+`;
+
+export const GET_PROJECTS = gql`
+  query {
+    getProjects {
+      ${ProjectFields}
+      ${MetadataFields}
+    }
+  }
+`;
+
+export const ADD_PROJECT = gql`
+  mutation AddProject($id: String!) {
+    addProject(id: $id) {
+      ${ProjectFields}
+    }
+  }
+`;
+
+export const REMOVE_PROJECT = gql`
+  mutation RemoveProject($id: String!) {
+    removeProject(id: $id) {
       status
-      nodeEndpoint
-      queryEndpoint
-      baseConfig {
-        networkEndpoint
-      }
+    }
+  }
+`;
+
+/// Accounts
+export const GET_COORDINATOR_INDEXER = gql`
+  query {
+    accountMetadata {
+      indexer
+      network
+    }
+  }
+`;
+
+export const ADD_INDEXER = gql`
+  mutation AddIndexer($indexer: String!) {
+    addIndexer(address: $indexer) {
+      address
     }
   }
 `;
@@ -142,23 +199,6 @@ export const REMOVE_ACCOUNTS = gql`
   }
 `;
 
-export const ADD_PROJECT = gql`
-  mutation AddProject($id: String!) {
-    addProject(id: $id) {
-      id
-      status
-    }
-  }
-`;
-
-export const REMOVE_PROJECT = gql`
-  mutation RemoveProject($id: String!) {
-    removeProject(id: $id) {
-      status
-    }
-  }
-`;
-
 export const CHANNEL_CLOSE = gql`
   mutation ChannelClose($id: String!) {
     channelClose(id: $id) {
@@ -167,22 +207,6 @@ export const CHANNEL_CLOSE = gql`
       remote
       onchain
       lastFinal
-    }
-  }
-`;
-
-export const GET_PROJECT = gql`
-  query Project($id: String!) {
-    project(id: $id) {
-      ${ProjectFields}
-    }
-  }
-`;
-
-export const GET_PROJECTS = gql`
-  query {
-    getProjects {
-      ${ProjectFields}
     }
   }
 `;

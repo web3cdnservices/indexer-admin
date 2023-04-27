@@ -5,12 +5,12 @@ import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button } from '@subql/components';
-import { renderAsync, useAsyncMemo } from '@subql/react-hooks';
+import { renderAsync } from '@subql/react-hooks';
 import { Col, Collapse, Form, Input, Row, Select, Slider, Switch } from 'antd';
 
 import { LoadingSpinner } from 'components/loading';
 import { ButtonContainer } from 'components/primary';
-import { getProjectService, useNodeVersions, useQueryVersions } from 'hooks/projectHook';
+import { useNodeVersions, useProjectDetails, useQueryVersions } from 'hooks/projectHook';
 import { defaultAdvancedConfig, ProjectFormKey, StartIndexingSchema } from 'types/schemas';
 import { START_PROJECT } from 'utils/queries';
 
@@ -85,6 +85,8 @@ export const IndexingForm: FC<Props> = ({ setVisible }) => {
   const [submitError, setSubmitError] = useState('');
   const { id } = useParams() as { id: string };
 
+  const projectQuery = useProjectDetails(id);
+
   const nodeVersions = useNodeVersions(id);
   const queryVersions = useQueryVersions(id);
   const [startProjectRequest, { loading: startProjectLoading }] = useMutation(START_PROJECT);
@@ -92,10 +94,6 @@ export const IndexingForm: FC<Props> = ({ setVisible }) => {
   const onSwitchChange = () => {
     setShowInput(!showInput);
   };
-
-  const defaultValues = useAsyncMemo(async () => {
-    return getProjectService(id);
-  }, [id]);
 
   const handleSubmit = (setVisible: Dispatch<SetStateAction<boolean>>) => async (values: any) => {
     setLoading(true);
@@ -119,11 +117,11 @@ export const IndexingForm: FC<Props> = ({ setVisible }) => {
     }
   };
 
-  return renderAsync(defaultValues, {
+  return renderAsync(projectQuery, {
     loading: () => <LoadingSpinner />,
     error: () => <>Unable to get default values</>,
-    data: (defaultValues) => {
-      const { baseConfig, advancedConfig } = defaultValues;
+    data: ({ project }) => {
+      const { baseConfig, advancedConfig } = project;
       return (
         <Form
           form={form}

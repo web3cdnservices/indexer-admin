@@ -7,10 +7,9 @@ import styled from 'styled-components';
 import Avatar from 'components/avatar';
 import { Separator, Text } from 'components/primary';
 import { TagItem } from 'components/tagItem';
-import { ProjectDetails } from 'hooks/projectHook';
 import { cidToBytes32 } from 'utils/ipfs';
 
-import { ProjectStatus } from '../types';
+import { ProjectDetails, ProjectStatus } from '../types';
 
 type Props = {
   id: string;
@@ -25,15 +24,15 @@ const ProjectDetailsHeader: FC<Props> = ({ id, projectStatus, project }) => {
         <Avatar address={cidToBytes32(id)} size={100} />
         <ContentContainer>
           <Text fw="600" size={30}>
-            {project.name}
+            {project.details.name}
           </Text>
           <Text fw="400" size={15}>
-            {project.owner}
+            {project.details.owner}
           </Text>
           <VersionContainer>
             <TagItem versionType="INDEXED NETWORK" value={project.metadata?.chain} />
             <Separator height={30} />
-            <TagItem versionType="VERSION" value={`V${project.version ?? '1.0.0'}`} />
+            <TagItem versionType="VERSION" value={`V${project.details.version ?? '1.0.0'}`} />
             <Separator height={30} />
             <TagItem versionType="PROJECT STATUS" value={projectStatus} />
           </VersionContainer>
