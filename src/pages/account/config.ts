@@ -11,7 +11,7 @@ const buttonTitles = {
   [AccountAction.updateMetaData]: 'Update Metadata',
 };
 
-export const createButonItem = (
+export const createButtonItem = (
   actionType: AccountAction,
   onClick: (type?: AccountAction) => void
 ): AccountButtonItem => {
@@ -33,7 +33,7 @@ export const createUnregisterSteps = (onUnregister: ClickAction) => ({
     {
       index: 0,
       title: 'Unregister from network',
-      desc: `Sorry to see the indexer unregister from the Subquery Network, please note that all the data in your coordinator service will be removed, and the staking token will deposit to your current account once transction processed`,
+      desc: `Sorry to see your indexer unregister from the Subquery Network. Please note that all data in your coordinator service will be removed, and the staking tokens will be deposited into your current account once the transaction is processed.`,
       buttonTitle: 'Unregister',
       onClick: onUnregister,
     },
@@ -45,7 +45,7 @@ export const createUpdateMetadataSteps = (onUpdate: FormSubmit, metadata?: Index
     {
       index: 0,
       title: 'Update Indexer Metadata',
-      desc: `Input valid indexer name and proxy server endpoint to update the metadata, make sure the proxy endpoint is valid`,
+      desc: `Please enter a valid indexer name and proxy server endpoint to update the metadata. Ensure that the proxy endpoint is valid.`,
       buttonTitle: 'Update Metadata',
       form: {
         formValues: initialMetadataValues(metadata),

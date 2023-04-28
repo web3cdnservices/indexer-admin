@@ -29,7 +29,7 @@ import { REMOVE_ACCOUNTS } from 'utils/queries';
 
 import {
   AccountActionName,
-  createButonItem,
+  createButtonItem,
   createUnregisterSteps,
   createUpdateMetadataSteps,
 } from './config';
@@ -86,8 +86,8 @@ const Account = () => {
   const indexerName = useMemo(() => metadata?.name ?? ' ', [metadata]);
 
   const indexerButtons = [
-    createButonItem(AccountAction.updateMetaData, onButtonPress),
-    createButonItem(AccountAction.unregister, onButtonPress),
+    createButtonItem(AccountAction.updateMetaData, onButtonPress),
+    createButtonItem(AccountAction.unregister, onButtonPress),
   ];
 
   const controllerButtons = [

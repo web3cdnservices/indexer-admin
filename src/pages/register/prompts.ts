@@ -6,7 +6,7 @@ import { RegisterStep } from './types';
 const prompts = {
   [RegisterStep.onboarding]: {
     title: 'Stake to Become a Subquery Indexer',
-    desc: 'Become an indexer so you can index SubQuery projects. You need to stake a minimum of 1000 SQT in order to index SubQuery projects. Learn more about the indexer.',
+    desc: 'Become an indexer so you can index SubQuery projects. You need to stake a minimum of 1000 SQT in order to index SubQuery projects.',
     buttonTitle: 'Get Started',
   },
   [RegisterStep.authorisation]: {

@@ -33,7 +33,7 @@ const EmptyView: FC<Props> = ({ onClick }) => {
       <IntroductionView
         item={{
           title: 'Start to index a Subquery project',
-          desc: 'Go to Subquery Explorer to start exploring query projects, pick the project you are interesting and copy the deployment id in the page, then press the add project button and paste in deployment id, add the project into you coordinator service, and you can manage the projects in indexer app. ',
+          desc: 'To begin exploring query projects, go to the Subquery Explorer. Select the project that interests you and copy its deployment ID from the page. Next, click the "Add Project" button and paste in the deployment ID. This will add the project to your coordinator service, allowing you to manage it in the indexer app. ',
           buttonTitle: 'Add Project',
         }}
         onClick={onClick}
