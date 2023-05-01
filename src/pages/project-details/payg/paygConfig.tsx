@@ -4,6 +4,7 @@
 import { Button, Table, TableTitle } from '@subql/components';
 
 import { createTextColumn } from 'utils/table';
+import { TOKEN_SYMBOL } from 'utils/web3';
 
 type Props = {
   price: string;
@@ -32,7 +33,7 @@ export function PAYGConfig({ price, period, onEdit }: Props) {
         columns: [...columns, actionColumn],
         dataSource: [
           {
-            price: `${price} SQT / 1000 requests`,
+            price: `${price} ${TOKEN_SYMBOL} / 1000 requests`,
             period: `${period} days`,
           },
         ],

@@ -3,9 +3,18 @@
 
 import { networks } from '@subql/contract-sdk';
 
-export const SUPPORTED_NETWORK = (window.env.network ?? 'testnet') as keyof typeof networks;
+const { network } = window.env;
+export const SUPPORTED_NETWORK = (network ?? 'testnet') as keyof typeof networks;
 
 export const PRODUCTION_NETWORK = 'kepler';
+
+export const tokenSymbols = {
+  testnet: 'SQT',
+  kepler: 'kSQT',
+  mainnet: 'SQT',
+};
+
+export const TOKEN_SYMBOL = tokenSymbols[network as keyof typeof tokenSymbols];
 
 export enum ChainID {
   testnet = '0x13881',

@@ -10,6 +10,7 @@ import {
   StartIndexingSchema,
 } from 'types/schemas';
 import { dismiss, ProjectNotification } from 'utils/notification';
+import { TOKEN_SYMBOL } from 'utils/web3';
 
 import prompts from './prompts';
 import {
@@ -284,7 +285,7 @@ const setPaygPriceForms = (config: ProjectConfig, onFormSubmit: FormSubmit) => (
   items: [
     {
       formKey: OpenPAYGFormKey.paygPrice,
-      title: 'Advertise a price per 1,000 requests (SQT)',
+      title: `Advertise a price per 1,000 requests (${TOKEN_SYMBOL})`,
       placeholder: '300',
     },
     {

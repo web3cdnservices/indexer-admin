@@ -12,6 +12,7 @@ import { Separator } from 'components/primary';
 import { useController, useIsIndexer, useTokenBalance } from 'hooks/indexerHook';
 import { useIsMetaMask, useWeb3 } from 'hooks/web3Hook';
 import SubqueryIcon from 'resources/subquery.svg';
+import { TOKEN_SYMBOL } from 'utils/web3';
 
 import { Container, LeftContainer, RightContainer } from './styles';
 
@@ -54,7 +55,7 @@ const Header = () => {
   const isRootPage = useMemo(() => pathname === '/', [pathname]);
   const accountDetails = useMemo(
     () => [
-      createItem('balance', `Token: ${tokenBalance} SQT`),
+      createItem('balance', `Token: ${tokenBalance} ${TOKEN_SYMBOL}`),
       createItem('disconnect', 'Disconnect'),
     ],
     [tokenBalance]

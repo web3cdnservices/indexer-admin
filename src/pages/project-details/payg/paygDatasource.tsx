@@ -3,6 +3,7 @@
 
 import { ChannelStatus, FlexPlanStatus, Plan } from 'hooks/paygHook';
 import { createTagColumn, createTextColumn } from 'utils/table';
+import { TOKEN_SYMBOL } from 'utils/web3';
 
 import prompts from '../prompts';
 
@@ -58,9 +59,9 @@ export function plansToDatasource(id: string, plans: Plan[] | undefined, tabItem
   // TODO: update `price` from onchain data
   return plans.map((p) => ({
     consumer: p.consumer,
-    price: '500 SQT',
-    spent: `${p.spent} SQT`,
-    deposit: `${p.total - p.spent} SQT`,
+    price: `500 ${TOKEN_SYMBOL}`,
+    spent: `${p.spent} ${TOKEN_SYMBOL}`,
+    deposit: `${p.total - p.spent} ${TOKEN_SYMBOL}`,
     expiration: new Date(p.expiredAt).toLocaleDateString(),
     status: getTagState(tabItem),
     action: { status: p.status, id },

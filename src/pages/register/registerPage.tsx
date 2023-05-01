@@ -18,6 +18,7 @@ import { RegisterFormKey, TRegisterValues } from 'types/schemas';
 import { indexerRegistry, indexerRequestApprove } from 'utils/indexerActions';
 import { createIndexerMetadata } from 'utils/ipfs';
 import { verifyProxyEndpoint } from 'utils/validateService';
+import { TOKEN_SYMBOL } from 'utils/web3';
 
 import { Container } from '../login/styles';
 import IndexerRegistryView from './indexerRegistryView';
@@ -112,7 +113,7 @@ const RegisterPage = () => {
       if (Number(tokenBalance) < amount) {
         setLoading(false);
         helper.setErrors({
-          [RegisterFormKey.amount]: `Account balance ${tokenBalance} is not enough for staking ${amount} SQT`,
+          [RegisterFormKey.amount]: `Account balance ${tokenBalance} is not enough for staking ${amount} ${TOKEN_SYMBOL}`,
         });
         return;
       }
