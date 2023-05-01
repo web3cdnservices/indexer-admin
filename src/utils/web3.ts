@@ -15,7 +15,7 @@ export enum ChainID {
 
 export type SubqueryNetwork = 'mainnet' | 'kepler' | 'testnet';
 
-export const ChainIDs = [ChainID.testnet, ChainID.kepler, ChainID.mainnet];
+export const ChainIDs = [ChainID.testnet, ChainID.kepler];
 
 export const NetworkToChainID: Record<SubqueryNetwork, ChainID> = {
   testnet: ChainID.testnet,
@@ -33,7 +33,6 @@ export const RPC_URLS: Record<number, string> = {
 export const NETWORK_CONFIGS = {
   [ChainID.testnet]: networks.testnet,
   [ChainID.kepler]: networks.kepler,
-  [ChainID.mainnet]: networks.mainnet,
 };
 
 export function hexToInt(hex: string) {

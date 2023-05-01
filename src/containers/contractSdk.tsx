@@ -30,7 +30,6 @@ function createContractOptions(network: SubqueryNetwork): SdkOptions {
 const options = {
   [ChainID.testnet]: createContractOptions('testnet'),
   [ChainID.kepler]: createContractOptions('kepler'),
-  [ChainID.mainnet]: createContractOptions('mainnet'),
 };
 
 export type SDK = ContractSDK | undefined;
