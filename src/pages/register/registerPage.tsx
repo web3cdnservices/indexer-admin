@@ -7,13 +7,14 @@ import { FormikHelpers } from 'formik';
 import { isUndefined } from 'lodash';
 
 import IntroductionView from 'components/introductionView';
+import { useAccount } from 'containers/account';
 import { useContractSDK } from 'containers/contractSdk';
 import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useLoading } from 'containers/loadingContext';
 import { useNotification } from 'containers/notificationContext';
 import { useIsIndexer, useIsRegistedIndexer, useTokenBalance } from 'hooks/indexerHook';
 import { useInitialStep } from 'hooks/registerHook';
-import { useSigner, useWeb3 } from 'hooks/web3Hook';
+import { useSigner } from 'hooks/web3Hook';
 import { RegisterFormKey, TRegisterValues } from 'types/schemas';
 import { indexerRegistry, indexerRequestApprove } from 'utils/indexerActions';
 import { createIndexerMetadata } from 'utils/ipfs';
@@ -30,7 +31,7 @@ import { getStepIndex, getStepStatus, registerSteps } from './utils';
 // TODO: refactor
 const RegisterPage = () => {
   const signer = useSigner();
-  const { account } = useWeb3();
+  const { account } = useAccount();
   const isRegistedIndexer = useIsRegistedIndexer();
   const isIndexer = useIsIndexer();
   const sdk = useContractSDK();

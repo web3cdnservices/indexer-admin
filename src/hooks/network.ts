@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { useAccount } from 'containers/account';
 import { useContractSDK } from 'containers/contractSdk';
 
 import { useWeb3 } from './web3Hook';
@@ -30,7 +31,7 @@ export type IndexerEra = {
 };
 
 export const useIndexerEra = () => {
-  const { account } = useWeb3();
+  const { account } = useAccount();
   const sdk = useContractSDK();
 
   const [indexerEra, setIndexerEra] = useState<IndexerEra>();
@@ -38,6 +39,7 @@ export const useIndexerEra = () => {
   const updateEra = useCallback(async () => {
     if (!sdk || !account) return;
 
+    console.log('account:', account);
     const lastClaimedEra = (await sdk.rewardsDistributor.getRewardInfo(account)).lastClaimEra;
     const [currentEra, lastSettledEra] = await Promise.all([
       sdk.eraManager.eraNumber(),

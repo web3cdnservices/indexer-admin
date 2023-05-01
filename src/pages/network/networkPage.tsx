@@ -7,16 +7,16 @@ import { isUndefined } from 'lodash';
 import Avatar from 'components/avatar';
 import { Separator, Text } from 'components/primary';
 import { TagItem } from 'components/tagItem';
+import { useAccount } from 'containers/account';
 import { useLoading } from 'containers/loadingContext';
 import { useIndexerMetadata } from 'hooks/indexerHook';
 import { useIndexerEra } from 'hooks/network';
-import { useWeb3 } from 'hooks/web3Hook';
 
 import NetworkTabbarView from './components/networkTabBarView';
 import { ContentContainer, Contrainer, LeftContainer, VersionContainer } from './styles';
 
 const NetworkPage = () => {
-  const { account } = useWeb3();
+  const { account } = useAccount();
   const { metadata } = useIndexerMetadata();
   const { setPageLoading } = useLoading();
   const indexerEra = useIndexerEra();

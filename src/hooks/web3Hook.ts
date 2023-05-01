@@ -8,6 +8,7 @@ import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
 import { providers } from 'ethers';
 import { isEmpty } from 'lodash';
 
+import { useAccount } from 'containers/account';
 import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useLoading } from 'containers/loadingContext';
 
@@ -40,6 +41,12 @@ export function useShowMetaMask(): boolean | undefined {
   const { indexer, load } = useCoordinatorIndexer();
   const isMetaMaskInstalled = useIsMetaMaskInstalled();
   const isMetaMask = useIsMetaMask();
+
+  const { account: _account, updateAccount } = useAccount();
+
+  useEffect(() => {
+    if (account && _account !== account) updateAccount(account);
+  }, [_account, account, updateAccount]);
 
   const isIndexer = useMemo(
     () => !!account && account?.toLowerCase() === indexer?.toLowerCase(),

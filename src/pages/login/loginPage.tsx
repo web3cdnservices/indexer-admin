@@ -5,14 +5,14 @@
 import { useEffect } from 'react';
 import { Redirect } from 'react-router';
 import { useIsIndexer } from 'hooks/indexerHook';
-import { useWeb3 } from 'hooks/web3Hook';
 import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useLoading } from 'containers/loadingContext';
 import { isUndefined } from 'lodash';
 import { Container } from './styles';
+import { useAccount } from 'containers/account';
 
 const LoginPage = () => {
-  const { account } = useWeb3();
+  const { account } = useAccount();
   const isIndexer = useIsIndexer();
   const { setPageLoading } = useLoading();
   const { loading, load } = useCoordinatorIndexer();

@@ -4,6 +4,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { formatUnits } from '@ethersproject/units';
 
+import { useAccount } from 'containers/account';
 import { useContractSDK } from 'containers/contractSdk';
 import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useWeb3 } from 'hooks/web3Hook';
@@ -13,38 +14,38 @@ import { emptyControllerAccount } from 'utils/indexerActions';
 import { bytes32ToCid, cat } from 'utils/ipfs';
 
 // indexer save inside coordinator service
-export const useIsCoordinatorIndexer = (): boolean => {
+const useIsCoordinatorIndexer = (): boolean => {
   const { indexer } = useCoordinatorIndexer();
-  const { account } = useWeb3();
+  const { account } = useAccount();
 
   return useMemo(() => !!account && !!indexer && account === indexer, [account, indexer]);
 };
 
 export const useIsRegistedIndexer = (): boolean | undefined => {
-  const { account } = useWeb3();
-  const [isIndexer, setIsIndexer] = useState<boolean>();
   const sdk = useContractSDK();
+  const { isRegisterIndexer, updateIsRegisterIndexer, account } = useAccount();
 
   const getIsIndexer = useCallback(async () => {
-    if (!account || !sdk) return;
+    if (!account || !sdk || isRegisterIndexer !== undefined) return;
+
     try {
       const status = await sdk?.indexerRegistry.isIndexer(account);
-      setIsIndexer(status);
-    } catch {
-      setIsIndexer(false);
+      updateIsRegisterIndexer(status);
+    } catch (e) {
+      console.error('Failed to get isIndexer', e);
     }
-  }, [account, sdk]);
+  }, [account, isRegisterIndexer, sdk, updateIsRegisterIndexer]);
 
   useEffect(() => {
     getIsIndexer();
   }, [getIsIndexer]);
 
-  return isIndexer;
+  return isRegisterIndexer;
 };
 
 export const useIsIndexer = (): boolean | undefined => {
-  const isCoordinatorIndexer = useIsCoordinatorIndexer();
   const isRegisteredIndexer = useIsRegistedIndexer();
+  const isCoordinatorIndexer = useIsCoordinatorIndexer();
 
   return useMemo(
     () => isCoordinatorIndexer && isRegisteredIndexer,
@@ -65,7 +66,7 @@ export const useIsController = (account: Account) => {
 
 export const useController = () => {
   const [controller, setController] = useState<string>();
-  const { account } = useWeb3();
+  const { account } = useAccount();
   const sdk = useContractSDK();
 
   const getController = useCallback(async () => {
@@ -129,7 +130,7 @@ export const useBalance = (account: Account) => {
 };
 
 export const useIndexerMetadata = () => {
-  const { account } = useWeb3();
+  const { account } = useAccount();
   const sdk = useContractSDK();
   const [metadata, setMetadata] = useState<IndexerMetadata>();
 

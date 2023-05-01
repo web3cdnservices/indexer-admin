@@ -8,6 +8,7 @@ import { isUndefined } from 'lodash';
 
 import AccountCard from 'components/accountCard';
 import { PopupView } from 'components/popupView';
+import { useAccount } from 'containers/account';
 import { useCoordinatorIndexer } from 'containers/coordinatorIndexer';
 import { useLoading } from 'containers/loadingContext';
 import { useNotification } from 'containers/notificationContext';
@@ -20,7 +21,7 @@ import {
 } from 'hooks/indexerHook';
 import { useTokenSymbol } from 'hooks/network';
 import { useAccountAction } from 'hooks/transactionHook';
-import { useIsMetaMask, useWeb3 } from 'hooks/web3Hook';
+import { useIsMetaMask } from 'hooks/web3Hook';
 import { AccountAction } from 'pages/project-details/types';
 import { MetadataFormKey } from 'types/schemas';
 import { balanceSufficient } from 'utils/account';
@@ -42,7 +43,7 @@ const Account = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [actionType, setActionType] = useState<AccountAction>();
 
-  const { account } = useWeb3();
+  const { account } = useAccount();
   const isIndexer = useIsIndexer();
   const { indexer } = useCoordinatorIndexer();
   const { metadata, fetchMetadata } = useIndexerMetadata();

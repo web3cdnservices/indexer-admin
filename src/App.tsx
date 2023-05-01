@@ -8,6 +8,7 @@ import * as Sentry from '@sentry/react';
 import { Button, Typography } from '@subql/react-ui';
 
 import Loading from 'components/loading';
+import { AccountProvider } from 'containers/account';
 import { ContractSDKProvider } from 'containers/contractSdk';
 import { CoordinatorIndexerProvider } from 'containers/coordinatorIndexer';
 import { LoadingProvider } from 'containers/loadingContext';
@@ -68,13 +69,15 @@ const App: FC = () => (
       <Web3Provider>
         <ContractSDKProvider>
           <CoordinatorIndexerProvider>
-            <LoadingProvider>
-              <NotificationProvider>
-                <div className="App">
-                  <AppContents />
-                </div>
-              </NotificationProvider>
-            </LoadingProvider>
+            <AccountProvider>
+              <LoadingProvider>
+                <NotificationProvider>
+                  <div className="App">
+                    <AppContents />
+                  </div>
+                </NotificationProvider>
+              </LoadingProvider>
+            </AccountProvider>
           </CoordinatorIndexerProvider>
         </ContractSDKProvider>
       </Web3Provider>

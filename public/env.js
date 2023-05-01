@@ -3,9 +3,10 @@
 
 window.env = {
   // This option can be retrieved in "src/index.js" with "window.env.API_URL".
-  NETWORK: 'testnet', // local | mainnet | testnet
+  NETWORK: 'kepler', // local | mainnet | testnet
+  RPC_ENDPOINT: 'https://polygon-rpc.com/',
   COORDINATOR_SERVICE_PORT: 8000,
-  COORDINATOR_SERVICE_URL: 'http://localhost:8007/graphql',
+  COORDINATOR_SERVICE_URL: 'http://localhost:8000/graphql',
   IPFS_GATEWAY: 'https://unauthipfs.subquery.network/ipfs/api/v0',
   REGISTRY_PROJECT: 'https://api.subquery.network/sq/subquery/kepler-testnet',
 };

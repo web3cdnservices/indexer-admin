@@ -6,9 +6,9 @@ import { useLazyQuery, useQuery } from '@apollo/client';
 import yaml from 'js-yaml';
 import { isEmpty } from 'lodash';
 
+import { useAccount } from 'containers/account';
 import { useContractSDK } from 'containers/contractSdk';
 import { useNotification } from 'containers/notificationContext';
-import { useWeb3 } from 'hooks/web3Hook';
 import {
   ChainType,
   DockerRegistry,
@@ -52,7 +52,7 @@ export const useProjectDetails = (deploymentId: string) => {
 
 export const useIndexingStatus = (deploymentId: string): IndexingStatus | undefined => {
   const [status, setStatus] = useState<IndexingStatus>();
-  const { account } = useWeb3();
+  const { account } = useAccount();
   const notificationContext = useNotification();
   const sdk = useContractSDK();
 
@@ -85,7 +85,7 @@ export const getQueryMetadata = async (id: string): Promise<TQueryMetadata> => {
 
 export const useDeploymentStatus = (deploymentId: string) => {
   const [status, setStatus] = useState<IndexingStatus | undefined>();
-  const { account } = useWeb3();
+  const { account } = useAccount();
   const sdk = useContractSDK();
 
   const getDeploymentStatus = useCallback(async () => {

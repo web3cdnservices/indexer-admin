@@ -9,11 +9,11 @@ import { GetIndexerClosedFlexPlans, GetIndexerOngoingFlexPlans } from '@subql/ne
 import { BigNumber } from 'ethers';
 import { FormikHelpers, FormikValues } from 'formik';
 
+import { useAccount } from 'containers/account';
 import { ProjectFormKey } from 'types/schemas';
 import { PAYG_PRICE } from 'utils/queries';
 
 import { useProjectDetails } from './projectHook';
-import { useWeb3 } from './web3Hook';
 
 export enum FlexPlanStatus {
   ONGOING,
@@ -96,7 +96,7 @@ export function usePAYGPlans(deploymentId: string) {
   const [data, setData] = useState<ApolloQueryResult<{ stateChannels: { nodes: Plan[] } }>>();
 
   const plans = useMemo((): Plan[] | undefined => data?.data.stateChannels.nodes, [data]);
-  const { account: indexer } = useWeb3();
+  const { account: indexer } = useAccount();
 
   const getPlans = useCallback(
     async (id: string, status: FlexPlanStatus) => {

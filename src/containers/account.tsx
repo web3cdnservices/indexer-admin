@@ -5,20 +5,24 @@ import { useState } from 'react';
 
 import { createContainer } from './unstated';
 
-export type TAccount = {
-  account: string;
-};
-
 type TAccountContext = {
-  account: TAccount | undefined;
-  // Add more global vars related with account like controller | balance etc
-  updateAccount: (account: TAccount) => void;
+  isRegisterIndexer: boolean | undefined;
+  updateIsRegisterIndexer: (isIndexer: boolean) => void;
+
+  account: string | undefined;
+  updateAccount: (account: string) => void;
 };
 
 function useAccountImpl(): TAccountContext {
-  const [account, setAccount] = useState<TAccount>();
+  const [account, updateAccount] = useState<string>();
+  const [isRegisterIndexer, updateIsRegisterIndexer] = useState<boolean>();
 
-  return { account, updateAccount: setAccount };
+  return {
+    account,
+    updateAccount,
+    isRegisterIndexer,
+    updateIsRegisterIndexer,
+  };
 }
 
 export const { useContainer: useAccount, Provider: AccountProvider } = createContainer(

@@ -4,13 +4,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { isUndefined } from 'lodash';
 
+import { useAccount } from 'containers/account';
 import { useContractSDK } from 'containers/contractSdk';
-import { useWeb3 } from 'hooks/web3Hook';
 import { RegisterStep } from 'pages/register/types';
 
 export const useIsApproved = () => {
   const [isApprove, setIsApprove] = useState<boolean>();
-  const { account } = useWeb3();
+  const { account } = useAccount();
   const sdk = useContractSDK();
 
   const checkAllowance = useCallback(async () => {
