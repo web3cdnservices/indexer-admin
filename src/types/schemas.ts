@@ -5,9 +5,9 @@ import * as yup from 'yup';
 
 import { IndexerMetadata } from 'pages/account/types';
 import { ProjectConfig } from 'pages/project-details/types';
+import { TOKEN_SYMBOL } from 'utils/web3';
 
 import { IProjectAdvancedConfig } from './types';
-import { TOKEN_SYMBOL } from 'utils/web3';
 
 export const defaultAdvancedConfig: IProjectAdvancedConfig = {
   purgeDB: false,
