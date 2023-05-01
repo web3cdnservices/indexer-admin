@@ -3,7 +3,8 @@
 
 import { networks } from '@subql/contract-sdk';
 
-const { network } = window.env;
+const network = window.env.NETWORK;
+
 export const SUPPORTED_NETWORK = (network ?? 'testnet') as keyof typeof networks;
 
 export const PRODUCTION_NETWORK = 'kepler';
