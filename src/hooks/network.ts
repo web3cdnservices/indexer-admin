@@ -14,11 +14,11 @@ export const useTokenSymbol = () => {
     if (chainId === 80001) {
       return 'MATIC';
     }
-    if (chainId === 173) {
-      return 'DEV';
+    if (chainId === 137) {
+      return 'MATIC';
     }
 
-    return 'DEV';
+    return 'MATIC';
   }, [chainId]);
 
   return tokenSymbol;
