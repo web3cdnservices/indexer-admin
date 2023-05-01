@@ -50,8 +50,8 @@ export function hexToInt(hex: string) {
 }
 
 export const SUPPORTED_NETWORK_PROJECTS_EXPLORER =
-  window.env.network === PRODUCTION_NETWORK
+  window.env.NETWORK === PRODUCTION_NETWORK
     ? 'https://kepler.subquery.network/'
     : 'https://kepler.thechaindata.com/';
 
-export const FLEX_PLAN_FEATURE = window.env.network !== PRODUCTION_NETWORK;
+export const FLEX_PLAN_FEATURE = window.env.NETWORK !== PRODUCTION_NETWORK;
