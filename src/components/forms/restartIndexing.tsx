@@ -173,9 +173,9 @@ export const IndexingForm: FC<Props> = ({ setVisible }) => {
           </Row>
           <Form.Item
             name="purgeDB"
-            label="Purge Db"
+            label="Purge POI"
             valuePropName="checked"
-            tooltip="Clean the database dropping project schemas and tables on start of indexing."
+            tooltip="Clean the MMR root values on start of indexing."
           >
             <Switch />
           </Form.Item>
