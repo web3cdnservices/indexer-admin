@@ -105,6 +105,7 @@ const ProjectDetailsPage = () => {
   );
 
   const projectStatus = useMemo(() => {
+    if (!metadata) return ProjectStatus.NotIndexing;
     const healthy = metadata?.indexerStatus === 'HEALTHY';
     switch (status) {
       case IndexingStatus.NOTINDEXING:

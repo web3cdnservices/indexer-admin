@@ -1,7 +1,7 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useState, VFC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Button } from '@subql/components';
 import { Modal } from 'antd';
 import styled from 'styled-components';
@@ -14,7 +14,7 @@ type Props = {
   description?: string;
 };
 
-const AlertView: VFC<Props> = ({ visible = false, title, description }) => {
+const AlertView: FC<Props> = ({ visible = false, title, description }) => {
   const [isOpen, setIsOpen] = useState(visible);
   const [loading, setLoading] = useState(false);
 
@@ -29,6 +29,10 @@ const AlertView: VFC<Props> = ({ visible = false, title, description }) => {
   const handleCancel = () => {
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    setIsOpen(visible);
+  }, [visible]);
 
   return (
     <Modal open={isOpen} width="40%" onCancel={handleCancel} footer={null}>

@@ -3,6 +3,7 @@
   "version": "1.0.1-7",
   "scripts": {
     "start": "PORT=8008 craco start -- --rest-cache",
+    "start:windows": "craco start -- --rest-cache",
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject",
