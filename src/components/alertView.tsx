@@ -1,7 +1,7 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { Button } from '@subql/components';
 import { Modal } from 'antd';
 import styled from 'styled-components';
@@ -9,13 +9,12 @@ import styled from 'styled-components';
 import { ButtonContainer, Text } from './primary';
 
 type Props = {
-  visible: boolean;
-  title?: string;
-  description?: string;
+  title: string;
+  description: string;
 };
 
-const AlertView: FC<Props> = ({ visible = false, title, description }) => {
-  const [isOpen, setIsOpen] = useState(visible);
+const AlertView: FC<Props> = ({ title, description }) => {
+  const [isOpen, setIsOpen] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const handleOk = () => {
@@ -29,10 +28,6 @@ const AlertView: FC<Props> = ({ visible = false, title, description }) => {
   const handleCancel = () => {
     setIsOpen(false);
   };
-
-  useEffect(() => {
-    setIsOpen(visible);
-  }, [visible]);
 
   return (
     <Modal open={isOpen} width="40%" onCancel={handleCancel} footer={null}>

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Dispatch, FC, SetStateAction, useState } from 'react';
+import { NOTIFICATION_TYPE } from 'react-notifications-component';
 import { useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button } from '@subql/components';
@@ -10,6 +11,7 @@ import { Col, Collapse, Form, Input, Row, Select, Slider, Switch } from 'antd';
 
 import { LoadingSpinner } from 'components/loading';
 import { ButtonContainer } from 'components/primary';
+import { useNotification } from 'containers/notificationContext';
 import { useNodeVersions, useProjectDetails, useQueryVersions } from 'hooks/projectHook';
 import { defaultAdvancedConfig, ProjectFormKey, StartIndexingSchema } from 'types/schemas';
 import { START_PROJECT } from 'utils/queries';
@@ -81,22 +83,36 @@ type Props = {
 export const IndexingForm: FC<Props> = ({ setVisible }) => {
   const [form] = Form.useForm();
   const [showInput, setShowInput] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [submitError, setSubmitError] = useState('');
+  const { dispatchNotification } = useNotification();
   const { id } = useParams() as { id: string };
 
   const projectQuery = useProjectDetails(id);
 
   const nodeVersions = useNodeVersions(id);
   const queryVersions = useQueryVersions(id);
-  const [startProjectRequest, { loading: startProjectLoading }] = useMutation(START_PROJECT);
+  const [startProjectRequest] = useMutation(START_PROJECT);
 
   const onSwitchChange = () => {
     setShowInput(!showInput);
   };
 
   const handleSubmit = (setVisible: Dispatch<SetStateAction<boolean>>) => async (values: any) => {
-    setLoading(true);
+    setVisible(false);
+    dispatchNotification({
+      type: 'default' as NOTIFICATION_TYPE,
+      title: 'Indexing Request',
+      message: 'Request to start the Indexing Project has been dispatched.',
+    });
+
+    if (values.purgeDB) {
+      dispatchNotification({
+        type: 'default' as NOTIFICATION_TYPE,
+        title: 'Purge POI',
+        message:
+          'Sent request to purge Proof of Index (POI), it will take around 2 minutes dependeing on your indexing progress. Monitor the network tab for progress.',
+      });
+    }
+
     try {
       await startProjectRequest({
         variables: {
@@ -109,11 +125,18 @@ export const IndexingForm: FC<Props> = ({ setVisible }) => {
         },
       });
       form.resetFields();
-      setLoading(startProjectLoading);
-      setVisible(false);
+
+      dispatchNotification({
+        type: 'success' as NOTIFICATION_TYPE,
+        title: 'Project Initiated',
+        message: 'Your Subquery project has been started. Monitor your service logs for any issues',
+      });
     } catch (error: any) {
-      setSubmitError('Unable to request indexing of project');
-      setLoading(false);
+      dispatchNotification({
+        type: 'danger' as NOTIFICATION_TYPE,
+        title: 'Indexing Initiation Failed',
+        message: `An error occurred while requesting the Indexing of the project: ${error.message}`,
+      });
     }
   };
 
@@ -188,20 +211,13 @@ export const IndexingForm: FC<Props> = ({ setVisible }) => {
               ))}
             </Collapse.Panel>
           </Collapse>
-          {submitError && <Form.Item validateStatus="error" help={submitError} />}
           <Form.Item>
             <ButtonContainer align="right" mt={30}>
-              <Button
-                label="Submit"
-                type="secondary"
-                onClick={() => form.submit()}
-                loading={loading}
-              >
+              <Button label="Submit" type="secondary" onClick={() => form.submit()}>
                 Submit
               </Button>
             </ButtonContainer>
           </Form.Item>
-          {}
         </Form>
       );
     },

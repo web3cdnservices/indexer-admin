@@ -119,13 +119,10 @@ const ProjectDetailsPage = () => {
     }
   }, [status, metadata]);
 
-  const alertInfo = useMemo(
-    () =>
-      projectStatus === ProjectStatus.Terminated
-        ? { visible: true, ...alertMessages[projectStatus] }
-        : { visible: false },
-    [projectStatus]
-  );
+  const alertInfo = useMemo(() => {
+    if (projectStatus === ProjectStatus.Terminated) return { ...alertMessages[projectStatus] };
+    return undefined;
+  }, [projectStatus]);
 
   const networkBtnItems = createNetworkButtonItems((type: ProjectAction) => {
     setActionType(type);
@@ -287,7 +284,7 @@ const ProjectDetailsPage = () => {
           type={actionType}
           loading={loading}
         />
-        <AlertView {...alertInfo} />
+        {alertInfo && <AlertView {...alertInfo} />}
       </Container>
     ),
   });
