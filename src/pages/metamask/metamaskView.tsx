@@ -26,7 +26,19 @@ const MetaMaskView = () => {
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
-    setNetworkError(error?.name === NetworkError.unSupportedNetworkError);
+    // Web3 may have a bug in production.
+    // a workaround for this.
+    // TODO: further error report for unknow error.
+    if (error) {
+      if (
+        error.name === NetworkError.unSupportedNetworkError ||
+        error.message.includes('Unsupported chain id')
+      ) {
+        setNetworkError(true);
+      } else {
+        console.error(error);
+      }
+    }
   }, [error]);
 
   const data = useMemo(() => {
