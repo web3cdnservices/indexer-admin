@@ -38,6 +38,7 @@ const coordinatorClient = createApolloClient(coordinatorServiceUrl);
 
 export const useProjectDetails = (deploymentId: string) => {
   const { notification } = useNotification();
+  // TODO add type
   const projectQuery = useQuery(GET_PROJECT, {
     fetchPolicy: 'network-only',
     variables: { id: deploymentId },

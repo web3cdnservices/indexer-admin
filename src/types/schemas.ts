@@ -4,7 +4,6 @@
 import * as yup from 'yup';
 
 import { IndexerMetadata } from 'pages/account/types';
-import { ProjectConfig } from 'pages/project-details/types';
 import { TOKEN_SYMBOL } from 'utils/web3';
 
 import { IProjectAdvancedConfig } from './types';
@@ -139,9 +138,14 @@ export enum OpenPAYGFormKey {
   paygPeriod = 'paygPeriod',
 }
 
-export const initalPAYGValues = (config: ProjectConfig) => ({
-  [OpenPAYGFormKey.paygPrice]: config.paygPrice,
-  [OpenPAYGFormKey.paygPeriod]: config.paygExpiration,
+export interface PaygEdit {
+  paygPrice: string;
+  paygExpiration: number;
+}
+
+export const initalPAYGValues = (config: PaygEdit) => ({
+  [OpenPAYGFormKey.paygPrice]: config.paygPrice || '',
+  [OpenPAYGFormKey.paygPeriod]: config.paygExpiration || '',
 });
 
 export const ProjectPaygSchema = yup.object({

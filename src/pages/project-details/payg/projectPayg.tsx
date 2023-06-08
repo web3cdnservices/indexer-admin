@@ -3,6 +3,7 @@
 
 import { useMemo } from 'react';
 
+import { noop, useModal } from 'containers/modalContext';
 import { usePAYGConfig } from 'hooks/paygHook';
 
 import { createPaygOpenSteps } from '../config';
@@ -18,35 +19,50 @@ type TProjectPAYG = {
   paygUpdated?: () => void;
 };
 
-export function ProjectPAYG({ id, config }: TProjectPAYG) {
+export function ProjectPAYG({ id }: TProjectPAYG) {
   const { paygConfig, changePAYGCofnig, loading } = usePAYGConfig(id);
-  const { paygPrice, paygExpiration } = paygConfig ?? config;
+  const { showModal, removeModal } = useModal();
+  const innerConfig = useMemo(() => {
+    const { paygPrice, paygExpiration } = paygConfig;
+    return { paygPrice, paygExpiration };
+  }, [paygConfig]);
+  const paygEnabled = useMemo(() => {
+    return innerConfig.paygExpiration && innerConfig.paygPrice;
+  }, [innerConfig]);
 
-  const paygEnabled = useMemo(() => paygPrice && paygExpiration, [paygPrice, paygExpiration]);
+  const paygOpenSteps = createPaygOpenSteps(innerConfig, async (value, helper) => {
+    const res = await changePAYGCofnig(value, helper);
 
-  const paygOpenSteps = createPaygOpenSteps(config, changePAYGCofnig);
+    if (res) {
+      removeModal();
+    }
+  });
 
   const onUpdatePayg = (title: string) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const modalItem = {
       visible: true,
-      steps: paygOpenSteps,
+      steps: paygOpenSteps['Open PAYG'],
       title,
       loading,
+      setVisible: noop,
     };
+    showModal(modalItem);
   };
 
   return (
     <Container>
       {!paygEnabled && <Introduction onEnablePayg={() => onUpdatePayg('Enable Flex Plan')} />}
-      {paygEnabled && (
+      {paygEnabled ? (
         <PAYGConfig
-          price={paygPrice}
-          period={paygExpiration}
+          price={innerConfig.paygPrice}
+          period={innerConfig.paygExpiration}
           onEdit={() => onUpdatePayg('Update Flex Plan')}
         />
+      ) : (
+        ''
       )}
-      {paygEnabled && <PAYGPlan deploymentId={id} />}
+      {paygEnabled ? <PAYGPlan deploymentId={id} /> : ''}
     </Container>
   );
 }

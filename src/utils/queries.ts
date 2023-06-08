@@ -57,6 +57,15 @@ const MetadataFields = `
   }
 `;
 
+const PaygFields = `
+  payg {
+    id
+    threshold
+    expiration
+    price
+  }
+`;
+
 export type QueryResult = {
   loading?: boolean;
   data?: any;
@@ -117,6 +126,7 @@ export const GET_PROJECT = gql`
     project(id: $id) {
       ${ProjectFields}
       ${MetadataFields}
+      ${PaygFields}
     }
   }
 `;
@@ -126,6 +136,7 @@ export const GET_PROJECTS = gql`
     getProjects {
       ${ProjectFields}
       ${MetadataFields}
+      ${PaygFields}
     }
   }
 `;
@@ -277,25 +288,35 @@ export const GET_REGISTRY_VERSIONS = gql`
 
 // PAYG
 export const PAYG_PRICE = gql`
-  mutation PaygProject(
+  mutation updateProjectPayg(
     $paygPrice: String!
     $paygExpiration: Float!
     $paygThreshold: Float!
     $paygOverflow: Float!
     $id: String!
   ) {
-    paygProject(
-      paygPrice: $paygPrice
-      paygExpiration: $paygExpiration
-      paygThreshold: $paygThreshold
-      paygOverflow: $paygOverflow
+    updateProjectPayg(
+      paygConfig: {
+        price: $paygPrice
+        expiration: $paygExpiration
+        threshold: $paygThreshold
+        overflow: $paygOverflow
+      }
       id: $id
     ) {
       id
-      paygPrice
-      paygExpiration
-      paygThreshold
-      paygOverflow
+    }
+  }
+`;
+
+export const GET_ALL_ALIVEPAYG = gql`
+  query payg {
+    getAlivePaygs {
+      id
+      expiration
+      price
+      overflow
+      threshold
     }
   }
 `;

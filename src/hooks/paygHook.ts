@@ -28,13 +28,13 @@ export function usePAYGConfig(deploymentId: string) {
   const projectQuery = useProjectDetails(deploymentId);
 
   const paygConfig = useMemo(() => {
-    if (!projectQuery.data || !projectQuery.data.paygPrice) {
+    const { data: { project: { payg } } = { project: { payg: {} } } } = projectQuery;
+    if (!payg || !payg.price) {
       return { paygPrice: '', paygExpiration: 0 };
     }
-
     return {
-      paygPrice: formatEther(BigNumber.from(projectQuery.data.paygPrice).mul(1000)),
-      paygExpiration: (projectQuery.data?.paygExpiration ?? 0) / daySeconds,
+      paygPrice: formatEther(BigNumber.from(payg.price).mul(1000)),
+      paygExpiration: (payg.expiration ?? 0) / daySeconds,
     };
   }, [projectQuery]);
 
@@ -55,9 +55,13 @@ export function usePAYGConfig(deploymentId: string) {
         });
 
         projectQuery.refetch();
+
+        return true;
       } catch (e) {
         formHelper.setErrors({ [ProjectFormKey.paygPrice]: `Invalid PAYG: ${e}` });
       }
+
+      return false;
     },
     [deploymentId, paygPriceRequest, projectQuery]
   );

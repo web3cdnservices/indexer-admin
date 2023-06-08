@@ -57,11 +57,13 @@ import {
 
 const ProjectDetailsPage = () => {
   const { id } = useParams() as { id: string };
-  const { data: projectDetails } = useLocation().state as { data: ProjectDetails };
-
+  const {
+    state: { data: projectDetails } = { data: undefined },
+  }: { state: { data: ProjectDetails | undefined } } = useLocation();
   const status = useIndexingStatus(id);
   const projectQuery = useProjectDetails(id);
   const history = useHistory();
+  // a weird but awesome way to solve the hooks cannot be used in judge.
   useRouter(!projectDetails);
 
   const indexingAction = useIndexingAction(id);
@@ -209,6 +211,7 @@ const ProjectDetailsPage = () => {
   }, [removeProjectRequest, history, id]);
 
   const steps = useMemo(() => {
+    if (!projectDetails) return false;
     const startIndexingSteps = createStartIndexingSteps(
       projectDetails,
       imageVersions,
@@ -255,6 +258,7 @@ const ProjectDetailsPage = () => {
 
   const [modalTitle, modalSteps] = useMemo(() => {
     if (!actionType) return ['', []];
+    if (!steps) return ['', []];
     return [ProjectActionName[actionType], steps[actionType]];
   }, [actionType, steps]);
 
@@ -272,7 +276,9 @@ const ProjectDetailsPage = () => {
             metadata={metadata}
           />
           <ProjectServiceCard id={id} actionItems={serviceActionItems} data={metadata} />
-          <ProjectTabbarView id={id} project={project} config={projectDetails} />
+          {projectDetails && (
+            <ProjectTabbarView id={id} project={project} config={projectDetails} />
+          )}
         </ContentContainer>
         <PopupView
           setVisible={setVisible}

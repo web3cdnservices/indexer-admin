@@ -1,21 +1,22 @@
 name: Dev
 
 on:
-    pull_request:
-        types: [closed]
-    workflow_dispatch:
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
 
 jobs:
-    dev-build:
-        if: github.event.action == 'closed' && github.event.pull_request.merged == true
-        runs-on: ubuntu-latest
-        env:
-            SENTRY_DSN: ${{ secrets.DEV_SENTRY_DSN }}
-        steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v1
-              with:
-                  node-version: 16
-            - run: npm install -g yarn@1.22.10
-            - run: yarn install
-            - run: yarn run build
+  dev-build:
+    if: github.event.action == 'closed' && github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    env:
+      SENTRY_DSN: ${{ secrets.DEV_SENTRY_DSN }}
+      NODE_OPTIONS: '--max_old_space_size=4096'
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - run: npm install -g yarn@1.22.10
+      - run: yarn install
+      - run: yarn run build

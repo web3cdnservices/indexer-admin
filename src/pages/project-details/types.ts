@@ -96,9 +96,12 @@ export type ProjectConfig = {
     cpu: number;
     memory: number;
   };
-  // TODO: remvoe these fields
-  paygPrice?: number;
-  paygExpiration?: number;
+  payg: {
+    id: string;
+    threshold: number;
+    expiration: number;
+    price: string;
+  };
 };
 
 export type ProjectServiceMetadata = {

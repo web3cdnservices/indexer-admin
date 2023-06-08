@@ -5,6 +5,7 @@ import { Notification } from 'containers/notificationContext';
 import {
   initalPAYGValues,
   OpenPAYGFormKey,
+  PaygEdit,
   ProjectFormKey,
   ProjectPaygSchema,
   StartIndexingSchema,
@@ -19,7 +20,6 @@ import {
   PAYGAction,
   PaygStatus,
   ProjectAction,
-  ProjectConfig,
   ProjectServiceMetadata,
   ProjectStatus,
 } from './types';
@@ -278,7 +278,7 @@ export const createStopIndexingSteps = (
   ],
 });
 
-const setPaygPriceForms = (config: ProjectConfig, onFormSubmit: FormSubmit) => ({
+const setPaygPriceForms = (config: PaygEdit, onFormSubmit: FormSubmit) => ({
   formValues: initalPAYGValues(config),
   schema: ProjectPaygSchema,
   onFormSubmit,
@@ -296,7 +296,7 @@ const setPaygPriceForms = (config: ProjectConfig, onFormSubmit: FormSubmit) => (
   ],
 });
 
-export const createPaygOpenSteps = (config: ProjectConfig, onPaygOpen: FormSubmit) => ({
+export const createPaygOpenSteps = (config: PaygEdit, onPaygOpen: FormSubmit) => ({
   [PAYGAction.PaygOpen]: [
     {
       index: 0,
