@@ -38,6 +38,8 @@ const MetaMaskView = () => {
       } else {
         console.error(error);
       }
+    } else {
+      setNetworkError(false);
     }
   }, [error]);
 
@@ -95,6 +97,7 @@ const MetaMaskView = () => {
       <Text color="red" alignCenter mt={15}>
         {errorMsg}
       </Text>
+
       <Button mt={50} type="secondary" title="" onClick={onButtonClick} leftItem={metaMaskItem} />
     </Container>
   );

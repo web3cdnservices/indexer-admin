@@ -72,7 +72,9 @@ const Account = () => {
     if (controllerBalance && !balanceSufficient(controllerBalance)) {
       dispatchNotification(notifications.controller);
     }
-  }, [controllerBalance, dispatchNotification]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [controllerBalance]);
 
   const onButtonPress = (type?: AccountAction) => {
     setActionType(type);
