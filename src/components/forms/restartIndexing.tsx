@@ -1,7 +1,7 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Dispatch, FC, SetStateAction, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { NOTIFICATION_TYPE } from 'react-notifications-component';
 import { useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -94,6 +94,7 @@ export const IndexingForm: FC<Props> = ({ setVisible }) => {
 
   const onSwitchChange = () => {
     setShowInput(!showInput);
+    form.setFieldValue(ProjectFormKey.networkDictionary, '');
   };
 
   const handleSubmit = (setVisible: Dispatch<SetStateAction<boolean>>) => async (values: any) => {
@@ -140,11 +141,21 @@ export const IndexingForm: FC<Props> = ({ setVisible }) => {
     }
   };
 
+  useEffect(() => {
+    if (projectQuery.data) {
+      const { project } = projectQuery.data;
+      if (project?.baseConfig?.networkDictionary) {
+        setShowInput(false);
+      }
+    }
+  }, [projectQuery]);
+
   return renderAsync(projectQuery, {
     loading: () => <LoadingSpinner />,
     error: () => <>Unable to get default values</>,
     data: ({ project }) => {
       const { baseConfig, advancedConfig } = project;
+
       return (
         <Form
           form={form}
