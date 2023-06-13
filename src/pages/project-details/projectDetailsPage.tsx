@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { renderAsync } from '@subql/react-hooks';
+import { useInterval } from 'ahooks';
 import { FormikHelpers, FormikValues } from 'formik';
 import { isUndefined } from 'lodash';
 
@@ -84,6 +85,10 @@ const ProjectDetailsPage = () => {
     const data = await getQueryMetadata(id);
     setMetadata(data);
   }, [id, setMetadata]);
+
+  useInterval(() => {
+    fetchQueryMetadata();
+  }, 15000);
 
   const updateServiceStatus = useCallback(() => {
     const intervalId = setInterval(() => fetchQueryMetadata(), 6000);
