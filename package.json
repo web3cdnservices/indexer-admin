@@ -1,6 +1,6 @@
 {
   "name": "@subql/indexer-admin",
-  "version": "1.0.1-13",
+  "version": "1.1.0",
   "scripts": {
     "start": "PORT=8008 craco start -- --rest-cache",
     "start:windows": "craco start -- --rest-cache",
@@ -22,7 +22,7 @@
     "@sentry/react": "^6.19.4",
     "@sentry/tracing": "^6.19.4",
     "@subql/components": "^1.0.1-76",
-    "@subql/contract-sdk": "0.13.4",
+    "@subql/contract-sdk": "0.13.5",
     "@subql/network-clients": "^0.3.4",
     "@subql/network-query": "0.3.4",
     "@subql/react-hooks": "^0.3.4",
