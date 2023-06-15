@@ -112,22 +112,26 @@ export const getManifest = async (cid: string) => {
   return resultManifest;
 };
 
-// TODO: migrate to docker registry module
-function dockerRegistryFromChain(chainType: ChainType): DockerRegistry {
+function dockerRegistryFromChain(chainType: ChainType): string {
   switch (chainType) {
     case 'cosmos':
-      return DockerRegistry.cosmos;
-    case 'avalanche':
-      return DockerRegistry.avalanche;
+    case 'algorand':
+    case 'flare':
+    case 'near':
+    case 'ethereum':
+      return `onfinality/subql-node-${chainType}`;
     default:
-      return DockerRegistry.substrateNode;
+      return 'onfinality/subql-node';
   }
 }
 
-const defaultRange = {
-  substrate: '>=1.1.1',
-  cosmos: '>=0.1.0',
-  avalanche: '>=0.1.1',
+const defaultRange: Record<ChainType, string> = {
+  substrate: '>=2.5.5',
+  cosmos: '>=2.5.0',
+  flare: '>=2.5.0',
+  algorand: '>=2.5.0',
+  near: '>=2.5.0',
+  ethereum: '>=2.5.3',
 };
 
 export const useNodeVersions = (cid: string): string[] => {

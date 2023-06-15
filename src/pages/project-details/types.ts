@@ -6,13 +6,10 @@ import { FormikHelpers, FormikValues } from 'formik';
 
 import { ControllerAction } from 'pages/controllers/types';
 
-export type ChainType = 'cosmos' | 'avalanche' | 'substrate';
+export type ChainType = 'near' | 'flare' | 'cosmos' | 'algorand' | 'substrate' | 'ethereum';
 
 export enum DockerRegistry {
   query = 'onfinality/subql-query',
-  substrateNode = 'onfinality/subql-node',
-  cosmos = 'onfinality/subql-node-cosmos',
-  avalanche = 'onfinality/subql-node-avalanche',
 }
 
 export enum IndexingStatus {
