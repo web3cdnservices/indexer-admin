@@ -11,11 +11,13 @@ export const Separator = styled.div<{
   width?: number;
   color?: string;
   mr?: number;
+  ml?: number;
 }>`
   height: ${({ height }) => height ?? 1}px;
   width: ${({ width }) => width ?? 1}px;
   background-color: ${({ color }) => color ?? 'lightgray'};
   margin-right: ${({ mr }) => mr ?? 0}px;
+  margin-left: ${({ mr }) => mr ?? 0}px;
 `;
 
 type TextProps = {

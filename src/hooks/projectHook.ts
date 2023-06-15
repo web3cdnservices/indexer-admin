@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { NetworkStatus, useLazyQuery, useQuery } from '@apollo/client';
+import { useInterval } from 'ahooks';
 import yaml from 'js-yaml';
 import { isEmpty } from 'lodash';
 
@@ -178,8 +179,12 @@ export const useQueryVersions = (cid: string): string[] => {
   return !isEmpty(versions) ? versions : [];
 };
 
-export const useIsOnline = (props: { deploymentId: string; indexer: string }) => {
-  const { deploymentId, indexer } = props;
+export const useIsOnline = (props: {
+  deploymentId: string;
+  indexer: string;
+  interval?: number;
+}) => {
+  const { deploymentId, indexer, interval = 30000 } = props;
   const [online, setOnline] = useState(false);
 
   const getProjectUptimeStatus = async () => {
@@ -197,6 +202,10 @@ export const useIsOnline = (props: { deploymentId: string; indexer: string }) =>
     getProjectUptimeStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deploymentId, indexer]);
+
+  useInterval(() => {
+    getProjectUptimeStatus();
+  }, interval);
 
   return online;
 };

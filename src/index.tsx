@@ -12,7 +12,7 @@ import reportWebVitals from './reportWebVitals';
 import './index.css';
 
 Sentry.init({
-  dsn: process.env.SENTRY_DSN,
+  dsn: process?.env?.SENTRY_DSN,
   integrations: [new BrowserTracing()],
 
   // Set tracesSampleRate to 1.0 to capture 100%

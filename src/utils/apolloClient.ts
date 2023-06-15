@@ -6,7 +6,7 @@ import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 const defaultCoordinatorUrl = `${window.location.protocol}//${window.location.hostname}:${window.env.COORDINATOR_SERVICE_PORT}/graphql`;
 
 export const coordinatorServiceUrl =
-  process.env.NODE_ENV !== 'production'
+  process?.env?.NODE_ENV !== 'production'
     ? window.env.COORDINATOR_SERVICE_URL
     : defaultCoordinatorUrl;
 

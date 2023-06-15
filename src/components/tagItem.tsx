@@ -9,8 +9,9 @@ import { Text } from './primary';
 const VersionItemContainer = styled.div<{ horizontal: boolean }>`
   display: flex;
   flex-direction: ${({ horizontal }) => (horizontal ? 'row' : 'column')};
-  justify-content: ${({ horizontal }) => (horizontal ? 'center' : 'flex-start')};
+  justify-content: ${({ horizontal }) => (horizontal ? 'center' : 'space-around')};
   align-items: ${({ horizontal }) => (horizontal ? 'center' : 'flex-start')};
+  height: 100%;
 `;
 
 type VersionProps = {
@@ -18,6 +19,7 @@ type VersionProps = {
   horizontal?: boolean;
   value?: string | number;
   prefix?: string;
+  children?: React.ReactNode;
 };
 
 export const TagItem: FC<VersionProps> = ({
@@ -25,6 +27,7 @@ export const TagItem: FC<VersionProps> = ({
   horizontal = false,
   value = '',
   prefix = '',
+  children,
 }) => {
   const mainColor = horizontal ? 'gray' : 'black';
   const subColor = prefix ? '#4388dd' : 'gray';
@@ -35,11 +38,11 @@ export const TagItem: FC<VersionProps> = ({
       </Text>
       {horizontal ? (
         <Text ml={15} mr={15} color={subColor} fw="500" size={15}>
-          {`${prefix}${value}`}
+          {children || `${prefix}${value}`}
         </Text>
       ) : (
         <Text mt={5} color={subColor} fw="500" size={13}>
-          {`${prefix}${value}`}
+          {children || `${prefix}${value}`}
         </Text>
       )}
     </VersionItemContainer>

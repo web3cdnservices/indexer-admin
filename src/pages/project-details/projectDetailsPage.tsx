@@ -12,10 +12,12 @@ import { isUndefined } from 'lodash';
 import AlertView from 'components/alertView';
 import { LoadingSpinner } from 'components/loading';
 import { PopupView } from 'components/popupView';
+import { useAccount } from 'containers/account';
 import { useNotification } from 'containers/notificationContext';
 import {
   getQueryMetadata,
   useIndexingStatus,
+  useIsOnline,
   useNodeVersions,
   useProjectDetails,
   useQueryVersions,
@@ -59,6 +61,7 @@ import {
 
 const ProjectDetailsPage = () => {
   const { id } = useParams() as { id: string };
+  const { account } = useAccount();
   const {
     state: { data: projectDetails } = { data: undefined },
   }: { state: { data: ProjectDetails | undefined } } = useLocation();
@@ -81,6 +84,10 @@ const ProjectDetailsPage = () => {
   const [visible, setVisible] = useState(false);
 
   const [actionType, setActionType] = useState<ProjectAction>();
+  const isOnline = useIsOnline({
+    deploymentId: id,
+    indexer: account || '',
+  });
 
   const fetchQueryMetadata = useCallback(async () => {
     const data = await getQueryMetadata(id);
@@ -98,14 +105,6 @@ const ProjectDetailsPage = () => {
       projectQuery.refetch();
     }, 60000);
   }, [fetchQueryMetadata, projectQuery]);
-
-  useEffect(() => {
-    metadata && setProgress(calculateProgress(metadata.targetHeight, metadata.lastProcessedHeight));
-  }, [metadata]);
-
-  useEffect(() => {
-    fetchQueryMetadata();
-  }, [fetchQueryMetadata, status]);
 
   const loading = useMemo(
     () => startProjectLoading || stopProjectLoading || removeProjectLoading,
@@ -262,6 +261,14 @@ const ProjectDetailsPage = () => {
     onPopoverClose,
   ]);
 
+  useEffect(() => {
+    metadata && setProgress(calculateProgress(metadata.targetHeight, metadata.lastProcessedHeight));
+  }, [metadata]);
+
+  useEffect(() => {
+    fetchQueryMetadata();
+  }, [fetchQueryMetadata, status]);
+
   const [modalTitle, modalSteps] = useMemo(() => {
     if (!actionType) return ['', []];
     if (!steps) return ['', []];
@@ -274,7 +281,12 @@ const ProjectDetailsPage = () => {
     data: ({ project }) => (
       <Container>
         <ContentContainer>
-          <ProjectDetailsHeader id={id} projectStatus={projectStatus} project={project} />
+          <ProjectDetailsHeader
+            id={id}
+            projectStatus={projectStatus}
+            project={project}
+            onlineStatus={isOnline}
+          />
           <ProjectStatusView
             percent={progress}
             actionItems={networkActionItems}
