@@ -3,6 +3,8 @@
 
 import { gql } from '@apollo/client';
 
+import { excellencyQuery } from './apolloClient';
+
 // TODO: use the public queries from `network-clients`
 
 const ProjectFields = `
@@ -332,3 +334,53 @@ export const CHANNEL_CHECKPOINT = gql`
     }
   }
 `;
+
+// excellency gql
+
+export interface IGetIndexerStatus {
+  getIndexerStatus: {
+    deploymentId: string;
+    nodeSuccess: boolean;
+    querySuccess: boolean;
+    errorMsg?: string;
+    timestamp: string;
+  };
+}
+
+export const getIndexerStatus = (params: { deploymentId: string; indexer: string }) => {
+  return excellencyQuery<IGetIndexerStatus>(`
+    {
+      getIndexerStatus(deploymentId: "${params.deploymentId}", indexer: "${params.indexer}"){
+        deploymentId
+        nodeSuccess
+        querySuccess
+        errorMsg
+        timestamp
+      }
+    }
+  `);
+};
+
+export interface IGetRequeestHistory {
+  getRequestHistory: {
+    records: {
+      nodeSuccess: boolean;
+      timestamp: string;
+      errorMsg?: string;
+    }[];
+  };
+}
+
+export const getRequestHistory = (params: { deploymentId: string; indexer: string }) => {
+  return excellencyQuery<IGetRequeestHistory>(`
+    {
+      getRequestHistory(deploymentId: "${params.deploymentId}", indexer: "${params.indexer}") {
+        records {
+          nodeSuccess
+          timestamp
+          errorMsg
+        }
+      }
+    }
+  `);
+};

@@ -32,6 +32,7 @@ import ProjectDetailsHeader from './components/projectDetailHeader';
 import ProjectServiceCard from './components/projectServiceCard';
 import ProjectStatusView from './components/projectStatusView';
 import ProjectTabbarView from './components/projectTabBarView';
+import ProjectUptime from './components/projectUptime';
 import {
   alertMessages,
   createAnnounceIndexingSteps,
@@ -281,6 +282,7 @@ const ProjectDetailsPage = () => {
             metadata={metadata}
           />
           <ProjectServiceCard id={id} actionItems={serviceActionItems} data={metadata} />
+          <ProjectUptime />
           {projectDetails && (
             <ProjectTabbarView id={id} project={project} config={projectDetails} />
           )}
