@@ -3,13 +3,14 @@
 
 import { FC, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Spinner } from '@subql/components';
+import { Spinner, Tag } from '@subql/components';
 import { isUndefined } from 'lodash';
 
 import Avatar from 'components/avatar';
 import { Text } from 'components/primary';
 import StatusLabel from 'components/statusLabel';
-import { useDeploymentStatus } from 'hooks/projectHook';
+import { useAccount } from 'containers/account';
+import { useDeploymentStatus, useIsOnline } from 'hooks/projectHook';
 import { ProjectDetails } from 'pages/project-details/types';
 import { cidToBytes32 } from 'utils/ipfs';
 import { calculateProgress } from 'utils/project';
@@ -22,9 +23,13 @@ type Props = ProjectDetails;
 const ProjectItem: FC<Props> = (props) => {
   const { id, details, metadata } = props;
 
+  const { account } = useAccount();
   const history = useHistory();
   const status = useDeploymentStatus(id);
-
+  const onlineStatus = useIsOnline({
+    deploymentId: id,
+    indexer: account || '',
+  });
   const progress = useMemo(() => {
     if (!metadata) return 0;
     const { targetHeight, lastProcessedHeight } = metadata;
@@ -48,6 +53,14 @@ const ProjectItem: FC<Props> = (props) => {
       </ItemContainer>
       <ItemContainer flex={6}>
         <Progress progress={progress / 100} />
+      </ItemContainer>
+      <ItemContainer flex={6}>
+        <Tag
+          state={onlineStatus ? 'success' : 'error'}
+          style={{ height: '22px', lineHeight: '18px' }}
+        >
+          {onlineStatus ? 'You are Connectable' : 'You are not Connectable'}
+        </Tag>
       </ItemContainer>
       <ItemContainer flex={1}>
         {!isUndefined(status) ? (

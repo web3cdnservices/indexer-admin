@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useCallback, useEffect, useState } from 'react';
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { NetworkStatus, useLazyQuery, useQuery } from '@apollo/client';
 import yaml from 'js-yaml';
 import { isEmpty } from 'lodash';
 
@@ -18,7 +18,12 @@ import {
 } from 'pages/project-details/types';
 import { coordinatorServiceUrl, createApolloClient } from 'utils/apolloClient';
 import { cat, cidToBytes32, IPFS_PROJECT_CLIENT } from 'utils/ipfs';
-import { GET_PROJECT, GET_QUERY_METADATA, GET_REGISTRY_VERSIONS } from 'utils/queries';
+import {
+  GET_PROJECT,
+  GET_QUERY_METADATA,
+  GET_REGISTRY_VERSIONS,
+  getIndexerStatus,
+} from 'utils/queries';
 
 const metadataInitValue = {
   lastProcessedHeight: 0,
@@ -167,4 +172,27 @@ export const useQueryVersions = (cid: string): string[] => {
 
   const versions = data?.getRegistryVersions;
   return !isEmpty(versions) ? versions : [];
+};
+
+export const useIsOnline = (props: { deploymentId: string; indexer: string }) => {
+  const { deploymentId, indexer } = props;
+  const [online, setOnline] = useState(false);
+
+  const getProjectUptimeStatus = async () => {
+    const res = await getIndexerStatus({
+      deploymentId,
+      indexer,
+    });
+
+    if (res.status === NetworkStatus.ready) {
+      setOnline(res.data.getIndexerStatus.nodeSuccess && res.data.getIndexerStatus.querySuccess);
+    }
+  };
+
+  useEffect(() => {
+    getProjectUptimeStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deploymentId, indexer]);
+
+  return online;
 };
