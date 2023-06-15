@@ -29,7 +29,7 @@ export const useIsRegistedIndexer = (): boolean | undefined => {
     if (!account || !sdk || isRegisterIndexer !== undefined) return;
 
     try {
-      const status = await sdk?.indexerRegistry.isIndexer(account);
+      const status = await sdk.indexerRegistry.isIndexer(account);
       updateIsRegisterIndexer(status);
     } catch (e) {
       console.error('Failed to get isIndexer', e);
