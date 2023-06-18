@@ -180,7 +180,7 @@ export const IndexingForm: FC<Props> = ({ setVisible }) => {
             <Item
               label="Dictionary Endpoint"
               name={ProjectFormKey.networkDictionary}
-              rules={[getYupRule(ProjectFormKey.networkEndpoint)]}
+              rules={[getYupRule(ProjectFormKey.networkDictionary)]}
             >
               <Input placeholder="https://api.subquery.network/sq/subquery/dictionary-polkadot" />
             </Item>
