@@ -6,7 +6,8 @@ import { Tag } from '@subql/react-ui';
 import styled from 'styled-components';
 
 import { Button, Text } from 'components/primary';
-import { proxyServiceUrl } from 'utils/apolloClient';
+import { useAccount } from 'containers/account';
+import { useGetIndexerMetadata } from 'hooks/projectHook';
 import { statusCode } from 'utils/project';
 
 import { ButtonItem } from '../config';
@@ -59,6 +60,9 @@ type Props = {
 };
 
 const ProjectServiceCard: FC<Props> = ({ id, actionItems, data }) => {
+  const { account } = useAccount();
+  const indexMetadata = useGetIndexerMetadata(account || '');
+
   if (!data) return null;
 
   const imageVersion = (type: string, version: string) => `onfinality/subql-${type}:${version}`;
@@ -78,7 +82,7 @@ const ProjectServiceCard: FC<Props> = ({ id, actionItems, data }) => {
         />
         <ServiceView
           title="Proxy Service"
-          subTitle={`Url: ${proxyServiceUrl}/query/${id}`}
+          subTitle={`Url: ${new URL(`/query/${id}`, indexMetadata?.url)}`}
           status={data.queryStatus}
         />
       </ContentContainer>

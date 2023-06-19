@@ -18,13 +18,15 @@ import {
   TQueryMetadata,
 } from 'pages/project-details/types';
 import { coordinatorServiceUrl, createApolloClient } from 'utils/apolloClient';
-import { cat, cidToBytes32, IPFS_PROJECT_CLIENT } from 'utils/ipfs';
+import { bytes32ToCid, cat, cidToBytes32, IPFS_PROJECT_CLIENT } from 'utils/ipfs';
 import {
   GET_PROJECT,
   GET_QUERY_METADATA,
   GET_REGISTRY_VERSIONS,
   getIndexerStatus,
 } from 'utils/queries';
+
+import { useGetIndexerMetadataCid } from './transactionHook';
 
 const metadataInitValue = {
   lastProcessedHeight: 0,
@@ -116,6 +118,24 @@ export const getManifest = async (cid: string) => {
   const projectYaml = await cat(cid, IPFS_PROJECT_CLIENT);
   const resultManifest = yaml.load(projectYaml) as PartialIpfsDeploymentManifest;
   return resultManifest;
+};
+
+export const useGetIndexerMetadata = (indexer: string) => {
+  const metadataCid = useGetIndexerMetadataCid(indexer);
+  const [metadata, setMetadata] = useState<{ name: string; url: string }>();
+
+  const getMetadata = async (cid: string) => {
+    const indexerMetadata = await cat(bytes32ToCid(cid), IPFS_PROJECT_CLIENT);
+    setMetadata(indexerMetadata);
+  };
+
+  useEffect(() => {
+    if (metadataCid) {
+      getMetadata(metadataCid);
+    }
+  }, [metadataCid]);
+
+  return metadata;
 };
 
 function dockerRegistryFromChain(chainType: ChainType): string {

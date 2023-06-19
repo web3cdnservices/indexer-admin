@@ -57,8 +57,17 @@ export async function updateMetadata(sdk: SDK, signer: Signer, metadata: string)
   if (!sdk || !signer) {
     throw new Error(ErrorMessages.sdkOrSignerError);
   }
-
   const tx = await sdk.indexerRegistry.connect(signer).updateMetadata(metadata);
+  return tx;
+}
+
+export async function getIndexMetadata(sdk: SDK, signer: Signer, indexer: string) {
+  if (!sdk || !signer) {
+    throw new Error(ErrorMessages.sdkOrSignerError);
+  }
+
+  const tx = await sdk.indexerRegistry.connect(signer).metadata(indexer);
+
   return tx;
 }
 

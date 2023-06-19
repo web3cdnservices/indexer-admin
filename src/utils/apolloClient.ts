@@ -3,6 +3,8 @@
 
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 
+import { PRODUCTION_NETWORK } from './web3';
+
 const defaultCoordinatorUrl = `${window.location.protocol}//${window.location.hostname}:${window.env.COORDINATOR_SERVICE_PORT}/graphql`;
 
 export const coordinatorServiceUrl =
@@ -11,9 +13,9 @@ export const coordinatorServiceUrl =
     : defaultCoordinatorUrl;
 
 export const excellencyServiceUrl =
-  process.env.NODE_ENV === 'development'
-    ? 'https://leaderboard-api.thechaindata.com/graphql'
-    : 'https://leaderboard-api.subquery.network/graphql';
+  window.env.NETWORK === PRODUCTION_NETWORK
+    ? 'https://leaderboard-api.subquery.network/graphql'
+    : 'https://leaderboard-api.thechaindata.com/graphql';
 
 export const proxyServiceUrl = `${window.location.protocol}//${window.location.hostname}`;
 

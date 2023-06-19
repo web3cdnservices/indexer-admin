@@ -1,7 +1,7 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useContractSDK } from 'containers/contractSdk';
 import { useNotification } from 'containers/notificationContext';
@@ -11,6 +11,7 @@ import { ProjectActionName } from 'pages/project-details/config';
 import { AccountAction, ProjectAction, TransactionType } from 'pages/project-details/types';
 import {
   configController,
+  getIndexMetadata,
   readyIndexing,
   startIndexing,
   stopIndexing,
@@ -86,4 +87,22 @@ export const useIndexingAction = (id: string) => {
     },
     [indexingTransactions, notificationContext]
   );
+};
+
+export const useGetIndexerMetadataCid = (indexer: string) => {
+  const signer = useSigner();
+  const sdk = useContractSDK();
+  const [metadataCid, setMetadataCid] = useState<string>();
+
+  const getIndexerMetadata = async () => {
+    const res = await getIndexMetadata(sdk, signer, indexer);
+    setMetadataCid(res);
+  };
+
+  useEffect(() => {
+    getIndexerMetadata();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [indexer, sdk, signer]);
+
+  return metadataCid;
 };
