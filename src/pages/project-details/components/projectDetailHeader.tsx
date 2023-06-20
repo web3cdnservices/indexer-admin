@@ -42,11 +42,11 @@ const ProjectDetailsHeader: FC<Props> = ({ id, projectStatus, project, onlineSta
             <Separator height={30} mr={36} ml={36} />
             <TagItem versionType="VERSION" value={`V${project.details.version ?? '1.0.0'}`} />
             <Separator height={30} mr={36} ml={36} />
-            <TagItem versionType="PROJECT STATUS">
+            <TagItem versionType="PROJECT STATUS" fw="normal">
               <Tag state={getProjectStatusTagState(projectStatus)}>{projectStatus}</Tag>
             </TagItem>
             <Separator height={30} mr={36} ml={36} />
-            <TagItem versionType="UPTIME">
+            <TagItem versionType="UPTIME" fw="normal">
               <Tag state={onlineStatus ? 'success' : 'error'}>
                 {onlineStatus ? 'You are Connectable' : 'You are not Connectable'}
               </Tag>

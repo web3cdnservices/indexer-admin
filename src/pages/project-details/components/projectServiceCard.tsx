@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC } from 'react';
-import { Tag } from '@subql/react-ui';
+import { Tag } from '@subql/components';
 import styled from 'styled-components';
 
 import { Button, Text } from 'components/primary';
@@ -45,7 +45,7 @@ const ServiceView: FC<CardProps> = ({ title, subTitle, status }) => (
       <Text mr={20} fw="500">
         {title}
       </Text>
-      {!!status && <Tag text={status} state={statusCode(status)} />}
+      {!!status && <Tag state={statusCode(status)}>{status}</Tag>}
     </HeaderContainer>
     <Text size={15} color="gray" mt={10}>
       {subTitle}
@@ -82,7 +82,7 @@ const ProjectServiceCard: FC<Props> = ({ id, actionItems, data }) => {
         />
         <ServiceView
           title="Proxy Service"
-          subTitle={`Url: ${new URL(`/query/${id}`, indexMetadata?.url)}`}
+          subTitle={`Url: ${new URL(`/query/${id}`, indexMetadata?.url || window.location.href)}`}
           status={data.queryStatus}
         />
       </ContentContainer>

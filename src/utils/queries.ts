@@ -344,7 +344,7 @@ export interface IGetIndexerStatus {
     querySuccess: boolean;
     errorMsg?: string;
     timestamp: string;
-  };
+  } | null;
 }
 
 export const getIndexerStatus = (params: { deploymentId: string; indexer: string }) => {

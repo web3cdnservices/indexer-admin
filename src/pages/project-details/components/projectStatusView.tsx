@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC } from 'react';
-import { ProgressBar, Spinner, Tag } from '@subql/react-ui';
+import { Tag } from '@subql/components';
+import { ProgressBar, Spinner } from '@subql/react-ui';
 import { isUndefined } from 'lodash';
 import styled from 'styled-components';
 
@@ -49,7 +50,7 @@ const ProjectStatusView: FC<Props> = ({ percent, actionItems, status, metadata }
           Indexing Status
         </Text>
         {!isUndefined(status) ? (
-          <Tag text={statusText[status]} state={indexingStatusCode(status)} />
+          <Tag state={indexingStatusCode(status)}>{statusText[status]}</Tag>
         ) : (
           <Spinner />
         )}

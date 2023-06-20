@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FC } from 'react';
-import { Tag } from '@subql/react-ui';
+import { Tag } from '@subql/components';
 import { isUndefined } from 'lodash';
 
 import { asyncRender } from 'components/asyncRender';
@@ -60,7 +60,7 @@ const ControllerItem: FC<Props> = ({
           </Text>
         </AccountContainer>
         <Balance>{asyncRender(!!balance, <Text>{`${balance} ${tokenSymbol}`}</Text>)}</Balance>
-        <Status>{isActived && <Tag text={active} state="success" />}</Status>
+        <Status>{isActived && <Tag state="success">{active}</Tag>}</Status>
       </ItemContentContainer>
       {asyncRender(
         !isUndefined(controller) && !isUndefined(balance),

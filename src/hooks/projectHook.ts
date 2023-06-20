@@ -3,7 +3,9 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { NetworkStatus, useLazyQuery, useQuery } from '@apollo/client';
+import { _Metadata } from '@subql/network-query';
 import { useInterval } from 'ahooks';
+import axios from 'axios';
 import yaml from 'js-yaml';
 import { isEmpty } from 'lodash';
 
@@ -19,6 +21,7 @@ import {
 } from 'pages/project-details/types';
 import { coordinatorServiceUrl, createApolloClient } from 'utils/apolloClient';
 import { bytes32ToCid, cat, cidToBytes32, IPFS_PROJECT_CLIENT } from 'utils/ipfs';
+import { wrapGqlUrl } from 'utils/project';
 import {
   GET_PROJECT,
   GET_QUERY_METADATA,
@@ -120,6 +123,7 @@ export const getManifest = async (cid: string) => {
   return resultManifest;
 };
 
+// TODO optimize
 export const useGetIndexerMetadata = (indexer: string) => {
   const metadataCid = useGetIndexerMetadataCid(indexer);
   const [metadata, setMetadata] = useState<{ name: string; url: string }>();
@@ -206,6 +210,7 @@ export const useIsOnline = (props: {
 }) => {
   const { deploymentId, indexer, interval = 30000 } = props;
   const [online, setOnline] = useState(false);
+  const metadata = useGetIndexerMetadata(indexer);
 
   const getProjectUptimeStatus = async () => {
     const res = await getIndexerStatus({
@@ -214,14 +219,56 @@ export const useIsOnline = (props: {
     });
 
     if (res.status === NetworkStatus.ready) {
-      setOnline(res.data.getIndexerStatus.nodeSuccess && res.data.getIndexerStatus.querySuccess);
+      if (res.data.getIndexerStatus) {
+        const status =
+          res.data.getIndexerStatus.nodeSuccess && res.data.getIndexerStatus.querySuccess;
+        setOnline(status);
+        return status;
+      }
+    }
+
+    return false;
+  };
+
+  const getProjectUptimeStatusFromGqlProxy = async () => {
+    if (!metadata?.url) return;
+    try {
+      const res = await axios.get<{
+        data: {
+          _metadata: _Metadata;
+        };
+      }>(
+        wrapGqlUrl({
+          indexer,
+          url: `${metadata.url}/metadata/${deploymentId}`,
+        })
+      );
+
+      if (res.status === 200) {
+        // eslint-disable-next-line no-underscore-dangle
+        if (res.data?.data?._metadata?.indexerHealthy) {
+          setOnline(true);
+        }
+      }
+    } catch (e) {
+      // actually don't care this error.
+      console.log(e);
     }
   };
 
+  const getOnlineStatus = async () => {
+    if (online) return;
+    const fromExcellency = await getProjectUptimeStatus();
+
+    if (fromExcellency) return;
+
+    getProjectUptimeStatusFromGqlProxy();
+  };
+
   useEffect(() => {
-    getProjectUptimeStatus();
+    getOnlineStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deploymentId, indexer]);
+  }, [deploymentId, indexer, metadata]);
 
   useInterval(() => {
     getProjectUptimeStatus();

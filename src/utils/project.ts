@@ -40,3 +40,9 @@ export function projectId(cid: string): string {
 export function isTrue(value: boolean | string): boolean {
   return value === true || value === 'true';
 }
+
+export const wrapGqlUrl = ({ indexer, url }: { indexer: string; url: string }) => {
+  const gqlProxy = process.env.REACT_APP_GQL_PROXY;
+
+  return new URL(`${indexer}/?to=${encodeURIComponent(url)}`, gqlProxy).toString();
+};

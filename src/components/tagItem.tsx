@@ -20,6 +20,7 @@ type VersionProps = {
   value?: string | number;
   prefix?: string;
   children?: React.ReactNode;
+  fw?: number | 'normal' | 'bold';
 };
 
 export const TagItem: FC<VersionProps> = ({
@@ -28,20 +29,21 @@ export const TagItem: FC<VersionProps> = ({
   value = '',
   prefix = '',
   children,
+  fw = 500,
 }) => {
   const mainColor = horizontal ? 'gray' : 'black';
   const subColor = prefix ? '#4388dd' : 'gray';
   return (
     <VersionItemContainer horizontal={horizontal}>
-      <Text color={mainColor} size={horizontal ? 13 : 15} fw="500">
+      <Text color={mainColor} size={horizontal ? 13 : 15} fw={fw}>
         {versionType}
       </Text>
       {horizontal ? (
-        <Text ml={15} mr={15} color={subColor} fw="500" size={15}>
+        <Text ml={15} mr={15} color={subColor} fw={fw} size={15}>
           {children || `${prefix}${value}`}
         </Text>
       ) : (
-        <Text mt={5} color={subColor} fw="500" size={13}>
+        <Text mt={5} color={subColor} fw={fw} size={13}>
           {children || `${prefix}${value}`}
         </Text>
       )}

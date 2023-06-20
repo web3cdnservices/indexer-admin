@@ -37,6 +37,8 @@ const ProjectUptime: FC = () => {
     getHistory();
   });
 
+  if (!history.length) return <></>;
+
   return (
     <div style={{ marginTop: '23px' }}>
       <UptimeBar

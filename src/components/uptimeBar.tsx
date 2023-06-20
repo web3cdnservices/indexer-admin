@@ -91,8 +91,8 @@ const UptimeBar: FC<IProps> = (props) => {
               margin: '16px 0',
             }}
           >
-            {new Array(90 - groypByUptime.length).fill(0).map(() => (
-              <StatusLine bg="var(--sq-gray300)" />
+            {new Array(90 - groypByUptime.length).fill(0).map((_, index) => (
+              <StatusLine key={index} bg="var(--sq-gray300)" />
             ))}
             {groypByUptime.map((uptime, index) => {
               return (
