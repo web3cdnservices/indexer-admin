@@ -25,10 +25,10 @@ import {
 import { useRouter } from 'hooks/routerHook';
 import { useIndexingAction } from 'hooks/transactionHook';
 import { ProjectFormKey } from 'types/schemas';
+import { parseError } from 'utils/error';
 import { ProjectNotification } from 'utils/notification';
 import { calculateProgress, isTrue } from 'utils/project';
 import { REMOVE_PROJECT, START_PROJECT, STOP_PROJECT } from 'utils/queries';
-import { txErrorNotification } from 'utils/transactions';
 
 import ProjectDetailsHeader from './components/projectDetailHeader';
 import ProjectServiceCard from './components/projectServiceCard';
@@ -151,15 +151,16 @@ const ProjectDetailsPage = () => {
     return serviceBtnItems[projectStatus];
   }, [projectStatus, serviceBtnItems]);
 
-  const onPopoverClose = useCallback(
-    (error?: any) => {
-      setVisible(false);
-      if (error?.data?.message) {
-        dispatchNotification(txErrorNotification(error.data.message));
-      }
-    },
-    [dispatchNotification]
-  );
+  const onPopoverClose = useCallback((error?: any) => {
+    if (error) {
+      parseError(error, {
+        alert: true,
+      });
+      return;
+    }
+
+    setVisible(false);
+  }, []);
 
   const imageVersions = useMemo(
     () => ({ query: queryVersions, node: nodeVersions }),
@@ -303,7 +304,7 @@ const ProjectDetailsPage = () => {
           setVisible={setVisible}
           visible={visible}
           title={modalTitle}
-          onClose={onPopoverClose}
+          onClose={() => onPopoverClose()}
           // @ts-ignore
           steps={modalSteps}
           type={actionType}

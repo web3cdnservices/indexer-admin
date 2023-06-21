@@ -1,6 +1,7 @@
 // Copyright 2020-2022 SubQuery Pte Ltd authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+// docker will override this environment.
 window.env = {
   // This option can be retrieved in "src/index.js" with "window.env.API_URL".
   COORDINATOR_SERVICE_PORT: 8000,

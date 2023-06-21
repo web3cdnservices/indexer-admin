@@ -53,6 +53,22 @@ export const Notifications = () => (
   </>
 );
 
+export const notificationMsg = (info: Notification) => {
+  const id = Store.addNotification({
+    title: info.title,
+    message: info.message,
+    type: info.type,
+    container: 'top-right',
+    animationIn: ['animate__animated', 'animate__fadeIn'],
+    animationOut: ['animate__animated', 'animate__fadeOut'],
+    dismiss: info.dismiss,
+  });
+
+  return () => {
+    Store.removeNotification(id);
+  };
+};
+
 export const { useContainer: useNotification, Provider: NotificationProvider } = createContainer(
   useNotificationImpl,
   {

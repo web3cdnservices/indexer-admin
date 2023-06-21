@@ -3,7 +3,7 @@
 
 import { networks } from '@subql/contract-sdk';
 
-const network = window.env.NETWORK;
+const network = process.env.REACT_APP_NETWORK || window.env.NETWORK;
 
 export const SUPPORTED_NETWORK = (network ?? 'testnet') as keyof typeof networks;
 
@@ -50,8 +50,8 @@ export function hexToInt(hex: string) {
 }
 
 export const SUPPORTED_NETWORK_PROJECTS_EXPLORER =
-  window.env.NETWORK === PRODUCTION_NETWORK
+  network === PRODUCTION_NETWORK
     ? 'https://kepler.subquery.network/'
     : 'https://kepler.thechaindata.com/';
 
-export const FLEX_PLAN_FEATURE = window.env.NETWORK !== PRODUCTION_NETWORK;
+export const FLEX_PLAN_FEATURE = network !== PRODUCTION_NETWORK;
