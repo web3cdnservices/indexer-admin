@@ -10,6 +10,7 @@ import { useMount } from 'ahooks';
 import UptimeBar from 'components/uptimeBar';
 import { useAccount } from 'containers/account';
 import { useIsOnline } from 'hooks/projectHook';
+import { OnlineStatus } from 'pages/projects/constant';
 import { getRequestHistory, IGetRequeestHistory } from 'utils/queries';
 
 const ProjectUptime: FC = () => {
@@ -52,7 +53,7 @@ const ProjectUptime: FC = () => {
               state={onlineStatus ? 'success' : 'error'}
               style={{ height: '22px', lineHeight: '18px' }}
             >
-              {onlineStatus ? 'You are Connectable' : 'You are not Connectable'}
+              {onlineStatus ? OnlineStatus.online : OnlineStatus.offline}
             </Tag>
           </div>
         }
