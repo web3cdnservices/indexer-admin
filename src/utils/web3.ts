@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { networks } from '@subql/contract-sdk';
-import { NETWORK_CONFIGS } from '@subql/network-clients';
 
 export const network = (process.env.REACT_APP_NETWORK ?? window.env.NETWORK) as SubqueryNetwork;
 
