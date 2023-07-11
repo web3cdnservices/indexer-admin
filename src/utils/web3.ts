@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { networks } from '@subql/contract-sdk';
+import { NETWORK_CONFIGS } from '@subql/network-clients';
 
-const network = process.env.REACT_APP_NETWORK || window.env.NETWORK;
+export const network = (process.env.REACT_APP_NETWORK ?? window.env.NETWORK) as SubqueryNetwork;
 
 export const SUPPORTED_NETWORK = (network ?? 'testnet') as keyof typeof networks;
 
@@ -38,11 +39,6 @@ export const isSupportNetwork = (chaiId: ChainID) => ChainIDs.includes(chaiId);
 export const RPC_URLS: Record<number, string> = {
   80001: 'https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78',
   137: process?.env?.RPC_ENDPOINT ?? 'https://polygon-rpc.com/',
-};
-
-export const NETWORK_CONFIGS = {
-  [ChainID.testnet]: networks.testnet,
-  [ChainID.kepler]: networks.kepler,
 };
 
 export function hexToInt(hex: string) {
