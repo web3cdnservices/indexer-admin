@@ -48,5 +48,3 @@ export const SUPPORTED_NETWORK_PROJECTS_EXPLORER =
   network === PRODUCTION_NETWORK
     ? 'https://kepler.subquery.network/'
     : 'https://kepler.thechaindata.com/';
-
-export const FLEX_PLAN_FEATURE = network !== PRODUCTION_NETWORK;
